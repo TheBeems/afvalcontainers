@@ -4,6 +4,13 @@ const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
+const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
+const INITIAL_ZOOM_OFFSET = 1;
+const MAP_MAX_ZOOM = 19;
+const OSRM_BASE_URL = 'https://routing.openstreetmap.de/routed-foot';
+const OSRM_PROFILE = 'foot';
+const LIVE_ROUTE_TIMEOUT_MS = 15000;
+const ROUTE_GEOMETRY_DECIMALS = 6;
 
 const COVERAGE_STATUS = {
   within_100: {
@@ -50,7 +57,9 @@ const state = {
   coverageCircle: null,
   selectedHouseMarker: null,
   containerMarkers: [],
-  containerButtons: []
+  containerButtons: [],
+  liveRouteCache: new Map(),
+  houseSelectionId: 0
 };
 
 const map = L.map('map', { preferCanvas: true }).setView(MAP_CENTER, MAP_ZOOM);
@@ -83,7 +92,7 @@ const containerLayer = L.layerGroup().addTo(map);
 const popup = L.popup();
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
+  maxZoom: MAP_MAX_ZOOM,
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-bijdragers'
 }).addTo(map);
 
@@ -115,6 +124,22 @@ function formatDuration(durationSeconds) {
   }
 
   return `${Math.max(1, Math.round(durationSeconds / 60))} min lopen`;
+}
+
+function roundMetric(value) {
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+
+  return Math.round(value * 10) / 10;
+}
+
+function roundCoordinate(value) {
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+
+  return Number(value.toFixed(ROUTE_GEOMETRY_DECIMALS));
 }
 
 function formatTimestamp(timestamp) {
@@ -292,7 +317,8 @@ function addContainerMarkers() {
   });
 
   if (bounds.length > 0) {
-    map.fitBounds(bounds, { padding: [32, 32], maxZoom: 16 });
+    map.fitBounds(bounds, { padding: [32, 32], maxZoom: INITIAL_CONTAINER_BOUNDS_MAX_ZOOM });
+    map.setZoom(Math.min(map.getZoom() + INITIAL_ZOOM_OFFSET, MAP_MAX_ZOOM));
   }
 }
 
@@ -462,13 +488,137 @@ function buildStatusBadge(status) {
   return `<span class="status-badge" style="background:${coverageStatus.color}">${escapeHtml(coverageStatus.label)}</span>`;
 }
 
-function hasRouteGeometry(container) {
-  return Array.isArray(container.routeGeometry)
-    && container.routeGeometry.length >= 2
-    && container.routeGeometry.every((point) => Array.isArray(point)
+function isValidRouteGeometry(routeGeometry) {
+  return Array.isArray(routeGeometry)
+    && routeGeometry.length >= 2
+    && routeGeometry.every((point) => Array.isArray(point)
       && point.length >= 2
       && Number.isFinite(point[0])
       && Number.isFinite(point[1]));
+}
+
+function hasRouteGeometry(container) {
+  return isValidRouteGeometry(container.routeGeometry);
+}
+
+function createTimeoutSignal(timeoutMs) {
+  if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+    return AbortSignal.timeout(timeoutMs);
+  }
+
+  const controller = new AbortController();
+  window.setTimeout(() => controller.abort(), timeoutMs);
+  return controller.signal;
+}
+
+function getLiveRouteKey(house, container) {
+  return `${house.id || `${house.lat},${house.lon}`}:${container.id}`;
+}
+
+function getLiveRouteState(house, container) {
+  return state.liveRouteCache.get(getLiveRouteKey(house, container)) || null;
+}
+
+function getCurrentContainer(container) {
+  return state.containersById.get(container.id) || container;
+}
+
+function canFetchLiveRoute(house, container) {
+  const currentContainer = getCurrentContainer(container);
+  return Number.isFinite(house.lat)
+    && Number.isFinite(house.lon)
+    && Number.isFinite(currentContainer.lat)
+    && Number.isFinite(currentContainer.lon);
+}
+
+async function fetchLiveRoute(house, container) {
+  const currentContainer = getCurrentContainer(container);
+  const coordinates = `${house.lon},${house.lat};${currentContainer.lon},${currentContainer.lat}`;
+  const url = `${OSRM_BASE_URL}/route/v1/${OSRM_PROFILE}/${coordinates}?overview=simplified&geometries=geojson`;
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json'
+    },
+    signal: createTimeoutSignal(LIVE_ROUTE_TIMEOUT_MS)
+  });
+
+  if (!response.ok) {
+    throw new Error(`OSRM live route mislukt (${response.status}).`);
+  }
+
+  const data = await response.json();
+  const route = Array.isArray(data.routes) ? data.routes[0] : null;
+  const coordinatesList = route?.geometry?.coordinates;
+  if (data.code !== 'Ok' || !Array.isArray(coordinatesList)) {
+    throw new Error(`OSRM live route gaf code ${data.code || 'onbekend'}.`);
+  }
+
+  const routeGeometry = coordinatesList
+    .map(([lon, lat]) => [roundCoordinate(lat), roundCoordinate(lon)])
+    .filter(([lat, lon]) => lat !== null && lon !== null);
+
+  if (!isValidRouteGeometry(routeGeometry)) {
+    throw new Error('OSRM live route bevat geen bruikbare routegeometrie.');
+  }
+
+  return {
+    routeGeometry,
+    walkingDistance: roundMetric(route.distance),
+    walkingDuration: roundMetric(route.duration)
+  };
+}
+
+function loadLiveRoute(house, container) {
+  const key = getLiveRouteKey(house, container);
+  const cached = state.liveRouteCache.get(key);
+  if (cached) {
+    return cached.status === 'pending' ? cached.promise : Promise.resolve(cached);
+  }
+
+  const promise = fetchLiveRoute(house, container)
+    .then((route) => {
+      const entry = { status: 'fulfilled', ...route };
+      state.liveRouteCache.set(key, entry);
+      return entry;
+    })
+    .catch((error) => {
+      const entry = {
+        status: 'rejected',
+        error: error.message || 'Live route kon niet worden opgehaald.'
+      };
+      state.liveRouteCache.set(key, entry);
+      return entry;
+    });
+
+  state.liveRouteCache.set(key, { status: 'pending', promise });
+  return promise;
+}
+
+function getRouteDisplay(house, container) {
+  if (hasRouteGeometry(container)) {
+    return { label: 'opgeslagen' };
+  }
+
+  const liveRoute = getLiveRouteState(house, container);
+  if (!liveRoute) {
+    return { label: 'live fallback nog niet opgehaald' };
+  }
+
+  if (liveRoute.status === 'pending') {
+    return { label: 'live fallback wordt opgehaald' };
+  }
+
+  if (liveRoute.status === 'fulfilled') {
+    return {
+      label: 'live fallback',
+      details: `${formatMeters(liveRoute.walkingDistance)} - ${formatDuration(liveRoute.walkingDuration)}`
+    };
+  }
+
+  return {
+    label: 'live fallback mislukt',
+    details: liveRoute.error
+  };
 }
 
 function buildStoredDetails(house, ranking) {
@@ -502,7 +652,7 @@ function buildStoredDetails(house, ranking) {
   `;
 }
 
-function buildRankingMarkup(ranking) {
+function buildRankingMarkup(house, ranking) {
   if (ranking.length === 0) {
     return '<div class="empty-state">Voor dit adres is geen container-ranking opgeslagen.</div>';
   }
@@ -513,6 +663,8 @@ function buildRankingMarkup(ranking) {
       <div class="ranking-list">
         ${ranking.map((container, index) => {
           const color = getWalkingDistanceColor(container.walkingDistance);
+          const routeDisplay = getRouteDisplay(house, container);
+          const routeDetails = routeDisplay.details ? `<br>${escapeHtml(routeDisplay.details)}` : '';
           return `
             <div class="ranking-item">
               <span class="ranking-rank" style="--rank-color:${color}">${index + 1}</span>
@@ -522,7 +674,7 @@ function buildRankingMarkup(ranking) {
                   ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}<br>
                   Hemelsbreed: ${escapeHtml(formatMeters(container.straightDistance))}<br>
                   Nauwkeurigheid: ${escapeHtml(container.accuracy || 'onbekend')}<br>
-                  Route: ${hasRouteGeometry(container) ? 'opgeslagen' : 'niet beschikbaar'}
+                  Route: ${escapeHtml(routeDisplay.label)}${routeDetails}
                 </div>
               </div>
             </div>
@@ -533,33 +685,46 @@ function buildRankingMarkup(ranking) {
   `;
 }
 
-function buildRouteNotice(ranking, drawnRouteCount) {
+function buildRouteNotice(ranking, routeCounts) {
   if (ranking.length === 0) {
     return '';
   }
 
-  if (drawnRouteCount === ranking.length) {
+  if (routeCounts.pending > 0) {
     return `
       <div class="detail-item">
         <span class="detail-label">Routeweergave</span>
-        <span class="detail-value">${drawnRouteCount} opgeslagen looproutes zijn getekend.</span>
+        <span class="detail-value">Live routefallback wordt opgehaald voor ${routeCounts.pending} ontbrekende route(s).</span>
       </div>
     `;
   }
 
-  if (drawnRouteCount > 0) {
+  if (routeCounts.drawn === ranking.length && routeCounts.live === 0) {
     return `
       <div class="detail-item">
         <span class="detail-label">Routeweergave</span>
-        <span class="detail-value">${drawnRouteCount} van de ${ranking.length} opgeslagen looproutes zijn getekend. Genereer de coverage opnieuw voor ontbrekende routes.</span>
+        <span class="detail-value">${routeCounts.stored} opgeslagen looproute(s) zijn getekend.</span>
       </div>
     `;
   }
 
-  return `
-    <div class="empty-state">Deze coverage bevat nog geen opgeslagen routegeometrieën voor dit adres. Genereer ` +
-    `data/house-coverage.json opnieuw om de 3 looproutes te kunnen tekenen.</div>
-  `;
+  if (routeCounts.drawn > 0) {
+    const failedText = routeCounts.failed > 0
+      ? ` ${routeCounts.failed} live fallbackroute(s) konden niet worden opgehaald.`
+      : '';
+    return `
+      <div class="detail-item">
+        <span class="detail-label">Routeweergave</span>
+        <span class="detail-value">${routeCounts.stored} opgeslagen en ${routeCounts.live} live fallbackroute(s) zijn getekend.${failedText}</span>
+      </div>
+    `;
+  }
+
+  if (routeCounts.failed > 0) {
+    return '<div class="empty-state">Routegeometrieën ontbreken en de live routefallback kon niet worden opgehaald.</div>';
+  }
+
+  return '<div class="empty-state">Deze coverage bevat nog geen opgeslagen routegeometrieën voor dit adres.</div>';
 }
 
 function highlightRanking(ranking) {
@@ -582,28 +747,57 @@ function highlightRanking(ranking) {
   }
 }
 
-function drawStoredRoutes(ranking) {
+function drawRoutes(house, ranking) {
   routeLayer.clearLayers();
-  let drawnRouteCount = 0;
+  const routeCounts = {
+    stored: 0,
+    live: 0,
+    drawn: 0,
+    pending: 0,
+    failed: 0,
+    missing: 0
+  };
 
   for (const container of ranking) {
-    if (!hasRouteGeometry(container)) {
+    let routeGeometry = null;
+    let isLiveRoute = false;
+
+    if (hasRouteGeometry(container)) {
+      routeGeometry = container.routeGeometry;
+      routeCounts.stored += 1;
+    } else {
+      const liveRoute = getLiveRouteState(house, container);
+      if (liveRoute?.status === 'fulfilled' && isValidRouteGeometry(liveRoute.routeGeometry)) {
+        routeGeometry = liveRoute.routeGeometry;
+        isLiveRoute = true;
+        routeCounts.live += 1;
+      } else if (liveRoute?.status === 'pending') {
+        routeCounts.pending += 1;
+      } else if (liveRoute?.status === 'rejected') {
+        routeCounts.failed += 1;
+      } else {
+        routeCounts.missing += 1;
+      }
+    }
+
+    if (!routeGeometry) {
       continue;
     }
 
-    L.polyline(container.routeGeometry, {
+    L.polyline(routeGeometry, {
       renderer: routeRenderer,
       color: getWalkingDistanceColor(container.walkingDistance),
       weight: 4,
       opacity: 0.85,
+      dashArray: isLiveRoute ? '8 6' : null,
       lineCap: 'round',
       lineJoin: 'round',
       interactive: false
     }).addTo(routeLayer);
-    drawnRouteCount += 1;
+    routeCounts.drawn += 1;
   }
 
-  return drawnRouteCount;
+  return routeCounts;
 }
 
 function buildHousePopup(house, ranking) {
@@ -624,8 +818,70 @@ function buildHousePopup(house, ranking) {
   `;
 }
 
+function renderHouseSelection(house, ranking) {
+  renderHouseSummary(house);
+  const routeCounts = drawRoutes(house, ranking);
+  elements.houseDetails.innerHTML = `
+    ${buildStoredDetails(house, ranking)}
+    ${buildRankingMarkup(house, ranking)}
+    ${buildRouteNotice(ranking, routeCounts)}
+  `;
+  highlightRanking(ranking);
+
+  popup
+    .setLatLng([house.lat, house.lon])
+    .setContent(buildHousePopup(house, ranking))
+    .openOn(map);
+
+  if (routeCounts.pending > 0) {
+    setCoverageStatus(`Opgeslagen batchanalyse geladen; live routefallback wordt opgehaald voor ${routeCounts.pending} route(s).`, 'loading');
+    return routeCounts;
+  }
+
+  if (routeCounts.drawn > 0) {
+    const liveText = routeCounts.live > 0 ? `, waarvan ${routeCounts.live} live fallback` : '';
+    setCoverageStatus(`Opgeslagen batchanalyse geladen; ${routeCounts.drawn} looproute(s) getekend${liveText}.`, 'success');
+    return routeCounts;
+  }
+
+  if (routeCounts.failed > 0) {
+    setCoverageStatus('Opgeslagen batchanalyse geladen; routegeometrieën ontbreken en live fallback is mislukt.', 'error');
+    return routeCounts;
+  }
+
+  setCoverageStatus('Opgeslagen batchanalyse geladen; routegeometrieën ontbreken nog voor dit adres.', 'error');
+  return routeCounts;
+}
+
+function loadMissingLiveRoutes(house, ranking, selectionId) {
+  const requests = ranking
+    .filter((container) => !hasRouteGeometry(container) && canFetchLiveRoute(house, container))
+    .filter((container) => {
+      const liveRoute = getLiveRouteState(house, container);
+      return !liveRoute || liveRoute.status === 'pending';
+    });
+
+  if (requests.length === 0) {
+    return;
+  }
+
+  for (const container of requests) {
+    loadLiveRoute(house, container).then(() => {
+      if (state.houseSelectionId !== selectionId || state.selectedHouse?.id !== house.id) {
+        return;
+      }
+
+      renderHouseSelection(house, ranking);
+    });
+  }
+
+  renderHouseSelection(house, ranking);
+}
+
 function selectHouse(house) {
   state.selectedHouse = house;
+  state.houseSelectionId += 1;
+  const selectionId = state.houseSelectionId;
   closeContainerPopups();
   clearContainerSelection();
   resetHouseSelectionVisuals();
@@ -642,26 +898,8 @@ function selectHouse(house) {
     interactive: false
   }).addTo(selectionLayer);
 
-  renderHouseSummary(house);
-  const drawnRouteCount = drawStoredRoutes(ranking);
-  elements.houseDetails.innerHTML = `
-    ${buildStoredDetails(house, ranking)}
-    ${buildRankingMarkup(ranking)}
-    ${buildRouteNotice(ranking, drawnRouteCount)}
-  `;
-  highlightRanking(ranking);
-
-  popup
-    .setLatLng([house.lat, house.lon])
-    .setContent(buildHousePopup(house, ranking))
-    .openOn(map);
-
-  if (drawnRouteCount > 0) {
-    setCoverageStatus(`Opgeslagen batchanalyse geladen; ${drawnRouteCount} looproutes getekend.`, 'success');
-    return;
-  }
-
-  setCoverageStatus('Opgeslagen batchanalyse geladen; routegeometrieën ontbreken nog voor dit adres.', 'error');
+  renderHouseSelection(house, ranking);
+  loadMissingLiveRoutes(house, ranking, selectionId);
 }
 
 async function init() {
