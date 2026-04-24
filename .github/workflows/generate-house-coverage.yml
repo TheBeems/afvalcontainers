@@ -1,0 +1,48 @@
+name: Generate House Coverage & Deploy (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate house coverage
+        run: node scripts/generate-house-coverage.mjs
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          if git diff --quiet data/house-coverage.json; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit updated data
+        if: steps.git-check.outputs.no_changes == 'false'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/house-coverage.json
+          git commit -m "Auto-generated house coverage on ${{ github.sha }}"
+          git push
+
+      - name: Deploy to GitHub Pages
+        if: steps.git-check.outputs.no_changes == 'false'
+        uses: peaceiris/actions-gh-pages@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist  # pas dit aan als jouw build-output folder anders heet
