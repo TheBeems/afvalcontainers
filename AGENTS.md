@@ -19,7 +19,7 @@ Use two-space indentation in HTML, CSS, and JavaScript. Use English for code, fi
 
 ## Data Rules
 
-JSON is the only browser data source. Do not add JS data wrappers or `window.WARMENHUIZEN_*` globals. `data/container-locations.json` may be edited manually. `data/house-coverage.json` is generated and should not be hand-edited except for deliberate mechanical migrations. Browser code must not call PDOK, OSRM, or other live routing/data APIs; all coverage, ranking, and route geometry shown on GitHub Pages must come from committed JSON.
+JSON is the authoritative browser data source for container data, coverage, rankings, distance bands, and summary statistics. Do not add JS data wrappers or `window.WARMENHUIZEN_*` globals. `data/container-locations.json` may be edited manually. `data/house-coverage.json` is generated and should not be hand-edited except for deliberate mechanical migrations. Browser code must not call PDOK or use live routing/data APIs to compute coverage, rankings, distance bands, or summary statistics. Exception: when a selected house/container route has missing or invalid `routeGeometry`, browser code may call OSRM live to fetch route geometry for visual fallback only. Live fallback routes must be labeled as fallback/live display, must not be written to `data/house-coverage.json`, and must not overwrite stored batch values.
 
 Distance bands are based on walking distance: `within_100`, `between_100_125`, `between_125_150`, `between_150_275`, `over_275`, and `unreachable`. UI colors are green, yellow, orange, red, dark red, and gray respectively.
 

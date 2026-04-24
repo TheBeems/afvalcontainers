@@ -16,7 +16,8 @@ Open `http://127.0.0.1:8000/` after `npm run serve`.
 
 - `data/container-locations.json` is the editable container source.
 - `data/house-coverage.json` is generated coverage output with distance bands, top-3 container rankings, and stored route geometry.
-- Browser code only reads committed JSON data and does not call live routing APIs.
+- Browser code reads committed JSON data for container data, coverage, rankings, distance bands, and summary statistics.
+- When stored route geometry is missing or invalid for a selected house/container pair, the map may fetch live OSRM route geometry as a visual fallback only.
 - Distance bands are based on walking distance: green `0-100 m`, yellow `100-125 m`, orange `125-150 m`, red `150-275 m`, dark red `>275 m`, and gray when no route is available.
 
 Smoke-test the generator without touching committed coverage data:
