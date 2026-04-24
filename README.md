@@ -1,6 +1,8 @@
 
 # Loopafstanden naar ondergrondse afvalcontainers in Warmenhuizen
 
+Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
+
 ## Inleiding
 Deze website is ontwikkeld om inzicht te geven in de daadwerkelijke loopafstanden die inwoners van Warmenhuizen moeten afleggen naar de ondergrondse afvalcontainers. Het doel is om bewustwording te creëren over de toegankelijkheid van de containers.
 
