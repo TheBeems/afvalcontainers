@@ -7,7 +7,7 @@ Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
 Deze website is ontwikkeld om inzicht te geven in de daadwerkelijke loopafstanden die inwoners van Warmenhuizen moeten afleggen naar de ondergrondse afvalcontainers. Het doel is om bewustwording te creëren over de toegankelijkheid van de containers.
 
 ## Context
-De gemeente Schagen hanteert in haar plan voor Warmenhuizen een maximale afstand van 275 meter tot een container. Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners:
+De gemeente Schagen hanteert in haar plan voor Warmenhuizen een maximale afstand van 275 meter tot een container. Echter baseert de gemeente zich op een afstand hemelsbreed gemeten en niet de daadwerkelijke loopafstand. Verder geeft de gemeente aan dat in "uitzonderlijke gevallen de afstand iets groter kan zijn", maar in deze analyse blijkt dat een aanzienlijk deel van de bewoners meer dan 275 meter moet lopen. Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners:
 
 - **Onder 100 meter:** relatief hoge acceptatie, weinig klachten.
 - **100–150 meter:** lichte tot matige weerstand.
