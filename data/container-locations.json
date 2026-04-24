@@ -1,0 +1,177 @@
+[
+  {
+    "id": "WH01",
+    "address": "Oostwal 37",
+    "lat": 52.731534,
+    "lon": 4.743758,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH02",
+    "address": "Dorpsstraat 13",
+    "lat": 52.727783,
+    "lon": 4.739556,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH04",
+    "address": "Maasweid 1",
+    "lat": 52.7263,
+    "lon": 4.746,
+    "accuracy": "benaderd"
+  },
+  {
+    "id": "WH07",
+    "address": "Dorpsstraat 37",
+    "lat": 52.7271,
+    "lon": 4.7397,
+    "accuracy": "benaderd"
+  },
+  {
+    "id": "WH09",
+    "address": "De Baan 7",
+    "lat": 52.725568,
+    "lon": 4.740668,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH10",
+    "address": "De Baan 27",
+    "lat": 52.725594,
+    "lon": 4.743376,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH11",
+    "address": "Wiekeland 2",
+    "lat": 52.723878,
+    "lon": 4.744526,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH12",
+    "address": "De Negen Geerzen 29",
+    "lat": 52.722168,
+    "lon": 4.746072,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH13",
+    "address": "Alingterp 2",
+    "lat": 52.724347,
+    "lon": 4.736129,
+    "accuracy": "nabij adres"
+  },
+  {
+    "id": "WH15",
+    "address": "Doorbraak 14",
+    "lat": 52.722223,
+    "lon": 4.740592,
+    "accuracy": "nabij adres"
+  },
+  {
+    "id": "WH16",
+    "address": "Vijfven 16",
+    "lat": 52.721835,
+    "lon": 4.726732,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH17",
+    "address": "Stationsstraat 65",
+    "lat": 52.722148,
+    "lon": 4.729417,
+    "accuracy": "geïnterpoleerd"
+  },
+  {
+    "id": "WH18",
+    "address": "Schelphoek Noord 48",
+    "lat": 52.7217,
+    "lon": 4.733087,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH19",
+    "address": "Zwartepad 32",
+    "lat": 52.721075,
+    "lon": 4.733566,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH20",
+    "address": "Oudewal 24",
+    "lat": 52.719835,
+    "lon": 4.731005,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH21",
+    "address": "Oudewal 57",
+    "lat": 52.7189,
+    "lon": 4.7264,
+    "accuracy": "nabij adres"
+  },
+  {
+    "id": "WH22",
+    "address": "Oudevaart 87",
+    "lat": 52.71578,
+    "lon": 4.727911,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH25",
+    "address": "Molenaarweg 42",
+    "lat": 52.71941,
+    "lon": 4.738215,
+    "accuracy": "geïnterpoleerd"
+  },
+  {
+    "id": "WH26",
+    "address": "Regelhaalder 42",
+    "lat": 52.718603,
+    "lon": 4.741364,
+    "accuracy": "nabij adres"
+  },
+  {
+    "id": "WH27",
+    "address": "Verzetslaan 40",
+    "lat": 52.718825,
+    "lon": 4.744664,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH28",
+    "address": "Zigt 1",
+    "lat": 52.71735,
+    "lon": 4.74443,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH29",
+    "address": "Schoffel 1",
+    "lat": 52.717094,
+    "lon": 4.741539,
+    "accuracy": "straat/postcode-bereik"
+  },
+  {
+    "id": "WH30",
+    "address": "Molenaarweg 1",
+    "lat": 52.718181,
+    "lon": 4.739098,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH31",
+    "address": "Fatimahof 1",
+    "lat": 52.723044,
+    "lon": 4.737377,
+    "accuracy": "exact/adres"
+  },
+  {
+    "id": "WH32",
+    "address": "Remmerdel 22",
+    "lat": 52.72629,
+    "lon": 4.747917,
+    "accuracy": "straat/postcode-bereik"
+  }
+]

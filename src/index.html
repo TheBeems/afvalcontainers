@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warmenhuizen - containeranalyse op loopafstand</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <h1>Warmenhuizen - containeranalyse op loopafstand</h1>
+        <p>De kaart toont voorlopige containerlocaties en vooraf berekende dekking voor BAG-adressen binnen Warmenhuizen.</p>
+      </header>
+
+      <details class="panel" open>
+        <summary>Kaartlagen</summary>
+        <div class="panel-body">
+          <div class="legend-list">
+            <div class="legend-item"><span class="legend-swatch status-within"></span> 0-100 meter loopafstand</div>
+            <div class="legend-item"><span class="legend-swatch status-warning"></span> 100-125 meter loopafstand</div>
+            <div class="legend-item"><span class="legend-swatch status-caution"></span> 125-150 meter loopafstand</div>
+            <div class="legend-item"><span class="legend-swatch status-over"></span> 150-275 meter loopafstand</div>
+            <div class="legend-item"><span class="legend-swatch status-far-over"></span> Meer dan 275 meter loopafstand</div>
+            <div class="legend-item"><span class="legend-swatch status-unreachable"></span> Geen route gevonden</div>
+            <div class="legend-item"><span class="legend-swatch status-radius"></span> 275 meter hemelsbreed vanaf geselecteerde container</div>
+          </div>
+          <p class="note">Klik op een container voor de hemelsbrede straal. Zoom in tot niveau 16 om de huizenlaag te tonen.</p>
+        </div>
+      </details>
+
+      <section class="panel analysis-panel" aria-labelledby="analysis-title">
+        <h2 id="analysis-title">Batchanalyse loopafstand</h2>
+        <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
+        <div id="coverage-summary" class="summary-grid" hidden></div>
+        <div id="house-summary" class="house-summary" hidden></div>
+        <div id="house-details" class="detail-list">
+          <div class="empty-state">Klik op een huispunt om de opgeslagen dekking en routes te bekijken.</div>
+        </div>
+        <p class="note">De publieke site gebruikt alleen vooraf berekende PDOK BAG-adrespunten, OSRM-loopafstanden en opgeslagen routegeometrieën. Er worden geen live routeverzoeken vanuit de browser gedaan.</p>
+      </section>
+
+      <section class="container-section" aria-labelledby="container-list-title">
+        <h2 id="container-list-title">Containerlocaties</h2>
+        <div id="container-list" class="container-list"></div>
+      </section>
+    </aside>
+
+    <main id="map" class="map" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse"></main>
+  </div>
+</body>
+</html>
