@@ -1,0 +1,612 @@
+{
+  "type": "FeatureCollection",
+  "name": "warmenhuizen_afvalcontainerlocaties_visueel",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH01",
+        "reference_address": "Oostwal 37",
+        "page": 3,
+        "container_type": "semi-ondergronds rest",
+        "rd_x": 111500,
+        "rd_y": 527321,
+        "confidence": "middel",
+        "uncertainty_m": 8,
+        "note": "westzijde/berm bij Oostwal, visueel afgeleid; relatief grote onzekerheid door afstand tot referentie-adres",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7315107&mlon=4.743219#map=19/52.7315107/4.743219",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743219,
+          52.7315107
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH02",
+        "reference_address": "Dorpsstraat 13",
+        "page": 4,
+        "container_type": "ondergronds rest",
+        "rd_x": 111237,
+        "rd_y": 526897,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "hoek Hartendorp/Dorpsstraat, westzijde van Dorpsstraat",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7276794&mlon=4.739382#map=19/52.7276794/4.739382",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739382,
+          52.7276794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH04",
+        "reference_address": "Maasweid 1",
+        "page": 5,
+        "container_type": "ondergronds rest",
+        "rd_x": 111616,
+        "rd_y": 526800,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook noordzijde Maasweid, nabij Sportlaan/De Zegersloot",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7268381&mlon=4.7450048#map=19/52.7268381/4.7450048",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7450048,
+          52.7268381
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH07",
+        "reference_address": "Dorpsstraat 37",
+        "page": 6,
+        "container_type": "ondergronds rest",
+        "rd_x": 111252,
+        "rd_y": 526774,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "hoek Oud Wulpendorp/Dorpsstraat, westzijde Dorpsstraat",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7265752&mlon=4.7396203#map=19/52.7265752/4.7396203",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7396203,
+          52.7265752
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH09",
+        "reference_address": "De Baan 7",
+        "page": 7,
+        "container_type": "ondergronds rest",
+        "rd_x": 111323,
+        "rd_y": 526637,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook zuidzijde De Baan, tegenover huisnrs 5-9",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7253498&mlon=4.7406894#map=19/52.7253498/4.7406894",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7406894,
+          52.7253498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH10",
+        "reference_address": "De Baan 27",
+        "page": 8,
+        "container_type": "ondergronds rest",
+        "rd_x": 111520,
+        "rd_y": 526638,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook zuidzijde De Baan, tegenover huisnrs 27-29",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7253746&mlon=4.7436051#map=19/52.7253746/4.7436051",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7436051,
+          52.7253746
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH11",
+        "reference_address": "Wiekeland 2",
+        "page": 9,
+        "container_type": "ondergronds rest",
+        "rd_x": 111525,
+        "rd_y": 526475,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "kruising Sportlaan/Langedijker/Wiekeland",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7239102&mlon=4.7437006#map=19/52.7239102/4.7437006",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7437006,
+          52.7239102
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH12",
+        "reference_address": "De Negen Geerzen 29",
+        "page": 10,
+        "container_type": "ondergronds rest",
+        "rd_x": 111707,
+        "rd_y": 526286,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "oostzijde Helshoek, in groenstrook/park",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7222263&mlon=4.7464192#map=19/52.7222263/4.7464192",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7464192,
+          52.7222263
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH13",
+        "reference_address": "Alingterp 2",
+        "page": 11,
+        "container_type": "ondergronds rest",
+        "rd_x": 110972,
+        "rd_y": 526409,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook bij Posthoorn/Alingterp",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7232726&mlon=4.7355246#map=19/52.7232726/4.7355246",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7355246,
+          52.7232726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH15",
+        "reference_address": "Doorbraak 14",
+        "page": 12,
+        "container_type": "ondergronds rest",
+        "rd_x": 111335,
+        "rd_y": 526270,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "Theresiaplein/Pastoor Willemsestraat, bij bestaande containers",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7220528&mlon=4.7409156#map=19/52.7220528/4.7409156",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7409156,
+          52.7220528
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH16",
+        "reference_address": "Vijfven 16",
+        "page": 13,
+        "container_type": "ondergronds rest",
+        "rd_x": 110405,
+        "rd_y": 526253,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "centrale groenstrook Vijfven/Wonge",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7218245&mlon=4.7271537#map=19/52.7218245/4.7271537",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7271537,
+          52.7218245
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH17",
+        "reference_address": "Stationsstraat 65",
+        "page": 14,
+        "container_type": "ondergronds rest",
+        "rd_x": 110562,
+        "rd_y": 526313,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "hoek Wonge/Stationsstraat, zuidzijde Stationsstraat",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7223766&mlon=4.7294693#map=19/52.7223766/4.7294693",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7294693,
+          52.7223766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH18",
+        "reference_address": "Schelphoek Noord 48",
+        "page": 15,
+        "container_type": "ondergronds rest",
+        "rd_x": 110704,
+        "rd_y": 526232,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook bij Schierige Ven/Schelphoek Noord",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7216603&mlon=4.7315818#map=19/52.7216603/4.7315818",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7315818,
+          52.7216603
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH19",
+        "reference_address": "Zwartepad 32",
+        "page": 16,
+        "container_type": "ondergronds rest",
+        "rd_x": 110870,
+        "rd_y": 526178,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "hoek Schelphoek Zuid/Zwartepad",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7211885&mlon=4.7340458#map=19/52.7211885/4.7340458",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7340458,
+          52.7211885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH20",
+        "reference_address": "Oudewal 24",
+        "page": 17,
+        "container_type": "ondergronds rest",
+        "rd_x": 110692,
+        "rd_y": 526028,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "noordzijde Oudewal, nabij Schelphoek Zuid",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7198261&mlon=4.7314316#map=19/52.7198261/4.7314316",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7314316,
+          52.7198261
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH21",
+        "reference_address": "Oudewal 57",
+        "page": 18,
+        "container_type": "ondergronds rest",
+        "rd_x": 110321,
+        "rd_y": 525965,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "driehoekige groenstrook bij Oudewal/Kanaalweg",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7192295&mlon=4.7259495#map=19/52.7192295/4.7259495",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7259495,
+          52.7192295
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH22",
+        "reference_address": "Oudevaart 87",
+        "page": 19,
+        "container_type": "ondergronds rest",
+        "rd_x": 110495,
+        "rd_y": 525580,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "oostzijde Nijverheidsstraat, zuidzijde Oudevaart",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7157841&mlon=4.7285765#map=19/52.7157841/4.7285765",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7285765,
+          52.7157841
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH25",
+        "reference_address": "Molenaarweg 42",
+        "page": 20,
+        "container_type": "ondergronds rest",
+        "rd_x": 111184,
+        "rd_y": 525993,
+        "confidence": "hoog",
+        "uncertainty_m": 4,
+        "note": "groenstrook hoek Molenaarweg/'t Jaerlinger",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7195514&mlon=4.7387175#map=19/52.7195514/4.7387175",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7387175,
+          52.7195514
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH26",
+        "reference_address": "Regelhaalder 42",
+        "page": 21,
+        "container_type": "bovengrondse GFE",
+        "rd_x": 111363,
+        "rd_y": 525876,
+        "confidence": "middel",
+        "uncertainty_m": 6,
+        "note": "naast/bij bestaande containerlocatie Regelhaalder/Koolben",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7185144&mlon=4.7413821#map=19/52.7185144/4.7413821",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7413821,
+          52.7185144
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH27",
+        "reference_address": "Verzetslaan 40",
+        "page": 22,
+        "container_type": "bovengrondse GFE",
+        "rd_x": 111488,
+        "rd_y": 525826,
+        "confidence": "middel",
+        "uncertainty_m": 7,
+        "note": "parkeer-/groenstrook zuidzijde Verzetslaan",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7180751&mlon=4.7432385#map=19/52.7180751/4.7432385",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7432385,
+          52.7180751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH28",
+        "reference_address": "Zigt 1",
+        "page": 23,
+        "container_type": "ondergronds rest",
+        "rd_x": 111630,
+        "rd_y": 525829,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "zuidzijde Zigt, bij Debbemeerweg",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7181134&mlon=4.7453396#map=19/52.7181134/4.7453396",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7453396,
+          52.7181134
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH29",
+        "reference_address": "Schoffel 1",
+        "page": 24,
+        "container_type": "ondergronds rest",
+        "rd_x": 111467,
+        "rd_y": 525668,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "westzijde Verzetslaan, bij Schoffel",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7166536&mlon=4.7429486#map=19/52.7166536/4.7429486",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7429486,
+          52.7166536
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH30",
+        "reference_address": "Molenaarweg 1",
+        "page": 25,
+        "container_type": "ondergronds rest",
+        "rd_x": 111242,
+        "rd_y": 525855,
+        "confidence": "laag",
+        "uncertainty_m": 10,
+        "note": "groenstrook/bocht oostzijde Molenaarweg; BAG gaf Molenaarweg 1A als dichtstbijzijnde adres",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.718316&mlon=4.7395942#map=19/52.718316/4.7395942",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7395942,
+          52.718316
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH31",
+        "reference_address": "Fatimahof 1",
+        "page": 26,
+        "container_type": "bovengrondse GFE",
+        "rd_x": 111118,
+        "rd_y": 526376,
+        "confidence": "hoog",
+        "uncertainty_m": 5,
+        "note": "hoek Posthoorn/Fatimahof",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7229879&mlon=4.7376898#map=19/52.7229879/4.7376898",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7376898,
+          52.7229879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "code": "WH32",
+        "reference_address": "Remmerdel 22",
+        "page": 27,
+        "container_type": "bovengrondse GFE",
+        "rd_x": 111840,
+        "rd_y": 526770,
+        "confidence": "middel",
+        "uncertainty_m": 7,
+        "note": "bij kruising Kuipersven/Remmerdel",
+        "osm_url": "https://www.openstreetmap.org/?mlat=52.7265863&mlon=4.7483243#map=19/52.7265863/4.7483243",
+        "source_pdf": "bewonersboekje-warmenhuizen.pdf",
+        "coordinate_method": "visueel afgeleid uit kaartbeeld PDF + BAG/PDOK-adrespunten als anker; geschikt voor indicatieve loopafstandsanalyse"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7483243,
+          52.7265863
+        ]
+      }
+    }
+  ]
+}
