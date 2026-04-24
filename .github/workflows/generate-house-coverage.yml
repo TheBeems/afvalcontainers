@@ -42,7 +42,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: steps.git-check.outputs.no_changes == 'false'
-        uses: peaceiris/actions-gh-pages@v5
+        uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist  # pas dit aan als jouw build-output folder anders heet
