@@ -1,6 +1,55 @@
-# Warmenhuizen Afvalcontainers
 
-Static GitHub Pages map for Warmenhuizen waste-container coverage by walking distance.
+# Loopafstanden naar ondergrondse afvalcontainers in Warmenhuizen
+
+## Inleiding
+Deze website is ontwikkeld om inzicht te geven in de daadwerkelijke loopafstanden die inwoners van Warmenhuizen moeten afleggen naar de ondergrondse afvalcontainers. Het doel is om bewustwording te creëren over de toegankelijkheid van de containers.
+
+## Context
+De gemeente Schagen hanteert in haar plan voor Warmenhuizen een maximale afstand van 275 meter tot een container. Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners:
+
+- **Onder 100 meter:** relatief hoge acceptatie, weinig klachten.
+- **100–150 meter:** lichte tot matige weerstand.
+- **150–275 meter:** duidelijk verhoogde kans op klachten en actieve participatie.
+- **Meer dan 275 meter:** grote kans op weerstand, vooral bij ouderen of minder mobiele bewoners.
+
+Deze bevindingen komen uit onderzoeken in gemeenten zoals Woerden, Zeist, Nijmegen en Wageningen en tonen sterke overeenkomsten met de situatie in Warmenhuizen.
+
+## Methode
+De loopafstanden zijn berekend met behulp van OpenStreetMap (OSM) data:
+
+- **Routes:** Kortste looproute van elk woonadres naar de dichtstbijzijnde container.
+- **Visualisatie:** Kleuren geven de afstandscategorieën aan.
+  - Groen: 0–100 meter
+  - Geel: 100–125 meter
+  - Oranje: 125–150 meter
+  - Rood: 150–275 meter
+  - Donkerrood: >275 meter
+- **Fallback:** Hemelsbrede afstand wordt weergegeven als een route niet beschikbaar is.
+- **Data:** Analyse gebaseerd op 3.615 adressen en 25 containerlocaties in Warmenhuizen volgens [Bewonersboekje Warmenhuizen](https://www.schagen.nl/sites/default/files/2026-04/bewonersboekje-warmenhuizen.pdf)
+
+## Bevindingen
+De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
+
+| Afstand | Aantal adressen | Percentage | Kleur op kaart |
+|----------|----------------|-----------|----------------|
+| 0–100 m | 832 | 23% | Groen |
+| 100–125 m | 346 | 10% | Geel |
+| 125–150 m | 284 | 8% | Oranje |
+| 150–275 m | 917 | 25% | Rood |
+| >275 m | 1.236 | 34% | Donkerrood |
+
+**Conclusie:** Meer dan de helft van de inwoners woont verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
+
+## Gebruik van de website
+- Klik op een container om de hemelsbrede straal en looproutes te bekijken.
+- Zoom in tot niveau 16 om individuele huizen te tonen.
+- De kleuren geven in één oogopslag de toegankelijkheid en potentiële probleemzones aan.
+
+## Bronnen
+- Evaluatie Woerden: [Omgekeerd inzamelen in Woerden](https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf)
+- Evaluatie Zeist: [Adviesnota RMN Zeist](https://zeist.raadsinformatie.nl/document/7330194/1/01-19RV006_Omgekeerd_inzamelen_afval_-_Bijlage_1_Adviesnota_RMN_omgekeerd_inzamelen_Zeist)
+- Evaluatie Nijmegen: [Loopafstanden Nijmegen](https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645)
+- Gemeentelijk plan Schagen: [Plaatsing ondergrondse restafvalcontainers Warmenhuizen](https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen)
 
 ## Development
 
