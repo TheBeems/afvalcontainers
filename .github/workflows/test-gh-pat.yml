@@ -1,18 +1,18 @@
 name: Test GH PAT & Deploy (Safe)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # alleen handmatige trigger
 
 jobs:
   test-pat-safe:
     runs-on: ubuntu-latest
-
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: false   # voorkomt dat de bot-token wordt gebruikt
 
       - name: Create dummy files
         run: |
@@ -21,16 +21,22 @@ jobs:
           mkdir -p dist/dummy
           echo "<h1>Dummy deploy</h1>" > dist/dummy/index.html
 
+      - name: Debug secret
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          echo "Secret length: ${#GH_PAT}"   # lengte controleren voor debug
+
       - name: Commit dummy files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add data/test-dummy dist/dummy
-          git commit -m "Test commit with dummy files for GH_PAT" || echo "No changes"
+          git add -f data/test-dummy dist/dummy
+          git diff --cached --quiet || git commit -m "Test commit with dummy files"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/TheBeems/afvalcontainers.git HEAD:main
 
       - name: Deploy dummy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4.0.0
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GH_PAT }}
           publish_dir: ./dist/dummy
