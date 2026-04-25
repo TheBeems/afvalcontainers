@@ -34,11 +34,11 @@ De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
 
 | Afstand | Aantal adressen | Percentage | Kleur op kaart |
 |----------|----------------|-----------|----------------|
-| 0–100 m | 832 | 23% | Groen |
-| 100–125 m | 346 | 10% | Geel |
-| 125–150 m | 284 | 8% | Oranje |
-| 150–275 m | 917 | 25% | Rood |
-| >275 m | 1.236 | 34% | Donkerrood |
+| 0–100 m | 767 | 21,2% | Groen |
+| 100–125 m | 375 | 10,4% | Geel |
+| 125–150 m | 354 | 9,8% | Oranje |
+| 150–275 m | 943 | 26,1% | Rood |
+| >275 m | 1.176 | 32,5% | Donkerrood |
 
 **Conclusie:** Meer dan de helft van de inwoners woont verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
 
