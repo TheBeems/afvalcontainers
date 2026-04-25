@@ -1,0 +1,35 @@
+name: Test GH PAT & Deploy (Safe)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-pat-safe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create dummy files
+        run: |
+          mkdir -p data/test-dummy
+          echo '{"dummy": "value"}' > data/test-dummy/test.json
+          mkdir -p dist/dummy
+          echo "<h1>Dummy deploy</h1>" > dist/dummy/index.html
+
+      - name: Commit dummy files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/test-dummy dist/dummy
+          git commit -m "Test commit with dummy files for GH_PAT" || echo "No changes"
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/TheBeems/afvalcontainers.git HEAD:main
+
+      - name: Deploy dummy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4.0.0
+        with:
+          github_token: ${{ secrets.GH_PAT }}
+          publish_dir: ./dist/dummy
