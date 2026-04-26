@@ -16,19 +16,6 @@
     <aside class="sidebar">
       <header class="sidebar-header">
         <div class="search-panel" role="search">
-          <p>Klik op een huispunt of zoek je adres hieronder op om de loopafstand te zien naar de drie dichtstbijzijnde afvalcontainers.</p>
-     
-          <label class="search-label" for="house-search">Zoek je adres</label>
-          <input
-            class="search-input"
-            type="search"
-            id="house-search"
-            placeholder="Straatnaam + huisnummer"
-            autocomplete="off"
-            />
-          <div id="search-results" class="search-results" aria-live="polite"></div>
-        </div>
-        
         <h1>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h1>
         <p style="margin-bottom: 1em;">Op de <a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">website</a> van de gemeente Schagen stelt de gemeente het volgende over de loopafstand naar de aangekondigde ondergrondse afvalcontainers:</p> 
         <p style="margin-bottom: 1em;"><i>"U loopt maximaal ongeveer 275 meter naar een container. In uitzonderlijke gevallen kan de afstand iets groter zijn"</i>.</p> 
@@ -69,7 +56,31 @@
       </section>
     </aside>
 
-    <main id="map" class="map" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse"></main>
+    <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
+  <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
+    <p>Bekijk per adres de werkelijke loopafstand naar de drie dichtstbijzijnde ondergrondse restafvalcontainers.</p>
+
+    <label class="search-label" for="house-search">Zoek je adres</label>
+    <input
+      class="search-input"
+      type="search"
+      id="house-search"
+      placeholder="Straatnaam + huisnummer"
+      autocomplete="off"
+    />
+    <div id="search-results" class="search-results" aria-live="polite"></div>
+  </section>
+
+  <div class="map-legend" aria-label="Legenda loopafstand">
+    <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
+    <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
+    <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
+    <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150+ m</span>
+    <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>275+ m</span>
+  </div>
+
+  <div id="map" class="map"></div>
+</main>
   </div>
 </body>
 </html>
