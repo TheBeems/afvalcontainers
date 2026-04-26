@@ -362,8 +362,8 @@ summary {
 }
 
 .house-map-info {
-  width: min(360px, calc(100vw - 48px));
-  max-height: min(45vh, 340px);
+  /* width: min(360px, calc(100vw - 48px)); */
+  /* max-height: min(45vh, 340px); */
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: 10px;
