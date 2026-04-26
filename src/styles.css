@@ -507,14 +507,35 @@ summary {
   flex: none;
 }
 
+.route-rank-marker {
+  background: transparent;
+  border: 0;
+}
+
+.route-rank-marker span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: var(--rank-color, var(--focus));
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3);
+}
+
 .house-map-info {
-  width: min(220px, calc(100vw - 48px));
+  width: min(240px, calc(100vw - 48px));
   max-height: min(45vh, 300px);
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
   padding: 12px;
 }
 
@@ -639,21 +660,32 @@ summary {
 
   .map-legend {
     display: flex;
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
     bottom: auto;
-    max-width: 150px;
-    padding: 7px 8px;
+    max-width: 126px;
+    padding: 6px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.96);
   }
 
+  .map-legend-item {
+  gap: 3px;
+  font-size: 10px;
+}
+
+.map-legend-dot {
+  width: 8px;
+  height: 8px;
+}
+
   .house-map-info {
-    width: min(175px, calc(100vw - 40px));
-    max-height: 36vh;
-    padding: 10px;
-  }
+  width: min(245px, calc(100vw - 40px));
+  max-height: 36vh;
+  padding: 10px;
+}
 
   .house-map-info.leaflet-control {
     margin: 0 0 18px 10px;
