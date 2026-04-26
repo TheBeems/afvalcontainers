@@ -639,12 +639,24 @@ summary {
 
   .map-legend {
     display: flex;
+    top: 12px;
+    right: 12px;
+    bottom: auto;
+    max-width: 150px;
+    padding: 7px 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 
   .house-map-info {
-    width: min(190px, calc(100vw - 40px));
-    max-height: 34vh;
+    width: min(175px, calc(100vw - 40px));
+    max-height: 36vh;
     padding: 10px;
+  }
+
+  .house-map-info.leaflet-control {
+    margin: 0 0 18px 10px;
   }
 
   .house-map-info-address {
