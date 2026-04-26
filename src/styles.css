@@ -361,6 +361,64 @@ summary {
   height: 100%;
 }
 
+.house-map-info {
+  width: min(360px, calc(100vw - 48px));
+  max-height: min(45vh, 340px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  padding: 12px;
+}
+
+.house-map-info-address {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.house-map-info-meta,
+.house-map-ranking-meta,
+.house-map-info-empty {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.house-map-info-meta {
+  margin-top: 2px;
+}
+
+.house-map-ranking {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.house-map-ranking li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.house-map-ranking-title {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.house-map-ranking-meta {
+  margin-top: 2px;
+  font-weight: 700;
+}
+
+.house-map-info-empty {
+  margin-top: 10px;
+}
+
 .leaflet-popup-content {
   font-size: 14px;
   line-height: 1.4;
