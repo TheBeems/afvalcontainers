@@ -2,7 +2,7 @@
 
 const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
-const HOUSE_CIRCLE_RADIUS = 5;
+const HOUSE_CIRCLE_RADIUS = 4.5;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
 const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
@@ -45,7 +45,8 @@ const elements = {
   coverageSummary: document.getElementById('coverage-summary'),
   houseSummary: document.getElementById('house-summary'),
   houseDetails: document.getElementById('house-details'),
-  containerList: document.getElementById('container-list')
+  containerList: document.getElementById('container-list'),
+  houseMapInfo: null
 };
 
 const state = {
@@ -91,6 +92,21 @@ const routeLayer = L.layerGroup().addTo(map);
 const selectionLayer = L.layerGroup().addTo(map);
 const containerLayer = L.layerGroup().addTo(map);
 const popup = L.popup();
+
+const houseInfoControl = L.control({ position: 'bottomleft' });
+
+houseInfoControl.onAdd = () => {
+  const container = L.DomUtil.create('aside', 'house-map-info');
+  container.hidden = true;
+
+  L.DomEvent.disableClickPropagation(container);
+  L.DomEvent.disableScrollPropagation(container);
+
+  return container;
+};
+
+houseInfoControl.addTo(map);
+elements.houseMapInfo = document.querySelector('.house-map-info');
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: MAP_MAX_ZOOM,
@@ -448,6 +464,7 @@ function resetHouseSelectionVisuals() {
   selectionLayer.clearLayers();
   resultLayer.clearLayers();
   routeLayer.clearLayers();
+  renderHouseMapInfo(null);
   state.selectedHouseMarker = null;
 }
 
@@ -801,26 +818,61 @@ function drawRoutes(house, ranking) {
   return routeCounts;
 }
 
-function buildHousePopup(house, ranking) {
-  const postcode = house.postcode ? `${escapeHtml(house.postcode)} ` : '';
-  const rankingHtml = ranking.length > 0
-    ? `<ol class="popup-list">${ranking.map((container, index) => `
-      <li><strong style="color:${getWalkingDistanceColor(container.walkingDistance)}">${index + 1}. ${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}<br>${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}</li>
-    `).join('')}</ol>`
-    : '<br><span style="color:#64748b">Geen container-ranking opgeslagen.</span>';
+function buildCompactRankingMarkup(ranking) {
+  const topThree = ranking.slice(0, 3);
+
+  if (topThree.length === 0) {
+    return '<div class="house-map-info-empty">Geen container-ranking opgeslagen.</div>';
+  }
 
   return `
-    <div>
-      <strong>${escapeHtml(house.address)}</strong><br>
-      <span style="color:#64748b">${postcode}${escapeHtml(house.city || 'Warmenhuizen')}</span><br>
-      ${buildStatusBadge(house.coverageStatus)}
-      ${rankingHtml}
-    </div>
+    <ol class="house-map-ranking">
+      ${topThree.map((container, index) => `
+        <li>
+          <span class="ranking-rank" style="--rank-color:${getWalkingDistanceColor(container.walkingDistance)}">${index + 1}</span>
+          <div>
+            <div class="house-map-ranking-title">
+              <strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}
+            </div>
+            <div class="house-map-ranking-meta">
+              ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
+            </div>
+          </div>
+        </li>
+      `).join('')}
+    </ol>
   `;
+}
+
+function renderHouseMapInfo(house, ranking = []) {
+  if (!elements.houseMapInfo) {
+    return;
+  }
+
+  if (!house) {
+    elements.houseMapInfo.hidden = true;
+    elements.houseMapInfo.innerHTML = '';
+    return;
+  }
+
+  const postcode = house.postcode ? `${house.postcode} ` : '';
+
+  elements.houseMapInfo.hidden = false;
+  elements.houseMapInfo.innerHTML = `
+    <div class="house-map-info-address">${escapeHtml(house.address)}</div>
+    <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+    ${buildCompactRankingMarkup(ranking)}
+  `;
+}
+
+function buildHousePopup(house) {
+  return `<strong>${escapeHtml(house.address)}</strong>`;
 }
 
 function renderHouseSelection(house, ranking) {
   renderHouseSummary(house);
+  renderHouseMapInfo(house, ranking);
+
   const routeCounts = drawRoutes(house, ranking);
   elements.houseDetails.innerHTML = `
     ${buildStoredDetails(house, ranking)}
