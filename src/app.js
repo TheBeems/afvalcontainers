@@ -976,7 +976,7 @@ function selectHouse(house, { focusMap = false } = {}) {
   closeContainerPopups();
   clearContainerSelection();
   resetHouseSelectionVisuals();
-  setHouseLayerMuted(true);
+  setHouseLayerMuted(false);
 
   const ranking = getStoredRanking(house);
 
