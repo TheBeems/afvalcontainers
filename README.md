@@ -1,5 +1,5 @@
 
-# Loopafstanden naar ondergrondse afvalcontainers in Warmenhuizen
+# Loopafstanden naar ondergrondse restafvalcontainers in Warmenhuizen
 
 Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
 
