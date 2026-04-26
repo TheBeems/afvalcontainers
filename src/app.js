@@ -968,7 +968,7 @@ function setupSearch() {
     <input type="text" id="house-search" placeholder="Zoek adres..." style="width:100%;padding:6px 8px;font-size:14px;" />
     <div id="search-results" style="max-height:200px;overflow:auto;margin-top:4px;"></div>
   `;
-  sidebarHeader.appendChild(searchContainer);
+  sidebarHeader.prependChild(searchContainer);
 
   const input = document.getElementById('house-search');
   const resultsDiv = document.getElementById('search-results');
