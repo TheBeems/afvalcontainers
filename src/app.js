@@ -922,7 +922,7 @@ function loadMissingLiveRoutes(house, ranking, selectionId) {
   renderHouseSelection(house, ranking);
 }
 
-function selectHouse(house) {
+function selectHouse(house, { focusMap = false } = {}) {
   state.selectedHouse = house;
   state.houseSelectionId += 1;
   const selectionId = state.houseSelectionId;
@@ -944,6 +944,10 @@ function selectHouse(house) {
 
   renderHouseSelection(house, ranking);
   loadMissingLiveRoutes(house, ranking, selectionId);
+
+  if (focusMap && Number.isFinite(house.lat) && Number.isFinite(house.lon)) {
+    map.setView([house.lat, house.lon], SEARCH_FOCUS_ZOOM);
+  }
 }
 
 // --- INIT SEARCH ---
@@ -1003,8 +1007,7 @@ function setupSearch() {
       `;
 
       button.addEventListener('click', () => {
-        selectHouse(house);
-        map.setView([house.lat, house.lon], SEARCH_FOCUS_ZOOM);
+        selectHouse(house, { focusMap: true });
         input.value = '';
         resultsDiv.innerHTML = '';
       });
