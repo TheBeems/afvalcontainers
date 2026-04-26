@@ -4,7 +4,8 @@ const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
 const SEARCH_FOCUS_ZOOM = HOUSE_MARKER_MIN_ZOOM;
 const HOUSE_CIRCLE_RADIUS = 4.5;
-const HOUSE_MARKER_FILL_OPACITY = 0.78;
+const HOUSE_MARKER_FILL_OPACITY = 0.75;
+const HOUSE_MARKER_MUTED_FILL_OPACITY = 0.25;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
 const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
@@ -455,6 +456,21 @@ function renderHouseMarkers() {
   }
 }
 
+function setHouseLayerMuted(isMuted) {
+  houseLayer.eachLayer((marker) => {
+    if (typeof marker.setStyle === 'function') {
+      marker.setStyle({
+        weight: isMuted ? 0 : 1,
+        fillOpacity: isMuted ? HOUSE_MARKER_MUTED_FILL_OPACITY : HOUSE_MARKER_FILL_OPACITY
+      });
+    }
+
+    if (typeof marker.setRadius === 'function') {
+      marker.setRadius(isMuted ? Math.max(3, HOUSE_CIRCLE_RADIUS - 1) : HOUSE_CIRCLE_RADIUS);
+    }
+  });
+}
+
 function syncHouseLayerVisibility() {
   const shouldShowHouses = state.houses.length > 0 && map.getZoom() >= HOUSE_MARKER_MIN_ZOOM;
 
@@ -475,6 +491,7 @@ function resetHouseSelectionVisuals() {
   resultLayer.clearLayers();
   routeLayer.clearLayers();
   renderHouseMapInfo(null);
+  setHouseLayerMuted(false);
   state.selectedHouseMarker = null;
 }
 
@@ -905,24 +922,26 @@ function renderHouseSelection(house, ranking) {
   highlightRanking(ranking);
 
   if (routeCounts.pending > 0) {
-    setCoverageStatus(`Opgeslagen batchanalyse geladen; live routefallback wordt opgehaald voor ${routeCounts.pending} route(s).`, 'loading');
-    return routeCounts;
-  }
-
-  if (routeCounts.drawn > 0) {
-    const liveText = routeCounts.live > 0 ? `, waarvan ${routeCounts.live} live fallback` : '';
-    setCoverageStatus(`Opgeslagen batchanalyse geladen; ${routeCounts.drawn} looproute(s) getekend${liveText}.`, 'success');
-    return routeCounts;
-  }
-
-  if (routeCounts.failed > 0) {
-    setCoverageStatus('Opgeslagen batchanalyse geladen; routegeometrieën ontbreken en live fallback is mislukt.', 'error');
-    return routeCounts;
-  }
-
-  setCoverageStatus('Opgeslagen batchanalyse geladen; routegeometrieën ontbreken nog voor dit adres.', 'error');
+  setCoverageStatus('Adres geselecteerd: de looproutes worden geladen.', 'loading');
   return routeCounts;
 }
+
+if (routeCounts.drawn > 0) {
+  const routeText = routeCounts.drawn === 1
+    ? '1 looproute is zichtbaar'
+    : `${routeCounts.drawn} looproutes zijn zichtbaar`;
+
+  setCoverageStatus(`Adres geselecteerd: ${routeText} op de kaart.`, 'success');
+  return routeCounts;
+}
+
+if (routeCounts.failed > 0) {
+  setCoverageStatus('Adres geselecteerd, maar de looproutes konden niet worden getoond.', 'error');
+  return routeCounts;
+}
+
+setCoverageStatus('Adres geselecteerd, maar voor dit adres zijn nog geen routegegevens beschikbaar.', 'error');
+return routeCounts;
 
 function loadMissingLiveRoutes(house, ranking, selectionId) {
   const requests = ranking
@@ -956,6 +975,7 @@ function selectHouse(house, { focusMap = false } = {}) {
   closeContainerPopups();
   clearContainerSelection();
   resetHouseSelectionVisuals();
+  setHouseLayerMuted(true);
 
   const ranking = getStoredRanking(house);
 
@@ -1050,7 +1070,7 @@ function setupSearch() {
 
       button.addEventListener('click', () => {
         selectHouse(house, { focusMap: true });
-        input.value = '';
+        input.value = house.address;
         resultsDiv.innerHTML = '';
       });
 
