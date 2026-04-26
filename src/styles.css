@@ -682,7 +682,7 @@ summary {
 }
 
   .house-map-info {
-  width: min(245px, calc(100vw - 40px));
+  width: min(220px, calc(100vw - 40px));
   max-height: 36vh;
   padding: 10px;
 }
