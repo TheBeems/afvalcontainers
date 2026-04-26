@@ -326,7 +326,7 @@ function addContainerMarkers() {
   state.containers.forEach((container, index) => {
     const marker = L.marker([container.lat, container.lon])
       .bindPopup(buildContainerPopup(container))
-      .on('click', () => selectContainer(index, { focusMap: false, openPopup: false }));
+      .on('click', () => selectContainer(index, { focusMap: true, openPopup: true }));
 
     marker.addTo(containerLayer);
     state.containerMarkers.push(marker);
