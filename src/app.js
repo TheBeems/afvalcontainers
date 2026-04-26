@@ -903,22 +903,21 @@ function selectHouse(house) {
   loadMissingLiveRoutes(house, ranking, selectionId);
 }
 
-// --- Fuzzy Search Setup ---
+// --- INIT SEARCH ---
 async function initSearch() {
-  // Voeg Fuse.js toe via CDN
-  if (typeof Fuse === 'undefined') {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js';
-    script.defer = true;
-    script.onload = () => setupSearch();
-    document.head.appendChild(script);
-  } else {
-    setupSearch();
-  }
+  return new Promise(resolve => {
+    if(typeof Fuse==='undefined'){
+      const script=document.createElement('script');
+      script.src='https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js';
+      script.onload=()=>{ setupSearch(); resolve(); };
+      document.head.appendChild(script);
+    } else {
+      setupSearch(); resolve();
+    }
+  });
 }
 
 function setupSearch() {
-  // Voeg zoekveld toe bovenin sidebar
   const sidebarHeader = document.querySelector('.sidebar-header');
   const searchContainer = document.createElement('div');
   searchContainer.style.margin = '1em 0';
@@ -930,37 +929,31 @@ function setupSearch() {
 
   const input = document.getElementById('house-search');
   const resultsDiv = document.getElementById('search-results');
+  const fuse = new Fuse(state.houses, { keys:['address','postcode'], includeScore:true, threshold:0.3 });
 
-  const fuse = new Fuse(state.houses, {
-    keys: ['address', 'postcode'],
-    includeScore: true,
-    threshold: 0.3,
-  });
-
-  input.addEventListener('input', () => {
-    const query = input.value.trim();
-    resultsDiv.innerHTML = '';
-    if (query.length === 0) return;
-
-    const results = fuse.search(query).slice(0, 10);
-    for (const result of results) {
-      const house = result.item;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.style.display = 'block';
-      btn.style.width = '100%';
-      btn.style.textAlign = 'left';
-      btn.style.padding = '4px 6px';
-      btn.style.marginBottom = '2px';
-      btn.style.background = '#f3f4f6';
-      btn.style.border = '1px solid #d1d5db';
-      btn.style.borderRadius = '4px';
-      btn.textContent = house.address;
-      btn.addEventListener('click', () => {
+  input.addEventListener('input',()=>{
+    const query=input.value.trim();
+    resultsDiv.innerHTML='';
+    if(!query) return;
+    const results=fuse.search(query).slice(0,10);
+    for(const res of results){
+      const house=res.item;
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.style.display='block';
+      btn.style.width='100%';
+      btn.style.textAlign='left';
+      btn.style.padding='4px 6px';
+      btn.style.marginBottom='2px';
+      btn.style.background='#f3f4f6';
+      btn.style.border='1px solid #d1d5db';
+      btn.style.borderRadius='4px';
+      btn.textContent=house.address;
+      btn.addEventListener('click',()=>{
         selectHouse(house);
-        map.setView([house.lat, house.lon], 17);
-        input.value = '';
-        resultsDiv.innerHTML = '';
+        map.setView([house.lat,house.lon],17);
+        input.value='';
+        resultsDiv.innerHTML='';
       });
       resultsDiv.appendChild(btn);
     }
@@ -988,6 +981,10 @@ async function init() {
     if (state.houses.length === 0) {
       setCoverageStatus('De viewer kon geen vooraf berekende huizenlaag vinden. Voer de generator uit om deze data te maken.', 'error');
     }
+    
+    // Pas hier de zoekfunctie initialiseren
+    await initSearch();
+    
   } catch (error) {
     elements.coverageSummary.hidden = true;
     elements.houseSummary.hidden = true;
@@ -999,4 +996,3 @@ async function init() {
 map.on('zoomend', syncHouseLayerVisibility);
 
 init();
-initSearch();
