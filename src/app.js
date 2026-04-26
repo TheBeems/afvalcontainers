@@ -2,6 +2,7 @@
 
 const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
+const HOUSE_CIRCLE_RADIUS = 5;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
 const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
@@ -416,7 +417,7 @@ function renderHouseMarkers() {
   for (const house of state.houses) {
     const marker = L.circleMarker([house.lat, house.lon], {
       renderer: houseRenderer,
-      radius: 4,
+      radius: HOUSE_CIRCLE_RADIUS,
       weight: 1,
       color: '#ffffff',
       fillColor: getCoverageStatus(house.coverageStatus).color,
