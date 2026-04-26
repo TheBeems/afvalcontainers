@@ -2,6 +2,7 @@
 
 const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
+const SEARCH_FOCUS_ZOOM = HOUSE_MARKER_MIN_ZOOM;
 const HOUSE_CIRCLE_RADIUS = 4.5;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
@@ -91,7 +92,6 @@ const resultLayer = L.layerGroup().addTo(map);
 const routeLayer = L.layerGroup().addTo(map);
 const selectionLayer = L.layerGroup().addTo(map);
 const containerLayer = L.layerGroup().addTo(map);
-const popup = L.popup();
 
 const houseInfoControl = L.control({ position: 'bottomleft' });
 
@@ -460,7 +460,7 @@ function syncHouseLayerVisibility() {
 }
 
 function resetHouseSelectionVisuals() {
-  map.closePopup(popup);
+  map.closePopup();
   selectionLayer.clearLayers();
   resultLayer.clearLayers();
   routeLayer.clearLayers();
@@ -865,10 +865,6 @@ function renderHouseMapInfo(house, ranking = []) {
   `;
 }
 
-function buildHousePopup(house) {
-  return `<strong>${escapeHtml(house.address)}</strong>`;
-}
-
 function renderHouseSelection(house, ranking) {
   renderHouseSummary(house);
   renderHouseMapInfo(house, ranking);
@@ -880,11 +876,6 @@ function renderHouseSelection(house, ranking) {
     ${buildRouteNotice(ranking, routeCounts)}
   `;
   highlightRanking(ranking);
-
-  popup
-    .setLatLng([house.lat, house.lon])
-    .setContent(buildHousePopup(house, ranking))
-    .openOn(map);
 
   if (routeCounts.pending > 0) {
     setCoverageStatus(`Opgeslagen batchanalyse geladen; live routefallback wordt opgehaald voor ${routeCounts.pending} route(s).`, 'loading');
@@ -1001,11 +992,11 @@ function setupSearch() {
       btn.style.border='1px solid #d1d5db';
       btn.style.borderRadius='4px';
       btn.textContent=house.address;
-      btn.addEventListener('click',()=>{
+      btn.addEventListener('click', () => {
         selectHouse(house);
-        map.setView([house.lat,house.lon],17);
-        input.value='';
-        resultsDiv.innerHTML='';
+        map.setView([house.lat, house.lon], SEARCH_FOCUS_ZOOM);
+        input.value = '';
+        resultsDiv.innerHTML = '';
       });
       resultsDiv.appendChild(btn);
     }
