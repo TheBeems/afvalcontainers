@@ -3,7 +3,8 @@
 const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
 const SEARCH_FOCUS_ZOOM = HOUSE_MARKER_MIN_ZOOM;
-const HOUSE_CIRCLE_RADIUS = 4.5;
+const HOUSE_CIRCLE_RADIUS = 4;
+const HOUSE_MARKER_FILL_OPACITY = 0.78;
 const MAP_CENTER = [52.7235, 4.7385];
 const MAP_ZOOM = 15;
 const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
@@ -13,6 +14,11 @@ const OSRM_BASE_URL = 'https://routing.openstreetmap.de/routed-foot';
 const OSRM_PROFILE = 'foot';
 const LIVE_ROUTE_TIMEOUT_MS = 15000;
 const ROUTE_GEOMETRY_DECIMALS = 6;
+const ROUTE_STYLES = [
+  { weight: 6, opacity: 0.95 },
+  { weight: 4, opacity: 0.72 },
+  { weight: 3, opacity: 0.55 }
+];
 
 const COVERAGE_STATUS = {
   within_100: {
@@ -205,6 +211,10 @@ function getDistanceStatus(distance) {
 
 function getWalkingDistanceColor(distance) {
   return getCoverageStatus(getDistanceStatus(distance)).color;
+}
+
+function getRouteStyle(index) {
+  return ROUTE_STYLES[index] || ROUTE_STYLES[ROUTE_STYLES.length - 1];
 }
 
 function setCoverageStatus(message, tone = '') {
@@ -437,7 +447,7 @@ function renderHouseMarkers() {
       weight: 1,
       color: '#ffffff',
       fillColor: getCoverageStatus(house.coverageStatus).color,
-      fillOpacity: 0.9
+      fillOpacity: HOUSE_MARKER_FILL_OPACITY
     });
 
     marker.on('click', () => selectHouse(house));
@@ -748,18 +758,33 @@ function buildRouteNotice(ranking, routeCounts) {
 function highlightRanking(ranking) {
   resultLayer.clearLayers();
 
-  for (const container of ranking) {
+  for (const [index, container] of ranking.slice(0, 3).entries()) {
     const storedContainer = state.containersById.get(container.id);
     if (!storedContainer) {
       continue;
     }
 
-    L.circleMarker([storedContainer.lat, storedContainer.lon], {
+    const color = getWalkingDistanceColor(container.walkingDistance);
+    const latLng = [storedContainer.lat, storedContainer.lon];
+
+    L.circleMarker(latLng, {
       renderer: resultRenderer,
-      radius: 12,
-      color: getWalkingDistanceColor(container.walkingDistance),
+      radius: 13,
+      color,
       weight: 3,
-      fillOpacity: 0,
+      fillColor: color,
+      fillOpacity: 0.08,
+      interactive: false
+    }).addTo(resultLayer);
+
+    L.marker(latLng, {
+      pane: 'resultMarkerPane',
+      icon: L.divIcon({
+        className: 'route-rank-marker',
+        html: `<span style="--rank-color:${color}">${index + 1}</span>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      }),
       interactive: false
     }).addTo(resultLayer);
   }
@@ -776,7 +801,7 @@ function drawRoutes(house, ranking) {
     missing: 0
   };
 
-  for (const container of ranking) {
+  for (const [index, container] of ranking.entries()) {
     let routeGeometry = null;
     let isLiveRoute = false;
 
@@ -802,16 +827,18 @@ function drawRoutes(house, ranking) {
       continue;
     }
 
-    L.polyline(routeGeometry, {
-      renderer: routeRenderer,
-      color: getWalkingDistanceColor(container.walkingDistance),
-      weight: 4,
-      opacity: 0.85,
-      dashArray: isLiveRoute ? '8 6' : null,
-      lineCap: 'round',
-      lineJoin: 'round',
-      interactive: false
-    }).addTo(routeLayer);
+    const routeStyle = getRouteStyle(index);
+
+L.polyline(routeGeometry, {
+  renderer: routeRenderer,
+  color: getWalkingDistanceColor(container.walkingDistance),
+  weight: routeStyle.weight,
+  opacity: routeStyle.opacity,
+  dashArray: isLiveRoute ? '8 6' : null,
+  lineCap: 'round',
+  lineJoin: 'round',
+  interactive: false
+}).addTo(routeLayer);
     routeCounts.drawn += 1;
   }
 
@@ -932,15 +959,30 @@ function selectHouse(house, { focusMap = false } = {}) {
 
   const ranking = getStoredRanking(house);
 
-  state.selectedHouseMarker = L.circleMarker([house.lat, house.lon], {
-    renderer: selectionRenderer,
-    radius: 8,
-    color: '#0f172a',
-    weight: 2,
-    fillColor: getCoverageStatus(house.coverageStatus).color,
-    fillOpacity: 0.95,
-    interactive: false
-  }).addTo(selectionLayer);
+  const selectedHouseColor = getCoverageStatus(house.coverageStatus).color;
+const selectedHouseLatLng = [house.lat, house.lon];
+
+L.circleMarker(selectedHouseLatLng, {
+  renderer: selectionRenderer,
+  radius: 15,
+  color: '#ffffff',
+  weight: 5,
+  fillColor: selectedHouseColor,
+  fillOpacity: 0.18,
+  interactive: false
+}).addTo(selectionLayer);
+
+state.selectedHouseMarker = L.circleMarker(selectedHouseLatLng, {
+  renderer: selectionRenderer,
+  radius: 7,
+  color: '#0f172a',
+  weight: 3,
+  fillColor: selectedHouseColor,
+  fillOpacity: 1,
+  interactive: false
+}).addTo(selectionLayer);
+
+state.selectedHouseMarker.bringToFront();
 
   renderHouseSelection(house, ranking);
   loadMissingLiveRoutes(house, ranking, selectionId);
