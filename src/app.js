@@ -961,44 +961,55 @@ async function initSearch() {
 }
 
 function setupSearch() {
-  const sidebarHeader = document.querySelector('.sidebar-header');
-  const searchContainer = document.createElement('div');
-  searchContainer.style.margin = '1em 0';
-  searchContainer.innerHTML = `
-    <input type="text" id="house-search" placeholder="Zoek adres..." style="width:100%;padding:6px 8px;font-size:14px;" />
-    <div id="search-results" style="max-height:200px;overflow:auto;margin-top:4px;"></div>
-  `;
-  sidebarHeader.prependChild(searchContainer);
-
   const input = document.getElementById('house-search');
   const resultsDiv = document.getElementById('search-results');
-  const fuse = new Fuse(state.houses, { keys:['address','postcode'], includeScore:true, threshold:0.3 });
 
-  input.addEventListener('input',()=>{
-    const query=input.value.trim();
-    resultsDiv.innerHTML='';
-    if(!query) return;
-    const results=fuse.search(query).slice(0,10);
-    for(const res of results){
-      const house=res.item;
-      const btn=document.createElement('button');
-      btn.type='button';
-      btn.style.display='block';
-      btn.style.width='100%';
-      btn.style.textAlign='left';
-      btn.style.padding='4px 6px';
-      btn.style.marginBottom='2px';
-      btn.style.background='#f3f4f6';
-      btn.style.border='1px solid #d1d5db';
-      btn.style.borderRadius='4px';
-      btn.textContent=house.address;
-      btn.addEventListener('click', () => {
+  if (!input || !resultsDiv) {
+    return;
+  }
+
+  const fuse = new Fuse(state.houses, {
+    keys: ['address', 'postcode'],
+    includeScore: true,
+    threshold: 0.3
+  });
+
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    resultsDiv.innerHTML = '';
+
+    if (!query) {
+      return;
+    }
+
+    const results = fuse.search(query).slice(0, 10);
+
+    if (results.length === 0) {
+      resultsDiv.innerHTML = '<div class="search-empty">Geen adres gevonden.</div>';
+      return;
+    }
+
+    for (const result of results) {
+      const house = result.item;
+      const button = document.createElement('button');
+      const postcode = house.postcode ? `${house.postcode} ` : '';
+      const city = house.city || 'Warmenhuizen';
+
+      button.type = 'button';
+      button.className = 'search-result';
+      button.innerHTML = `
+        <span class="search-result-address">${escapeHtml(house.address)}</span>
+        <span class="search-result-meta">${escapeHtml(postcode)}${escapeHtml(city)}</span>
+      `;
+
+      button.addEventListener('click', () => {
         selectHouse(house);
         map.setView([house.lat, house.lon], SEARCH_FOCUS_ZOOM);
         input.value = '';
         resultsDiv.innerHTML = '';
       });
-      resultsDiv.appendChild(btn);
+
+      resultsDiv.appendChild(button);
     }
   });
 }
