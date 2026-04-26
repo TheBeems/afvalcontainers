@@ -15,8 +15,17 @@
   <div class="app-shell">
     <aside class="sidebar">
       <header class="sidebar-header">
-        <input type="text" id="house-search" placeholder="Zoek adres..." style="width:100%;padding:6px 8px;font-size:14px;" />
-        <div id="search-results" style="max-height:200px;overflow:auto;margin-top:4px;"></div>
+        <div class="search-panel" role="search">
+          <label class="search-label" for="house-search">Zoek je adres</label>
+          <input
+            class="search-input"
+            type="search"
+            id="house-search"
+            placeholder="Straatnaam..."
+            autocomplete="off"
+            />
+          <div id="search-results" class="search-results" aria-live="polite"></div>
+        </div>
         
         <h1>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h1>
         <p style="margin-bottom: 1em;">Op de <a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">website</a> van de gemeente Schagen stelt de gemeente het volgende over de loopafstand naar de aangekondigde ondergrondse afvalcontainers:</p> 
