@@ -942,6 +942,7 @@ if (routeCounts.failed > 0) {
 
 setCoverageStatus('Adres geselecteerd, maar voor dit adres zijn nog geen routegegevens beschikbaar.', 'error');
 return routeCounts;
+}
 
 function loadMissingLiveRoutes(house, ranking, selectionId) {
   const requests = ranking
