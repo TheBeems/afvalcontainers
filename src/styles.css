@@ -473,35 +473,77 @@ summary {
   max-height: 260px;
 }
 
-.map-legend {
+.map-collapsible {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  color: #334155;
+  overflow: hidden;
+}
+
+.map-collapsible > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  padding: 9px 10px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.map-collapsible > summary::-webkit-details-marker {
   display: none;
+}
+
+.map-collapsible > summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.map-collapsible:not([open]) > summary::after {
+  transform: rotate(-45deg);
+}
+
+.map-collapsible-body {
+  display: grid;
+  gap: 6px;
+  padding: 0 10px 10px;
+}
+
+.map-legend {
   position: absolute;
   z-index: 1000;
   right: 12px;
-  bottom: 28px;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-width: min(280px, calc(100% - 24px));
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+  bottom: 34px;
+  width: max-content;
+  max-width: min(180px, calc(100% - 24px));
 }
 
 .map-legend-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   color: #334155;
   font-size: 11px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .map-legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border: 1px solid rgba(15, 23, 42, 0.18);
   border-radius: 999px;
   flex: none;
@@ -529,14 +571,13 @@ summary {
 }
 
 .house-map-info {
-  width: min(240px, calc(100vw - 48px));
-  max-height: min(45vh, 300px);
+  width: min(250px, calc(100vw - 48px));
+  max-height: min(45vh, 320px);
+}
+
+.house-map-info .map-collapsible-body {
+  max-height: calc(min(45vh, 320px) - 42px);
   overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
-  padding: 12px;
 }
 
 .house-map-info.leaflet-control {
@@ -659,33 +700,39 @@ summary {
 }
 
   .map-legend {
-    display: flex;
-    top: 8px;
     right: 8px;
-    bottom: auto;
-    max-width: 126px;
-    padding: 6px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.96);
+    bottom: 28px;
+    max-width: min(160px, calc(100% - 16px));
+  }
+
+  .map-collapsible > summary {
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+
+  .map-collapsible-body {
+    gap: 5px;
+    padding: 0 9px 9px;
   }
 
   .map-legend-item {
-  gap: 3px;
-  font-size: 10px;
-}
+    gap: 4px;
+    font-size: 10px;
+  }
 
-.map-legend-dot {
-  width: 8px;
-  height: 8px;
-}
+  .map-legend-dot {
+    width: 8px;
+    height: 8px;
+  }
 
   .house-map-info {
-  width: min(200px, calc(100vw - 40px));
-  max-height: 36vh;
-  padding: 10px;
-}
+    width: min(220px, calc(100vw - 40px));
+    max-height: 36vh;
+  }
+
+  .house-map-info .map-collapsible-body {
+    max-height: calc(36vh - 40px);
+  }
 
   .house-map-info.leaflet-control {
     margin: 0 0 18px 10px;
