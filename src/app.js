@@ -755,7 +755,6 @@ function getRouteDisplay(house, container) {
   };
 }
 
-function buildStoredDetails(house, ranking) {
 function buildMainResultCard(house, ranking) {
   const nearest = ranking[0] || null;
 
@@ -1052,7 +1051,6 @@ function renderHouseMapInfo(house, ranking = []) {
   `;
 }
 
-function renderHouseSelection(house, ranking) {
 function renderHouseSelection(house, ranking) {
   renderHouseSummary(house, ranking);
   renderHouseMapInfo(house, ranking);
