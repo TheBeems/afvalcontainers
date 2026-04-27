@@ -102,7 +102,6 @@ const selectionLayer = L.layerGroup().addTo(map);
 const containerLayer = L.layerGroup().addTo(map);
 
 const houseInfoControl = L.control({ position: 'bottomleft' });
-const houseInfoControl = L.control({ position: 'bottomleft' });
 
 houseInfoControl.onAdd = () => {
   const container = L.DomUtil.create('details', 'map-collapsible house-map-info');
