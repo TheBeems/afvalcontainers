@@ -302,7 +302,6 @@ function buildSummaryStat(value, label, { total = 0, showPercent = false } = {})
 
 function collapseUiForActiveHouse() {
   setDetailsOpen(elements.coverageSummaryPanel, false);
-  setDetailsOpen(elements.houseSummary, false);
   setDetailsOpen(elements.mapLegend, false);
 }
 
@@ -576,9 +575,11 @@ function renderIdleHouseState() {
   resetUiForIdleState();
 
   elements.houseSummary.hidden = true;
-  elements.houseSummary.innerHTML = '';
-  elements.houseDetails.innerHTML = '<div class="empty-state">Klik op een huispunt om de opgeslagen dekking en routes te bekijken.</div>';
+elements.houseSummary.innerHTML = '';
 
+elements.houseDetails.hidden = false;
+elements.houseDetails.innerHTML = '<div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>';
+  
   if (!state.coverage || state.houses.length === 0) {
     setCoverageStatus('Geen vooraf berekende huizenlaag beschikbaar.', 'error');
     return;
@@ -592,20 +593,26 @@ function renderIdleHouseState() {
   setCoverageStatus(`Klik op een huispunt om de opgeslagen dekking en maximaal 3 looproutes te zien. ${state.houses.length.toLocaleString('nl-NL')} adressen geladen.`);
 }
 
-function renderHouseSummary(house) {
+function renderHouseSummary(house, ranking) {
   const postcode = house.postcode ? `${house.postcode} ` : '';
 
   elements.houseSummary.hidden = false;
+  elements.houseSummary.open = true;
+
   elements.houseSummary.innerHTML = `
     <summary>
       <span class="house-summary-heading">
         <span class="house-summary-title">Geselecteerd adres</span>
         <span class="house-address">${escapeHtml(house.address)}</span>
+        <span class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</span>
       </span>
+      ${buildStatusBadge(house.coverageStatus)}
     </summary>
 
-    <div class="sidebar-collapsible-body">
-      <div class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+    <div class="sidebar-collapsible-body selected-house-body">
+      ${buildMainResultCard(house, ranking)}
+      ${buildAlternativeContainersMarkup(ranking)}
+      ${buildMeasurementDetails(house, ranking)}
     </div>
   `;
 }
@@ -749,66 +756,114 @@ function getRouteDisplay(house, container) {
 }
 
 function buildStoredDetails(house, ranking) {
+function buildMainResultCard(house, ranking) {
   const nearest = ranking[0] || null;
-  const nearestText = nearest
+
+  const walkingDistance = nearest?.walkingDistance ?? house.walkingDistance;
+  const walkingDuration = nearest?.walkingDuration ?? house.walkingDuration;
+  const straightDistance = nearest?.straightDistance ?? house.straightDistance;
+
+  const containerText = nearest
     ? `<strong>${escapeHtml(nearest.id)}</strong> - ${escapeHtml(nearest.address || 'onbekend adres')}`
     : 'Geen gekoppelde container';
 
-  const analysisError = house.analysisError
-    ? `<div class="detail-item"><span class="detail-label">Opmerking</span><span class="detail-value">${escapeHtml(house.analysisError)}</span></div>`
-    : '';
+  const resultColor = getCoverageStatus(house.coverageStatus).color;
 
   return `
-    <div class="detail-item">
-      <span class="detail-label">Afstandsband</span>
-      <span class="detail-value">${buildStatusBadge(house.coverageStatus)}</span>
-    </div>
-    <div class="detail-item">
-      <span class="detail-label">Opgeslagen loopafstand</span>
-      <span class="detail-value">${escapeHtml(formatMeters(house.walkingDistance))} - ${escapeHtml(formatDuration(house.walkingDuration))}</span>
-    </div>
-    <div class="detail-item">
-      <span class="detail-label">Dichtstbijzijnde container volgens batchanalyse</span>
-      <span class="detail-value">${nearestText}</span>
-    </div>
-    <div class="detail-item">
-      <span class="detail-label">Hemelsbreed naar gekozen container</span>
-      <span class="detail-value">${escapeHtml(formatMeters(house.straightDistance))}</span>
-    </div>
-    ${analysisError}
+    <section class="selected-result-card" style="--result-color:${resultColor}" aria-label="Belangrijkste resultaat">
+      <span class="selected-result-kicker">Belangrijkste resultaat</span>
+
+      <div class="selected-result-distance">
+        ${escapeHtml(formatMeters(walkingDistance))}
+        <span>- ${escapeHtml(formatDuration(walkingDuration))}</span>
+      </div>
+
+      <div class="selected-result-destination">
+        naar ${containerText}
+      </div>
+
+      <div class="selected-result-sub">
+        Hemelsbreed: ${escapeHtml(formatMeters(straightDistance))}
+      </div>
+    </section>
   `;
 }
 
-function buildRankingMarkup(house, ranking) {
-  if (ranking.length === 0) {
-    return '<div class="empty-state">Voor dit adres is geen container-ranking opgeslagen.</div>';
+function buildAlternativeContainersMarkup(ranking) {
+  const alternatives = ranking.slice(1, 3);
+
+  if (alternatives.length === 0) {
+    return '';
   }
 
   return `
-    <div class="detail-item">
-      <span class="detail-label">Opgeslagen container-ranking</span>
-      <div class="ranking-list">
-        ${ranking.map((container, index) => {
+    <section class="detail-section">
+      <h3 class="detail-section-title">Andere containers in de buurt</h3>
+
+      <div class="ranking-list ranking-list-compact">
+        ${alternatives.map((container, index) => {
+          const rank = index + 2;
           const color = getWalkingDistanceColor(container.walkingDistance);
-          const routeDisplay = getRouteDisplay(house, container);
-          const routeDetails = routeDisplay.details ? `<br>${escapeHtml(routeDisplay.details)}` : '';
+
           return `
             <div class="ranking-item">
-              <span class="ranking-rank" style="--rank-color:${color}">${index + 1}</span>
+              <span class="ranking-rank" style="--rank-color:${color}">${rank}</span>
               <div>
-                <div class="ranking-title"><strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}</div>
+                <div class="ranking-title">
+                  <strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}
+                </div>
                 <div class="ranking-meta">
-                  ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}<br>
-                  Hemelsbreed: ${escapeHtml(formatMeters(container.straightDistance))}<br>
-                  Nauwkeurigheid: ${escapeHtml(container.accuracy || 'onbekend')}<br>
-                  Route: ${escapeHtml(routeDisplay.label)}${routeDetails}
+                  ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
+                  · hemelsbreed ${escapeHtml(formatMeters(container.straightDistance))}
                 </div>
               </div>
             </div>
           `;
         }).join('')}
       </div>
+    </section>
+  `;
+}
+
+function buildMeasurementRow(label, value) {
+  return `
+    <div class="measurement-row">
+      <span>${escapeHtml(label)}</span>
+      <strong>${value}</strong>
     </div>
+  `;
+}
+
+function buildMeasurementDetails(house, ranking) {
+  const nearest = ranking[0] || null;
+  const routeDisplay = nearest ? getRouteDisplay(house, nearest) : null;
+
+  const nearestText = nearest
+    ? `${escapeHtml(nearest.id)} - ${escapeHtml(nearest.address || 'onbekend adres')}`
+    : 'Geen gekoppelde container';
+
+  const routeText = routeDisplay
+    ? `${escapeHtml(routeDisplay.label)}${routeDisplay.details ? ` (${escapeHtml(routeDisplay.details)})` : ''}`
+    : 'Geen routegegevens';
+
+  const analysisError = house.analysisError
+    ? buildMeasurementRow('Opmerking', escapeHtml(house.analysisError))
+    : '';
+
+  return `
+    <details class="measurement-details">
+      <summary>Meetdetails en nauwkeurigheid</summary>
+
+      <div class="measurement-list">
+        ${buildMeasurementRow('Afstandsband', buildStatusBadge(house.coverageStatus))}
+        ${buildMeasurementRow('Berekende loopafstand', `${escapeHtml(formatMeters(house.walkingDistance))} - ${escapeHtml(formatDuration(house.walkingDuration))}`)}
+        ${buildMeasurementRow('Dichtstbijzijnde container', nearestText)}
+        ${buildMeasurementRow('Hemelsbreed', escapeHtml(formatMeters(house.straightDistance)))}
+        ${buildMeasurementRow('Nauwkeurigheid locatie', escapeHtml(nearest?.accuracy || 'onbekend'))}
+        ${buildMeasurementRow('Routegegevens', routeText)}
+        ${analysisError}
+      </div>
+    </details>
   `;
 }
 
@@ -998,38 +1053,38 @@ function renderHouseMapInfo(house, ranking = []) {
 }
 
 function renderHouseSelection(house, ranking) {
-  renderHouseSummary(house);
+function renderHouseSelection(house, ranking) {
+  renderHouseSummary(house, ranking);
   renderHouseMapInfo(house, ranking);
 
   const routeCounts = drawRoutes(house, ranking);
-  elements.houseDetails.innerHTML = `
-    ${buildStoredDetails(house, ranking)}
-    ${buildRankingMarkup(house, ranking)}
-    ${buildRouteNotice(ranking, routeCounts)}
-  `;
+
+  elements.houseDetails.hidden = true;
+  elements.houseDetails.innerHTML = '';
+
   highlightRanking(ranking);
 
   if (routeCounts.pending > 0) {
-  setCoverageStatus('Adres geselecteerd: de looproutes worden geladen.', 'loading');
+    setCoverageStatus('Adres geselecteerd: de looproutes worden geladen.', 'loading');
+    return routeCounts;
+  }
+
+  if (routeCounts.drawn > 0) {
+    const routeText = routeCounts.drawn === 1
+      ? '1 looproute is zichtbaar'
+      : `${routeCounts.drawn} looproutes zijn zichtbaar`;
+
+    setCoverageStatus(`Adres geselecteerd: ${routeText} op de kaart.`, 'success');
+    return routeCounts;
+  }
+
+  if (routeCounts.failed > 0) {
+    setCoverageStatus('Adres geselecteerd, maar de looproutes konden niet worden getoond.', 'error');
+    return routeCounts;
+  }
+
+  setCoverageStatus('Adres geselecteerd, maar voor dit adres zijn nog geen routegegevens beschikbaar.', 'error');
   return routeCounts;
-}
-
-if (routeCounts.drawn > 0) {
-  const routeText = routeCounts.drawn === 1
-    ? '1 looproute is zichtbaar'
-    : `${routeCounts.drawn} looproutes zijn zichtbaar`;
-
-  setCoverageStatus(`Adres geselecteerd: ${routeText} op de kaart.`, 'success');
-  return routeCounts;
-}
-
-if (routeCounts.failed > 0) {
-  setCoverageStatus('Adres geselecteerd, maar de looproutes konden niet worden getoond.', 'error');
-  return routeCounts;
-}
-
-setCoverageStatus('Adres geselecteerd, maar voor dit adres zijn nog geen routegegevens beschikbaar.', 'error');
-return routeCounts;
 }
 
 function loadMissingLiveRoutes(house, ranking, selectionId) {
@@ -1355,11 +1410,12 @@ async function init() {
     await initSearch();
     
   } catch (error) {
-    elements.coverageSummary.hidden = true;
-    elements.houseSummary.hidden = true;
-    elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
-    setCoverageStatus(error.message || 'De viewer kon de batchlaag niet laden.', 'error');
-  }
+  elements.coverageSummary.hidden = true;
+  elements.houseSummary.hidden = true;
+  elements.houseDetails.hidden = false;
+  elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
+  setCoverageStatus(error.message || 'De viewer kon de batchlaag niet laden.', 'error');
+}
 }
 
 map.on('zoomend', syncHouseLayerVisibility);
