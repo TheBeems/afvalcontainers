@@ -3,6 +3,8 @@
 const REFERENCE_RADIUS_METERS = 275;
 const HOUSE_MARKER_MIN_ZOOM = 16;
 const SEARCH_FOCUS_ZOOM = HOUSE_MARKER_MIN_ZOOM;
+const SEARCH_RESULT_LIMIT = 10;
+const SEARCH_MIN_QUERY_LENGTH = 1;
 const HOUSE_CIRCLE_RADIUS = 4.5;
 const HOUSE_MARKER_FILL_OPACITY = 0.75;
 const HOUSE_MARKER_MUTED_FILL_OPACITY = 1.0;
@@ -1064,47 +1066,187 @@ function setupSearch() {
     return;
   }
 
+  const searchRoot = input.closest('.search-panel') || input;
+
   const fuse = new Fuse(state.houses, {
     keys: ['address', 'postcode'],
     includeScore: true,
     threshold: 0.3
   });
 
-  input.addEventListener('input', () => {
-    const query = input.value.trim();
+  let matches = [];
+  let activeIndex = -1;
+
+  function getQuery() {
+    return input.value.trim();
+  }
+
+  function getResultId(index) {
+    return `search-result-${index}`;
+  }
+
+  function setExpanded(isExpanded) {
+    input.setAttribute('aria-expanded', String(isExpanded));
+  }
+
+  function clearActiveResult() {
+    activeIndex = -1;
+    input.removeAttribute('aria-activedescendant');
+  }
+
+  function closeResults() {
+    matches = [];
     resultsDiv.innerHTML = '';
+    clearActiveResult();
+    setExpanded(false);
+  }
 
-    if (!query) {
+  function setActiveIndex(nextIndex) {
+    if (matches.length === 0) {
+      clearActiveResult();
       return;
     }
 
-    const results = fuse.search(query).slice(0, 10);
+    activeIndex = (nextIndex + matches.length) % matches.length;
 
-    if (results.length === 0) {
-      resultsDiv.innerHTML = '<div class="search-empty">Geen adres gevonden.</div>';
+    const buttons = resultsDiv.querySelectorAll('.search-result');
+
+    buttons.forEach((button, index) => {
+      const isActive = index === activeIndex;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-selected', String(isActive));
+    });
+
+    const activeButton = buttons[activeIndex];
+
+    if (activeButton) {
+      input.setAttribute('aria-activedescendant', activeButton.id);
+      activeButton.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  function selectMatch(index = activeIndex) {
+    const match = matches[index];
+
+    if (!match) {
       return;
     }
 
-    for (const result of results) {
-      const house = result.item;
-      const button = document.createElement('button');
-      const postcode = house.postcode ? `${house.postcode} ` : '';
-      const city = house.city || 'Warmenhuizen';
+    const house = match.item;
 
-      button.type = 'button';
-      button.className = 'search-result';
-      button.innerHTML = `
-        <span class="search-result-address">${escapeHtml(house.address)}</span>
-        <span class="search-result-meta">${escapeHtml(postcode)}${escapeHtml(city)}</span>
-      `;
+    selectHouse(house, { focusMap: true });
+    input.value = house.address;
+    closeResults();
+  }
 
-      button.addEventListener('click', () => {
-        selectHouse(house, { focusMap: true });
-        input.value = house.address;
-        resultsDiv.innerHTML = '';
-      });
+  function renderEmptyResult() {
+    resultsDiv.innerHTML = '<div class="search-empty" role="status">Geen adres gevonden.</div>';
+    clearActiveResult();
+    setExpanded(true);
+  }
 
-      resultsDiv.appendChild(button);
+  function createResultButton(result, index) {
+    const house = result.item;
+    const postcode = house.postcode ? `${house.postcode} ` : '';
+    const city = house.city || 'Warmenhuizen';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = getResultId(index);
+    button.className = 'search-result';
+    button.setAttribute('role', 'option');
+    button.setAttribute('aria-selected', 'false');
+    button.tabIndex = -1;
+
+    button.innerHTML = `
+      <span class="search-result-address">${escapeHtml(house.address)}</span>
+      <span class="search-result-meta">${escapeHtml(postcode)}${escapeHtml(city)}</span>
+    `;
+
+    button.addEventListener('pointerenter', () => setActiveIndex(index));
+    button.addEventListener('click', () => selectMatch(index));
+
+    return button;
+  }
+
+  function renderResults() {
+    const query = getQuery();
+
+    resultsDiv.innerHTML = '';
+    matches = [];
+    clearActiveResult();
+
+    if (query.length < SEARCH_MIN_QUERY_LENGTH) {
+      setExpanded(false);
+      return;
+    }
+
+    matches = fuse.search(query).slice(0, SEARCH_RESULT_LIMIT);
+
+    if (matches.length === 0) {
+      renderEmptyResult();
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    matches.forEach((result, index) => {
+      fragment.appendChild(createResultButton(result, index));
+    });
+
+    resultsDiv.appendChild(fragment);
+    setExpanded(true);
+    setActiveIndex(0);
+  }
+
+  function handleSearchKeydown(event) {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+
+      if (matches.length === 0) {
+        renderResults();
+      }
+
+      setActiveIndex(activeIndex + 1);
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+
+      if (matches.length === 0) {
+        renderResults();
+      }
+
+      setActiveIndex(activeIndex - 1);
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      if (matches.length > 0 && activeIndex >= 0) {
+        event.preventDefault();
+        selectMatch();
+      }
+
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      closeResults();
+    }
+  }
+
+  input.addEventListener('input', renderResults);
+  input.addEventListener('focus', () => {
+    if (getQuery()) {
+      renderResults();
+    }
+  });
+  input.addEventListener('keydown', handleSearchKeydown);
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!searchRoot.contains(event.target)) {
+      closeResults();
     }
   });
 }
