@@ -770,7 +770,7 @@ function buildMainResultCard(house, ranking) {
 
   return `
     <section class="selected-result-card" style="--result-color:${resultColor}" aria-label="Belangrijkste resultaat">
-      <span class="selected-result-kicker">Belangrijkste resultaat</span>
+      <span class="selected-result-kicker">Dichtstbijzijnde container</span>
 
       <div class="selected-result-distance">
         ${escapeHtml(formatMeters(walkingDistance))}
@@ -854,10 +854,6 @@ function buildMeasurementDetails(house, ranking) {
       <summary>Meetdetails en nauwkeurigheid</summary>
 
       <div class="measurement-list">
-        ${buildMeasurementRow('Afstandsband', buildStatusBadge(house.coverageStatus))}
-        ${buildMeasurementRow('Berekende loopafstand', `${escapeHtml(formatMeters(house.walkingDistance))} - ${escapeHtml(formatDuration(house.walkingDuration))}`)}
-        ${buildMeasurementRow('Dichtstbijzijnde container', nearestText)}
-        ${buildMeasurementRow('Hemelsbreed', escapeHtml(formatMeters(house.straightDistance)))}
         ${buildMeasurementRow('Nauwkeurigheid locatie', escapeHtml(nearest?.accuracy || 'onbekend'))}
         ${buildMeasurementRow('Routegegevens', routeText)}
         ${analysisError}
