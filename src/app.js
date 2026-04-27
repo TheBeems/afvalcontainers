@@ -50,12 +50,23 @@ const COVERAGE_STATUS = {
   }
 };
 
+const SUMMARY_DISTANCE_ROWS = [
+  { key: 'within_100', label: '0-100 m' },
+  { key: 'between_100_125', label: '100-125 m' },
+  { key: 'between_125_150', label: '125-150 m' },
+  { key: 'between_150_275', label: '150-275 m' },
+  { key: 'over_275', label: 'meer dan 275 m' },
+  { key: 'unreachable', label: 'geen route' }
+];
+
 const elements = {
   coverageStatus: document.getElementById('coverage-status'),
+  coverageSummaryPanel: document.getElementById('coverage-summary-panel'),
   coverageSummary: document.getElementById('coverage-summary'),
   houseSummary: document.getElementById('house-summary'),
   houseDetails: document.getElementById('house-details'),
   containerList: document.getElementById('container-list'),
+  mapLegend: document.getElementById('map-legend'),
   houseMapInfo: null
 };
 
@@ -230,6 +241,49 @@ function setCoverageStatus(message, tone = '') {
   elements.coverageStatus.className = tone ? `status-note ${tone}` : 'status-note';
 }
 
+function setDetailsOpen(element, isOpen) {
+  if (element && 'open' in element) {
+    element.open = isOpen;
+  }
+}
+
+function formatPercent(count, total) {
+  if (!Number.isFinite(total) || total <= 0) {
+    return '0,0%';
+  }
+
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }).format(count / total);
+}
+
+function buildSummaryStat(value, label, { total = 0, showPercent = false } = {}) {
+  const safeValue = Number.isFinite(value) ? value : 0;
+  const percent = showPercent
+    ? `<span class="summary-percent">(${formatPercent(safeValue, total)})</span>`
+    : '';
+
+  return `
+    <div class="summary-stat">
+      <strong>${safeValue.toLocaleString('nl-NL')}${percent}</strong>
+      <span>${escapeHtml(label)}</span>
+    </div>
+  `;
+}
+
+function collapseUiForActiveHouse() {
+  setDetailsOpen(elements.coverageSummaryPanel, false);
+  setDetailsOpen(elements.houseSummary, false);
+  setDetailsOpen(elements.mapLegend, false);
+}
+
+function resetUiForIdleState() {
+  setDetailsOpen(elements.coverageSummaryPanel, true);
+  setDetailsOpen(elements.mapLegend, true);
+}
+
 async function loadJson(url, label) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -260,42 +314,25 @@ function getSummaryCounts(coverage) {
 function renderCoverageSummary() {
   const summary = state.coverage?.summary || {};
   const counts = summary.counts || getSummaryCounts(state.coverage);
-  const totalAddresses = Number.isFinite(summary.totalAddresses) ? summary.totalAddresses : state.houses.length;
+  const totalAddresses = Number.isFinite(summary.totalAddresses)
+    ? summary.totalAddresses
+    : state.houses.length;
+  const containerCount = Number.isFinite(summary.containerCount)
+    ? summary.containerCount
+    : state.containers.length;
+
+  const distanceStats = SUMMARY_DISTANCE_ROWS
+    .map(({ key, label }) => buildSummaryStat(counts[key] || 0, label, {
+      total: totalAddresses,
+      showPercent: true
+    }))
+    .join('');
 
   elements.coverageSummary.hidden = false;
   elements.coverageSummary.innerHTML = `
-    <div class="summary-stat">
-      <strong>${totalAddresses.toLocaleString('nl-NL')}</strong>
-      <span>adressen</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(summary.containerCount || state.containers.length).toLocaleString('nl-NL')}</strong>
-      <span>containers</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.within_100 || 0).toLocaleString('nl-NL')}</strong>
-      <span>0-100 m</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.between_100_125 || 0).toLocaleString('nl-NL')}</strong>
-      <span>100-125 m</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.between_125_150 || 0).toLocaleString('nl-NL')}</strong>
-      <span>125-150 m</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.between_150_275 || 0).toLocaleString('nl-NL')}</strong>
-      <span>150-275 m</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.over_275 || 0).toLocaleString('nl-NL')}</strong>
-      <span>meer dan 275 m</span>
-    </div>
-    <div class="summary-stat">
-      <strong>${(counts.unreachable || 0).toLocaleString('nl-NL')}</strong>
-      <span>geen route</span>
-    </div>
+    ${buildSummaryStat(totalAddresses, 'adressen')}
+    ${buildSummaryStat(containerCount, 'containers')}
+    ${distanceStats}
     <div class="summary-meta">
       Gegenereerd: ${escapeHtml(formatTimestamp(state.coverage?.generatedAt))}
     </div>
@@ -509,6 +546,8 @@ function clearHouseSelection() {
 }
 
 function renderIdleHouseState() {
+  resetUiForIdleState();
+
   elements.houseSummary.hidden = true;
   elements.houseSummary.innerHTML = '';
   elements.houseDetails.innerHTML = '<div class="empty-state">Klik op een huispunt om de opgeslagen dekking en routes te bekijken.</div>';
@@ -528,10 +567,19 @@ function renderIdleHouseState() {
 
 function renderHouseSummary(house) {
   const postcode = house.postcode ? `${house.postcode} ` : '';
+
   elements.houseSummary.hidden = false;
   elements.houseSummary.innerHTML = `
-    <div class="house-address">${escapeHtml(house.address)}</div>
-    <div class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+    <summary>
+      <span class="house-summary-heading">
+        <span class="house-summary-title">Geselecteerd adres</span>
+        <span class="house-address">${escapeHtml(house.address)}</span>
+      </span>
+    </summary>
+
+    <div class="sidebar-collapsible-body">
+      <div class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+    </div>
   `;
 }
 
@@ -1001,9 +1049,12 @@ function selectHouse(house, { focusMap = true } = {}) {
   state.houseSelectionId += 1;
 
   if (isNewHouse) {
-    state.houseInfoCollapsed = false;
-  }
-  const selectionId = state.houseSelectionId;
+  state.houseInfoCollapsed = false;
+}
+
+collapseUiForActiveHouse();
+
+const selectionId = state.houseSelectionId;
   closeContainerPopups();
   clearContainerSelection();
   resetHouseSelectionVisuals();
