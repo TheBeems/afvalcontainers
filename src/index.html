@@ -29,22 +29,6 @@
         <p style="margin-bottom: 1em;">Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners. Dat geldt met name wanneer de loopafstand boven de 100 meter komt. Lees <a href="https://github.com/TheBeems/afvalcontainers/blob/main/README.md">hier</a> de methodiek, bronnen en vergelijking met andere gemeenten.</p>
      </header>
 
-      <details class="panel" open>
-        <summary>Legenda</summary>
-        <div class="panel-body">
-          <div class="legend-list">
-            <div class="legend-item"><span class="legend-swatch status-within"></span> 0-100 meter loopafstand</div>
-            <div class="legend-item"><span class="legend-swatch status-warning"></span> 100-125 meter loopafstand</div>
-            <div class="legend-item"><span class="legend-swatch status-caution"></span> 125-150 meter loopafstand</div>
-            <div class="legend-item"><span class="legend-swatch status-over"></span> 150-275 meter loopafstand</div>
-            <div class="legend-item"><span class="legend-swatch status-far-over"></span> Meer dan 275 meter loopafstand</div>
-            <div class="legend-item"><span class="legend-swatch status-unreachable"></span> Geen route gevonden</div>
-            <div class="legend-item"><span class="legend-swatch status-radius"></span> 275 meter hemelsbreed vanaf geselecteerde container</div>
-          </div>
-          <p class="note">Klik op een container voor de hemelsbrede straal. Zoom in tot niveau 16 om de huizenlaag te tonen.</p>
-        </div>
-      </details>
-
       <section class="panel analysis-panel" aria-labelledby="analysis-title">
         <h2 id="analysis-title">Analyse van alle adressen</h2>
         <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
@@ -70,8 +54,18 @@
       id="house-search"
       placeholder="Straatnaam + huisnummer"
       autocomplete="off"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-expanded="false"
+      aria-controls="search-results"
     />
-    <div id="search-results" class="search-results" aria-live="polite"></div>
+    <div
+      id="search-results"
+      class="search-results"
+      role="listbox"
+      aria-label="Zoekresultaten adressen"
+      aria-live="polite"
+    ></div>
   </section>
 
   <details class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
