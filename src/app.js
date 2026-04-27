@@ -66,7 +66,7 @@ const elements = {
   houseSummary: document.getElementById('house-summary'),
   houseDetails: document.getElementById('house-details'),
   containerList: document.getElementById('container-list'),
-  mapLegend: document.getElementById('map-legend'),
+  mapLegend: null,
   houseMapInfo: null
 };
 
