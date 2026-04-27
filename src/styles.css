@@ -726,7 +726,6 @@ summary {
 }
 
 @media (max-width: 960px) {
-@media (max-width: 960px) {
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
