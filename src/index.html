@@ -30,22 +30,36 @@
      </header>
 
       <section class="panel analysis-panel" aria-labelledby="analysis-title">
-        <h2 id="analysis-title">Analyse van alle adressen</h2>
-        <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
-        <div id="coverage-summary" class="summary-grid" hidden></div>
-        <div id="house-summary" class="house-summary" hidden></div>
-        <div id="house-details" class="detail-list">
-          <div class="empty-state">Klik op een huispunt om de dekking en routes te bekijken.</div>
-        </div>
-      </section>
+  <h2 id="analysis-title">Analyse van alle adressen</h2>
+  <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
 
-      <section class="container-section" aria-labelledby="container-list-title">
-        <h2 id="container-list-title">Containerlocaties</h2>
-        <div id="container-list" class="container-list"></div>
-      </section>
+  <details id="coverage-summary-panel" class="sidebar-collapsible summary-panel" open>
+    <summary>Samenvatting alle adressen</summary>
+    <div class="sidebar-collapsible-body">
+      <div id="coverage-summary" class="summary-grid" hidden></div>
+    </div>
+  </details>
+
+  <details id="house-summary" class="house-summary sidebar-collapsible" hidden></details>
+
+  <div id="house-details" class="detail-list">
+    <div class="empty-state">Klik op een huispunt om de dekking en routes te bekijken.</div>
+  </div>
+</section>
+
+      <details class="sidebar-collapsible container-section" open>
+  <summary id="container-list-title">Containerlocaties</summary>
+  <div class="sidebar-collapsible-body">
+    <div id="container-list" class="container-list"></div>
+  </div>
+</details>
     </aside>
 
     <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
+  <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
+    <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
+  <div id="map" class="map"></div>
+
   <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
     <label class="search-label" for="house-search">Zoek je adres</label>
     <input
@@ -68,20 +82,19 @@
     ></div>
   </section>
 
-  <details class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
-  <summary>Legenda loopafstand</summary>
+  <details id="map-legend" class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
+    <summary>Legenda loopafstand</summary>
 
-  <div class="map-collapsible-body">
-    <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
-    <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
-    <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
-    <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150+ m</span>
-    <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>275+ m</span>
-  </div>
-</details>
-
-  <div id="map" class="map"></div>
-</main>
+    <div class="map-collapsible-body">
+      <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150-275 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>meer dan 275 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-unreachable"></span>geen route</span>
+    </div>
+  </details>
+    </main>
   </div>
 </body>
 </html>
