@@ -74,14 +74,17 @@
     <div id="search-results" class="search-results" aria-live="polite"></div>
   </section>
 
-  <div class="map-legend" aria-label="Legenda loopafstand">
-    <span class="map-legend-item">Legenda loopafstand</span>
+  <details class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
+  <summary>Legenda loopafstand</summary>
+
+  <div class="map-collapsible-body">
     <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
     <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
     <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
     <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150+ m</span>
     <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>275+ m</span>
   </div>
+</details>
 
   <div id="map" class="map"></div>
 </main>
