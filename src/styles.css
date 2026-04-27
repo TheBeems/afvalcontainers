@@ -602,12 +602,12 @@ summary {
 }
 
 .map-legend {
-  position: absolute;
-  z-index: 1000;
-  right: 12px;
-  bottom: 34px;
   width: max-content;
-  max-width: min(180px, calc(100% - 24px));
+  max-width: min(180px, calc(100vw - 24px));
+}
+
+.map-legend.leaflet-control {
+  margin: 0 12px 18px 0;
 }
 
 .map-legend-item {
@@ -774,10 +774,12 @@ summary {
   }
 
   .map-legend {
-    right: 8px;
-    bottom: 28px;
-    max-width: min(160px, calc(100% - 16px));
-  }
+  max-width: min(160px, calc(100vw - 16px));
+}
+
+.map-legend.leaflet-control {
+  margin: 0 8px 18px 0;
+}
 
   .map-collapsible > summary {
     padding: 8px 9px;
