@@ -115,7 +115,34 @@ const selectionLayer = L.layerGroup().addTo(map);
 const containerLayer = L.layerGroup().addTo(map);
 
 const houseInfoControl = L.control({ position: 'bottomleft' });
+const mapLegendControl = L.control({ position: 'bottomright' });
 
+mapLegendControl.onAdd = () => {
+  const container = L.DomUtil.create('details', 'map-collapsible map-legend');
+  container.id = 'map-legend';
+  container.open = true;
+  container.setAttribute('aria-label', 'Legenda loopafstand');
+
+  container.innerHTML = `
+    <summary>Legenda loopafstand</summary>
+    <div class="map-collapsible-body">
+      <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150-275 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>meer dan 275 m</span>
+      <span class="map-legend-item"><span class="map-legend-dot status-unreachable"></span>geen route</span>
+    </div>
+  `;
+
+  L.DomEvent.disableClickPropagation(container);
+  L.DomEvent.disableScrollPropagation(container);
+
+  return container;
+};
+
+mapLegendControl.addTo(map);
+elements.mapLegend = document.getElementById('map-legend');
 houseInfoControl.onAdd = () => {
   const container = L.DomUtil.create('details', 'map-collapsible house-map-info');
   container.hidden = true;
