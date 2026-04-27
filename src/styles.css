@@ -726,11 +726,12 @@ summary {
 }
 
 @media (max-width: 960px) {
+@media (max-width: 960px) {
   .app-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: 620px minmax(0, 1fr);
+    grid-template-rows: auto auto;
     height: auto;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .sidebar {
@@ -742,39 +743,36 @@ summary {
   .map-shell {
     grid-row: 1;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    min-height: 620px;
+    grid-template-rows: auto auto;
+    height: auto;
+    min-height: 0;
     background: var(--panel);
   }
 
-.map {
-  position: relative;
-  inset: auto;
-  grid-row: 2;
-  min-height: 420px;
-}
+  .map {
+    position: relative;
+    inset: auto;
+    grid-row: 2;
+    height: clamp(420px, 58vh, 560px);
+    min-height: 0;
+  }
 
-.map-search-panel {
-  position: relative;
-  z-index: 1;
-  top: auto;
-  left: auto;
-  grid-row: 1;
-  width: auto;
-  margin: 0;
-  padding: 14px 16px;
-  transform: none;
-  border: 0;
-  border-bottom: 1px solid var(--border);
-  border-radius: 0;
-  background: var(--panel);
-  box-shadow: none;
-}
-
-.map-search-panel p {
-  margin-bottom: 10px;
-  font-size: 14px;
-}
+  .map-search-panel {
+    position: relative;
+    z-index: 1;
+    top: auto;
+    left: auto;
+    grid-row: 1;
+    width: auto;
+    margin: 0;
+    padding: 8px 16px 10px;
+    transform: none;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: var(--panel);
+    box-shadow: none;
+  }
 
   .map-legend {
     right: 8px;
@@ -834,6 +832,17 @@ summary {
     grid-template-columns: 20px minmax(0, 1fr);
     gap: 7px;
   }
+
+  .house-map-info .ranking-rank {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .house-map-ranking-title {
+    font-size: 12px;
+  }
+}
 
   .house-map-info .ranking-rank {
     width: 20px;
