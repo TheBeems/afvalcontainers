@@ -69,7 +69,8 @@ const state = {
   containerMarkers: [],
   containerButtons: [],
   liveRouteCache: new Map(),
-  houseSelectionId: 0
+  houseSelectionId: 0,
+  houseInfoCollapsed: false
 };
 
 const map = L.map('map', { preferCanvas: true }).setView(MAP_CENTER, MAP_ZOOM);
@@ -101,10 +102,12 @@ const selectionLayer = L.layerGroup().addTo(map);
 const containerLayer = L.layerGroup().addTo(map);
 
 const houseInfoControl = L.control({ position: 'bottomleft' });
+const houseInfoControl = L.control({ position: 'bottomleft' });
 
 houseInfoControl.onAdd = () => {
-  const container = L.DomUtil.create('aside', 'house-map-info');
+  const container = L.DomUtil.create('details', 'map-collapsible house-map-info');
   container.hidden = true;
+  container.open = true;
 
   L.DomEvent.disableClickPropagation(container);
   L.DomEvent.disableScrollPropagation(container);
@@ -115,6 +118,9 @@ houseInfoControl.onAdd = () => {
 houseInfoControl.addTo(map);
 elements.houseMapInfo = document.querySelector('.house-map-info');
 
+elements.houseMapInfo.addEventListener('toggle', () => {
+  state.houseInfoCollapsed = !elements.houseMapInfo.open;
+});
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: MAP_MAX_ZOOM,
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-bijdragers'
@@ -902,10 +908,16 @@ function renderHouseMapInfo(house, ranking = []) {
   const postcode = house.postcode ? `${house.postcode} ` : '';
 
   elements.houseMapInfo.hidden = false;
+  elements.houseMapInfo.open = !state.houseInfoCollapsed;
   elements.houseMapInfo.innerHTML = `
-    <div class="house-map-info-address">${escapeHtml(house.address)}</div>
-    <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
-    ${buildCompactRankingMarkup(ranking)}
+    <summary>
+      <span class="house-map-info-address">${escapeHtml(house.address)}</span>
+    </summary>
+
+    <div class="map-collapsible-body">
+      <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+      ${buildCompactRankingMarkup(ranking)}
+    </div>
   `;
 }
 
@@ -969,9 +981,27 @@ function loadMissingLiveRoutes(house, ranking, selectionId) {
   renderHouseSelection(house, ranking);
 }
 
-function selectHouse(house, { focusMap = false } = {}) {
+function focusHouseOnMap(house) {
+  if (!Number.isFinite(house.lat) || !Number.isFinite(house.lon)) {
+    return;
+  }
+
+  map.setView(
+    [house.lat, house.lon],
+    Math.max(map.getZoom(), SEARCH_FOCUS_ZOOM),
+    { animate: true }
+  );
+}
+
+function selectHouse(house, { focusMap = true } = {}) {
+  const isNewHouse = state.selectedHouse?.id !== house.id;
+
   state.selectedHouse = house;
   state.houseSelectionId += 1;
+
+  if (isNewHouse) {
+    state.houseInfoCollapsed = false;
+  }
   const selectionId = state.houseSelectionId;
   closeContainerPopups();
   clearContainerSelection();
@@ -1008,8 +1038,8 @@ state.selectedHouseMarker.bringToFront();
   renderHouseSelection(house, ranking);
   loadMissingLiveRoutes(house, ranking, selectionId);
 
-  if (focusMap && Number.isFinite(house.lat) && Number.isFinite(house.lon)) {
-    map.setView([house.lat, house.lon], SEARCH_FOCUS_ZOOM);
+  if (focusMap) {
+    focusHouseOnMap(house);
   }
 }
 
