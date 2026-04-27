@@ -47,7 +47,7 @@
   </div>
 </section>
 
-      <details class="sidebar-collapsible container-section" close>
+      <details class="sidebar-collapsible container-section">
   <summary id="container-list-title">Containerlocaties</summary>
   <div class="sidebar-collapsible-body">
     <div id="container-list" class="container-list"></div>
@@ -56,44 +56,42 @@
     </aside>
 
     <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
-  <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
-    <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
-  <div id="map" class="map"></div>
+      <div id="map" class="map"></div>
 
-  <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
-    <label class="search-label" for="house-search">Zoek je adres</label>
-    <input
-      class="search-input"
-      type="search"
-      id="house-search"
-      placeholder="Straatnaam + huisnummer"
-      autocomplete="off"
-      role="combobox"
-      aria-autocomplete="list"
-      aria-expanded="false"
-      aria-controls="search-results"
-    />
-    <div
-      id="search-results"
-      class="search-results"
-      role="listbox"
-      aria-label="Zoekresultaten adressen"
-      aria-live="polite"
-    ></div>
-  </section>
+      <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
+        <label class="search-label" for="house-search">Zoek je adres</label>
+        <input
+          class="search-input"
+          type="search"
+          id="house-search"
+          placeholder="Straatnaam + huisnummer"
+          autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="search-results"
+        />
+        <div
+          id="search-results"
+          class="search-results"
+          role="listbox"
+          aria-label="Zoekresultaten adressen"
+          aria-live="polite"
+        ></div>
+      </section>
 
-  <details id="map-legend" class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
-    <summary>Legenda loopafstand</summary>
+      <details id="map-legend" class="map-collapsible map-legend" aria-label="Legenda loopafstand" open>
+        <summary>Legenda loopafstand</summary>
 
-    <div class="map-collapsible-body">
-      <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
-      <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
-      <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
-      <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150-275 m</span>
-      <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>meer dan 275 m</span>
-      <span class="map-legend-item"><span class="map-legend-dot status-unreachable"></span>geen route</span>
-    </div>
-  </details>
+        <div class="map-collapsible-body">
+          <span class="map-legend-item"><span class="map-legend-dot status-within"></span>0-100 m</span>
+          <span class="map-legend-item"><span class="map-legend-dot status-warning"></span>100-125 m</span>
+          <span class="map-legend-item"><span class="map-legend-dot status-caution"></span>125-150 m</span>
+          <span class="map-legend-item"><span class="map-legend-dot status-over"></span>150-275 m</span>
+          <span class="map-legend-item"><span class="map-legend-dot status-far-over"></span>meer dan 275 m</span>
+          <span class="map-legend-item"><span class="map-legend-dot status-unreachable"></span>geen route</span>
+        </div>
+      </details>
     </main>
   </div>
 </body>
