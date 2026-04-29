@@ -17,7 +17,11 @@ export function roundCoordinate(value) {
 }
 
 export function formatRouteCacheCoordinate(value) {
-  return Number(value).toFixed(ROUTE_GEOMETRY_DECIMALS);
+  if (!Number.isFinite(value)) {
+    return 'invalid';
+  }
+
+  return value.toFixed(ROUTE_GEOMETRY_DECIMALS);
 }
 
 export function haversineMeters(lat1, lon1, lat2, lon2) {
