@@ -108,6 +108,7 @@ const elements = {
   containerList: document.getElementById('container-list'),
   mapShell: document.querySelector('.map-shell'),
   mapLegend: null,
+  containerMarkerLegend: null,
   mapInfoStack: null,
   containerMapInfo: null,
   houseMapInfo: null,
@@ -245,6 +246,7 @@ containerMarkerLegendControl.onAdd = () => {
 };
 
 containerMarkerLegendControl.addTo(map);
+elements.containerMarkerLegend = document.getElementById('container-marker-legend');
 
 containerEditorControl.onAdd = () => {
   const container = L.DomUtil.create('section', 'container-editor');
@@ -486,11 +488,13 @@ function buildSummaryStat(value, label, { total = 0, showPercent = false } = {})
 function collapseUiForActiveHouse() {
   setDetailsOpen(elements.coverageSummaryPanel, false);
   setDetailsOpen(elements.mapLegend, false);
+  setDetailsOpen(elements.containerMarkerLegend, false);
 }
 
 function resetUiForIdleState() {
   setDetailsOpen(elements.coverageSummaryPanel, true);
   setDetailsOpen(elements.mapLegend, true);
+  setDetailsOpen(elements.containerMarkerLegend, true);
 }
 
 async function loadJson(url, label) {
@@ -1097,12 +1101,15 @@ function addContainerAtLatLng(latlng) {
   setContainerEditorStatus('Vul de gegevens voor de nieuwe container in.', 'active');
 }
 
-function handleMapClickForNewContainer(event) {
-  if (!state.addContainerMode) {
+function handleMapClick(event) {
+  if (state.addContainerMode) {
+    addContainerAtLatLng(event.latlng);
     return;
   }
 
-  addContainerAtLatLng(event.latlng);
+  if (state.activeContainerIndex !== null) {
+    clearContainerSelection();
+  }
 }
 
 function applyContainerMove(containerId, latlng) {
@@ -2620,7 +2627,7 @@ async function init() {
 }
 
 map.on('zoomend', syncHouseLayerVisibility);
-map.on('click', handleMapClickForNewContainer);
+map.on('click', handleMapClick);
 
 elements.addContainerButton?.addEventListener('click', beginAddContainerMode);
 elements.containerEditorToggle?.addEventListener('click', toggleContainerEditor);
