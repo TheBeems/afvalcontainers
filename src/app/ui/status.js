@@ -9,12 +9,14 @@ export function createStatusUi(context) {
   }
 
   function collapseUiForActiveHouse() {
+    setDetailsOpen(elements.sidebarHeaderPanel, false);
     setDetailsOpen(elements.coverageSummaryPanel, false);
     setDetailsOpen(elements.mapLegend, false);
     setDetailsOpen(elements.containerMarkerLegend, false);
   }
 
   function resetUiForIdleState() {
+    setDetailsOpen(elements.sidebarHeaderPanel, true);
     setDetailsOpen(elements.coverageSummaryPanel, true);
     setDetailsOpen(elements.mapLegend, true);
     setDetailsOpen(elements.containerMarkerLegend, true);

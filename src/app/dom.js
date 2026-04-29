@@ -1,5 +1,6 @@
 export function getElements() {
   return {
+    sidebarHeaderPanel: document.getElementById('sidebar-header-panel'),
     coverageStatus: document.getElementById('coverage-status'),
     coverageSummaryPanel: document.getElementById('coverage-summary-panel'),
     coverageSummary: document.getElementById('coverage-summary'),

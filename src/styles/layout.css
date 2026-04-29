@@ -12,10 +12,77 @@
   padding: 18px 16px 24px;
 }
 
+.sidebar-header > details {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.sidebar-header > details > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+}
+
+.sidebar-header > details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-header > details > summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  margin-top: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  color: var(--muted);
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.sidebar-header > details[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.sidebar-header-summary-text {
+  margin: 0;
+  min-width: 0;
+}
+
 .sidebar-header h1 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 20px;
   line-height: 1.25;
+}
+
+.sidebar-header .sidebar-header-hint {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.sidebar-header-hint-open {
+  display: none;
+}
+
+.sidebar-header > details[open] .sidebar-header-hint-closed {
+  display: none;
+}
+
+.sidebar-header > details[open] .sidebar-header-hint-open {
+  display: inline;
+}
+
+.sidebar-header-body {
+  padding: 0 14px 14px;
 }
 
 .sidebar-header p,
@@ -122,6 +189,7 @@
 }
 
 .panel > summary:focus-visible,
+.sidebar-header > details > summary:focus-visible,
 .sidebar-collapsible > summary:focus-visible,
 .container-item:focus-visible {
   outline: 2px solid var(--focus);
