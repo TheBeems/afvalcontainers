@@ -15,7 +15,8 @@ const files = [
 
 const directories = [
   ['src/app', 'app'],
-  ['src/shared', 'shared']
+  ['src/shared', 'shared'],
+  ['src/styles', 'styles']
 ];
 
 async function build() {
