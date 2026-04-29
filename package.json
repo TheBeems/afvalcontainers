@@ -12,7 +12,7 @@
     "build": "node scripts/build-site.mjs",
     "check": "npm run check:syntax && npm run check:data && npm run build",
     "check:data": "node scripts/validate-data.mjs",
-    "check:syntax": "node --check src/app.js && node --check scripts/build-site.mjs && node --check scripts/generate-house-coverage.mjs && node --check scripts/validate-data.mjs",
+    "check:syntax": "node scripts/build/check-syntax.mjs",
     "generate:smoke": "node scripts/generate-house-coverage.mjs --limit-houses=10 --output-json=/tmp/house-coverage.json",
     "serve": "python3 -m http.server 8000 --directory dist"
   }

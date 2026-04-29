@@ -1,0 +1,129 @@
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  height: 100vh;
+  min-height: 620px;
+}
+
+.sidebar {
+  overflow: auto;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  padding: 18px 16px 24px;
+}
+
+.sidebar-header h1 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.sidebar-header p,
+.note {
+  margin: 0;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sidebar-header p + p {
+  margin-top: 1em;
+}
+
+.note {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.panel {
+  margin: 14px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfdff;
+  overflow: hidden;
+}
+
+.panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.panel > summary::after {
+  content: "+";
+  flex: none;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.panel[open] > summary::after {
+  content: "-";
+}
+
+.sidebar-collapsible {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.sidebar-collapsible > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-collapsible > summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.sidebar-collapsible[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.sidebar-collapsible-body {
+  padding: 0 12px 12px;
+}
+
+.summary-panel {
+  margin-top: 12px;
+}
+
+.panel > summary:focus-visible,
+.sidebar-collapsible > summary:focus-visible,
+.container-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
