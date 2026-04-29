@@ -4,174 +4,199 @@
     "address": "Oostwal 37",
     "lat": 52.7315107,
     "lon": 4.743219,
-    "accuracy": "visueel afgeleid (middel, onzekerheid 8 m)"
+    "accuracy": "visueel afgeleid (middel, onzekerheid 8 m)",
+    "type": "rest"
   },
   {
     "id": "WH02",
     "address": "Dorpsstraat 13",
     "lat": 52.7276794,
     "lon": 4.739382,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH04",
     "address": "Maasweid 1",
     "lat": 52.7268381,
     "lon": 4.7450048,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH07",
     "address": "Dorpsstraat 37",
     "lat": 52.7265752,
     "lon": 4.7396203,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH09",
     "address": "De Baan 7",
     "lat": 52.7253498,
     "lon": 4.7406894,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH10",
     "address": "De Baan 27",
     "lat": 52.7253746,
     "lon": 4.7436051,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH11",
     "address": "Wiekeland 2",
     "lat": 52.7239102,
     "lon": 4.7437006,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH12",
     "address": "De Negen Geerzen 29",
     "lat": 52.7222263,
     "lon": 4.7464192,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH13",
     "address": "Alingterp 2",
     "lat": 52.7232726,
     "lon": 4.7355246,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH15",
     "address": "Doorbraak 14",
     "lat": 52.7220528,
     "lon": 4.7409156,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH16",
     "address": "Vijfven 16",
     "lat": 52.7218245,
     "lon": 4.7271537,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH17",
     "address": "Stationsstraat 65",
     "lat": 52.7223766,
     "lon": 4.7294693,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH18",
     "address": "Schelphoek Noord 48",
     "lat": 52.7216603,
     "lon": 4.7315818,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH19",
     "address": "Zwartepad 32",
     "lat": 52.7211885,
     "lon": 4.7340458,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH20",
     "address": "Oudewal 24",
     "lat": 52.7198261,
     "lon": 4.7314316,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH21",
     "address": "Oudewal 57",
     "lat": 52.7192295,
     "lon": 4.7259495,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH22",
     "address": "Oudevaart 87",
     "lat": 52.7157841,
     "lon": 4.7285765,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH25",
     "address": "Molenaarweg 42",
     "lat": 52.7195514,
     "lon": 4.7387175,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 4 m)",
+    "type": "rest"
   },
   {
     "id": "WH26",
     "address": "Regelhaalder 42",
     "lat": 52.7185144,
     "lon": 4.7413821,
-    "accuracy": "visueel afgeleid (middel, onzekerheid 6 m)"
+    "accuracy": "visueel afgeleid (middel, onzekerheid 6 m)",
+    "type": "rest"
   },
   {
     "id": "WH27",
     "address": "Verzetslaan 40",
     "lat": 52.7180751,
     "lon": 4.7432385,
-    "accuracy": "visueel afgeleid (middel, onzekerheid 7 m)"
+    "accuracy": "visueel afgeleid (middel, onzekerheid 7 m)",
+    "type": "rest"
   },
   {
     "id": "WH28",
     "address": "Zigt 1",
     "lat": 52.7181134,
     "lon": 4.7453396,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH29",
     "address": "Schoffel 1",
     "lat": 52.7166536,
     "lon": 4.7429486,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH30",
     "address": "Molenaarweg 1",
     "lat": 52.718316,
     "lon": 4.7395942,
-    "accuracy": "visueel afgeleid (laag, onzekerheid 10 m)"
+    "accuracy": "visueel afgeleid (laag, onzekerheid 10 m)",
+    "type": "rest"
   },
   {
     "id": "WH31",
     "address": "Fatimahof 1",
     "lat": 52.7229879,
     "lon": 4.7376898,
-    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)"
+    "accuracy": "visueel afgeleid (hoog, onzekerheid 5 m)",
+    "type": "rest"
   },
   {
     "id": "WH32",
     "address": "Remmerdel 22",
     "lat": 52.7265863,
     "lon": 4.7483243,
-    "accuracy": "visueel afgeleid (middel, onzekerheid 7 m)"
+    "accuracy": "visueel afgeleid (middel, onzekerheid 7 m)",
+    "type": "rest"
   }
 ]

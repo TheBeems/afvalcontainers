@@ -468,6 +468,8 @@ async function buildRankedContainersWithRoutes(house, ranked, options) {
       id: container.id,
       address: container.address,
       accuracy: container.accuracy,
+      type: container.type || 'rest',
+      ...(Object.prototype.hasOwnProperty.call(container, 'status') ? { status: container.status } : {}),
       straightDistance: roundMetric(container.straightDistance),
       walkingDistance: roundMetric(container.walkingDistance),
       walkingDuration: roundMetric(container.walkingDuration),

@@ -16,6 +16,16 @@ const VALID_COVERAGE_STATUSES = new Set([
   'unreachable'
 ]);
 
+const VALID_CONTAINER_TYPES = new Set(['rest', 'semi-rest', 'gfe']);
+const DEFAULT_CONTAINER_STATUS = 'new';
+const VALID_CONTAINER_STATUSES = new Set(['new', 'existing']);
+const VALID_CONTAINER_CATEGORIES = new Set([
+  'new:rest',
+  'existing:rest',
+  'new:semi-rest',
+  'new:gfe'
+]);
+
 function fail(message) {
   throw new Error(message);
 }
@@ -40,6 +50,32 @@ function assertNumber(value, label) {
   }
 }
 
+function getContainerStatus(container, label) {
+  if (!Object.prototype.hasOwnProperty.call(container, 'status')) {
+    return DEFAULT_CONTAINER_STATUS;
+  }
+
+  assertString(container.status, `${label}.status`);
+  if (!VALID_CONTAINER_STATUSES.has(container.status)) {
+    fail(`${label}.status must be one of: ${Array.from(VALID_CONTAINER_STATUSES).join(', ')}. Received: ${container.status}`);
+  }
+
+  return container.status;
+}
+
+function validateContainerClassification(container, label) {
+  assertString(container.type, `${label}.type`);
+  if (!VALID_CONTAINER_TYPES.has(container.type)) {
+    fail(`${label}.type must be one of: ${Array.from(VALID_CONTAINER_TYPES).join(', ')}. Received: ${container.type}`);
+  }
+
+  const status = getContainerStatus(container, label);
+  const category = `${status}:${container.type}`;
+  if (!VALID_CONTAINER_CATEGORIES.has(category)) {
+    fail(`${label} has unsupported status/type combination: ${category}`);
+  }
+}
+
 function validateContainers(containers) {
   if (!Array.isArray(containers) || containers.length === 0) {
     fail('container-locations.json must contain a non-empty array.');
@@ -61,6 +97,7 @@ function validateContainers(containers) {
     assertNumber(container.lat, `${label}.lat`);
     assertNumber(container.lon, `${label}.lon`);
     assertString(container.accuracy, `${label}.accuracy`);
+    validateContainerClassification(container, label);
   }
 
   return seenIds;
