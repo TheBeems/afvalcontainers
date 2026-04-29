@@ -978,12 +978,39 @@ summary {
   cursor: crosshair;
 }
 
-.container-marker-icon-wrapper {
-  width: 56px;
+.container-marker-icon {
+  width: 42px;
   height: 58px;
   overflow: visible;
   background: transparent;
   border: 0;
+}
+
+.container-marker-svg {
+  display: block;
+  width: 42px;
+  height: 58px;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.34));
+  transition:
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.container-marker-icon:hover .container-marker-svg,
+.container-marker-icon:focus-visible .container-marker-svg {
+  transform: scale(1.08);
+  filter: drop-shadow(0 5px 7px rgba(15, 23, 42, 0.42));
+}
+
+.container-marker-active .container-marker-svg {
+  transform: scale(1.12);
+  filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.35));
+}
+
+.container-marker-unlocked .container-marker-svg {
+  filter: drop-shadow(0 0 9px rgba(37, 99, 235, 0.85));
 }
 
 .container-pin {
@@ -1031,22 +1058,6 @@ summary {
   border-radius: 999px;
   background: #ffffff;
   transform: translateX(-50%);
-}
-
-.container-marker-icon-wrapper:hover .container-pin,
-.container-marker-icon-wrapper:focus-visible .container-pin,
-.container-marker-active .container-pin {
-  filter: drop-shadow(0 5px 7px rgba(15, 23, 42, 0.42));
-}
-
-.container-marker-active .container-pin::before {
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.2),
-    0 0 0 3px rgba(37, 99, 235, 0.25);
-}
-
-.container-marker-unlocked .container-pin {
-  filter: drop-shadow(0 0 9px rgba(37, 99, 235, 0.85));
 }
 
 .map-collapsible {

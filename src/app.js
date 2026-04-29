@@ -1321,21 +1321,42 @@ function renderContainerMapInfo(container) {
   `;
 }
 
+function getContainerMarkerColor(container) {
+  return getContainerCategory(container).borderColor;
+}
+
+function createContainerMarkerSvg(color) {
+  return `
+    <svg
+      class="container-marker-svg"
+      width="42"
+      height="58"
+      viewBox="0 0 64 88"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M32 84C32 84 56 52 56 30C56 16.745 45.255 6 32 6C18.745 6 8 16.745 8 30C8 52 32 84 32 84Z"
+        fill="${color}"
+        stroke="#ffffff"
+        stroke-width="6"
+      />
+
+      <circle cx="32" cy="30" r="12" fill="#ffffff"/>
+    </svg>
+  `;
+}
+
 function createContainerMarkerIcon(container, isActive = false) {
-  const category = getContainerCategory(container);
+  const color = getContainerMarkerColor(container);
 
   return L.divIcon({
-    className: `container-marker-icon-wrapper${isActive ? ' container-marker-active' : ''}`,
-    html: `
-      <span
-        class="container-pin"
-        style="--container-pin-color:${category.borderColor}"
-        aria-hidden="true"
-      ></span>
-    `,
-    iconSize: [56, 58],
-    iconAnchor: [28, 55],
-    popupAnchor: [0, -50]
+    className: `container-marker-icon${isActive ? ' container-marker-active' : ''}`,
+    html: createContainerMarkerSvg(color),
+    iconSize: [42, 58],
+    iconAnchor: [21, 58],
+    popupAnchor: [0, -58]
   });
 }
 
