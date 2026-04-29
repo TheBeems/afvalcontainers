@@ -14,27 +14,45 @@ import { createHouseSelection } from './ui/house-selection.js';
 import { createSearch } from './ui/search.js';
 import { createStatusUi } from './ui/status.js';
 
-const context = {
-  elements: getElements(),
-  state: createAppState(),
-  mapContext: createMapContext()
-};
+async function waitForLeaflet() {
+  if (window.L) {
+    return;
+  }
 
-installMapControls(context);
+  await new Promise((resolve) => {
+    window.addEventListener('load', resolve, { once: true });
+  });
 
-const api = {};
-Object.assign(api, createStatusUi(context, api));
-Object.assign(api, createContainerMarkup(context, api));
-Object.assign(api, createContainerStore(context, api));
-Object.assign(api, createLiveRoutes(context, api));
-Object.assign(api, createRanking(context, api));
-Object.assign(api, createCoverageSummary(context, api));
-Object.assign(api, createContainerEditor(context, api));
-Object.assign(api, createContainersUi(context, api));
-Object.assign(api, createHouseSelection(context, api));
-Object.assign(api, createSearch(context, api));
+  if (!window.L) {
+    throw new Error('Leaflet kon niet worden geladen.');
+  }
+}
 
-async function init() {
+function createApp() {
+  const context = {
+    elements: getElements(),
+    state: createAppState(),
+    mapContext: createMapContext()
+  };
+
+  installMapControls(context);
+
+  const api = {};
+  Object.assign(api, createStatusUi(context, api));
+  Object.assign(api, createContainerMarkup(context, api));
+  Object.assign(api, createContainerStore(context, api));
+  Object.assign(api, createLiveRoutes(context, api));
+  Object.assign(api, createRanking(context, api));
+  Object.assign(api, createCoverageSummary(context, api));
+  Object.assign(api, createContainerEditor(context, api));
+  Object.assign(api, createContainersUi(context, api));
+  Object.assign(api, createHouseSelection(context, api));
+  Object.assign(api, createSearch(context, api));
+
+  return { api, context };
+}
+
+async function init(context, api) {
   const { elements, mapContext, state } = context;
 
   try {
@@ -77,4 +95,16 @@ async function init() {
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
 }
 
-init();
+async function start() {
+  await waitForLeaflet();
+  const { api, context } = createApp();
+  await init(context, api);
+}
+
+start().catch((error) => {
+  const coverageStatus = document.getElementById('coverage-status');
+  if (coverageStatus) {
+    coverageStatus.textContent = error.message || 'De kaart kon niet worden gestart.';
+    coverageStatus.className = 'status-note error';
+  }
+});
