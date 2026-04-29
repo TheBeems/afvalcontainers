@@ -13,7 +13,12 @@ export function createSearch(context, api) {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js';
         script.onload = () => {
-          setupSearch();
+          if (typeof Fuse !== 'undefined') {
+            setupSearch();
+          }
+          resolve();
+        };
+        script.onerror = () => {
           resolve();
         };
         document.head.appendChild(script);

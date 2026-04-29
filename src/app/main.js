@@ -52,8 +52,20 @@ function createApp() {
   return { api, context };
 }
 
+function registerCoreListeners(context, api) {
+  const { elements, mapContext } = context;
+
+  mapContext.map.on('zoomend', api.syncHouseLayerVisibility);
+  mapContext.map.on('click', api.handleMapClick);
+
+  elements.addContainerButton?.addEventListener('click', api.beginAddContainerMode);
+  elements.containerEditorToggle?.addEventListener('click', api.toggleContainerEditor);
+  elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
+  elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
+}
+
 async function init(context, api) {
-  const { elements, mapContext, state } = context;
+  const { elements, state } = context;
 
   try {
     const [containers, coverage] = await Promise.all([
@@ -72,6 +84,7 @@ async function init(context, api) {
     api.renderCoverageSummary();
     api.renderHouseMarkers();
     api.syncHouseLayerVisibility();
+    registerCoreListeners(context, api);
 
     if (state.houses.length === 0) {
       api.setCoverageStatus('De viewer kon geen vooraf berekende huizenlaag vinden. Voer de generator uit om deze data te maken.', 'error');
@@ -85,14 +98,6 @@ async function init(context, api) {
     elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
     api.setCoverageStatus(error.message || 'De viewer kon de batchlaag niet laden.', 'error');
   }
-
-  mapContext.map.on('zoomend', api.syncHouseLayerVisibility);
-  mapContext.map.on('click', api.handleMapClick);
-
-  elements.addContainerButton?.addEventListener('click', api.beginAddContainerMode);
-  elements.containerEditorToggle?.addEventListener('click', api.toggleContainerEditor);
-  elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
-  elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
 }
 
 async function start() {
