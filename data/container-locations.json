@@ -264,7 +264,16 @@
     "lon": 4.73849,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "rest",
-    "status": "existing"
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
   },
   {
     "id": "WH24",
@@ -273,6 +282,15 @@
     "lon": 4.74023,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "rest",
-    "status": "existing"
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
   }
 ]

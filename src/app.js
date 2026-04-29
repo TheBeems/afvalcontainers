@@ -22,6 +22,7 @@ const MANUAL_CONTAINER_ACCURACY = 'handmatig bepaald (zeer hoog, onzekerheid -1 
 const CONTAINER_ID_PATTERN = /^WH\d{2}$/;
 const DEFAULT_CONTAINER_TYPE = 'rest';
 const DEFAULT_CONTAINER_STATUS = 'new';
+const PRIVATE_ACCESS_SCOPE = 'private';
 const MOBILE_MAP_SCROLL_QUERY = '(max-width: 960px)';
 const CONTAINER_TYPE_LABELS = {
   rest: 'Rest',
@@ -396,6 +397,90 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return 2 * earthRadius * Math.asin(Math.sqrt(a));
 }
 
+function normalizeWhitespace(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ');
+}
+
+function cloneContainerAccess(access) {
+  if (!access || typeof access !== 'object') {
+    return null;
+  }
+
+  return {
+    scope: access.scope,
+    label: access.label,
+    allowedAddressRange: access.allowedAddressRange
+      ? { ...access.allowedAddressRange }
+      : undefined
+  };
+}
+
+function hasPrivateContainerAccess(container) {
+  return container?.access?.scope === PRIVATE_ACCESS_SCOPE;
+}
+
+function getContainerAccessLabel(container) {
+  return hasPrivateContainerAccess(container)
+    ? container.access.label || 'Privé'
+    : '';
+}
+
+function buildContainerAccessPill(container) {
+  const label = getContainerAccessLabel(container);
+  return label
+    ? `<span class="container-access-pill">${escapeHtml(label)}</span>`
+    : '';
+}
+
+function buildContainerTitleMarkup(container) {
+  if (!container) {
+    return 'Geen gekoppelde container';
+  }
+
+  return `
+    <span class="container-title-text">
+      <strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}
+    </span>
+    ${buildContainerAccessPill(container)}
+  `;
+}
+
+function getAddressBaseHouseNumber(address, street) {
+  const normalizedStreet = normalizeWhitespace(street);
+  const normalizedAddress = normalizeWhitespace(address);
+  const prefix = `${normalizedStreet} `;
+
+  if (!normalizedStreet || !normalizedAddress.startsWith(prefix)) {
+    return null;
+  }
+
+  const houseNumberMatch = normalizedAddress.slice(prefix.length).match(/^(\d+)/);
+  if (!houseNumberMatch) {
+    return null;
+  }
+
+  return Number.parseInt(houseNumberMatch[1], 10);
+}
+
+function isAddressInAllowedRange(address, range) {
+  if (!range) {
+    return false;
+  }
+
+  const houseNumber = getAddressBaseHouseNumber(address, range.street);
+  return Number.isInteger(houseNumber)
+    && houseNumber >= range.minHouseNumber
+    && houseNumber <= range.maxHouseNumber;
+}
+
+function isContainerAllowedForHouse(house, container) {
+  if (!hasPrivateContainerAccess(container)) {
+    return true;
+  }
+
+  return isAddressInAllowedRange(house?.address, container.access.allowedAddressRange);
+}
+
 function formatTimestamp(timestamp) {
   if (!timestamp) {
     return 'onbekend';
@@ -519,6 +604,11 @@ function cloneContainer(container) {
     cloned.status = normalizeContainerStatus(container.status);
   }
 
+  const access = cloneContainerAccess(container.access);
+  if (access) {
+    cloned.access = access;
+  }
+
   return cloned;
 }
 
@@ -574,6 +664,11 @@ function getContainerStoredStatus(container) {
   return hasExplicitContainerStatus(container) ? normalizeContainerStatus(container.status) : null;
 }
 
+function getContainerStoredAccess(container) {
+  const access = cloneContainerAccess(container.access);
+  return access ? JSON.stringify(access) : '';
+}
+
 function getContainerCategory(container) {
   const type = normalizeContainerType(container.type);
   const rawStatus = hasExplicitContainerStatus(container)
@@ -622,6 +717,7 @@ function hasContainerChanged(container) {
   return original.address !== container.address
     || original.id !== container.id
     || original.accuracy !== container.accuracy
+    || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
     || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
     || normalizeContainerType(original.type) !== normalizeContainerType(container.type)
     || normalizeContainerCoordinate(original.lat) !== normalizeContainerCoordinate(container.lat)
@@ -666,6 +762,7 @@ function getContainerChangeLabel(container) {
   const idChanged = original.id !== container.id;
   const locationChanged = hasContainerLocationChanged(container);
   const infoChanged = original.address !== container.address
+    || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
     || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
     || normalizeContainerType(original.type) !== normalizeContainerType(container.type);
 
@@ -1186,9 +1283,11 @@ function renderCoverageSummary() {
   `;
 }
 
-function shouldIgnoreStoredContainerId(containerId) {
+function shouldIgnoreStoredContainerId(house, containerId) {
   const container = state.containersById.get(containerId);
-  return !container || requiresLiveContainerRoute(container);
+  return !container
+    || requiresLiveContainerRoute(container)
+    || !isContainerAllowedForHouse(house, container);
 }
 
 function mergeStoredContainerEntry(entry) {
@@ -1201,6 +1300,7 @@ function mergeStoredContainerEntry(entry) {
       accuracy: currentContainer.accuracy,
       type: currentContainer.type,
       ...(hasExplicitContainerStatus(currentContainer) ? { status: currentContainer.status } : {}),
+      ...(currentContainer.access ? { access: currentContainer.access } : {}),
       lat: currentContainer.lat,
       lon: currentContainer.lon,
       clientKey: currentContainer.clientKey
@@ -1212,11 +1312,11 @@ function mergeStoredContainerEntry(entry) {
 function getStoredRanking(house) {
   if (Array.isArray(house.nearestContainers) && house.nearestContainers.length > 0) {
     return house.nearestContainers
-      .filter((entry) => !shouldIgnoreStoredContainerId(entry.id))
+      .filter((entry) => !shouldIgnoreStoredContainerId(house, entry.id))
       .map(mergeStoredContainerEntry);
   }
 
-  if (!house.nearestContainerId || shouldIgnoreStoredContainerId(house.nearestContainerId)) {
+  if (!house.nearestContainerId || shouldIgnoreStoredContainerId(house, house.nearestContainerId)) {
     return [];
   }
 
@@ -1241,6 +1341,7 @@ function buildLiveContainerRankingEntry(house, container, liveRoute) {
     accuracy: container.accuracy,
     type: container.type,
     ...(hasExplicitContainerStatus(container) ? { status: container.status } : {}),
+    ...(container.access ? { access: container.access } : {}),
     lat: container.lat,
     lon: container.lon,
     clientKey: container.clientKey,
@@ -1257,6 +1358,7 @@ function buildLiveContainerRankingEntry(house, container, liveRoute) {
 function getLiveEditedRankingEntries(house) {
   return getChangedContainers()
     .filter(requiresLiveContainerRoute)
+    .filter((container) => isContainerAllowedForHouse(house, container))
     .map((container) => {
       const liveRoute = getLiveRouteState(house, container);
       if (liveRoute?.status !== 'fulfilled') {
@@ -1315,6 +1417,7 @@ function renderContainerMapInfo(container) {
           <span class="container-category-swatch" aria-hidden="true"></span>
           ${escapeHtml(category.label)}
         </span>
+        ${buildContainerAccessPill(container)}
       </div>
       <div class="container-map-info-meta">Nauwkeurigheid: ${escapeHtml(container.accuracy)}</div>
     </div>
@@ -1540,6 +1643,8 @@ function addContainerList() {
 
   state.containers.forEach((container, index) => {
     const isChanged = hasContainerChanged(container);
+    const accessLabel = getContainerAccessLabel(container);
+    const accessText = accessLabel ? ` · ${escapeHtml(accessLabel)}` : '';
     const button = document.createElement('button');
     button.type = 'button';
     button.className = isChanged ? 'container-item changed' : 'container-item';
@@ -1549,7 +1654,7 @@ function addContainerList() {
         <span class="container-address">${escapeHtml(container.address)}</span>
       </div>
       <div class="container-meta">
-        ${escapeHtml(formatContainerCategory(container))} · Nauwkeurigheid: ${escapeHtml(container.accuracy)}
+        ${escapeHtml(formatContainerCategory(container))}${accessText} · Nauwkeurigheid: ${escapeHtml(container.accuracy)}
         ${isChanged ? '<span class="container-change-label">gewijzigd</span>' : ''}
       </div>
     `;
@@ -1909,9 +2014,7 @@ function buildMainResultCard(house, ranking) {
   const straightDistance = nearest?.straightDistance ?? house.straightDistance;
   const coverageStatus = nearest?.coverageStatus ?? house.coverageStatus;
 
-  const containerText = nearest
-    ? `<strong>${escapeHtml(nearest.id)}</strong> - ${escapeHtml(nearest.address || 'onbekend adres')}`
-    : 'Geen gekoppelde container';
+  const containerText = buildContainerTitleMarkup(nearest);
 
   const resultColor = getCoverageStatus(coverageStatus).color;
 
@@ -1956,7 +2059,7 @@ function buildAlternativeContainersMarkup(ranking) {
               <span class="ranking-rank" style="--rank-color:${color}">${rank}</span>
               <div>
                 <div class="ranking-title">
-                  <strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}
+                  ${buildContainerTitleMarkup(container)}
                 </div>
                 <div class="ranking-meta">
                   ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
@@ -1984,16 +2087,16 @@ function buildMeasurementDetails(house, ranking) {
   const nearest = ranking[0] || null;
   const routeDisplay = nearest ? getRouteDisplay(house, nearest) : null;
 
-  const nearestText = nearest
-    ? `${escapeHtml(nearest.id)} - ${escapeHtml(nearest.address || 'onbekend adres')}`
-    : 'Geen gekoppelde container';
-
   const routeText = routeDisplay
     ? `${escapeHtml(routeDisplay.label)}${routeDisplay.details ? ` (${escapeHtml(routeDisplay.details)})` : ''}`
     : 'Geen routegegevens';
 
   const analysisError = house.analysisError
     ? buildMeasurementRow('Opmerking', escapeHtml(house.analysisError))
+    : '';
+  const accessLabel = getContainerAccessLabel(nearest);
+  const accessRow = accessLabel
+    ? buildMeasurementRow('Toegang', escapeHtml(accessLabel))
     : '';
 
   return `
@@ -2002,6 +2105,7 @@ function buildMeasurementDetails(house, ranking) {
 
       <div class="measurement-list">
         ${buildMeasurementRow('Nauwkeurigheid locatie', escapeHtml(nearest?.accuracy || 'onbekend'))}
+        ${accessRow}
         ${buildMeasurementRow('Routegegevens', routeText)}
         ${analysisError}
       </div>
@@ -2159,7 +2263,7 @@ function buildCompactRankingMarkup(ranking) {
           <span class="ranking-rank" style="--rank-color:${getWalkingDistanceColor(container.walkingDistance)}">${index + 1}</span>
           <div>
             <div class="house-map-ranking-title">
-              <strong>${escapeHtml(container.id)}</strong> - ${escapeHtml(container.address || 'onbekend adres')}
+              ${buildContainerTitleMarkup(container)}
             </div>
             <div class="house-map-ranking-meta">
               ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
@@ -2240,7 +2344,9 @@ function getChangedContainerLiveRouteStatus(house) {
     failed: 0
   };
 
-  for (const container of getChangedContainers().filter(requiresLiveContainerRoute)) {
+  for (const container of getChangedContainers()
+    .filter(requiresLiveContainerRoute)
+    .filter((changedContainer) => isContainerAllowedForHouse(house, changedContainer))) {
     if (!canFetchLiveRoute(house, container)) {
       status.failed += 1;
       continue;
@@ -2310,6 +2416,10 @@ function getLiveRouteRequests(house, ranking) {
   const requests = new Map();
 
   function addRequest(container) {
+    if (!isContainerAllowedForHouse(house, container)) {
+      return;
+    }
+
     if (!canFetchLiveRoute(house, container)) {
       return;
     }
@@ -2322,7 +2432,9 @@ function getLiveRouteRequests(house, ranking) {
     requests.set(getLiveRouteKey(house, container), getCurrentContainer(container));
   }
 
-  for (const container of getChangedContainers().filter(requiresLiveContainerRoute)) {
+  for (const container of getChangedContainers()
+    .filter(requiresLiveContainerRoute)
+    .filter((changedContainer) => isContainerAllowedForHouse(house, changedContainer))) {
     addRequest(container);
   }
 
