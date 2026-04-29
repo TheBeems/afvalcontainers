@@ -14,6 +14,7 @@ const DEFAULT_CANDIDATE_COUNT = 6;
 const DEFAULT_RESULT_COUNT = 3;
 const DEFAULT_CONCURRENCY = 1;
 const DEFAULT_DELAY_MS = 1100;
+const DEFAULT_TABLE_BATCH_SIZE = 20;
 const DEFAULT_TIMEOUT_MS = 45000;
 const PDOK_WOONPLAATS_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/woonplaats/items';
 const PDOK_ADRES_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/adres/items';
@@ -21,6 +22,7 @@ const OSRM_BASE_URL = 'https://routing.openstreetmap.de/routed-foot';
 const OSRM_PROFILE = 'foot';
 const USER_AGENT = 'warmenhuizen-afvalcontainers-batch/1.0';
 const ROUTE_GEOMETRY_DECIMALS = 6;
+const ROUTE_CACHE_VERSION = 'route-v1';
 
 const defaultOptions = {
   containerPath: resolve(projectRoot, 'data/container-locations.json'),
@@ -29,7 +31,10 @@ const defaultOptions = {
   resultCount: DEFAULT_RESULT_COUNT,
   concurrency: DEFAULT_CONCURRENCY,
   limitHouses: null,
-  delayMs: DEFAULT_DELAY_MS
+  delayMs: DEFAULT_DELAY_MS,
+  tableBatchSize: DEFAULT_TABLE_BATCH_SIZE,
+  includeRouteGeometries: false,
+  refreshRoutes: false
 };
 
 function printHelp() {
@@ -41,10 +46,14 @@ Opties:
   --container-file=PAD   Pad naar de containerdataset JSON.
   --output-json=PAD      Pad voor het gegenereerde JSON-resultaat.
   --candidate-count=N    Aantal hemelsbreed dichtste containers per adres. Standaard: ${DEFAULT_CANDIDATE_COUNT}
-  --result-count=N       Aantal opgeslagen dichtstbijzijnde containers en routes per adres. Standaard: ${DEFAULT_RESULT_COUNT}
-  --concurrency=N        Gelijktijdige OSRM table-verzoeken. Standaard: ${DEFAULT_CONCURRENCY}
+  --result-count=N       Aantal opgeslagen dichtstbijzijnde containers per adres. Standaard: ${DEFAULT_RESULT_COUNT}
+  --concurrency=N        Gelijktijdige OSRM-verzoeken, begrensd door --delay-ms. Standaard: ${DEFAULT_CONCURRENCY}
   --limit-houses=N       Analyseer alleen de eerste N adressen (handig voor tests).
-  --delay-ms=N           Extra wachttijd tussen OSRM-verzoeken per worker. Standaard: ${DEFAULT_DELAY_MS}
+  --delay-ms=N           Minimum wachttijd tussen OSRM-verzoeken. Standaard: ${DEFAULT_DELAY_MS}
+  --table-batch-size=N   Aantal adressen per OSRM table-batch. Standaard: ${DEFAULT_TABLE_BATCH_SIZE}
+  --include-route-geometries
+                         Haal routegeometrieën op voor de opgeslagen top-${DEFAULT_RESULT_COUNT}. Standaard: uit.
+  --refresh-routes       Haal routegeometrieën opnieuw op en negeer de route-cache. Impliceert --include-route-geometries.
   --help                 Toon deze hulptekst.
 `.trim());
 }
@@ -56,6 +65,17 @@ function parseArgs(argv) {
     if (arg === '--help') {
       printHelp();
       process.exit(0);
+    }
+
+    if (arg === '--refresh-routes') {
+      options.includeRouteGeometries = true;
+      options.refreshRoutes = true;
+      continue;
+    }
+
+    if (arg === '--include-route-geometries') {
+      options.includeRouteGeometries = true;
+      continue;
     }
 
     if (!arg.startsWith('--') || !arg.includes('=')) {
@@ -84,6 +104,9 @@ function parseArgs(argv) {
         break;
       case 'delay-ms':
         options.delayMs = parseNonNegativeInteger(rawValue, key);
+        break;
+      case 'table-batch-size':
+        options.tableBatchSize = parsePositiveInteger(rawValue, key);
         break;
       default:
         throw new Error(`Onbekend argument: --${key}`);
@@ -115,6 +138,32 @@ function sleep(ms) {
   });
 }
 
+function createRateLimiter(delayMs) {
+  let nextRequestAt = 0;
+  let queue = Promise.resolve();
+
+  return async function waitForTurn() {
+    const turn = queue.then(async () => {
+      const waitMs = Math.max(0, nextRequestAt - Date.now());
+      if (waitMs > 0) {
+        await sleep(waitMs);
+      }
+      nextRequestAt = Date.now() + delayMs;
+    });
+
+    queue = turn.catch(() => {});
+    await turn;
+  };
+}
+
+function chunkArray(items, size) {
+  const chunks = [];
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size));
+  }
+  return chunks;
+}
+
 function roundMetric(value) {
   if (!Number.isFinite(value)) {
     return null;
@@ -128,6 +177,36 @@ function roundCoordinate(value) {
   }
 
   return Number(value.toFixed(ROUTE_GEOMETRY_DECIMALS));
+}
+
+function formatRouteCacheCoordinate(value) {
+  if (!Number.isFinite(value)) {
+    return 'invalid';
+  }
+  return value.toFixed(ROUTE_GEOMETRY_DECIMALS);
+}
+
+function buildRouteCacheKey(house, container) {
+  return [
+    ROUTE_CACHE_VERSION,
+    OSRM_BASE_URL,
+    OSRM_PROFILE,
+    house.id,
+    formatRouteCacheCoordinate(house.lat),
+    formatRouteCacheCoordinate(house.lon),
+    container.id,
+    formatRouteCacheCoordinate(container.lat),
+    formatRouteCacheCoordinate(container.lon)
+  ].join('|');
+}
+
+function isValidRouteGeometry(routeGeometry) {
+  return Array.isArray(routeGeometry)
+    && routeGeometry.length >= 2
+    && routeGeometry.every((point) => Array.isArray(point)
+      && point.length >= 2
+      && Number.isFinite(point[0])
+      && Number.isFinite(point[1]));
 }
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
@@ -144,15 +223,63 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return 2 * earthRadius * Math.asin(Math.sqrt(a));
 }
 
+function normalizeWhitespace(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ');
+}
+
+function getAddressBaseHouseNumber(address, street) {
+  const normalizedStreet = normalizeWhitespace(street);
+  const normalizedAddress = normalizeWhitespace(address);
+  const prefix = `${normalizedStreet} `;
+
+  if (!normalizedStreet || !normalizedAddress.startsWith(prefix)) {
+    return null;
+  }
+
+  const houseNumberMatch = normalizedAddress.slice(prefix.length).match(/^(\d+)/);
+  if (!houseNumberMatch) {
+    return null;
+  }
+
+  return Number.parseInt(houseNumberMatch[1], 10);
+}
+
+function isAddressInAllowedRange(address, range) {
+  if (!range) {
+    return false;
+  }
+
+  const houseNumber = getAddressBaseHouseNumber(address, range.street);
+  return Number.isInteger(houseNumber)
+    && houseNumber >= range.minHouseNumber
+    && houseNumber <= range.maxHouseNumber;
+}
+
+function isContainerAllowedForHouse(house, container) {
+  if (!container.access) {
+    return true;
+  }
+
+  if (container.access.scope !== 'private') {
+    throw new Error(`Container ${container.id} heeft een onbekende toegangsregel: ${container.access.scope}`);
+  }
+
+  return isAddressInAllowedRange(house.address, container.access.allowedAddressRange);
+}
+
 function formatDutchHouseNumber(properties) {
   return `${properties.huisnummer || ''}${properties.huisletter || ''}${properties.toevoeging ? ` ${properties.toevoeging}` : ''}`;
 }
 
-async function fetchJson(url, label, { retries = 3, timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+async function fetchJson(url, label, { retries = 3, timeoutMs = DEFAULT_TIMEOUT_MS, beforeAttempt = null } = {}) {
   let lastError = null;
 
   for (let attempt = 1; attempt <= retries; attempt += 1) {
     try {
+      if (typeof beforeAttempt === 'function') {
+        await beforeAttempt();
+      }
+
       const response = await fetch(url, {
         headers: {
           Accept: 'application/json',
@@ -186,6 +313,10 @@ async function fetchJson(url, label, { retries = 3, timeoutMs = DEFAULT_TIMEOUT_
   }
 
   throw new Error(`${label} mislukt: ${lastError?.message || 'onbekende fout'}`);
+}
+
+async function fetchOsrmJson(url, label, options) {
+  return fetchJson(url, label, { beforeAttempt: options.osrmRateLimiter });
 }
 
 async function fetchPaginatedFeatures(initialUrl, label, { pageLimit = 25, stopWhen = null } = {}) {
@@ -222,6 +353,44 @@ async function loadContainers(containerPath) {
   }
 
   return parsed;
+}
+
+async function loadRouteCache(outputJsonPath, options) {
+  const emptyCache = {
+    routes: new Map(),
+    scanned: 0,
+    reusable: 0,
+    skipped: 0,
+    disabled: !options.includeRouteGeometries || options.refreshRoutes
+  };
+
+  if (!options.includeRouteGeometries || options.refreshRoutes) {
+    return emptyCache;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(await readFile(outputJsonPath, 'utf8'));
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return emptyCache;
+    }
+    throw new Error(`Bestaande coverage kon niet als route-cache worden gelezen: ${error.message}`);
+  }
+
+  for (const house of parsed.houses || []) {
+    for (const container of house.nearestContainers || []) {
+      emptyCache.scanned += 1;
+      if (typeof container.routeCacheKey !== 'string' || !isValidRouteGeometry(container.routeGeometry)) {
+        emptyCache.skipped += 1;
+        continue;
+      }
+      emptyCache.routes.set(container.routeCacheKey, container.routeGeometry);
+      emptyCache.reusable += 1;
+    }
+  }
+
+  return emptyCache;
 }
 
 function getFeatureCoordinates(geometry) {
@@ -383,6 +552,7 @@ async function loadAddresses(boundaryGeometry) {
 
 function getCandidateContainers(house, containers, count) {
   return containers
+    .filter((container) => isContainerAllowedForHouse(house, container))
     .map((container) => ({
       ...container,
       straightDistance: haversineMeters(house.lat, house.lon, container.lat, container.lon)
@@ -391,26 +561,48 @@ function getCandidateContainers(house, containers, count) {
     .slice(0, Math.min(count, containers.length));
 }
 
-async function fetchWalkingMatrix(house, candidates) {
-  const coordinates = [[house.lon, house.lat], ...candidates.map((candidate) => [candidate.lon, candidate.lat])]
+function getUniqueCandidateContainers(jobs) {
+  const containersById = new Map();
+
+  for (const job of jobs) {
+    for (const candidate of job.candidates) {
+      if (!containersById.has(candidate.id)) {
+        containersById.set(candidate.id, candidate);
+      }
+    }
+  }
+
+  return Array.from(containersById.values());
+}
+
+async function fetchWalkingMatrixBatch(jobs, options) {
+  const destinationContainers = getUniqueCandidateContainers(jobs);
+  const coordinates = [
+    ...jobs.map((job) => [job.house.lon, job.house.lat]),
+    ...destinationContainers.map((container) => [container.lon, container.lat])
+  ]
     .map(([lon, lat]) => `${lon},${lat}`)
     .join(';');
 
-  const destinations = candidates.map((_, index) => index + 1).join(';');
-  const url = `${OSRM_BASE_URL}/table/v1/${OSRM_PROFILE}/${coordinates}?sources=0&destinations=${destinations}&annotations=distance,duration`;
-  const data = await fetchJson(url, `Loopafstand berekenen voor ${house.address}`);
+  const sources = jobs.map((_, index) => index).join(';');
+  const destinations = destinationContainers
+    .map((_, index) => jobs.length + index)
+    .join(';');
+
+  const url = `${OSRM_BASE_URL}/table/v1/${OSRM_PROFILE}/${coordinates}?sources=${sources}&destinations=${destinations}&annotations=distance,duration`;
+  const data = await fetchOsrmJson(url, `Loopafstanden berekenen voor ${jobs.length} adres(sen)`, options);
 
   if (data.code !== 'Ok') {
     throw new Error(`OSRM table gaf code ${data.code || 'onbekend'}.`);
   }
 
-  return data;
+  return { matrix: data, destinationContainers };
 }
 
-async function fetchWalkingRoute(house, container) {
+async function fetchWalkingRoute(house, container, options) {
   const coordinates = `${house.lon},${house.lat};${container.lon},${container.lat}`;
   const url = `${OSRM_BASE_URL}/route/v1/${OSRM_PROFILE}/${coordinates}?overview=simplified&geometries=geojson`;
-  const data = await fetchJson(url, `Looproute ophalen voor ${house.address} naar ${container.id}`);
+  const data = await fetchOsrmJson(url, `Looproute ophalen voor ${house.address} naar ${container.id}`, options);
 
   if (data.code !== 'Ok' || !Array.isArray(data.routes) || !data.routes[0]?.geometry?.coordinates) {
     throw new Error(`OSRM route gaf code ${data.code || 'onbekend'}.`);
@@ -460,57 +652,175 @@ function buildUnreachableResult(house, analysisError = null) {
   };
 }
 
-async function buildRankedContainersWithRoutes(house, ranked, options) {
-  const nearestContainers = [];
+async function mapWithConcurrency(items, concurrency, mapper) {
+  const results = new Array(items.length);
+  let nextIndex = 0;
 
-  for (const container of ranked.slice(0, Math.min(options.resultCount, ranked.length))) {
-    const entry = {
-      id: container.id,
-      address: container.address,
-      accuracy: container.accuracy,
-      straightDistance: roundMetric(container.straightDistance),
-      walkingDistance: roundMetric(container.walkingDistance),
-      walkingDuration: roundMetric(container.walkingDuration),
-      coverageStatus: classifyCoverageStatus(container.walkingDistance),
-      routeGeometry: [],
-      routeError: null
-    };
+  async function worker() {
+    while (true) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
 
-    try {
-      if (options.delayMs > 0) {
-        await sleep(options.delayMs);
+      if (currentIndex >= items.length) {
+        return;
       }
-      entry.routeGeometry = await fetchWalkingRoute(house, container);
-    } catch (error) {
-      entry.routeError = error.message || 'Looproute kon niet worden opgehaald.';
+
+      results[currentIndex] = await mapper(items[currentIndex], currentIndex);
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => worker());
+  await Promise.all(workers);
+  return results;
+}
+
+function buildHouseJobs(houses, containers, options) {
+  return houses.map((house, index) => ({
+    index,
+    house,
+    candidates: getCandidateContainers(house, containers, options.candidateCount)
+  }));
+}
+
+function buildRankedCandidates(job, matrix, sourceIndex, destinationIndexById) {
+  const distances = matrix.distances?.[sourceIndex] || [];
+  const durations = matrix.durations?.[sourceIndex] || [];
+
+  return job.candidates
+    .map((candidate) => {
+      const destinationIndex = destinationIndexById.get(candidate.id);
+      return {
+        ...candidate,
+        walkingDistance: distances[destinationIndex],
+        walkingDuration: durations[destinationIndex]
+      };
+    })
+    .filter((candidate) => Number.isFinite(candidate.walkingDistance) && Number.isFinite(candidate.walkingDuration))
+    .sort((left, right) => left.walkingDistance - right.walkingDistance);
+}
+
+async function analyzeDistanceBatch(jobs, options, distanceStats, totalHouses) {
+  try {
+    const { matrix, destinationContainers } = await fetchWalkingMatrixBatch(jobs, options);
+    const destinationIndexById = new Map(destinationContainers.map((container, index) => [container.id, index]));
+
+    distanceStats.batches += 1;
+    distanceStats.houses += jobs.length;
+    if (distanceStats.batches % 5 === 0 || distanceStats.houses === totalHouses) {
+      console.log(`Loopafstandsbatches berekend: ${distanceStats.batches} batch(es), ${distanceStats.houses}/${totalHouses} adressen.`);
+    }
+
+    return jobs.map((job, sourceIndex) => ({
+      index: job.index,
+      house: job.house,
+      ranked: buildRankedCandidates(job, matrix, sourceIndex, destinationIndexById),
+      analysisError: null
+    }));
+  } catch (error) {
+    distanceStats.failedBatches += 1;
+
+    if (jobs.length > 1) {
+      const midpoint = Math.ceil(jobs.length / 2);
+      const left = await analyzeDistanceBatch(jobs.slice(0, midpoint), options, distanceStats, totalHouses);
+      const right = await analyzeDistanceBatch(jobs.slice(midpoint), options, distanceStats, totalHouses);
+      return [...left, ...right];
+    }
+
+    distanceStats.houses += 1;
+    return [{
+      index: jobs[0].index,
+      house: jobs[0].house,
+      ranked: [],
+      analysisError: error.message || 'Loopafstand kon niet worden berekend.'
+    }];
+  }
+}
+
+async function buildDistanceAnalyses(houseJobs, options) {
+  const analyses = new Array(houseJobs.length);
+  const routableJobs = [];
+  const distanceStats = {
+    batches: 0,
+    failedBatches: 0,
+    houses: 0
+  };
+
+  for (const job of houseJobs) {
+    if (!job.candidates.length) {
+      analyses[job.index] = {
+        index: job.index,
+        house: job.house,
+        ranked: [],
+        analysisError: 'Er zijn geen containers beschikbaar.'
+      };
+      continue;
+    }
+    routableJobs.push(job);
+  }
+
+  const batches = chunkArray(routableJobs, options.tableBatchSize);
+  const batchResults = await mapWithConcurrency(batches, options.concurrency, (batch) => (
+    analyzeDistanceBatch(batch, options, distanceStats, routableJobs.length)
+  ));
+
+  for (const batchResult of batchResults) {
+    for (const analysis of batchResult) {
+      analyses[analysis.index] = analysis;
+    }
+  }
+
+  console.log(`Loopafstandsbatches afgerond: ${distanceStats.batches} gelukt, ${distanceStats.failedBatches} opgesplitst of mislukt.`);
+  return analyses;
+}
+
+function buildNearestContainerEntry(house, container) {
+  return {
+    id: container.id,
+    address: container.address,
+    accuracy: container.accuracy,
+    type: container.type || 'rest',
+    ...(Object.prototype.hasOwnProperty.call(container, 'status') ? { status: container.status } : {}),
+    straightDistance: roundMetric(container.straightDistance),
+    walkingDistance: roundMetric(container.walkingDistance),
+    walkingDuration: roundMetric(container.walkingDuration),
+    coverageStatus: classifyCoverageStatus(container.walkingDistance),
+    routeCacheKey: buildRouteCacheKey(house, container),
+    routeGeometry: [],
+    routeError: null
+  };
+}
+
+function buildCoverageResult(analysis, options, routeCache, routeTasks, routeStats) {
+  const { house, ranked } = analysis;
+
+  if (!ranked.length) {
+    return buildUnreachableResult(
+      house,
+      analysis.analysisError || 'Voor dit adres vond OSRM geen looproute naar de voorselectiecontainers.'
+    );
+  }
+
+  const nearestContainers = [];
+  for (const container of ranked.slice(0, Math.min(options.resultCount, ranked.length))) {
+    const entry = buildNearestContainerEntry(house, container);
+
+    routeStats.total += 1;
+    if (!options.includeRouteGeometries) {
+      routeStats.skipped += 1;
+    } else {
+      const cachedRouteGeometry = routeCache.routes.get(entry.routeCacheKey);
+      if (cachedRouteGeometry) {
+        entry.routeGeometry = cachedRouteGeometry;
+        routeStats.reused += 1;
+      } else {
+        routeTasks.push({ house, container, entry });
+      }
     }
 
     nearestContainers.push(entry);
   }
 
-  return nearestContainers;
-}
-
-async function buildCoverageResult(house, candidates, matrix, options) {
-  const distances = matrix.distances?.[0] || [];
-  const durations = matrix.durations?.[0] || [];
-
-  const ranked = candidates
-    .map((candidate, index) => ({
-      ...candidate,
-      walkingDistance: distances[index],
-      walkingDuration: durations[index]
-    }))
-    .filter((candidate) => Number.isFinite(candidate.walkingDistance) && Number.isFinite(candidate.walkingDuration))
-    .sort((left, right) => left.walkingDistance - right.walkingDistance);
-
-  if (!ranked.length) {
-    return buildUnreachableResult(house, 'Voor dit adres vond OSRM geen looproute naar de voorselectiecontainers.');
-  }
-
   const nearest = ranked[0];
-  const nearestContainers = await buildRankedContainersWithRoutes(house, ranked, options);
-
   return {
     ...house,
     nearestContainerId: nearest.id,
@@ -525,50 +835,26 @@ async function buildCoverageResult(house, candidates, matrix, options) {
   };
 }
 
-async function analyzeHouse(house, containers, options) {
-  const candidates = getCandidateContainers(house, containers, options.candidateCount);
-  if (!candidates.length) {
-    return buildUnreachableResult(house, 'Er zijn geen containers beschikbaar.');
+async function populateRouteGeometries(routeTasks, options, routeStats) {
+  if (!routeTasks.length) {
+    console.log(`Routegeometrieën: ${routeStats.reused} hergebruikt, 0 opgehaald, 0 mislukt.`);
+    return;
   }
 
-  if (options.delayMs > 0) {
-    await sleep(options.delayMs);
-  }
-
-  try {
-    const matrix = await fetchWalkingMatrix(house, candidates);
-    return await buildCoverageResult(house, candidates, matrix, options);
-  } catch (error) {
-    return buildUnreachableResult(house, error.message || 'Loopafstand kon niet worden berekend.');
-  }
-}
-
-async function mapWithConcurrency(items, concurrency, mapper) {
-  const results = new Array(items.length);
-  let nextIndex = 0;
-  let completed = 0;
-
-  async function worker() {
-    while (true) {
-      const currentIndex = nextIndex;
-      nextIndex += 1;
-
-      if (currentIndex >= items.length) {
-        return;
-      }
-
-      results[currentIndex] = await mapper(items[currentIndex], currentIndex);
-      completed += 1;
-
-      if (completed % 25 === 0 || completed === items.length) {
-        console.log(`Loopafstanden berekend: ${completed}/${items.length}`);
-      }
+  await mapWithConcurrency(routeTasks, options.concurrency, async ({ house, container, entry }) => {
+    try {
+      entry.routeGeometry = await fetchWalkingRoute(house, container, options);
+      routeStats.fetched += 1;
+    } catch (error) {
+      entry.routeError = error.message || 'Looproute kon niet worden opgehaald.';
+      routeStats.failed += 1;
     }
-  }
 
-  const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => worker());
-  await Promise.all(workers);
-  return results;
+    const completed = routeStats.fetched + routeStats.failed;
+    if (completed % 25 === 0 || completed === routeTasks.length) {
+      console.log(`Routegeometrieën opgehaald: ${completed}/${routeTasks.length} (${routeStats.reused} hergebruikt, ${routeStats.failed} mislukt).`);
+    }
+  });
 }
 
 function buildSummary(results, options, containers, bbox) {
@@ -611,6 +897,8 @@ function buildSummary(results, options, containers, bbox) {
     maxWalkingDistance: routedDistances.length ? roundMetric(Math.max(...routedDistances)) : null,
     candidateCount: options.candidateCount,
     resultCount: options.resultCount,
+    includeRouteGeometries: options.includeRouteGeometries,
+    tableBatchSize: options.tableBatchSize,
     containerCount: containers.length,
     bbox,
     limitedRun: Number.isInteger(options.limitHouses)
@@ -626,9 +914,20 @@ async function writeOutput(outputJsonPath, payload) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+  options.osrmRateLimiter = createRateLimiter(options.delayMs);
+
   const containers = await loadContainers(options.containerPath);
+  const routeCache = await loadRouteCache(options.outputJsonPath, options);
 
   console.log(`Containerdataset geladen: ${containers.length} locaties.`);
+  console.log(`OSRM-instellingen: ${options.tableBatchSize} adressen per table-batch, minimaal ${options.delayMs} ms tussen verzoeken.`);
+  if (!options.includeRouteGeometries) {
+    console.log('Routegeometrieën: overgeslagen. De kaart gebruikt live fallback wanneer een route wordt geselecteerd.');
+  } else if (routeCache.disabled) {
+    console.log('Route-cache genegeerd door --refresh-routes.');
+  } else {
+    console.log(`Route-cache geladen: ${routeCache.reusable} bruikbare route(s), ${routeCache.skipped} overgeslagen.`);
+  }
   console.log(`Zoek woonplaatsgrens voor ${WARMENHUIZEN_NAME}...`);
 
   const boundaryFeature = await loadWarmenhuizenBoundary();
@@ -642,7 +941,25 @@ async function main() {
 
   console.log(`Te analyseren adressen: ${houses.length}${Number.isInteger(options.limitHouses) ? ` (beperkt vanaf totaal ${allAddresses.length})` : ''}.`);
 
-  const results = await mapWithConcurrency(houses, options.concurrency, (house) => analyzeHouse(house, containers, options));
+  const houseJobs = buildHouseJobs(houses, containers, options);
+  const analyses = await buildDistanceAnalyses(houseJobs, options);
+  const routeTasks = [];
+  const routeStats = {
+    total: 0,
+    reused: 0,
+    fetched: 0,
+    failed: 0,
+    skipped: 0
+  };
+  const results = analyses.map((analysis) => buildCoverageResult(analysis, options, routeCache, routeTasks, routeStats));
+
+  if (options.includeRouteGeometries) {
+    console.log(`Routegeometrieën voorbereid: ${routeStats.total} totaal, ${routeStats.reused} uit cache, ${routeTasks.length} op te halen.`);
+    await populateRouteGeometries(routeTasks, options, routeStats);
+  } else {
+    console.log(`Routegeometrieën overgeslagen: ${routeStats.skipped} route(s) krijgen live fallback in de kaart.`);
+  }
+
   const generatedAt = new Date().toISOString();
   const summary = buildSummary(results, options, containers, bbox);
 

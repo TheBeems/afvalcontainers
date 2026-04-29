@@ -103,5 +103,5 @@ Source files live in `src/`: `index.html` is the page template, `styles.css` con
 - For routine changes, run `npm run check`.
 - For data or script changes, run `npm run check`.
 - For generator changes, also run `npm run generate:smoke` and inspect the summary output.
-- For map changes, run `npm run build`, then `npm run serve`, and verify that Leaflet tiles, container markers, house markers at zoom level 16+, selection states, stored route polylines, and coverage statistics load correctly.
+- For map changes, run `npm run build`.
 - There is no browser automation suite.
