@@ -63,6 +63,14 @@ npm run serve
 
 Open `http://127.0.0.1:8000/` after `npm run serve`.
 
+## Repository structure
+
+- `src/index.html` contains the fixed page structure.
+- `src/styles.css` is the CSS entrypoint and imports focused CSS modules from `src/styles/`.
+- `src/app/main.js` is the browser entrypoint. Feature code lives in `src/app/domain/`, `src/app/map/`, `src/app/services/`, and `src/app/ui/`.
+- `src/shared/` contains pure helpers and constants reused by the browser app and Node scripts.
+- `scripts/build-site.mjs`, `scripts/validate-data.mjs`, and `scripts/generate-house-coverage.mjs` remain the public CLI entrypoints; their implementation modules live under `scripts/build/`, `scripts/validation/`, and `scripts/generator/`.
+
 ## Data
 
 - `data/container-locations.json` is the editable container source.
