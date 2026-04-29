@@ -2,6 +2,11 @@ name: Generate House Coverage & Deploy (Manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      include_route_geometries:
+        description: 'Prefetch and store route geometries'
+        type: boolean
+        default: false
 
 jobs:
   generate-and-deploy:
@@ -23,7 +28,12 @@ jobs:
         run: npm ci
 
       - name: Generate house coverage
-        run: node scripts/generate-house-coverage.mjs
+        run: |
+          args=()
+          if [ "${{ inputs.include_route_geometries }}" = "true" ]; then
+            args+=(--include-route-geometries)
+          fi
+          node scripts/generate-house-coverage.mjs "${args[@]}"
 
       - name: Check for changes
         id: git-check

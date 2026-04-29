@@ -33,6 +33,7 @@ const defaultOptions = {
   limitHouses: null,
   delayMs: DEFAULT_DELAY_MS,
   tableBatchSize: DEFAULT_TABLE_BATCH_SIZE,
+  includeRouteGeometries: false,
   refreshRoutes: false
 };
 
@@ -45,12 +46,14 @@ Opties:
   --container-file=PAD   Pad naar de containerdataset JSON.
   --output-json=PAD      Pad voor het gegenereerde JSON-resultaat.
   --candidate-count=N    Aantal hemelsbreed dichtste containers per adres. Standaard: ${DEFAULT_CANDIDATE_COUNT}
-  --result-count=N       Aantal opgeslagen dichtstbijzijnde containers en routes per adres. Standaard: ${DEFAULT_RESULT_COUNT}
+  --result-count=N       Aantal opgeslagen dichtstbijzijnde containers per adres. Standaard: ${DEFAULT_RESULT_COUNT}
   --concurrency=N        Gelijktijdige OSRM-verzoeken, begrensd door --delay-ms. Standaard: ${DEFAULT_CONCURRENCY}
   --limit-houses=N       Analyseer alleen de eerste N adressen (handig voor tests).
   --delay-ms=N           Minimum wachttijd tussen OSRM-verzoeken. Standaard: ${DEFAULT_DELAY_MS}
   --table-batch-size=N   Aantal adressen per OSRM table-batch. Standaard: ${DEFAULT_TABLE_BATCH_SIZE}
-  --refresh-routes       Haal alle routegeometrieën opnieuw op en negeer de route-cache.
+  --include-route-geometries
+                         Haal routegeometrieën op voor de opgeslagen top-${DEFAULT_RESULT_COUNT}. Standaard: uit.
+  --refresh-routes       Haal routegeometrieën opnieuw op en negeer de route-cache. Impliceert --include-route-geometries.
   --help                 Toon deze hulptekst.
 `.trim());
 }
@@ -65,7 +68,13 @@ function parseArgs(argv) {
     }
 
     if (arg === '--refresh-routes') {
+      options.includeRouteGeometries = true;
       options.refreshRoutes = true;
+      continue;
+    }
+
+    if (arg === '--include-route-geometries') {
+      options.includeRouteGeometries = true;
       continue;
     }
 
@@ -352,10 +361,10 @@ async function loadRouteCache(outputJsonPath, options) {
     scanned: 0,
     reusable: 0,
     skipped: 0,
-    disabled: options.refreshRoutes
+    disabled: !options.includeRouteGeometries || options.refreshRoutes
   };
 
-  if (options.refreshRoutes) {
+  if (!options.includeRouteGeometries || options.refreshRoutes) {
     return emptyCache;
   }
 
@@ -794,14 +803,18 @@ function buildCoverageResult(analysis, options, routeCache, routeTasks, routeSta
   const nearestContainers = [];
   for (const container of ranked.slice(0, Math.min(options.resultCount, ranked.length))) {
     const entry = buildNearestContainerEntry(house, container);
-    const cachedRouteGeometry = routeCache.routes.get(entry.routeCacheKey);
 
     routeStats.total += 1;
-    if (cachedRouteGeometry) {
-      entry.routeGeometry = cachedRouteGeometry;
-      routeStats.reused += 1;
+    if (!options.includeRouteGeometries) {
+      routeStats.skipped += 1;
     } else {
-      routeTasks.push({ house, container, entry });
+      const cachedRouteGeometry = routeCache.routes.get(entry.routeCacheKey);
+      if (cachedRouteGeometry) {
+        entry.routeGeometry = cachedRouteGeometry;
+        routeStats.reused += 1;
+      } else {
+        routeTasks.push({ house, container, entry });
+      }
     }
 
     nearestContainers.push(entry);
@@ -884,6 +897,7 @@ function buildSummary(results, options, containers, bbox) {
     maxWalkingDistance: routedDistances.length ? roundMetric(Math.max(...routedDistances)) : null,
     candidateCount: options.candidateCount,
     resultCount: options.resultCount,
+    includeRouteGeometries: options.includeRouteGeometries,
     tableBatchSize: options.tableBatchSize,
     containerCount: containers.length,
     bbox,
@@ -907,7 +921,9 @@ async function main() {
 
   console.log(`Containerdataset geladen: ${containers.length} locaties.`);
   console.log(`OSRM-instellingen: ${options.tableBatchSize} adressen per table-batch, minimaal ${options.delayMs} ms tussen verzoeken.`);
-  if (routeCache.disabled) {
+  if (!options.includeRouteGeometries) {
+    console.log('Routegeometrieën: overgeslagen. De kaart gebruikt live fallback wanneer een route wordt geselecteerd.');
+  } else if (routeCache.disabled) {
     console.log('Route-cache genegeerd door --refresh-routes.');
   } else {
     console.log(`Route-cache geladen: ${routeCache.reusable} bruikbare route(s), ${routeCache.skipped} overgeslagen.`);
@@ -932,12 +948,17 @@ async function main() {
     total: 0,
     reused: 0,
     fetched: 0,
-    failed: 0
+    failed: 0,
+    skipped: 0
   };
   const results = analyses.map((analysis) => buildCoverageResult(analysis, options, routeCache, routeTasks, routeStats));
 
-  console.log(`Routegeometrieën voorbereid: ${routeStats.total} totaal, ${routeStats.reused} uit cache, ${routeTasks.length} op te halen.`);
-  await populateRouteGeometries(routeTasks, options, routeStats);
+  if (options.includeRouteGeometries) {
+    console.log(`Routegeometrieën voorbereid: ${routeStats.total} totaal, ${routeStats.reused} uit cache, ${routeTasks.length} op te halen.`);
+    await populateRouteGeometries(routeTasks, options, routeStats);
+  } else {
+    console.log(`Routegeometrieën overgeslagen: ${routeStats.skipped} route(s) krijgen live fallback in de kaart.`);
+  }
 
   const generatedAt = new Date().toISOString();
   const summary = buildSummary(results, options, containers, bbox);

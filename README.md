@@ -84,8 +84,10 @@ node scripts/generate-house-coverage.mjs
 ```
 
 The full generator calls PDOK BAG APIs and OSRM routing services.
-It batches OSRM distance-table requests and stores simplified route geometry for the 3 nearest containers per address.
-After a full run with route cache keys, unchanged route geometries are reused automatically; use `--refresh-routes` to force a full route refresh.
+It batches OSRM distance-table requests and stores the 3 nearest containers per address.
+Route geometry is skipped by default; the map fetches missing route lines through live OSRM fallback when an address is selected.
+Use `--include-route-geometries` only when you intentionally want to prefetch and store simplified route geometry for the 3 nearest containers per address.
+After a route-geometry run with route cache keys, unchanged route geometries are reused automatically; use `--refresh-routes` to force a full route refresh.
 
 ## Deployment
 
