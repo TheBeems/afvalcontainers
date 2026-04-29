@@ -979,49 +979,73 @@ summary {
 }
 
 .container-marker-icon-wrapper {
-  width: 34px;
-  height: 44px;
+  width: 56px;
+  height: 58px;
+  overflow: visible;
   background: transparent;
   border: 0;
 }
 
-.container-marker-icon {
+.container-pin {
+  --container-pin-width: 56px;
+  --container-pin-height: 58px;
+  --container-pin-body-size: 29px;
+  --container-pin-border-width: 5px;
+  --container-pin-body-top: 8px;
+  --container-pin-dot-size: 13px;
+  --container-pin-dot-top: 17px;
+
   position: relative;
   display: block;
-  width: 32px;
-  height: 32px;
-  margin: 2px auto 0;
-  border: 3px solid #ffffff;
-  border-radius: 50% 50% 50% 0;
-  background: var(--container-marker-border, #dc2626);
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.22),
-    0 6px 14px rgba(15, 23, 42, 0.34);
-  transform: rotate(-45deg);
-  transform-origin: 50% 50%;
+  width: var(--container-pin-width);
+  height: var(--container-pin-height);
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.34));
+  transition:
+    filter 160ms ease,
+    transform 160ms ease;
 }
 
-.container-marker-icon::after {
+.container-pin::before {
   content: "";
   position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 10px;
-  height: 10px;
-  border: 2px solid rgba(15, 23, 42, 0.18);
+  left: 50%;
+  top: var(--container-pin-body-top);
+  width: var(--container-pin-body-size);
+  height: var(--container-pin-body-size);
+  border: var(--container-pin-border-width) solid #ffffff;
+  border-radius: 50% 50% 50% 0;
+  background: var(--container-pin-color, #ef1d1d);
+  transform: translateX(-50%) rotate(-45deg);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2);
+}
+
+.container-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: var(--container-pin-dot-top);
+  width: var(--container-pin-dot-size);
+  height: var(--container-pin-dot-size);
   border-radius: 999px;
   background: #ffffff;
+  transform: translateX(-50%);
 }
 
-.container-marker-active .container-marker-icon {
+.container-marker-icon-wrapper:hover .container-pin,
+.container-marker-icon-wrapper:focus-visible .container-pin,
+.container-marker-active .container-pin {
+  filter: drop-shadow(0 5px 7px rgba(15, 23, 42, 0.42));
+}
+
+.container-marker-active .container-pin::before {
   box-shadow:
-    0 0 0 4px rgba(37, 99, 235, 0.24),
-    0 1px 2px rgba(15, 23, 42, 0.22),
-    0 8px 18px rgba(15, 23, 42, 0.38);
-  transform: rotate(-45deg) scale(1.08);
+    0 1px 2px rgba(15, 23, 42, 0.2),
+    0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
-.container-marker-unlocked {
+.container-marker-unlocked .container-pin {
   filter: drop-shadow(0 0 9px rgba(37, 99, 235, 0.85));
 }
 
@@ -1082,6 +1106,15 @@ summary {
   margin: 0 12px 18px 0;
 }
 
+.container-marker-legend {
+  width: max-content;
+  max-width: min(190px, calc(100vw - 24px));
+}
+
+.container-marker-legend.leaflet-control {
+  margin: 0 12px 10px 0;
+}
+
 .map-legend-item {
   display: flex;
   align-items: center;
@@ -1091,6 +1124,31 @@ summary {
   font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+.container-marker-legend-item {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-height: 36px;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.container-pin--legend {
+  --container-pin-width: 32px;
+  --container-pin-height: 34px;
+  --container-pin-body-size: 16px;
+  --container-pin-border-width: 3px;
+  --container-pin-body-top: 5px;
+  --container-pin-dot-size: 7px;
+  --container-pin-dot-top: 10px;
+
+  filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.32));
 }
 
 .map-legend-dot {
@@ -1326,6 +1384,14 @@ summary {
     margin: 0 8px 18px 0;
   }
 
+  .container-marker-legend {
+    max-width: min(170px, calc(100vw - 16px));
+  }
+
+  .container-marker-legend.leaflet-control {
+    margin: 0 8px 8px 0;
+  }
+
   .map-collapsible > summary {
     padding: 8px 9px;
     font-size: 11px;
@@ -1338,6 +1404,13 @@ summary {
 
   .map-legend-item {
     gap: 4px;
+    font-size: 10px;
+  }
+
+  .container-marker-legend-item {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 6px;
+    min-height: 34px;
     font-size: 10px;
   }
 

@@ -35,22 +35,22 @@ const CONTAINER_STATUS_LABELS = {
 const CONTAINER_CATEGORIES = {
   'new:rest': {
     label: 'Nieuw rest',
-    borderColor: '#ff0000',
+    borderColor: '#ef1d1d',
     fillColor: '#fee2e2'
   },
   'existing:rest': {
     label: 'Bestaand rest',
-    borderColor: '#000000',
+    borderColor: '#111111',
     fillColor: '#f8fafc'
   },
   'new:semi-rest': {
     label: 'Nieuw semi-rest',
-    borderColor: '#b441bd',
+    borderColor: '#b91bb8',
     fillColor: '#f3e8ff'
   },
   'new:gfe': {
     label: 'Nieuw GFE',
-    borderColor: '#00ff00',
+    borderColor: '#18bf20',
     fillColor: '#dcfce7'
   }
 };
@@ -184,6 +184,7 @@ const containerLayer = L.layerGroup().addTo(map);
 
 const mapInfoControl = L.control({ position: 'bottomleft' });
 const mapLegendControl = L.control({ position: 'bottomright' });
+const containerMarkerLegendControl = L.control({ position: 'bottomright' });
 const containerEditorControl = L.control({ position: 'topright' });
 
 mapLegendControl.onAdd = () => {
@@ -212,6 +213,38 @@ mapLegendControl.onAdd = () => {
 
 mapLegendControl.addTo(map);
 elements.mapLegend = document.getElementById('map-legend');
+
+containerMarkerLegendControl.onAdd = () => {
+  const container = L.DomUtil.create('details', 'map-collapsible container-marker-legend');
+  container.id = 'container-marker-legend';
+  container.open = true;
+  container.setAttribute('aria-label', 'Legenda containermarkers');
+
+  const items = Object.values(CONTAINER_CATEGORIES).map((category) => `
+    <span class="container-marker-legend-item">
+      <span
+        class="container-pin container-pin--legend"
+        style="--container-pin-color:${category.borderColor}"
+        aria-hidden="true"
+      ></span>
+      ${escapeHtml(category.label)}
+    </span>
+  `).join('');
+
+  container.innerHTML = `
+    <summary>Containermarkers</summary>
+    <div class="map-collapsible-body">
+      ${items}
+    </div>
+  `;
+
+  L.DomEvent.disableClickPropagation(container);
+  L.DomEvent.disableScrollPropagation(container);
+
+  return container;
+};
+
+containerMarkerLegendControl.addTo(map);
 
 containerEditorControl.onAdd = () => {
   const container = L.DomUtil.create('section', 'container-editor');
@@ -1283,17 +1316,19 @@ function renderContainerMapInfo(container) {
 
 function createContainerMarkerIcon(container, isActive = false) {
   const category = getContainerCategory(container);
+
   return L.divIcon({
     className: `container-marker-icon-wrapper${isActive ? ' container-marker-active' : ''}`,
     html: `
       <span
-        class="container-marker-icon"
-        style="--container-marker-border:${category.borderColor}; --container-marker-fill:${category.fillColor}"
+        class="container-pin"
+        style="--container-pin-color:${category.borderColor}"
         aria-hidden="true"
       ></span>
     `,
-    iconSize: [34, 44],
-    iconAnchor: [17, 42]
+    iconSize: [56, 58],
+    iconAnchor: [28, 55],
+    popupAnchor: [0, -50]
   });
 }
 
