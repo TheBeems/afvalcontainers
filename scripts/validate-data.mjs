@@ -247,6 +247,9 @@ function validateNearestContainers(house, index, containersById) {
     if (container.routeGeometry.length === 0 && container.routeError !== null && typeof container.routeError !== 'string') {
       fail(`${label}.routeError must be null or a string.`);
     }
+    if (Object.prototype.hasOwnProperty.call(container, 'routeCacheKey')) {
+      assertString(container.routeCacheKey, `${label}.routeCacheKey`);
+    }
   }
 
   if (house.nearestContainerId && !containersById.has(house.nearestContainerId)) {
