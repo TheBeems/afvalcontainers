@@ -1,0 +1,31 @@
+export function createAppState() {
+  return {
+    containers: [],
+    originalContainers: [],
+    houses: [],
+    coverage: null,
+    containersById: new Map(),
+    containersByKey: new Map(),
+    originalContainersById: new Map(),
+    originalContainersByKey: new Map(),
+    activeContainerIndex: null,
+    activeContainerKey: null,
+    selectedHouse: null,
+    coverageCircle: null,
+    selectedHouseMarker: null,
+    containerMarkers: [],
+    containerButtons: [],
+    liveRouteCache: new Map(),
+    houseSelectionId: 0,
+    containerInfoCollapsed: false,
+    houseInfoCollapsed: false,
+    containerEditorExpanded: false,
+    addContainerMode: false,
+    pendingNewContainer: null,
+    editingContainerKey: null,
+    nextContainerClientKey: 1,
+    unlockedContainerKey: null,
+    containerDragStart: null,
+    suppressContainerClickUntil: 0
+  };
+}
