@@ -41,6 +41,38 @@ export const DEFAULT_CONTAINER_STATUS = 'new';
 export const PRIVATE_ACCESS_SCOPE = 'private';
 export const MANUAL_CONTAINER_ACCURACY = 'handmatig bepaald (zeer hoog, onzekerheid -1 m)';
 
+function getContainerIdNumber(id) {
+  const match = String(id || '').match(CONTAINER_ID_PATTERN);
+  return match ? Number(match[0].slice(2)) : null;
+}
+
+export function compareContainerIds(leftId, rightId) {
+  const leftNumber = getContainerIdNumber(leftId);
+  const rightNumber = getContainerIdNumber(rightId);
+
+  if (leftNumber !== null && rightNumber !== null && leftNumber !== rightNumber) {
+    return leftNumber - rightNumber;
+  }
+
+  if (leftNumber !== null && rightNumber === null) {
+    return -1;
+  }
+
+  if (leftNumber === null && rightNumber !== null) {
+    return 1;
+  }
+
+  return String(leftId || '').localeCompare(String(rightId || ''), 'en', { numeric: true });
+}
+
+export function compareContainersById(left, right) {
+  return compareContainerIds(left?.id, right?.id);
+}
+
+export function sortContainersById(containers) {
+  return [...containers].sort(compareContainersById);
+}
+
 export function cloneContainerAccess(access) {
   if (!access || typeof access !== 'object') {
     return null;

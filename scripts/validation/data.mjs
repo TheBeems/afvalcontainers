@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { COVERAGE_STATUS_KEYS } from '../../src/shared/coverage.js';
 import {
+  compareContainersById,
   DEFAULT_CONTAINER_STATUS,
   PRIVATE_ACCESS_SCOPE,
   VALID_CONTAINER_CATEGORIES,
@@ -130,6 +131,10 @@ function validateContainers(containers) {
       fail(`Duplicate container id: ${container.id}`);
     }
     seenIds.add(container.id);
+
+    if (index > 0 && compareContainersById(containers[index - 1], container) > 0) {
+      fail(`container-locations.json must be sorted by id. ${container.id} should appear before ${containers[index - 1].id}.`);
+    }
 
     assertString(container.address, `${label}.address`);
     assertNumber(container.lat, `${label}.lat`);

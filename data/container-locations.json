@@ -18,6 +18,15 @@
     "status": "new"
   },
   {
+    "id": "WH03",
+    "address": "Rietzangerstraat 17",
+    "lat": 52.727235,
+    "lon": 4.741842,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
     "id": "WH04",
     "address": "Maasweid 1",
     "lat": 52.726813,
@@ -26,12 +35,39 @@
     "type": "rest"
   },
   {
+    "id": "WH05",
+    "address": "Kuipersven 36",
+    "lat": 52.726868,
+    "lon": 4.748425,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH06",
+    "address": "Soeverein 2",
+    "lat": 52.727571,
+    "lon": 4.750299,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
     "id": "WH07",
     "address": "Dorpsstraat 37",
     "lat": 52.726592,
     "lon": 4.739501,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "rest"
+  },
+  {
+    "id": "WH08",
+    "address": "Dorpsstraat 89",
+    "lat": 52.725443,
+    "lon": 4.73915,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
   },
   {
     "id": "WH09",
@@ -76,6 +112,15 @@
     "lon": 4.735266,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "rest"
+  },
+  {
+    "id": "WH14",
+    "address": "Doorbraak 23",
+    "lat": 52.722378,
+    "lon": 4.740949,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
   },
   {
     "id": "WH15",
@@ -141,6 +186,42 @@
     "lon": 4.728182,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "rest"
+  },
+  {
+    "id": "WH23",
+    "address": "Molenaarsweg 7",
+    "lat": 52.720326,
+    "lon": 4.73849,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
+  },
+  {
+    "id": "WH24",
+    "address": "Pastoor Willemsestraat 80",
+    "lat": 52.720786,
+    "lon": 4.74023,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
   },
   {
     "id": "WH25",
@@ -211,87 +292,6 @@
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "type": "gfe",
     "status": "new"
-  },
-  {
-    "id": "WH03",
-    "address": "Rietzangerstraat 17",
-    "lat": 52.727235,
-    "lon": 4.741842,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing"
-  },
-  {
-    "id": "WH05",
-    "address": "Kuipersven 36",
-    "lat": 52.726868,
-    "lon": 4.748425,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing"
-  },
-  {
-    "id": "WH06",
-    "address": "Soeverein 2",
-    "lat": 52.727571,
-    "lon": 4.750299,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing"
-  },
-  {
-    "id": "WH08",
-    "address": "Dorpsstraat 89",
-    "lat": 52.725443,
-    "lon": 4.73915,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing"
-  },
-  {
-    "id": "WH14",
-    "address": "Doorbraak 23",
-    "lat": 52.722378,
-    "lon": 4.740949,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing"
-  },
-  {
-    "id": "WH23",
-    "address": "Molenaarsweg 7",
-    "lat": 52.720326,
-    "lon": 4.73849,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing",
-    "access": {
-      "scope": "private",
-      "label": "Privé Angelapark",
-      "allowedAddressRange": {
-        "street": "Pastoor Willemsestraat",
-        "minHouseNumber": 2,
-        "maxHouseNumber": 224
-      }
-    }
-  },
-  {
-    "id": "WH24",
-    "address": "Pastoor Willemsestraat 80",
-    "lat": 52.720786,
-    "lon": 4.74023,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
-    "type": "rest",
-    "status": "existing",
-    "access": {
-      "scope": "private",
-      "label": "Privé Angelapark",
-      "allowedAddressRange": {
-        "street": "Pastoor Willemsestraat",
-        "minHouseNumber": 2,
-        "maxHouseNumber": 224
-      }
-    }
   },
   {
     "id": "WH33",

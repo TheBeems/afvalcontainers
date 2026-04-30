@@ -1,12 +1,14 @@
 import {
   cloneContainerAccess,
+  compareContainersById,
   DEFAULT_CONTAINER_STATUS,
   DEFAULT_CONTAINER_TYPE,
   formatContainerCategory,
   getContainerCategory,
   hasExplicitContainerStatus,
   normalizeContainerStatus,
-  normalizeContainerType
+  normalizeContainerType,
+  sortContainersById
 } from '../../shared/containers.js';
 import { roundCoordinate } from '../../shared/geometry.js';
 
@@ -48,14 +50,32 @@ export function createContainerStore(context) {
     };
   }
 
+  function syncActiveContainerIndex() {
+    if (!state.activeContainerKey) {
+      state.activeContainerIndex = null;
+      return;
+    }
+
+    const activeIndex = state.containers.findIndex((container) => container.clientKey === state.activeContainerKey);
+    if (activeIndex === -1) {
+      state.activeContainerIndex = null;
+      state.activeContainerKey = null;
+      return;
+    }
+
+    state.activeContainerIndex = activeIndex;
+  }
+
   function syncContainerIndex() {
+    state.containers.sort(compareContainersById);
     state.containersById = new Map(state.containers.map((container) => [container.id, container]));
     state.containersByKey = new Map(state.containers.map((container) => [container.clientKey, container]));
+    syncActiveContainerIndex();
   }
 
   function setOriginalContainers(containers) {
     state.nextContainerClientKey = 1;
-    state.originalContainers = containers.map((container) => cloneContainerForState(container));
+    state.originalContainers = sortContainersById(containers).map((container) => cloneContainerForState(container));
     state.originalContainersById = new Map(state.originalContainers.map((container) => [container.id, container]));
     state.originalContainersByKey = new Map(state.originalContainers.map((container) => [container.clientKey, container]));
   }
@@ -160,7 +180,7 @@ export function createContainerStore(context) {
   }
 
   function serializeContainersForDownload() {
-    return state.containers.map(cloneContainer);
+    return sortContainersById(state.containers).map(cloneContainer);
   }
 
   function getNextContainerId() {
@@ -178,6 +198,7 @@ export function createContainerStore(context) {
     cloneContainer,
     cloneContainerForState,
     createContainerClientKey,
+    syncActiveContainerIndex,
     syncContainerIndex,
     setOriginalContainers,
     normalizeContainerCoordinate,

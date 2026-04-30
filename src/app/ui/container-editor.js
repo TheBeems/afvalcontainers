@@ -350,13 +350,12 @@ export function createContainerEditor(context, api) {
       ...values
     }, state.pendingNewContainer.clientKey);
 
-    state.containers.push(container);
-    api.syncContainerIndex();
     state.pendingNewContainer = null;
     state.addContainerMode = false;
-    state.activeContainerIndex = state.containers.length - 1;
     state.activeContainerKey = container.clientKey;
     state.editingContainerKey = container.clientKey;
+    state.containers.push(container);
+    api.syncContainerIndex();
     state.liveRouteCache.clear();
     map.getContainer().classList.remove('adding-container');
     api.renderContainers();
