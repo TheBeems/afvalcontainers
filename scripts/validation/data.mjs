@@ -139,6 +139,12 @@ function validateContainerAccess(container, label) {
   }
 }
 
+function validateContainerMetadata(container, label) {
+  if (Object.prototype.hasOwnProperty.call(container, 'hvcContainerId')) {
+    assertString(container.hvcContainerId, `${label}.hvcContainerId`);
+  }
+}
+
 function validateContainers(containers) {
   if (!Array.isArray(containers) || containers.length === 0) {
     fail('container-locations.json must contain a non-empty array.');
@@ -165,6 +171,7 @@ function validateContainers(containers) {
     assertNumber(container.lat, `${label}.lat`);
     assertNumber(container.lon, `${label}.lon`);
     assertString(container.accuracy, `${label}.accuracy`);
+    validateContainerMetadata(container, label);
     validateContainerClassification(container, label);
     validateContainerAccess(container, label);
     containersById.set(container.id, container);

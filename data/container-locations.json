@@ -28,15 +28,16 @@
   {
     "id": "WH03",
     "address": "Rietzangerstraat 17",
-    "lat": 52.727235,
-    "lon": 4.741842,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.72721,
+    "lon": 4.741939,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "80799"
   },
   {
     "id": "WH04",
@@ -54,28 +55,30 @@
   {
     "id": "WH05",
     "address": "Kuipersven 36",
-    "lat": 52.726868,
-    "lon": 4.748425,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.726883,
+    "lon": 4.748476,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81617"
   },
   {
     "id": "WH06",
     "address": "Soeverein 2",
-    "lat": 52.727571,
-    "lon": 4.750299,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.727578,
+    "lon": 4.750383,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81653"
   },
   {
     "id": "WH07",
@@ -93,15 +96,16 @@
   {
     "id": "WH08",
     "address": "Dorpsstraat 89",
-    "lat": 52.725443,
-    "lon": 4.73915,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.725435,
+    "lon": 4.739056,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81580"
   },
   {
     "id": "WH09",
@@ -171,15 +175,16 @@
   {
     "id": "WH14",
     "address": "Doorbraak 23",
-    "lat": 52.722378,
-    "lon": 4.740949,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.722411,
+    "lon": 4.740981,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81206"
   },
   {
     "id": "WH15",
@@ -288,9 +293,9 @@
   {
     "id": "WH23",
     "address": "Molenaarsweg 7",
-    "lat": 52.720326,
-    "lon": 4.73849,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.720329,
+    "lon": 4.738551,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
@@ -305,14 +310,15 @@
         "minHouseNumber": 2,
         "maxHouseNumber": 224
       }
-    }
+    },
+    "hvcContainerId": "80365"
   },
   {
     "id": "WH24",
     "address": "Pastoor Willemsestraat 80",
-    "lat": 52.720786,
-    "lon": 4.74023,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.720753,
+    "lon": 4.74024,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
@@ -327,7 +333,8 @@
         "minHouseNumber": 2,
         "maxHouseNumber": 224
       }
-    }
+    },
+    "hvcContainerId": "80428"
   },
   {
     "id": "WH25",
@@ -345,9 +352,9 @@
   {
     "id": "WH26",
     "address": "Regelhaalder 42",
-    "lat": 52.718597,
-    "lon": 4.741513,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.718557,
+    "lon": 4.741484,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "gfe",
@@ -357,14 +364,15 @@
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "80299"
   },
   {
     "id": "WH27",
     "address": "Zigt 97",
-    "lat": 52.718126,
-    "lon": 4.743441,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.718151,
+    "lon": 4.743409,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "gfe",
@@ -374,7 +382,8 @@
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "80552"
   },
   {
     "id": "WH28",
@@ -444,27 +453,29 @@
   {
     "id": "WH33",
     "address": "Zuiderkruis 36",
-    "lat": 52.729878,
-    "lon": 4.748457,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.729898,
+    "lon": 4.74845,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81782"
   },
   {
     "id": "WH34",
     "address": "Poolster 25",
-    "lat": 52.730477,
-    "lon": 4.75057,
-    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "lat": 52.730485,
+    "lon": 4.750576,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81783"
   }
 ]

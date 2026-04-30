@@ -1,5 +1,47 @@
-import { CONTAINER_CATEGORIES } from '../../shared/containers.js';
+import { getContainerCategories } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
+import { createContainerMarkerSvg } from '../ui/container-marker.js';
+
+function getContainerLegendItems(containers) {
+  const seenKeys = new Set();
+  const items = [];
+
+  for (const container of containers) {
+    const categories = getContainerCategories(container);
+    const key = categories.map((category) => `${category.status}:${category.type}`).join('|');
+
+    if (seenKeys.has(key)) {
+      continue;
+    }
+
+    seenKeys.add(key);
+    items.push({
+      label: categories.map((category) => category.label).join(', '),
+      marker: {
+        id: `legend-${items.length + 1}`,
+        streams: categories.map(({ status, type }) => ({ status, type }))
+      }
+    });
+  }
+
+  return items;
+}
+
+export function renderContainerMarkerLegend(context) {
+  const { elements, state } = context;
+  const body = elements.containerMarkerLegend?.querySelector('.map-collapsible-body');
+
+  if (!body) {
+    return;
+  }
+
+  body.innerHTML = getContainerLegendItems(state.containers).map((item) => `
+    <span class="container-marker-legend-item">
+      ${createContainerMarkerSvg(item.marker, { variant: 'legend' })}
+      ${escapeHtml(item.label)}
+    </span>
+  `).join('');
+}
 
 export function installMapControls(context) {
   const { elements, mapContext, state } = context;
@@ -44,22 +86,9 @@ export function installMapControls(context) {
     container.open = true;
     container.setAttribute('aria-label', 'Legenda containermarkers');
 
-    const items = Object.values(CONTAINER_CATEGORIES).map((category) => `
-      <span class="container-marker-legend-item">
-        <span
-          class="container-pin container-pin--legend"
-          style="--container-pin-color:${category.borderColor}"
-          aria-hidden="true"
-        ></span>
-        ${escapeHtml(category.label)}
-      </span>
-    `).join('');
-
     container.innerHTML = `
       <summary>Containermarkers</summary>
-      <div class="map-collapsible-body">
-        ${items}
-      </div>
+      <div class="map-collapsible-body"></div>
     `;
 
     L.DomEvent.disableClickPropagation(container);
@@ -70,6 +99,7 @@ export function installMapControls(context) {
 
   containerMarkerLegendControl.addTo(map);
   elements.containerMarkerLegend = document.getElementById('container-marker-legend');
+  renderContainerMarkerLegend(context);
 
   containerEditorControl.onAdd = () => {
     const container = L.DomUtil.create('section', 'container-editor');
@@ -154,4 +184,8 @@ export function installMapControls(context) {
   elements.houseMapInfo.addEventListener('toggle', () => {
     state.houseInfoCollapsed = !elements.houseMapInfo.open;
   });
+
+  return {
+    renderContainerMarkerLegend: () => renderContainerMarkerLegend(context)
+  };
 }

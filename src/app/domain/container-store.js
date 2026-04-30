@@ -33,6 +33,10 @@ export function createContainerStore(context) {
       streams: cloneContainerStreams(container)
     };
 
+    if (Object.prototype.hasOwnProperty.call(container, 'hvcContainerId')) {
+      cloned.hvcContainerId = container.hvcContainerId;
+    }
+
     const access = cloneContainerAccess(container.access);
     if (access) {
       cloned.access = access;
@@ -112,6 +116,7 @@ export function createContainerStore(context) {
 
     return original.address !== container.address
       || original.id !== container.id
+      || original.hvcContainerId !== container.hvcContainerId
       || original.accuracy !== container.accuracy
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
       || getContainerStoredStreams(original) !== getContainerStoredStreams(container)
@@ -163,6 +168,7 @@ export function createContainerStore(context) {
     const idChanged = original.id !== container.id;
     const locationChanged = hasContainerLocationChanged(container);
     const infoChanged = original.address !== container.address
+      || original.hvcContainerId !== container.hvcContainerId
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
       || getContainerStoredStreams(original) !== getContainerStoredStreams(container);
 

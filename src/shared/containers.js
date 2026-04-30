@@ -51,6 +51,7 @@ export const DEFAULT_CONTAINER_TYPE = 'rest';
 export const DEFAULT_CONTAINER_STATUS = 'new';
 export const PRIVATE_ACCESS_SCOPE = 'private';
 export const MANUAL_CONTAINER_ACCURACY = 'handmatig bepaald (zeer hoog, onzekerheid -1 m)';
+export const HVC_IMPORT_CONTAINER_ACCURACY = 'hvc import (exacte locatie)';
 
 function getContainerIdNumber(id) {
   const match = String(id || '').match(CONTAINER_ID_PATTERN);

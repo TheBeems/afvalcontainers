@@ -88,18 +88,6 @@
   white-space: nowrap;
 }
 
-.container-pin--legend {
-  --container-pin-width: 32px;
-  --container-pin-height: 34px;
-  --container-pin-body-size: 16px;
-  --container-pin-border-width: 3px;
-  --container-pin-body-top: 5px;
-  --container-pin-dot-size: 7px;
-  --container-pin-dot-top: 10px;
-
-  filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.32));
-}
-
 .map-legend-dot {
   width: 9px;
   height: 9px;

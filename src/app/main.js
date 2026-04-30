@@ -35,9 +35,8 @@ function createApp() {
     mapContext: createMapContext()
   };
 
-  installMapControls(context);
-
   const api = {};
+  Object.assign(api, installMapControls(context));
   Object.assign(api, createStatusUi(context, api));
   Object.assign(api, createContainerMarkup(context, api));
   Object.assign(api, createContainerStore(context, api));

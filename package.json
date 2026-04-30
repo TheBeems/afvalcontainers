@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "node scripts/build-site.mjs",
+    "audit:hvc-existing": "node scripts/audit-hvc-existing-containers.mjs",
     "check": "npm run check:syntax && npm run check:data && npm run build",
     "check:data": "node scripts/validate-data.mjs",
     "check:syntax": "node scripts/build/check-syntax.mjs",
