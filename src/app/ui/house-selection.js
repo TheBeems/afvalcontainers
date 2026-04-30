@@ -112,7 +112,7 @@ export function createHouseSelection(context, api) {
       return;
     }
 
-    api.setCoverageStatus(`Klik op een huispunt om de opgeslagen dekking en maximaal 3 looproutes te zien. ${state.houses.length.toLocaleString('nl-NL')} adressen geladen.`);
+    api.setCoverageStatus(`Klik op een huispunt om de opgeslagen dekking en maximaal 3 looproutes te zien. ${state.houses.length.toLocaleString('nl-NL')} adressen binnen de bebouwde kom geladen.`);
   }
 
   function renderHouseSummary(house, ranking) {

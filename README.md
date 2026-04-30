@@ -7,7 +7,7 @@ Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
 Deze website is ontwikkeld om inzicht te geven in de daadwerkelijke loopafstanden die inwoners van Warmenhuizen moeten afleggen naar de [aangekondigde](https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen) ondergrondse afvalcontainers. Het doel is om bewustwording te creëren over de toegankelijkheid van de containers.
 
 ## Context
-De gemeente Schagen hanteert in haar plan voor Warmenhuizen een maximale afstand van 275 meter tot een container. Echter baseert de gemeente zich op een afstand hemelsbreed gemeten en niet de daadwerkelijke loopafstand! Verder geeft de gemeente aan dat in "uitzonderlijke gevallen de afstand iets groter kan zijn", maar in deze analyse blijkt dat 1.103 adressen (30,5%) meer dan 275 meter moeten lopen. Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners:
+De gemeente Schagen hanteert in haar plan voor Warmenhuizen een maximale afstand van 275 meter tot een container. Echter baseert de gemeente zich op een afstand hemelsbreed gemeten en niet de daadwerkelijke loopafstand! Verder geeft de gemeente aan dat in "uitzonderlijke gevallen de afstand iets groter kan zijn", maar in deze analyse blijkt dat 358 adressen binnen de bebouwde kom (12,5%) meer dan 275 meter moeten lopen. Daarnaast liggen 1.151 adressen (40,1%) boven 150 meter loopafstand. Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners:
 
 - **Onder 100 meter:** relatief hoge acceptatie, weinig klachten.
 - **100–150 meter:** lichte tot matige weerstand.
@@ -21,11 +21,12 @@ Deze bevindingen komen uit onderzoeken in gemeenten zoals Woerden, Zeist, Nijmeg
 - Evaluatie Zeist: [Adviesnota RMN Zeist](https://zeist.raadsinformatie.nl/document/7330194/1/01-19RV006_Omgekeerd_inzamelen_afval_-_Bijlage_1_Adviesnota_RMN_omgekeerd_inzamelen_Zeist)
 - Evaluatie Nijmegen: [Loopafstanden Nijmegen](https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645)
 - Gemeentelijk plan Schagen: [Plaatsing ondergrondse restafvalcontainers Warmenhuizen](https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen)
+- Bebouwde-komgrens: [PDOK BRT TOP10NL plaats_multivlak](https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak?f=html)
 
 ## Methode
 De loopafstanden zijn berekend met behulp van OpenStreetMap (OSM) data:
 
-- **Routes:** Kortste looproute van elk woonadres naar de dichtstbijzijnde container.
+- **Routes:** Kortste looproute van elk woonadres binnen de bebouwde kom naar de dichtstbijzijnde container.
 - **Visualisatie:** Kleuren geven de afstandscategorieën aan.
   - Groen: 0–100 meter
   - Geel: 100–125 meter
@@ -33,20 +34,20 @@ De loopafstanden zijn berekend met behulp van OpenStreetMap (OSM) data:
   - Rood: 150–275 meter
   - Donkerrood: >275 meter
 - **Fallback:** Hemelsbrede afstand wordt weergegeven als een route niet beschikbaar is.
-- **Data:** Analyse gebaseerd op 3.615 adressen en 32 containerlocaties in Warmenhuizen: 25 aangekondigde locaties volgens [Bewonersboekje Warmenhuizen](https://www.schagen.nl/sites/default/files/2026-04/bewonersboekje-warmenhuizen.pdf) en 7 bestaande containers.
+- **Data:** Analyse gebaseerd op 2.868 adressen binnen de BRT TOP10NL-bebouwdekomgrens van Warmenhuizen en 32 containerlocaties: 25 aangekondigde locaties volgens [Bewonersboekje Warmenhuizen](https://www.schagen.nl/sites/default/files/2026-04/bewonersboekje-warmenhuizen.pdf) en 7 bestaande containers. De BAG-woonplaats bevat 3.615 verblijfsobjectadressen; 747 adressen in buitengebied of kleine kernen zijn buiten de analyse gehouden omdat daar volgens de gemeente de bestaande restafvalinzameling blijft.
 
 ## Bevindingen
 De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
 
 | Afstand | Aantal adressen | Percentage | Kleur op kaart |
 |----------|----------------|-----------|----------------|
-| 0–100 m | 983 | 27,2% | Groen |
-| 100–125 m | 361 | 10,0% | Geel |
-| 125–150 m | 373 | 10,3% | Oranje |
-| 150–275 m | 795 | 22,0% | Rood |
-| >275 m | 1.103 | 30,5% | Donkerrood |
+| 0–100 m | 983 | 34,3% | Groen |
+| 100–125 m | 361 | 12,6% | Geel |
+| 125–150 m | 373 | 13,0% | Oranje |
+| 150–275 m | 793 | 27,6% | Rood |
+| >275 m | 358 | 12,5% | Donkerrood |
 
-**Conclusie:** 1.898 adressen (52,5%) liggen verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
+**Conclusie:** 1.151 adressen (40,1%) binnen de bebouwde kom liggen verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
 
 ## Gebruik van de website
 - Klik op een container om de hemelsbrede straal en looproutes te bekijken.
@@ -74,7 +75,7 @@ Open `http://127.0.0.1:8000/` after `npm run serve`.
 ## Data
 
 - `data/container-locations.json` is the editable container source.
-- `data/house-coverage.json` is generated coverage output with distance bands, top-3 container rankings, and stored route geometry.
+- `data/house-coverage.json` is generated coverage output for addresses within the BRT TOP10NL built-up area, with distance bands, top-3 container rankings, and stored route geometry.
 - Browser code reads committed JSON data for container data, coverage, rankings, distance bands, and summary statistics.
 - When stored route geometry is missing or invalid for a selected house/container pair, the map may fetch live OSRM route geometry as a visual fallback only.
 - Distance bands are based on walking distance: green `0-100 m`, yellow `100-125 m`, orange `125-150 m`, red `150-275 m`, dark red `>275 m`, and gray when no route is available.
@@ -91,7 +92,7 @@ Regenerate the full coverage dataset only when intended:
 node scripts/generate-house-coverage.mjs
 ```
 
-The full generator calls PDOK BAG APIs and OSRM routing services.
+The full generator calls PDOK BAG, PDOK BRT TOP10NL, and OSRM routing services.
 It batches OSRM distance-table requests and stores the 3 nearest containers per address.
 Route geometry is skipped by default; the map fetches missing route lines through live OSRM fallback when an address is selected.
 Use `--include-route-geometries` only when you intentionally want to prefetch and store simplified route geometry for the 3 nearest containers per address.

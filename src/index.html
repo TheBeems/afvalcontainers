@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</title>
-  <meta name="description" content="Bekijk de werkelijke loopafstand van adressen in Warmenhuizen naar de geplande ondergrondse restafvalcontainers. De kaart toont per huispunt de afstand tot de dichtstbijzijnde containers." />
+  <meta name="description" content="Bekijk de werkelijke loopafstand van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers. De kaart toont per huispunt de afstand tot de dichtstbijzijnde containers." />
   <link rel="canonical" href="https://thebeems.github.io/afvalcontainers/" />
 
   <meta property="og:title" content="Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen" />
-  <meta property="og:description" content="Interactieve kaart met loopafstanden van adressen in Warmenhuizen naar de geplande ondergrondse restafvalcontainers." />
+  <meta property="og:description" content="Interactieve kaart met loopafstanden van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://thebeems.github.io/afvalcontainers/" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -36,7 +36,8 @@
           <div class="sidebar-header-body">
             <p>Op de <a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">website</a> van de gemeente Schagen stelt de gemeente het volgende over de loopafstand naar de aangekondigde ondergrondse afvalcontainers:</p> 
             <p><i>"U loopt maximaal ongeveer 275 meter naar een container. In uitzonderlijke gevallen kan de afstand iets groter zijn"</i>.</p> 
-            <p>De gemeente berekent echter de afstand hemelsbreed. Deze kaart laat zien wat er gebeurt wanneer niet de hemelsbrede afstand, maar de werkelijke loopafstand wordt berekend. Dan blijkt dat het niet om enkele uitzonderingen gaat: <strong>bij een aanzienlijk deel van de onderzochte adressen is de loopafstand groter dan de gemeentelijke norm, en meer dan de helft komt uit op 150 meter of meer.</strong> (zie de analyse hieronder).</p> 
+            <p>De gemeente berekent echter de afstand hemelsbreed. Deze kaart laat zien wat er gebeurt wanneer niet de hemelsbrede afstand, maar de werkelijke loopafstand wordt berekend. Dan blijkt dat het niet om enkele uitzonderingen gaat: <strong>bij een duidelijk deel van de onderzochte adressen is de loopafstand groter dan de gemeentelijke norm, en een groot deel komt uit op 150 meter of meer.</strong> (zie de analyse hieronder).</p> 
+            <p>De analyse is beperkt tot adressen binnen de bebouwde kom Warmenhuizen. Buitengebied en kleine kernen behouden volgens de gemeente de bestaande restafvalinzameling en tellen daarom niet mee.</p>
             <p>Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners. Dat geldt met name wanneer de loopafstand boven de 100 meter komt. Lees <a href="https://github.com/TheBeems/afvalcontainers/blob/main/README.md">hier</a> de methodiek, bronnen en vergelijking met andere gemeenten.</p>
           </div>
         </details>
@@ -47,7 +48,7 @@
   <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
 
   <details id="coverage-summary-panel" class="sidebar-collapsible summary-panel" open>
-    <summary>Samenvatting alle adressen</summary>
+    <summary>Samenvatting bebouwde kom</summary>
     <div class="sidebar-collapsible-body">
       <div id="coverage-summary" class="summary-grid" hidden></div>
     </div>

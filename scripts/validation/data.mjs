@@ -14,6 +14,10 @@ const projectRoot = resolve(import.meta.dirname, '../..');
 const containerPath = resolve(projectRoot, 'data/container-locations.json');
 const coveragePath = resolve(projectRoot, 'data/house-coverage.json');
 
+const EXPECTED_COVERAGE_SCHEMA_VERSION = 4;
+const ANALYSIS_SCOPE_TYPE = 'built_up_area';
+const ANALYSIS_SCOPE_LABEL = 'bebouwde kom Warmenhuizen';
+const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
 const VALID_COVERAGE_STATUSES = new Set(COVERAGE_STATUS_KEYS);
 
 function fail(message) {
@@ -43,6 +47,13 @@ function assertNumber(value, label) {
 function assertInteger(value, label) {
   if (!Number.isInteger(value)) {
     fail(`${label} must be an integer.`);
+  }
+}
+
+function assertNonNegativeInteger(value, label) {
+  assertInteger(value, label);
+  if (value < 0) {
+    fail(`${label} must be a non-negative integer.`);
   }
 }
 
@@ -140,6 +151,9 @@ function validateSummary(coverage, houses, containers) {
   if (summary.containerCount !== containers.size) {
     fail(`summary.containerCount (${summary.containerCount}) must equal container count (${containers.size}).`);
   }
+  if (summary.analysisAddressScope !== ANALYSIS_SCOPE_TYPE) {
+    fail(`summary.analysisAddressScope must be "${ANALYSIS_SCOPE_TYPE}". Received: ${summary.analysisAddressScope}`);
+  }
 
   const actualCounts = {
     within_100: 0,
@@ -158,6 +172,77 @@ function validateSummary(coverage, houses, containers) {
     if (summary.counts?.[status] !== count) {
       fail(`summary.counts.${status} (${summary.counts?.[status]}) must equal actual count (${count}).`);
     }
+  }
+}
+
+function validateAnalysisScope(coverage, houses) {
+  const scope = coverage.analysisScope;
+  if (!scope || typeof scope !== 'object' || Array.isArray(scope)) {
+    fail('house-coverage.json must contain an analysisScope object.');
+  }
+
+  if (scope.type !== ANALYSIS_SCOPE_TYPE) {
+    fail(`analysisScope.type must be "${ANALYSIS_SCOPE_TYPE}". Received: ${scope.type}`);
+  }
+  if (scope.label !== ANALYSIS_SCOPE_LABEL) {
+    fail(`analysisScope.label must be "${ANALYSIS_SCOPE_LABEL}". Received: ${scope.label}`);
+  }
+
+  const source = scope.source;
+  if (!source || typeof source !== 'object' || Array.isArray(source)) {
+    fail('analysisScope.source must be an object.');
+  }
+
+  if (source.dataset !== 'BRT TOP10NL') {
+    fail(`analysisScope.source.dataset must be "BRT TOP10NL". Received: ${source.dataset}`);
+  }
+  if (source.collection !== BRT_BUILT_UP_AREA_COLLECTION) {
+    fail(`analysisScope.source.collection must be "${BRT_BUILT_UP_AREA_COLLECTION}". Received: ${source.collection}`);
+  }
+  assertString(source.featureId, 'analysisScope.source.featureId');
+  if (source.name !== 'Warmenhuizen') {
+    fail(`analysisScope.source.name must be "Warmenhuizen". Received: ${source.name}`);
+  }
+  if (source.builtUpArea !== 'ja') {
+    fail(`analysisScope.source.builtUpArea must be "ja". Received: ${source.builtUpArea}`);
+  }
+  if (source.areaType !== 'woonkern') {
+    fail(`analysisScope.source.areaType must be "woonkern". Received: ${source.areaType}`);
+  }
+  if (source.isBagPlace !== 'ja') {
+    fail(`analysisScope.source.isBagPlace must be "ja". Received: ${source.isBagPlace}`);
+  }
+  assertString(source.sourceActuality, 'analysisScope.source.sourceActuality');
+  assertString(source.sourceDescription, 'analysisScope.source.sourceDescription');
+
+  const addresses = scope.addresses;
+  if (!addresses || typeof addresses !== 'object' || Array.isArray(addresses)) {
+    fail('analysisScope.addresses must be an object.');
+  }
+
+  assertNonNegativeInteger(addresses.totalBagAddresses, 'analysisScope.addresses.totalBagAddresses');
+  assertNonNegativeInteger(addresses.includedAddresses, 'analysisScope.addresses.includedAddresses');
+  assertNonNegativeInteger(addresses.excludedAddresses, 'analysisScope.addresses.excludedAddresses');
+
+  if (addresses.totalBagAddresses !== addresses.includedAddresses + addresses.excludedAddresses) {
+    fail('analysisScope.addresses.totalBagAddresses must equal includedAddresses + excludedAddresses.');
+  }
+  if (addresses.includedAddresses < houses.length) {
+    fail('analysisScope.addresses.includedAddresses must be at least houses.length.');
+  }
+
+  const summary = coverage.summary || {};
+  if (summary.sourceAddressCount !== addresses.totalBagAddresses) {
+    fail('summary.sourceAddressCount must match analysisScope.addresses.totalBagAddresses.');
+  }
+  if (summary.includedAddressCount !== addresses.includedAddresses) {
+    fail('summary.includedAddressCount must match analysisScope.addresses.includedAddresses.');
+  }
+  if (summary.excludedAddressCount !== addresses.excludedAddresses) {
+    fail('summary.excludedAddressCount must match analysisScope.addresses.excludedAddresses.');
+  }
+  if (!summary.limitedRun && addresses.includedAddresses !== houses.length) {
+    fail('analysisScope.addresses.includedAddresses must equal houses.length for full coverage runs.');
   }
 }
 
@@ -243,11 +328,12 @@ function validateHouses(coverage, containersById) {
 export async function validateData() {
   const containers = await readJson(containerPath, 'container-locations.json');
   const coverage = await readJson(coveragePath, 'house-coverage.json');
-  if (coverage.schemaVersion !== 3) {
-    fail(`house-coverage.json schemaVersion must be 3. Received: ${coverage.schemaVersion}`);
+  if (coverage.schemaVersion !== EXPECTED_COVERAGE_SCHEMA_VERSION) {
+    fail(`house-coverage.json schemaVersion must be ${EXPECTED_COVERAGE_SCHEMA_VERSION}. Received: ${coverage.schemaVersion}`);
   }
   const containersById = validateContainers(containers);
   const houses = validateHouses(coverage, containersById);
+  validateAnalysisScope(coverage, houses);
   validateSummary(coverage, houses, containersById);
 
   console.log(`Validated ${containers.length} containers and ${houses.length} covered addresses.`);

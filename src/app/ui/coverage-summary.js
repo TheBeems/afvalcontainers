@@ -47,6 +47,18 @@ export function createCoverageSummary(context) {
     const containerCount = Number.isFinite(summary.containerCount)
       ? summary.containerCount
       : state.containers.length;
+    const scopeLabel = state.coverage?.analysisScope?.label || '';
+    const addressLabel = state.coverage?.analysisScope?.type === 'built_up_area'
+      ? 'adressen binnen bebouwde kom'
+      : 'adressen';
+    const excludedAddressCount = Number.isFinite(summary.excludedAddressCount)
+      ? summary.excludedAddressCount
+      : null;
+    const scopeMeta = scopeLabel
+      ? `<div class="summary-meta">
+        Scope: ${escapeHtml(scopeLabel)}${excludedAddressCount !== null ? `; ${excludedAddressCount.toLocaleString('nl-NL')} BAG-adressen buiten analyse.` : ''}
+      </div>`
+      : '';
 
     const distanceStats = SUMMARY_DISTANCE_ROWS
       .map(({ key, label }) => buildSummaryStat(counts[key] || 0, label, {
@@ -57,12 +69,13 @@ export function createCoverageSummary(context) {
 
     elements.coverageSummary.hidden = false;
     elements.coverageSummary.innerHTML = `
-      ${buildSummaryStat(totalAddresses, 'adressen')}
+      ${buildSummaryStat(totalAddresses, addressLabel)}
       ${buildSummaryStat(containerCount, 'containers')}
       ${distanceStats}
       <div class="summary-meta">
         Gegenereerd: ${escapeHtml(formatTimestamp(state.coverage?.generatedAt))}
       </div>
+      ${scopeMeta}
     `;
   }
 
