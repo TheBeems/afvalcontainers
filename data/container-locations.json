@@ -161,7 +161,7 @@
   },
   {
     "id": "WH27",
-    "address": "Verzetslaan 40",
+    "address": "Zigt 97",
     "lat": 52.718126,
     "lon": 4.743441,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -214,7 +214,7 @@
   },
   {
     "id": "WH03",
-    "address": "Rietzangerstraat 13",
+    "address": "Rietzangerstraat 17",
     "lat": 52.727235,
     "lon": 4.741842,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -223,7 +223,7 @@
   },
   {
     "id": "WH05",
-    "address": "Verlei",
+    "address": "Kuipersven 36",
     "lat": 52.726868,
     "lon": 4.748425,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -241,7 +241,7 @@
   },
   {
     "id": "WH08",
-    "address": "Torenvenplein",
+    "address": "Dorpsstraat 89",
     "lat": 52.725443,
     "lon": 4.73915,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -250,7 +250,7 @@
   },
   {
     "id": "WH14",
-    "address": "Doorbraak 21",
+    "address": "Doorbraak 23",
     "lat": 52.722378,
     "lon": 4.740949,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -259,7 +259,7 @@
   },
   {
     "id": "WH23",
-    "address": "Pastoor Willemsestraat 2",
+    "address": "Molenaarsweg 7",
     "lat": 52.720326,
     "lon": 4.73849,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -277,7 +277,7 @@
   },
   {
     "id": "WH24",
-    "address": "Pastoor Willemsestraat 224",
+    "address": "Pastoor Willemsestraat 80",
     "lat": 52.720786,
     "lon": 4.74023,
     "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
@@ -292,5 +292,23 @@
         "maxHouseNumber": 224
       }
     }
+  },
+  {
+    "id": "WH33",
+    "address": "Zuiderkruis 36",
+    "lat": 52.729878,
+    "lon": 4.748457,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH34",
+    "address": "Poolster 25",
+    "lat": 52.730477,
+    "lon": 4.75057,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
   }
 ]
