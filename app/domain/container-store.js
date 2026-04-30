@@ -1,12 +1,16 @@
 import {
   cloneContainerAccess,
+  cloneContainerStreams,
+  compareContainersById,
   DEFAULT_CONTAINER_STATUS,
   DEFAULT_CONTAINER_TYPE,
   formatContainerCategory,
+  getContainerAnalysisStatus,
+  getContainerAnalysisType,
   getContainerCategory,
-  hasExplicitContainerStatus,
-  normalizeContainerStatus,
-  normalizeContainerType
+  hasRestafvalStream,
+  normalizeContainerStreams,
+  sortContainersById
 } from '../../shared/containers.js';
 import { roundCoordinate } from '../../shared/geometry.js';
 
@@ -26,11 +30,11 @@ export function createContainerStore(context) {
       lat: container.lat,
       lon: container.lon,
       accuracy: container.accuracy,
-      type: normalizeContainerType(container.type)
+      streams: cloneContainerStreams(container)
     };
 
-    if (hasExplicitContainerStatus(container)) {
-      cloned.status = normalizeContainerStatus(container.status);
+    if (Object.prototype.hasOwnProperty.call(container, 'hvcContainerId')) {
+      cloned.hvcContainerId = container.hvcContainerId;
     }
 
     const access = cloneContainerAccess(container.access);
@@ -48,14 +52,32 @@ export function createContainerStore(context) {
     };
   }
 
+  function syncActiveContainerIndex() {
+    if (!state.activeContainerKey) {
+      state.activeContainerIndex = null;
+      return;
+    }
+
+    const activeIndex = state.containers.findIndex((container) => container.clientKey === state.activeContainerKey);
+    if (activeIndex === -1) {
+      state.activeContainerIndex = null;
+      state.activeContainerKey = null;
+      return;
+    }
+
+    state.activeContainerIndex = activeIndex;
+  }
+
   function syncContainerIndex() {
+    state.containers.sort(compareContainersById);
     state.containersById = new Map(state.containers.map((container) => [container.id, container]));
     state.containersByKey = new Map(state.containers.map((container) => [container.clientKey, container]));
+    syncActiveContainerIndex();
   }
 
   function setOriginalContainers(containers) {
     state.nextContainerClientKey = 1;
-    state.originalContainers = containers.map((container) => cloneContainerForState(container));
+    state.originalContainers = sortContainersById(containers).map((container) => cloneContainerForState(container));
     state.originalContainersById = new Map(state.originalContainers.map((container) => [container.id, container]));
     state.originalContainersByKey = new Map(state.originalContainers.map((container) => [container.clientKey, container]));
   }
@@ -64,8 +86,8 @@ export function createContainerStore(context) {
     return roundCoordinate(value);
   }
 
-  function getContainerStoredStatus(container) {
-    return hasExplicitContainerStatus(container) ? normalizeContainerStatus(container.status) : null;
+  function getContainerStoredStreams(container) {
+    return JSON.stringify(normalizeContainerStreams(container));
   }
 
   function getContainerStoredAccess(container) {
@@ -94,10 +116,10 @@ export function createContainerStore(context) {
 
     return original.address !== container.address
       || original.id !== container.id
+      || original.hvcContainerId !== container.hvcContainerId
       || original.accuracy !== container.accuracy
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
-      || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
-      || normalizeContainerType(original.type) !== normalizeContainerType(container.type)
+      || getContainerStoredStreams(original) !== getContainerStoredStreams(container)
       || normalizeContainerCoordinate(original.lat) !== normalizeContainerCoordinate(container.lat)
       || normalizeContainerCoordinate(original.lon) !== normalizeContainerCoordinate(container.lon);
   }
@@ -117,9 +139,15 @@ export function createContainerStore(context) {
     return Boolean(original && original.id !== container.id);
   }
 
+  function hasContainerRestEligibilityChanged(container) {
+    const original = getOriginalContainer(container);
+    return Boolean(original && hasRestafvalStream(original) !== hasRestafvalStream(container));
+  }
+
   function requiresLiveContainerRoute(container) {
     return !getOriginalContainer(container)
       || hasContainerIdChanged(container)
+      || hasContainerRestEligibilityChanged(container)
       || hasContainerLocationChanged(container);
   }
 
@@ -140,9 +168,9 @@ export function createContainerStore(context) {
     const idChanged = original.id !== container.id;
     const locationChanged = hasContainerLocationChanged(container);
     const infoChanged = original.address !== container.address
+      || original.hvcContainerId !== container.hvcContainerId
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
-      || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
-      || normalizeContainerType(original.type) !== normalizeContainerType(container.type);
+      || getContainerStoredStreams(original) !== getContainerStoredStreams(container);
 
     if (idChanged) {
       return `${original.id} -> ${container.id}`;
@@ -160,7 +188,7 @@ export function createContainerStore(context) {
   }
 
   function serializeContainersForDownload() {
-    return state.containers.map(cloneContainer);
+    return sortContainersById(state.containers).map(cloneContainer);
   }
 
   function getNextContainerId() {
@@ -178,19 +206,24 @@ export function createContainerStore(context) {
     cloneContainer,
     cloneContainerForState,
     createContainerClientKey,
+    syncActiveContainerIndex,
     syncContainerIndex,
     setOriginalContainers,
     normalizeContainerCoordinate,
-    getContainerStoredStatus,
+    getContainerStoredStreams,
     getContainerStoredAccess,
     getContainerCategory,
     formatContainerCategory,
+    getContainerAnalysisType,
+    getContainerAnalysisStatus,
+    hasRestafvalStream,
     getOriginalContainer,
     getContainerByKey,
     getContainerIndexByKey,
     hasContainerChanged,
     hasContainerLocationChanged,
     hasContainerIdChanged,
+    hasContainerRestEligibilityChanged,
     requiresLiveContainerRoute,
     getChangedContainers,
     getChangedContainerCount,

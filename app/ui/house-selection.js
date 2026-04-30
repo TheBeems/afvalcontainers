@@ -11,7 +11,7 @@ import {
   getWalkingDistanceColor
 } from '../../shared/coverage.js';
 import { isContainerAllowedForHouse } from '../../shared/address.js';
-import { getContainerAccessLabel } from '../../shared/containers.js';
+import { getContainerAccessLabel, hasRestafvalStream } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
 import { formatDuration, formatMeters } from '../../shared/format.js';
 import { isValidRouteGeometry } from '../../shared/geometry.js';
@@ -443,6 +443,7 @@ export function createHouseSelection(context, api) {
 
     for (const container of api.getChangedContainers()
       .filter(api.requiresLiveContainerRoute)
+      .filter(hasRestafvalStream)
       .filter((changedContainer) => isContainerAllowedForHouse(house, changedContainer))) {
       if (!api.canFetchLiveRoute(house, container)) {
         status.failed += 1;
@@ -513,6 +514,10 @@ export function createHouseSelection(context, api) {
     const requests = new Map();
 
     function addRequest(container) {
+      if (!hasRestafvalStream(container)) {
+        return;
+      }
+
       if (!isContainerAllowedForHouse(house, container)) {
         return;
       }
@@ -531,6 +536,7 @@ export function createHouseSelection(context, api) {
 
     for (const container of api.getChangedContainers()
       .filter(api.requiresLiveContainerRoute)
+      .filter(hasRestafvalStream)
       .filter((changedContainer) => isContainerAllowedForHouse(house, changedContainer))) {
       addRequest(container);
     }

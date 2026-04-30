@@ -8,10 +8,17 @@ import {
 import { REFERENCE_RADIUS_METERS } from '../../shared/coverage.js';
 import {
   getContainerAccessLabel,
+  getContainerCategories,
   getContainerCategory,
+  hasRestafvalStream,
   MANUAL_CONTAINER_ACCURACY
 } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
+import {
+  createContainerMarkerIcon,
+  createContainerMarkerSvg,
+  getContainerMarkerColor
+} from './container-marker.js';
 
 export function createContainersUi(context, api) {
   const { elements, mapContext, state } = context;
@@ -19,6 +26,17 @@ export function createContainersUi(context, api) {
     containerLayer,
     map
   } = mapContext;
+
+  function getKnownExistingHvcContainerId(container, categories) {
+    const hvcContainerId = String(container.hvcContainerId || '').trim();
+    if (!hvcContainerId) {
+      return '';
+    }
+
+    return categories.some((category) => category.status === 'existing')
+      ? hvcContainerId
+      : '';
+  }
 
   function renderContainerMapInfo(container) {
     if (!elements.containerMapInfo) {
@@ -33,6 +51,19 @@ export function createContainersUi(context, api) {
     }
 
     const category = getContainerCategory(container);
+    const categories = getContainerCategories(container);
+    const hvcContainerId = getKnownExistingHvcContainerId(container, categories);
+    const hvcContainerIdLine = hvcContainerId
+      ? `<div class="container-map-info-meta">HVC container-ID: ${escapeHtml(hvcContainerId)}</div>`
+      : '';
+    const categoryPills = categories
+      .map((containerCategory) => `
+        <span class="container-category-pill">
+          <span class="container-category-swatch" style="border-color:${containerCategory.borderColor};background:${containerCategory.fillColor}" aria-hidden="true"></span>
+          ${escapeHtml(containerCategory.label)}
+        </span>
+      `)
+      .join('');
     elements.containerMapInfo.hidden = false;
     elements.containerMapInfo.open = !state.containerInfoCollapsed;
     elements.containerMapInfo.style.setProperty('--container-category-color', category.borderColor);
@@ -44,54 +75,13 @@ export function createContainersUi(context, api) {
       <div class="map-collapsible-body">
         <div class="container-map-info-address">${escapeHtml(container.address)}, Warmenhuizen</div>
         <div class="container-map-info-meta">
-          <span class="container-category-pill">
-            <span class="container-category-swatch" aria-hidden="true"></span>
-            ${escapeHtml(category.label)}
-          </span>
+          ${categoryPills}
           ${api.buildContainerAccessPill(container)}
         </div>
+        ${hvcContainerIdLine}
         <div class="container-map-info-meta">Nauwkeurigheid: ${escapeHtml(container.accuracy)}</div>
       </div>
     `;
-  }
-
-  function getContainerMarkerColor(container) {
-    return getContainerCategory(container).borderColor;
-  }
-
-  function createContainerMarkerSvg(color) {
-    return `
-      <svg
-        class="container-marker-svg"
-        width="42"
-        height="58"
-        viewBox="0 0 64 88"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          d="M32 84C32 84 56 52 56 30C56 16.745 45.255 6 32 6C18.745 6 8 16.745 8 30C8 52 32 84 32 84Z"
-          fill="${color}"
-          stroke="#ffffff"
-          stroke-width="6"
-        />
-
-        <circle cx="32" cy="30" r="12" fill="#ffffff"/>
-      </svg>
-    `;
-  }
-
-  function createContainerMarkerIcon(container, isActive = false) {
-    const color = getContainerMarkerColor(container);
-
-    return L.divIcon({
-      className: `container-marker-icon${isActive ? ' container-marker-active' : ''}`,
-      html: createContainerMarkerSvg(color),
-      iconSize: [42, 58],
-      iconAnchor: [21, 58],
-      popupAnchor: [0, -58]
-    });
   }
 
   function scrollMapIntoView() {
@@ -358,6 +348,10 @@ export function createContainersUi(context, api) {
 
   function showCoverageCircle(container) {
     clearCoverageCircle();
+    if (!hasRestafvalStream(container)) {
+      return;
+    }
+
     state.coverageCircle = L.circle([container.lat, container.lon], {
       radius: REFERENCE_RADIUS_METERS,
       color: '#2563eb',
@@ -385,18 +379,24 @@ export function createContainersUi(context, api) {
 
     if (focusMap && state.coverageCircle) {
       map.fitBounds(state.coverageCircle.getBounds(), { padding: [32, 32], maxZoom: 17 });
+    } else if (focusMap) {
+      map.setView([container.lat, container.lon], Math.max(map.getZoom(), 17), { animate: true });
     }
 
     if (scrollToMap) {
       scrollMapIntoView();
     }
 
-    api.setCoverageStatus(`Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`);
+    const statusText = hasRestafvalStream(container)
+      ? `Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`
+      : `Geselecteerde container ${container.id}. Deze locatie telt niet mee voor restafval-loopafstanden.`;
+    api.setCoverageStatus(statusText);
   }
 
   function renderContainers({ fitBounds = false } = {}) {
     addContainerMarkers({ fitBounds });
     addContainerList();
+    api.renderContainerMarkerLegend();
     renderContainerMapInfo(state.activeContainerIndex !== null ? state.containers[state.activeContainerIndex] : null);
     api.updateContainerEditorControls();
   }

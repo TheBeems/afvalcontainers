@@ -168,7 +168,8 @@
 }
 
 .container-edit-heading span,
-.container-edit-form label span {
+.container-edit-form label span,
+.container-streams-fieldset legend {
   color: var(--muted);
   font-size: 11px;
   font-weight: 800;
@@ -178,6 +179,30 @@
 .container-edit-form label {
   display: grid;
   gap: 4px;
+}
+
+.container-streams-fieldset {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.container-stream-rows {
+  display: grid;
+  gap: 6px;
+}
+
+.container-stream-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: end;
+}
+
+.container-stream-remove-button {
+  min-height: 31px;
 }
 
 .container-edit-form input,

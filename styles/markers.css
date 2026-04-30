@@ -33,49 +33,16 @@
   filter: drop-shadow(0 0 9px rgba(37, 99, 235, 0.85));
 }
 
-.container-pin {
-  --container-pin-width: 56px;
-  --container-pin-height: 58px;
-  --container-pin-body-size: 29px;
-  --container-pin-border-width: 5px;
-  --container-pin-body-top: 8px;
-  --container-pin-dot-size: 13px;
-  --container-pin-dot-top: 17px;
-
-  position: relative;
-  display: block;
-  width: var(--container-pin-width);
-  height: var(--container-pin-height);
+.container-marker-count {
+  fill: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 900;
   pointer-events: none;
-  transform-origin: 50% 100%;
-  filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.34));
-  transition:
-    filter 160ms ease,
-    transform 160ms ease;
 }
 
-.container-pin::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: var(--container-pin-body-top);
-  width: var(--container-pin-body-size);
-  height: var(--container-pin-body-size);
-  border: var(--container-pin-border-width) solid #ffffff;
-  border-radius: 50% 50% 50% 0;
-  background: var(--container-pin-color, #ef1d1d);
-  transform: translateX(-50%) rotate(-45deg);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2);
-}
-
-.container-pin::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: var(--container-pin-dot-top);
-  width: var(--container-pin-dot-size);
-  height: var(--container-pin-dot-size);
-  border-radius: 999px;
-  background: #ffffff;
-  transform: translateX(-50%);
+.container-marker-svg--legend {
+  width: 32px;
+  height: 34px;
+  filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.32));
 }
