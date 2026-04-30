@@ -1,13 +1,15 @@
 import {
   cloneContainerAccess,
+  cloneContainerStreams,
   compareContainersById,
   DEFAULT_CONTAINER_STATUS,
   DEFAULT_CONTAINER_TYPE,
   formatContainerCategory,
+  getContainerAnalysisStatus,
+  getContainerAnalysisType,
   getContainerCategory,
-  hasExplicitContainerStatus,
-  normalizeContainerStatus,
-  normalizeContainerType,
+  hasRestafvalStream,
+  normalizeContainerStreams,
   sortContainersById
 } from '../../shared/containers.js';
 import { roundCoordinate } from '../../shared/geometry.js';
@@ -28,12 +30,8 @@ export function createContainerStore(context) {
       lat: container.lat,
       lon: container.lon,
       accuracy: container.accuracy,
-      type: normalizeContainerType(container.type)
+      streams: cloneContainerStreams(container)
     };
-
-    if (hasExplicitContainerStatus(container)) {
-      cloned.status = normalizeContainerStatus(container.status);
-    }
 
     const access = cloneContainerAccess(container.access);
     if (access) {
@@ -84,8 +82,8 @@ export function createContainerStore(context) {
     return roundCoordinate(value);
   }
 
-  function getContainerStoredStatus(container) {
-    return hasExplicitContainerStatus(container) ? normalizeContainerStatus(container.status) : null;
+  function getContainerStoredStreams(container) {
+    return JSON.stringify(normalizeContainerStreams(container));
   }
 
   function getContainerStoredAccess(container) {
@@ -116,8 +114,7 @@ export function createContainerStore(context) {
       || original.id !== container.id
       || original.accuracy !== container.accuracy
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
-      || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
-      || normalizeContainerType(original.type) !== normalizeContainerType(container.type)
+      || getContainerStoredStreams(original) !== getContainerStoredStreams(container)
       || normalizeContainerCoordinate(original.lat) !== normalizeContainerCoordinate(container.lat)
       || normalizeContainerCoordinate(original.lon) !== normalizeContainerCoordinate(container.lon);
   }
@@ -137,9 +134,15 @@ export function createContainerStore(context) {
     return Boolean(original && original.id !== container.id);
   }
 
+  function hasContainerRestEligibilityChanged(container) {
+    const original = getOriginalContainer(container);
+    return Boolean(original && hasRestafvalStream(original) !== hasRestafvalStream(container));
+  }
+
   function requiresLiveContainerRoute(container) {
     return !getOriginalContainer(container)
       || hasContainerIdChanged(container)
+      || hasContainerRestEligibilityChanged(container)
       || hasContainerLocationChanged(container);
   }
 
@@ -161,8 +164,7 @@ export function createContainerStore(context) {
     const locationChanged = hasContainerLocationChanged(container);
     const infoChanged = original.address !== container.address
       || getContainerStoredAccess(original) !== getContainerStoredAccess(container)
-      || getContainerStoredStatus(original) !== getContainerStoredStatus(container)
-      || normalizeContainerType(original.type) !== normalizeContainerType(container.type);
+      || getContainerStoredStreams(original) !== getContainerStoredStreams(container);
 
     if (idChanged) {
       return `${original.id} -> ${container.id}`;
@@ -202,16 +204,20 @@ export function createContainerStore(context) {
     syncContainerIndex,
     setOriginalContainers,
     normalizeContainerCoordinate,
-    getContainerStoredStatus,
+    getContainerStoredStreams,
     getContainerStoredAccess,
     getContainerCategory,
     formatContainerCategory,
+    getContainerAnalysisType,
+    getContainerAnalysisStatus,
+    hasRestafvalStream,
     getOriginalContainer,
     getContainerByKey,
     getContainerIndexByKey,
     hasContainerChanged,
     hasContainerLocationChanged,
     hasContainerIdChanged,
+    hasContainerRestEligibilityChanged,
     requiresLiveContainerRoute,
     getChangedContainers,
     getChangedContainerCount,

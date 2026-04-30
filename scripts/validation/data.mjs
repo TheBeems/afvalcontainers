@@ -3,7 +3,9 @@ import { resolve } from 'node:path';
 import { COVERAGE_STATUS_KEYS } from '../../src/shared/coverage.js';
 import {
   compareContainersById,
+  countRestafvalContainers,
   DEFAULT_CONTAINER_STATUS,
+  hasRestafvalStream,
   PRIVATE_ACCESS_SCOPE,
   VALID_CONTAINER_CATEGORIES,
   VALID_CONTAINER_STATUSES,
@@ -58,29 +60,52 @@ function assertNonNegativeInteger(value, label) {
   }
 }
 
-function getContainerStatus(container, label) {
-  if (!Object.prototype.hasOwnProperty.call(container, 'status')) {
+function getStreamStatus(stream, label) {
+  if (!Object.prototype.hasOwnProperty.call(stream, 'status')) {
     return DEFAULT_CONTAINER_STATUS;
   }
 
-  assertString(container.status, `${label}.status`);
-  if (!VALID_CONTAINER_STATUSES.has(container.status)) {
-    fail(`${label}.status must be one of: ${Array.from(VALID_CONTAINER_STATUSES).join(', ')}. Received: ${container.status}`);
+  assertString(stream.status, `${label}.status`);
+  if (!VALID_CONTAINER_STATUSES.has(stream.status)) {
+    fail(`${label}.status must be one of: ${Array.from(VALID_CONTAINER_STATUSES).join(', ')}. Received: ${stream.status}`);
   }
 
-  return container.status;
+  return stream.status;
+}
+
+function validateContainerStream(stream, label) {
+  if (!stream || typeof stream !== 'object' || Array.isArray(stream)) {
+    fail(`${label} must be an object.`);
+  }
+
+  assertString(stream.type, `${label}.type`);
+  if (!VALID_CONTAINER_TYPES.has(stream.type)) {
+    fail(`${label}.type must be one of: ${Array.from(VALID_CONTAINER_TYPES).join(', ')}. Received: ${stream.type}`);
+  }
+
+  const status = getStreamStatus(stream, label);
+  const category = `${status}:${stream.type}`;
+  if (!VALID_CONTAINER_CATEGORIES.has(category)) {
+    fail(`${label} has unsupported status/type combination: ${category}`);
+  }
 }
 
 function validateContainerClassification(container, label) {
-  assertString(container.type, `${label}.type`);
-  if (!VALID_CONTAINER_TYPES.has(container.type)) {
-    fail(`${label}.type must be one of: ${Array.from(VALID_CONTAINER_TYPES).join(', ')}. Received: ${container.type}`);
+  if (!Array.isArray(container.streams) || container.streams.length === 0) {
+    fail(`${label}.streams must be a non-empty array.`);
   }
 
-  const status = getContainerStatus(container, label);
-  const category = `${status}:${container.type}`;
-  if (!VALID_CONTAINER_CATEGORIES.has(category)) {
-    fail(`${label} has unsupported status/type combination: ${category}`);
+  if (Object.prototype.hasOwnProperty.call(container, 'type') || Object.prototype.hasOwnProperty.call(container, 'status')) {
+    fail(`${label} must use streams instead of legacy type/status fields.`);
+  }
+
+  const seenTypes = new Set();
+  for (const [streamIndex, stream] of container.streams.entries()) {
+    validateContainerStream(stream, `${label}.streams[${streamIndex}]`);
+    if (seenTypes.has(stream.type)) {
+      fail(`${label}.streams contains duplicate type: ${stream.type}`);
+    }
+    seenTypes.add(stream.type);
   }
 }
 
@@ -150,11 +175,12 @@ function validateContainers(containers) {
 
 function validateSummary(coverage, houses, containers) {
   const summary = coverage.summary || {};
+  const restafvalContainerCount = countRestafvalContainers(Array.from(containers.values()));
   if (summary.totalAddresses !== houses.length) {
     fail(`summary.totalAddresses (${summary.totalAddresses}) must equal houses.length (${houses.length}).`);
   }
-  if (summary.containerCount !== containers.size) {
-    fail(`summary.containerCount (${summary.containerCount}) must equal container count (${containers.size}).`);
+  if (summary.containerCount !== restafvalContainerCount) {
+    fail(`summary.containerCount (${summary.containerCount}) must equal restafval container count (${restafvalContainerCount}).`);
   }
   if (summary.analysisAddressScope !== ANALYSIS_SCOPE_TYPE) {
     fail(`summary.analysisAddressScope must be "${ANALYSIS_SCOPE_TYPE}". Received: ${summary.analysisAddressScope}`);
@@ -269,6 +295,9 @@ function validateNearestContainers(house, index, containersById) {
     const sourceContainer = containersById.get(container.id);
     if (!sourceContainer) {
       fail(`${label}.id references unknown container id: ${container.id}`);
+    }
+    if (!hasRestafvalStream(sourceContainer)) {
+      fail(`${label}.id references non-restafval container id: ${container.id}`);
     }
     if (seenIds.has(container.id)) {
       fail(`${label}.id is duplicated in the same ranking: ${container.id}`);

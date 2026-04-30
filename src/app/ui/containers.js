@@ -8,7 +8,11 @@ import {
 import { REFERENCE_RADIUS_METERS } from '../../shared/coverage.js';
 import {
   getContainerAccessLabel,
+  getContainerCategories,
   getContainerCategory,
+  getContainerMarkerColors,
+  getContainerTypeCount,
+  hasRestafvalStream,
   MANUAL_CONTAINER_ACCURACY
 } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
@@ -33,6 +37,14 @@ export function createContainersUi(context, api) {
     }
 
     const category = getContainerCategory(container);
+    const categoryPills = getContainerCategories(container)
+      .map((containerCategory) => `
+        <span class="container-category-pill">
+          <span class="container-category-swatch" style="border-color:${containerCategory.borderColor};background:${containerCategory.fillColor}" aria-hidden="true"></span>
+          ${escapeHtml(containerCategory.label)}
+        </span>
+      `)
+      .join('');
     elements.containerMapInfo.hidden = false;
     elements.containerMapInfo.open = !state.containerInfoCollapsed;
     elements.containerMapInfo.style.setProperty('--container-category-color', category.borderColor);
@@ -44,10 +56,7 @@ export function createContainersUi(context, api) {
       <div class="map-collapsible-body">
         <div class="container-map-info-address">${escapeHtml(container.address)}, Warmenhuizen</div>
         <div class="container-map-info-meta">
-          <span class="container-category-pill">
-            <span class="container-category-swatch" aria-hidden="true"></span>
-            ${escapeHtml(category.label)}
-          </span>
+          ${categoryPills}
           ${api.buildContainerAccessPill(container)}
         </div>
         <div class="container-map-info-meta">Nauwkeurigheid: ${escapeHtml(container.accuracy)}</div>
@@ -59,7 +68,39 @@ export function createContainersUi(context, api) {
     return getContainerCategory(container).borderColor;
   }
 
-  function createContainerMarkerSvg(color) {
+  function buildMarkerFill(container) {
+    const colors = getContainerMarkerColors(container);
+    if (colors.length <= 1) {
+      return {
+        defs: '',
+        fill: colors[0] || getContainerMarkerColor(container)
+      };
+    }
+
+    const gradientId = `container-marker-gradient-${String(container.id || 'marker').replace(/[^a-z0-9_-]/gi, '-')}`;
+    const step = 100 / colors.length;
+    const stops = colors.map((color, index) => {
+      const start = (index * step).toFixed(2);
+      const end = ((index + 1) * step).toFixed(2);
+      return `
+        <stop offset="${start}%" stop-color="${color}"/>
+        <stop offset="${end}%" stop-color="${color}"/>
+      `;
+    }).join('');
+
+    return {
+      defs: `<defs><linearGradient id="${gradientId}" x1="0" x2="1" y1="0" y2="0">${stops}</linearGradient></defs>`,
+      fill: `url(#${gradientId})`
+    };
+  }
+
+  function createContainerMarkerSvg(container) {
+    const typeCount = getContainerTypeCount(container);
+    const { defs, fill } = buildMarkerFill(container);
+    const markerCenter = typeCount > 1
+      ? `<text class="container-marker-count" x="32" y="30" text-anchor="middle" dominant-baseline="central">${typeCount}</text>`
+      : '<circle cx="32" cy="30" r="12" fill="#ffffff"/>';
+
     return `
       <svg
         class="container-marker-svg"
@@ -70,24 +111,23 @@ export function createContainersUi(context, api) {
         aria-hidden="true"
         focusable="false"
       >
+        ${defs}
         <path
           d="M32 84C32 84 56 52 56 30C56 16.745 45.255 6 32 6C18.745 6 8 16.745 8 30C8 52 32 84 32 84Z"
-          fill="${color}"
+          fill="${fill}"
           stroke="#ffffff"
           stroke-width="6"
         />
 
-        <circle cx="32" cy="30" r="12" fill="#ffffff"/>
+        ${markerCenter}
       </svg>
     `;
   }
 
   function createContainerMarkerIcon(container, isActive = false) {
-    const color = getContainerMarkerColor(container);
-
     return L.divIcon({
       className: `container-marker-icon${isActive ? ' container-marker-active' : ''}`,
-      html: createContainerMarkerSvg(color),
+      html: createContainerMarkerSvg(container),
       iconSize: [42, 58],
       iconAnchor: [21, 58],
       popupAnchor: [0, -58]
@@ -358,6 +398,10 @@ export function createContainersUi(context, api) {
 
   function showCoverageCircle(container) {
     clearCoverageCircle();
+    if (!hasRestafvalStream(container)) {
+      return;
+    }
+
     state.coverageCircle = L.circle([container.lat, container.lon], {
       radius: REFERENCE_RADIUS_METERS,
       color: '#2563eb',
@@ -385,13 +429,18 @@ export function createContainersUi(context, api) {
 
     if (focusMap && state.coverageCircle) {
       map.fitBounds(state.coverageCircle.getBounds(), { padding: [32, 32], maxZoom: 17 });
+    } else if (focusMap) {
+      map.setView([container.lat, container.lon], Math.max(map.getZoom(), 17), { animate: true });
     }
 
     if (scrollToMap) {
       scrollMapIntoView();
     }
 
-    api.setCoverageStatus(`Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`);
+    const statusText = hasRestafvalStream(container)
+      ? `Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`
+      : `Geselecteerde container ${container.id}. Deze locatie telt niet mee voor restafval-loopafstanden.`;
+    api.setCoverageStatus(statusText);
   }
 
   function renderContainers({ fitBounds = false } = {}) {

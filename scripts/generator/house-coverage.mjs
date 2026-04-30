@@ -4,6 +4,12 @@ import { fileURLToPath } from 'node:url';
 import { isAddressInAllowedRange, normalizeWhitespace } from '../../src/shared/address.js';
 import { classifyCoverageStatus } from '../../src/shared/coverage.js';
 import {
+  countRestafvalContainers,
+  getContainerAnalysisStatus,
+  getContainerAnalysisType,
+  hasRestafvalStream
+} from '../../src/shared/containers.js';
+import {
   formatRouteCacheCoordinate,
   haversineMeters,
   isValidRouteGeometry,
@@ -22,6 +28,9 @@ const DEFAULT_CONCURRENCY = 1;
 const DEFAULT_DELAY_MS = 1100;
 const DEFAULT_TABLE_BATCH_SIZE = 20;
 const DEFAULT_TIMEOUT_MS = 45000;
+const ADDRESS_BBOX_TILE_ROWS = 2;
+const ADDRESS_BBOX_TILE_COLUMNS = 2;
+const BBOX_TILE_OVERLAP_DEGREES = 0.000001;
 const PDOK_WOONPLAATS_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/woonplaats/items';
 const PDOK_ADRES_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/adres/items';
 const PDOK_BRT_BUILT_UP_AREA_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak/items';
@@ -401,6 +410,25 @@ function buildBboxParam(bbox) {
     .join(',');
 }
 
+function splitBbox(bbox, rows, columns) {
+  const tiles = [];
+  const width = (bbox.east - bbox.west) / columns;
+  const height = (bbox.north - bbox.south) / rows;
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      tiles.push({
+        west: Math.max(bbox.west, bbox.west + (column * width) - BBOX_TILE_OVERLAP_DEGREES),
+        south: Math.max(bbox.south, bbox.south + (row * height) - BBOX_TILE_OVERLAP_DEGREES),
+        east: Math.min(bbox.east, bbox.west + ((column + 1) * width) + BBOX_TILE_OVERLAP_DEGREES),
+        north: Math.min(bbox.north, bbox.south + ((row + 1) * height) + BBOX_TILE_OVERLAP_DEGREES)
+      });
+    }
+  }
+
+  return tiles;
+}
+
 async function loadWarmenhuizenBoundary() {
   const initialUrl = `${PDOK_WOONPLAATS_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}`;
   const { stopResult } = await fetchPaginatedFeatures(initialUrl, 'Woonplaatsen laden', {
@@ -503,12 +531,19 @@ function sortHouses(houses) {
 
 async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry) {
   const bbox = computeBboxFromMultiPolygon(boundaryGeometry);
-  const bboxParam = buildBboxParam(bbox);
+  const addressBboxes = splitBbox(bbox, ADDRESS_BBOX_TILE_ROWS, ADDRESS_BBOX_TILE_COLUMNS);
+  const features = [];
+  let pageCount = 0;
 
-  const initialUrl = `${PDOK_ADRES_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
-  const { features, pageCount } = await fetchPaginatedFeatures(initialUrl, 'Adressen laden', { pageLimit: 20 });
+  for (const [index, addressBbox] of addressBboxes.entries()) {
+    const bboxParam = buildBboxParam(addressBbox);
+    const initialUrl = `${PDOK_ADRES_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
+    const tileResult = await fetchPaginatedFeatures(initialUrl, `Adressen laden tegel ${index + 1}/${addressBboxes.length}`, { pageLimit: 20 });
+    features.push(...tileResult.features);
+    pageCount += tileResult.pageCount;
+  }
 
-  console.log(`BAG-adressen opgehaald binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} pagina(s).`);
+  console.log(`BAG-adressen opgehaald binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} tegelpagina(s).`);
 
   const uniqueBagHouses = new Map();
   for (const feature of features) {
@@ -536,6 +571,7 @@ async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry) {
 
 function getCandidateContainers(house, containers, count) {
   return containers
+    .filter(hasRestafvalStream)
     .filter((container) => isContainerAllowedForHouse(house, container))
     .map((container) => ({
       ...container,
@@ -738,8 +774,8 @@ function buildNearestContainerEntry(house, container) {
     id: container.id,
     address: container.address,
     accuracy: container.accuracy,
-    type: container.type || 'rest',
-    ...(Object.prototype.hasOwnProperty.call(container, 'status') ? { status: container.status } : {}),
+    type: getContainerAnalysisType(container),
+    status: getContainerAnalysisStatus(container),
     straightDistance: roundMetric(container.straightDistance),
     walkingDistance: roundMetric(container.walkingDistance),
     walkingDuration: roundMetric(container.walkingDuration),
@@ -859,7 +895,7 @@ function buildSummary(results, options, containers, bbox, addressStats) {
     resultCount: options.resultCount,
     includeRouteGeometries: options.includeRouteGeometries,
     tableBatchSize: options.tableBatchSize,
-    containerCount: containers.length,
+    containerCount: countRestafvalContainers(containers),
     bbox,
     analysisAddressScope: ANALYSIS_SCOPE_TYPE,
     sourceAddressCount: addressStats.totalBagAddresses,

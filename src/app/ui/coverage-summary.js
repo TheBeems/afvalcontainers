@@ -1,4 +1,5 @@
 import { SUMMARY_DISTANCE_ROWS } from '../../shared/coverage.js';
+import { countRestafvalContainers } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
 import { formatPercent, formatTimestamp } from '../../shared/format.js';
 
@@ -46,7 +47,7 @@ export function createCoverageSummary(context) {
       : state.houses.length;
     const containerCount = Number.isFinite(summary.containerCount)
       ? summary.containerCount
-      : state.containers.length;
+      : countRestafvalContainers(state.containers);
     const scopeLabel = state.coverage?.analysisScope?.label || '';
     const addressLabel = state.coverage?.analysisScope?.type === 'built_up_area'
       ? 'adressen binnen bebouwde kom'

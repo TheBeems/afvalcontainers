@@ -6,11 +6,11 @@ import {
   CONTAINER_ID_PATTERN,
   CONTAINER_STATUS_LABELS,
   CONTAINER_TYPE_LABELS,
-  DEFAULT_CONTAINER_TYPE,
-  DEFAULT_CONTAINER_STATUS,
   MANUAL_CONTAINER_ACCURACY,
   VALID_CONTAINER_STATUSES,
   VALID_CONTAINER_TYPES,
+  createDefaultContainerStream,
+  normalizeContainerStreams,
   normalizeContainerStatus,
   normalizeContainerType
 } from '../../shared/containers.js';
@@ -178,6 +178,32 @@ export function createContainerEditor(context, api) {
       .join('');
   }
 
+  function buildContainerStreamRow(stream) {
+    return `
+      <div class="container-stream-row">
+        <label>
+          <span>Type</span>
+          <select name="stream-type" required>
+            ${getContainerTypeOptions(stream.type)}
+          </select>
+        </label>
+        <label>
+          <span>Status</span>
+          <select name="stream-status" required>
+            ${getContainerStatusOptions(stream.status)}
+          </select>
+        </label>
+        <button type="button" class="editor-button container-stream-remove-button">Verwijderen</button>
+      </div>
+    `;
+  }
+
+  function buildContainerStreamRowsMarkup(container) {
+    return normalizeContainerStreams(container)
+      .map((stream) => buildContainerStreamRow(stream))
+      .join('');
+  }
+
   function getEditableContainer() {
     if (state.pendingNewContainer) {
       return state.pendingNewContainer;
@@ -230,18 +256,13 @@ export function createContainerEditor(context, api) {
           <span>Adres of omschrijving</span>
           <input name="address" value="${escapeHtml(container.address)}" autocomplete="off" required />
         </label>
-        <label>
-          <span>Type afvalcontainer</span>
-          <select name="type" required>
-            ${getContainerTypeOptions(container.type)}
-          </select>
-        </label>
-        <label>
-          <span>Status</span>
-          <select name="status" required>
-            ${getContainerStatusOptions(container.status)}
-          </select>
-        </label>
+        <fieldset class="container-streams-fieldset">
+          <legend>Typen en status</legend>
+          <div id="container-stream-rows" class="container-stream-rows">
+            ${buildContainerStreamRowsMarkup(container)}
+          </div>
+          <button type="button" id="add-container-stream-button" class="editor-button">Type toevoegen</button>
+        </fieldset>
         <div id="container-edit-error" class="container-edit-error" role="alert" hidden></div>
         <div class="container-edit-actions">
           <button type="submit" class="editor-button editor-button-primary">Opslaan</button>
@@ -253,7 +274,58 @@ export function createContainerEditor(context, api) {
     const form = document.getElementById('container-edit-form');
     const cancelButton = document.getElementById('cancel-container-edit-button');
     form?.addEventListener('submit', handleContainerEditSubmit);
+    form?.addEventListener('click', handleContainerEditFormClick);
     cancelButton?.addEventListener('click', cancelContainerEdit);
+    syncContainerStreamRowControls(form);
+  }
+
+  function syncContainerStreamRowControls(form) {
+    const rows = form?.querySelectorAll('.container-stream-row') || [];
+    const removeButtons = form?.querySelectorAll('.container-stream-remove-button') || [];
+    const removeDisabled = rows.length <= 1;
+
+    removeButtons.forEach((button, index) => {
+      button.disabled = removeDisabled;
+      button.setAttribute('aria-label', `Type ${index + 1} verwijderen`);
+    });
+  }
+
+  function addContainerStreamRow(form) {
+    const rowsElement = form.querySelector('#container-stream-rows');
+    if (!rowsElement) {
+      return;
+    }
+
+    rowsElement.insertAdjacentHTML('beforeend', buildContainerStreamRow(createDefaultContainerStream()));
+    syncContainerStreamRowControls(form);
+  }
+
+  function removeContainerStreamRow(button, form) {
+    const row = button.closest('.container-stream-row');
+    if (!row) {
+      return;
+    }
+
+    row.remove();
+    syncContainerStreamRowControls(form);
+  }
+
+  function handleContainerEditFormClick(event) {
+    const form = event.currentTarget;
+    const target = event.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.id === 'add-container-stream-button') {
+      addContainerStreamRow(form);
+      return;
+    }
+
+    if (target.classList.contains('container-stream-remove-button')) {
+      removeContainerStreamRow(target, form);
+    }
   }
 
   function setContainerEditError(message) {
@@ -268,11 +340,16 @@ export function createContainerEditor(context, api) {
 
   function readContainerEditForm(form) {
     const formData = new FormData(form);
+    const streamTypes = formData.getAll('stream-type');
+    const streamStatuses = formData.getAll('stream-status');
+
     return {
       id: String(formData.get('id') || '').trim().toUpperCase(),
       address: String(formData.get('address') || '').trim(),
-      type: String(formData.get('type') || '').trim(),
-      status: String(formData.get('status') || '').trim()
+      streams: streamTypes.map((type, index) => ({
+        type: String(type || '').trim(),
+        status: String(streamStatuses[index] || '').trim()
+      }))
     };
   }
 
@@ -292,16 +369,28 @@ export function createContainerEditor(context, api) {
       return 'Vul een adres of omschrijving in.';
     }
 
-    if (!VALID_CONTAINER_TYPES.has(values.type)) {
-      return 'Kies een geldig containertype.';
+    if (!Array.isArray(values.streams) || values.streams.length === 0) {
+      return 'Voeg minimaal één containertype toe.';
     }
 
-    if (!VALID_CONTAINER_STATUSES.has(values.status)) {
-      return 'Kies een geldige containerstatus.';
-    }
+    const seenTypes = new Set();
+    for (const stream of values.streams) {
+      if (!VALID_CONTAINER_TYPES.has(stream.type)) {
+        return 'Kies een geldig containertype.';
+      }
 
-    if (!CONTAINER_CATEGORIES[`${values.status}:${values.type}`]) {
-      return 'Deze combinatie van status en type wordt niet ondersteund.';
+      if (seenTypes.has(stream.type)) {
+        return 'Gebruik elk containertype maximaal één keer per locatie.';
+      }
+      seenTypes.add(stream.type);
+
+      if (!VALID_CONTAINER_STATUSES.has(stream.status)) {
+        return 'Kies een geldige containerstatus.';
+      }
+
+      if (!CONTAINER_CATEGORIES[`${stream.status}:${stream.type}`]) {
+        return 'Deze combinatie van status en type wordt niet ondersteund.';
+      }
     }
 
     return '';
@@ -371,8 +460,9 @@ export function createContainerEditor(context, api) {
 
     container.id = values.id;
     container.address = values.address;
-    container.type = values.type;
-    container.status = values.status;
+    container.streams = values.streams.map((stream) => ({ ...stream }));
+    delete container.type;
+    delete container.status;
     api.syncContainerIndex();
 
     if (previousId !== container.id) {
@@ -414,8 +504,7 @@ export function createContainerEditor(context, api) {
       lat: api.normalizeContainerCoordinate(latlng.lat),
       lon: api.normalizeContainerCoordinate(latlng.lng),
       accuracy: MANUAL_CONTAINER_ACCURACY,
-      type: DEFAULT_CONTAINER_TYPE,
-      status: DEFAULT_CONTAINER_STATUS
+      streams: [createDefaultContainerStream()]
     });
     setAddContainerMode(false);
     updateContainerEditorControls();

@@ -1,6 +1,10 @@
 import { classifyCoverageStatus } from '../../shared/coverage.js';
 import { isContainerAllowedForHouse } from '../../shared/address.js';
-import { hasExplicitContainerStatus } from '../../shared/containers.js';
+import {
+  getContainerAnalysisStatus,
+  getContainerAnalysisType,
+  hasRestafvalStream
+} from '../../shared/containers.js';
 import { haversineMeters, roundMetric } from '../../shared/geometry.js';
 
 export function createRanking(context, api) {
@@ -9,6 +13,7 @@ export function createRanking(context, api) {
   function shouldIgnoreStoredContainerId(house, containerId) {
     const container = state.containersById.get(containerId);
     return !container
+      || !hasRestafvalStream(container)
       || api.requiresLiveContainerRoute(container)
       || !isContainerAllowedForHouse(house, container);
   }
@@ -21,8 +26,9 @@ export function createRanking(context, api) {
         id: currentContainer.id,
         address: currentContainer.address,
         accuracy: currentContainer.accuracy,
-        type: currentContainer.type,
-        ...(hasExplicitContainerStatus(currentContainer) ? { status: currentContainer.status } : {}),
+        type: getContainerAnalysisType(currentContainer),
+        status: getContainerAnalysisStatus(currentContainer),
+        streams: currentContainer.streams,
         ...(currentContainer.access ? { access: currentContainer.access } : {}),
         lat: currentContainer.lat,
         lon: currentContainer.lon,
@@ -62,8 +68,9 @@ export function createRanking(context, api) {
       id: container.id,
       address: container.address,
       accuracy: container.accuracy,
-      type: container.type,
-      ...(hasExplicitContainerStatus(container) ? { status: container.status } : {}),
+      type: getContainerAnalysisType(container),
+      status: getContainerAnalysisStatus(container),
+      streams: container.streams,
       ...(container.access ? { access: container.access } : {}),
       lat: container.lat,
       lon: container.lon,
@@ -81,6 +88,7 @@ export function createRanking(context, api) {
   function getLiveEditedRankingEntries(house) {
     return api.getChangedContainers()
       .filter(api.requiresLiveContainerRoute)
+      .filter(hasRestafvalStream)
       .filter((container) => isContainerAllowedForHouse(house, container))
       .map((container) => {
         const liveRoute = api.getLiveRouteState(house, container);
