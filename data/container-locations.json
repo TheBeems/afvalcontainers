@@ -1,0 +1,296 @@
+[
+  {
+    "id": "WH01",
+    "address": "Oostwal 37",
+    "lat": 52.731429,
+    "lon": 4.743208,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "semi-rest",
+    "status": "new"
+  },
+  {
+    "id": "WH02",
+    "address": "Dorpsstraat 13",
+    "lat": 52.727742,
+    "lon": 4.739284,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH04",
+    "address": "Maasweid 1",
+    "lat": 52.726813,
+    "lon": 4.744852,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH07",
+    "address": "Dorpsstraat 37",
+    "lat": 52.726592,
+    "lon": 4.739501,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH09",
+    "address": "De Baan 7",
+    "lat": 52.725403,
+    "lon": 4.740552,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH10",
+    "address": "De Baan 27",
+    "lat": 52.725356,
+    "lon": 4.74332,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH11",
+    "address": "Wiekeland 2",
+    "lat": 52.723809,
+    "lon": 4.743822,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH12",
+    "address": "De Negen Geerzen 29",
+    "lat": 52.722146,
+    "lon": 4.74644,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH13",
+    "address": "Alingterp 2",
+    "lat": 52.723362,
+    "lon": 4.735266,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH15",
+    "address": "Doorbraak 14",
+    "lat": 52.721977,
+    "lon": 4.740861,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH16",
+    "address": "Vijfven 16",
+    "lat": 52.721787,
+    "lon": 4.727026,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH17",
+    "address": "Stationsstraat 65",
+    "lat": 52.722227,
+    "lon": 4.729346,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH18",
+    "address": "Schelphoek Noord 48",
+    "lat": 52.721767,
+    "lon": 4.731634,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH19",
+    "address": "Zwartepad 32",
+    "lat": 52.720963,
+    "lon": 4.73382,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH20",
+    "address": "Oudewal 24",
+    "lat": 52.719722,
+    "lon": 4.731197,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH21",
+    "address": "Oudewal 57",
+    "lat": 52.71922,
+    "lon": 4.72627,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH22",
+    "address": "Oudevaart 87",
+    "lat": 52.715871,
+    "lon": 4.728182,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH25",
+    "address": "Molenaarweg 42",
+    "lat": 52.719605,
+    "lon": 4.738471,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH26",
+    "address": "Regelhaalder 42",
+    "lat": 52.718597,
+    "lon": 4.741513,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "gfe",
+    "status": "new"
+  },
+  {
+    "id": "WH27",
+    "address": "Verzetslaan 40",
+    "lat": 52.718126,
+    "lon": 4.743441,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "gfe",
+    "status": "new"
+  },
+  {
+    "id": "WH28",
+    "address": "Zigt 1",
+    "lat": 52.718461,
+    "lon": 4.745592,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest"
+  },
+  {
+    "id": "WH29",
+    "address": "Schoffel 1",
+    "lat": 52.716677,
+    "lon": 4.742937,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH30",
+    "address": "Molenaarweg 1",
+    "lat": 52.71779,
+    "lon": 4.739241,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "new"
+  },
+  {
+    "id": "WH31",
+    "address": "Fatimahof 1",
+    "lat": 52.723164,
+    "lon": 4.737626,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "gfe",
+    "status": "new"
+  },
+  {
+    "id": "WH32",
+    "address": "Remmerdel 22",
+    "lat": 52.726345,
+    "lon": 4.748175,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "gfe",
+    "status": "new"
+  },
+  {
+    "id": "WH03",
+    "address": "Rietzangerstraat 13",
+    "lat": 52.727235,
+    "lon": 4.741842,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH05",
+    "address": "Verlei",
+    "lat": 52.726868,
+    "lon": 4.748425,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH06",
+    "address": "Soeverein 2",
+    "lat": 52.727571,
+    "lon": 4.750299,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH08",
+    "address": "Torenvenplein",
+    "lat": 52.725443,
+    "lon": 4.73915,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH14",
+    "address": "Doorbraak 21",
+    "lat": 52.722378,
+    "lon": 4.740949,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing"
+  },
+  {
+    "id": "WH23",
+    "address": "Pastoor Willemsestraat 2",
+    "lat": 52.720326,
+    "lon": 4.73849,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
+  },
+  {
+    "id": "WH24",
+    "address": "Pastoor Willemsestraat 224",
+    "lat": 52.720786,
+    "lon": 4.74023,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "type": "rest",
+    "status": "existing",
+    "access": {
+      "scope": "private",
+      "label": "Privé Angelapark",
+      "allowedAddressRange": {
+        "street": "Pastoor Willemsestraat",
+        "minHouseNumber": 2,
+        "maxHouseNumber": 224
+      }
+    }
+  }
+]

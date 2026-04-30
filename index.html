@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</title>
+  <meta name="description" content="Bekijk de werkelijke loopafstand van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers. De kaart toont per huispunt de afstand tot de dichtstbijzijnde containers." />
+  <link rel="canonical" href="https://thebeems.github.io/afvalcontainers/" />
+
+  <meta property="og:title" content="Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen" />
+  <meta property="og:description" content="Interactieve kaart met loopafstanden van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://thebeems.github.io/afvalcontainers/" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="./app/main.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <details id="sidebar-header-panel" open>
+          <summary>
+            <hgroup class="sidebar-header-summary-text">
+              <h1>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h1>
+              <p class="sidebar-header-hint">
+                <span class="sidebar-header-hint-closed">Toelichting en methode tonen</span>
+                <span class="sidebar-header-hint-open">Toelichting en methode verbergen</span>
+              </p>
+            </hgroup>
+          </summary>
+
+          <div class="sidebar-header-body">
+            <p>Op de <a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">website</a> van de gemeente Schagen stelt de gemeente het volgende over de loopafstand naar de aangekondigde ondergrondse afvalcontainers:</p> 
+            <p><i>"U loopt maximaal ongeveer 275 meter naar een container. In uitzonderlijke gevallen kan de afstand iets groter zijn"</i>.</p> 
+            <p>De gemeente berekent echter de afstand hemelsbreed. Deze kaart laat zien wat er gebeurt wanneer niet de hemelsbrede afstand, maar de werkelijke loopafstand wordt berekend. Dan blijkt dat het niet om enkele uitzonderingen gaat: <strong>bij een duidelijk deel van de onderzochte adressen is de loopafstand groter dan de gemeentelijke norm, en een groot deel komt uit op 150 meter of meer.</strong> (zie de analyse hieronder).</p> 
+            <p>De analyse is beperkt tot adressen binnen de bebouwde kom Warmenhuizen. Buitengebied en kleine kernen behouden volgens de gemeente de bestaande restafvalinzameling en tellen daarom niet mee.</p>
+            <p>Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners. Dat geldt met name wanneer de loopafstand boven de 100 meter komt. Lees <a href="https://github.com/TheBeems/afvalcontainers/blob/main/README.md">hier</a> de methodiek, bronnen en vergelijking met andere gemeenten.</p>
+          </div>
+        </details>
+      </header>
+
+      <section class="panel analysis-panel" aria-labelledby="analysis-title">
+  <h2 id="analysis-title">Analyse</h2>
+  <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
+
+  <details id="coverage-summary-panel" class="sidebar-collapsible summary-panel" open>
+    <summary>Samenvatting bebouwde kom</summary>
+    <div class="sidebar-collapsible-body">
+      <div id="coverage-summary" class="summary-grid" hidden></div>
+    </div>
+  </details>
+
+  <details id="house-summary" class="house-summary sidebar-collapsible" hidden></details>
+
+  <div id="house-details" class="detail-list">
+    <div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>
+  </div>
+</section>
+
+      <details class="sidebar-collapsible container-section">
+  <summary id="container-list-title">Containerlocaties</summary>
+  <div class="sidebar-collapsible-body">
+    <div id="container-list" class="container-list"></div>
+  </div>
+</details>
+    </aside>
+
+    <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
+      <div id="map" class="map"></div>
+
+      <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
+        <label class="search-label" for="house-search">Zoek je adres</label>
+        <input
+          class="search-input"
+          type="search"
+          id="house-search"
+          placeholder="Straatnaam + huisnummer"
+          autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="search-results"
+        />
+        <div
+          id="search-results"
+          class="search-results"
+          role="listbox"
+          aria-label="Zoekresultaten adressen"
+          aria-live="polite"
+        ></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
