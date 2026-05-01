@@ -11,7 +11,10 @@ import {
   VALID_CONTAINER_STATUSES,
   VALID_CONTAINER_TYPES
 } from '../../src/shared/containers.js';
-import { isAddressInAllowedRange } from '../../src/shared/address.js';
+import {
+  isAddressAllowedByRules,
+  validateAllowedAddressRules
+} from '../../src/shared/address.js';
 
 const projectRoot = resolve(import.meta.dirname, '../..');
 const containerPath = resolve(projectRoot, 'data/container-locations.json');
@@ -125,17 +128,23 @@ function validateContainerAccess(container, label) {
 
   assertString(access.label, `${label}.access.label`);
 
-  const range = access.allowedAddressRange;
-  if (!range || typeof range !== 'object' || Array.isArray(range)) {
-    fail(`${label}.access.allowedAddressRange must be an object.`);
+  if (!Array.isArray(access.allowedAddresses) || access.allowedAddresses.length === 0) {
+    fail(`${label}.access.allowedAddresses must be a non-empty array.`);
   }
 
-  assertString(range.street, `${label}.access.allowedAddressRange.street`);
-  assertInteger(range.minHouseNumber, `${label}.access.allowedAddressRange.minHouseNumber`);
-  assertInteger(range.maxHouseNumber, `${label}.access.allowedAddressRange.maxHouseNumber`);
+  for (const [ruleIndex, rule] of access.allowedAddresses.entries()) {
+    const ruleLabel = `${label}.access.allowedAddresses[${ruleIndex}]`;
+    if (!rule || typeof rule !== 'object' || Array.isArray(rule)) {
+      fail(`${ruleLabel} must be an object.`);
+    }
 
-  if (range.minHouseNumber > range.maxHouseNumber) {
-    fail(`${label}.access.allowedAddressRange.minHouseNumber must be <= maxHouseNumber.`);
+    assertString(rule.street, `${ruleLabel}.street`);
+    assertString(rule.houseNumbers, `${ruleLabel}.houseNumbers`);
+  }
+
+  const accessError = validateAllowedAddressRules(access.allowedAddresses);
+  if (accessError) {
+    fail(`${label}.access.allowedAddresses is invalid: ${accessError}`);
   }
 }
 
@@ -312,7 +321,7 @@ function validateNearestContainers(house, index, containersById) {
     seenIds.add(container.id);
 
     if (sourceContainer.access?.scope === PRIVATE_ACCESS_SCOPE
-      && !isAddressInAllowedRange(house.address, sourceContainer.access.allowedAddressRange)) {
+      && !isAddressAllowedByRules(house.address, sourceContainer.access.allowedAddresses)) {
       fail(`${label}.id references private container ${container.id} for disallowed address: ${house.address}`);
     }
 

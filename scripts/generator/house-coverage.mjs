@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { isAddressInAllowedRange, normalizeWhitespace } from '../../src/shared/address.js';
+import { isAddressAllowedByRules, normalizeWhitespace } from '../../src/shared/address.js';
 import { classifyCoverageStatus } from '../../src/shared/coverage.js';
 import {
   countRestafvalContainers,
@@ -205,7 +205,7 @@ function isContainerAllowedForHouse(house, container) {
     throw new Error(`Container ${container.id} heeft een onbekende toegangsregel: ${container.access.scope}`);
   }
 
-  return isAddressInAllowedRange(house.address, container.access.allowedAddressRange);
+  return isAddressAllowedByRules(house.address, container.access.allowedAddresses);
 }
 
 function formatDutchHouseNumber(properties) {

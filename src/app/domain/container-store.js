@@ -144,10 +144,16 @@ export function createContainerStore(context) {
     return Boolean(original && hasRestafvalStream(original) !== hasRestafvalStream(container));
   }
 
+  function hasContainerAccessChanged(container) {
+    const original = getOriginalContainer(container);
+    return Boolean(original && getContainerStoredAccess(original) !== getContainerStoredAccess(container));
+  }
+
   function requiresLiveContainerRoute(container) {
     return !getOriginalContainer(container)
       || hasContainerIdChanged(container)
       || hasContainerRestEligibilityChanged(container)
+      || hasContainerAccessChanged(container)
       || hasContainerLocationChanged(container);
   }
 
@@ -224,6 +230,7 @@ export function createContainerStore(context) {
     hasContainerLocationChanged,
     hasContainerIdChanged,
     hasContainerRestEligibilityChanged,
+    hasContainerAccessChanged,
     requiresLiveContainerRoute,
     getChangedContainers,
     getChangedContainerCount,

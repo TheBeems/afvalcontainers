@@ -305,11 +305,12 @@
     "access": {
       "scope": "private",
       "label": "Privé Angelapark",
-      "allowedAddressRange": {
-        "street": "Pastoor Willemsestraat",
-        "minHouseNumber": 2,
-        "maxHouseNumber": 224
-      }
+      "allowedAddresses": [
+        {
+          "street": "Pastoor Willemsestraat",
+          "houseNumbers": "2-224"
+        }
+      ]
     },
     "hvcContainerId": "80365"
   },
@@ -328,11 +329,12 @@
     "access": {
       "scope": "private",
       "label": "Privé Angelapark",
-      "allowedAddressRange": {
-        "street": "Pastoor Willemsestraat",
-        "minHouseNumber": 2,
-        "maxHouseNumber": 224
-      }
+      "allowedAddresses": [
+        {
+          "street": "Pastoor Willemsestraat",
+          "houseNumbers": "2-224"
+        }
+      ]
     },
     "hvcContainerId": "80428"
   },
