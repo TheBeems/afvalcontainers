@@ -1,5 +1,9 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { generateAddressIndexes } from '../generate-address-indexes.mjs';
+import {
+  readJson,
+  readPlacesManifest,
+  resolvePlaceDataPath
+} from '../places.mjs';
 import { COVERAGE_STATUS_KEYS } from '../../src/shared/coverage.js';
 import {
   compareContainersById,
@@ -16,25 +20,74 @@ import {
   validateAllowedAddressRules
 } from '../../src/shared/address.js';
 
-const projectRoot = resolve(import.meta.dirname, '../..');
-const containerPath = resolve(projectRoot, 'data/container-locations.json');
-const coveragePath = resolve(projectRoot, 'data/house-coverage.json');
-
 const EXPECTED_COVERAGE_SCHEMA_VERSION = 4;
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
-const ANALYSIS_SCOPE_LABEL = 'bebouwde kom Warmenhuizen';
 const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
 const VALID_COVERAGE_STATUSES = new Set(COVERAGE_STATUS_KEYS);
+const REQUIRED_PLACE_PATHS = ['containers', 'coverage', 'addressIndex'];
 
 function fail(message) {
   throw new Error(message);
 }
 
-async function readJson(path, label) {
-  try {
-    return JSON.parse(await readFile(path, 'utf8'));
-  } catch (error) {
-    fail(`${label} is not valid JSON: ${error.message}`);
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getContainerIdPattern(place) {
+  return new RegExp(`^${escapeRegExp(place.containerIdPrefix)}\\d{2}$`);
+}
+
+function getContainerIdFormat(place) {
+  return `${place.containerIdPrefix}NN`;
+}
+
+function getAnalysisScopeLabel(place) {
+  return `bebouwde kom ${place.name}`;
+}
+
+function validatePlacesManifest(places) {
+  const seenIds = new Set();
+
+  for (const [index, place] of places.entries()) {
+    const label = `place at index ${index}`;
+    if (!place || typeof place !== 'object' || Array.isArray(place)) {
+      fail(`${label} must be an object.`);
+    }
+
+    assertString(place.id, `${label}.id`);
+    if (!/^[a-z0-9-]+$/.test(place.id)) {
+      fail(`${label}.id must use lowercase letters, numbers, and hyphens.`);
+    }
+    if (seenIds.has(place.id)) {
+      fail(`Duplicate place id: ${place.id}`);
+    }
+    seenIds.add(place.id);
+
+    assertString(place.name, `${label}.name`);
+    assertString(place.containerIdPrefix, `${label}.containerIdPrefix`);
+    if (!/^[A-Z]{1,6}$/.test(place.containerIdPrefix)) {
+      fail(`${label}.containerIdPrefix must contain 1-6 uppercase letters.`);
+    }
+
+    if (!place.map || typeof place.map !== 'object' || Array.isArray(place.map)) {
+      fail(`${label}.map must be an object.`);
+    }
+    if (!Array.isArray(place.map.center) || place.map.center.length !== 2) {
+      fail(`${label}.map.center must be [lat, lon].`);
+    }
+    assertNumber(place.map.center[0], `${label}.map.center[0]`);
+    assertNumber(place.map.center[1], `${label}.map.center[1]`);
+    assertNumber(place.map.zoom, `${label}.map.zoom`);
+
+    assertString(place.sourceUrl, `${label}.sourceUrl`);
+
+    if (!place.paths || typeof place.paths !== 'object' || Array.isArray(place.paths)) {
+      fail(`${label}.paths must be an object.`);
+    }
+    for (const key of REQUIRED_PLACE_PATHS) {
+      assertString(place.paths[key], `${label}.paths.${key}`);
+    }
   }
 }
 
@@ -154,26 +207,28 @@ function validateContainerMetadata(container, label) {
   }
 }
 
-function validateContainers(containers) {
+function validateContainers(containers, place) {
   if (!Array.isArray(containers) || containers.length === 0) {
-    fail('container-locations.json must contain a non-empty array.');
+    fail(`${place.id} container-locations.json must contain a non-empty array.`);
   }
 
+  const containerIdPattern = getContainerIdPattern(place);
+  const containerIdFormat = getContainerIdFormat(place);
   const seenIds = new Set();
   const containersById = new Map();
   for (const [index, container] of containers.entries()) {
-    const label = `container at index ${index}`;
+    const label = `${place.id} container at index ${index}`;
     assertString(container.id, `${label}.id`);
-    if (!/^WH\d{2}$/.test(container.id)) {
-      fail(`${label}.id must match WHNN. Received: ${container.id}`);
+    if (!containerIdPattern.test(container.id)) {
+      fail(`${label}.id must match ${containerIdFormat}. Received: ${container.id}`);
     }
     if (seenIds.has(container.id)) {
-      fail(`Duplicate container id: ${container.id}`);
+      fail(`Duplicate container id in ${place.id}: ${container.id}`);
     }
     seenIds.add(container.id);
 
     if (index > 0 && compareContainersById(containers[index - 1], container) > 0) {
-      fail(`container-locations.json must be sorted by id. ${container.id} should appear before ${containers[index - 1].id}.`);
+      fail(`${place.id} container-locations.json must be sorted by id. ${container.id} should appear before ${containers[index - 1].id}.`);
     }
 
     assertString(container.address, `${label}.address`);
@@ -222,17 +277,18 @@ function validateSummary(coverage, houses, containers) {
   }
 }
 
-function validateAnalysisScope(coverage, houses) {
+function validateAnalysisScope(coverage, houses, place) {
   const scope = coverage.analysisScope;
   if (!scope || typeof scope !== 'object' || Array.isArray(scope)) {
-    fail('house-coverage.json must contain an analysisScope object.');
+    fail(`${place.id} house-coverage.json must contain an analysisScope object.`);
   }
 
   if (scope.type !== ANALYSIS_SCOPE_TYPE) {
     fail(`analysisScope.type must be "${ANALYSIS_SCOPE_TYPE}". Received: ${scope.type}`);
   }
-  if (scope.label !== ANALYSIS_SCOPE_LABEL) {
-    fail(`analysisScope.label must be "${ANALYSIS_SCOPE_LABEL}". Received: ${scope.label}`);
+  const analysisScopeLabel = getAnalysisScopeLabel(place);
+  if (scope.label !== analysisScopeLabel) {
+    fail(`analysisScope.label must be "${analysisScopeLabel}". Received: ${scope.label}`);
   }
 
   const source = scope.source;
@@ -247,8 +303,8 @@ function validateAnalysisScope(coverage, houses) {
     fail(`analysisScope.source.collection must be "${BRT_BUILT_UP_AREA_COLLECTION}". Received: ${source.collection}`);
   }
   assertString(source.featureId, 'analysisScope.source.featureId');
-  if (source.name !== 'Warmenhuizen') {
-    fail(`analysisScope.source.name must be "Warmenhuizen". Received: ${source.name}`);
+  if (source.name !== place.name) {
+    fail(`analysisScope.source.name must be "${place.name}". Received: ${source.name}`);
   }
   if (source.builtUpArea !== 'ja') {
     fail(`analysisScope.source.builtUpArea must be "ja". Received: ${source.builtUpArea}`);
@@ -352,10 +408,10 @@ function validateNearestContainers(house, index, containersById) {
   }
 }
 
-function validateHouses(coverage, containersById) {
+function validateHouses(coverage, containersById, place) {
   const houses = coverage.houses;
   if (!Array.isArray(houses)) {
-    fail('house-coverage.json must contain a houses array.');
+    fail(`${place.id} house-coverage.json must contain a houses array.`);
   }
 
   for (const [index, house] of houses.entries()) {
@@ -375,16 +431,81 @@ function validateHouses(coverage, containersById) {
   return houses;
 }
 
-export async function validateData() {
-  const containers = await readJson(containerPath, 'container-locations.json');
-  const coverage = await readJson(coveragePath, 'house-coverage.json');
+function validateCoverageMetadata(coverage, place) {
   if (coverage.schemaVersion !== EXPECTED_COVERAGE_SCHEMA_VERSION) {
-    fail(`house-coverage.json schemaVersion must be ${EXPECTED_COVERAGE_SCHEMA_VERSION}. Received: ${coverage.schemaVersion}`);
+    fail(`${place.id} house-coverage.json schemaVersion must be ${EXPECTED_COVERAGE_SCHEMA_VERSION}. Received: ${coverage.schemaVersion}`);
   }
-  const containersById = validateContainers(containers);
-  const houses = validateHouses(coverage, containersById);
-  validateAnalysisScope(coverage, houses);
-  validateSummary(coverage, houses, containersById);
+  if (coverage.placeName !== place.name) {
+    fail(`${place.id} house-coverage.json placeName must be "${place.name}". Received: ${coverage.placeName}`);
+  }
+}
 
-  console.log(`Validated ${containers.length} containers and ${houses.length} covered addresses.`);
+function validateAddressIndex(addressIndex, coverage, place) {
+  if (!Array.isArray(addressIndex)) {
+    fail(`${place.id} address-index.json must contain an array.`);
+  }
+
+  const houses = Array.isArray(coverage.houses) ? coverage.houses : [];
+  if (addressIndex.length !== houses.length) {
+    fail(`${place.id} address-index.json length (${addressIndex.length}) must equal houses.length (${houses.length}).`);
+  }
+
+  const allowedKeys = ['address', 'city', 'id', 'lat', 'lon', 'placeId', 'postcode'];
+  const indexById = new Map(addressIndex.map((entry) => [entry.id, entry]));
+
+  for (const [index, house] of houses.entries()) {
+    const entry = indexById.get(house.id);
+    if (!entry) {
+      fail(`${place.id} address-index.json is missing house id ${house.id}.`);
+    }
+
+    const keys = Object.keys(entry).sort();
+    if (keys.join(',') !== allowedKeys.join(',')) {
+      fail(`${place.id} address-index entry for ${house.id} must only contain: ${allowedKeys.join(', ')}.`);
+    }
+
+    if (entry.placeId !== place.id) {
+      fail(`${place.id} address-index entry ${house.id}.placeId must be "${place.id}".`);
+    }
+    if (entry.address !== house.address) {
+      fail(`${place.id} address-index entry ${house.id}.address must match coverage house at index ${index}.`);
+    }
+    if ((entry.postcode || '') !== (house.postcode || '')) {
+      fail(`${place.id} address-index entry ${house.id}.postcode must match coverage.`);
+    }
+    if ((entry.city || '') !== (house.city || place.name)) {
+      fail(`${place.id} address-index entry ${house.id}.city must match coverage.`);
+    }
+    if (entry.lat !== house.lat || entry.lon !== house.lon) {
+      fail(`${place.id} address-index entry ${house.id} coordinates must match coverage.`);
+    }
+  }
+}
+
+export async function validateData() {
+  await generateAddressIndexes({ verbose: false });
+
+  const places = await readPlacesManifest();
+  validatePlacesManifest(places);
+
+  let totalContainers = 0;
+  let totalHouses = 0;
+
+  for (const place of places) {
+    const containers = await readJson(resolvePlaceDataPath(place, 'containers'), `${place.id} container-locations.json`);
+    const coverage = await readJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`);
+    const addressIndex = await readJson(resolvePlaceDataPath(place, 'addressIndex'), `${place.id} address-index.json`);
+
+    validateCoverageMetadata(coverage, place);
+    const containersById = validateContainers(containers, place);
+    const houses = validateHouses(coverage, containersById, place);
+    validateAnalysisScope(coverage, houses, place);
+    validateSummary(coverage, houses, containersById);
+    validateAddressIndex(addressIndex, coverage, place);
+
+    totalContainers += containers.length;
+    totalHouses += houses.length;
+  }
+
+  console.log(`Validated ${places.length} place(s), ${totalContainers} containers, and ${totalHouses} covered addresses.`);
 }

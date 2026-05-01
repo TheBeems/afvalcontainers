@@ -127,7 +127,7 @@ export function createHouseSelection(context, api) {
         <span class="house-summary-heading">
           <span class="house-summary-title">Geselecteerd adres</span>
           <span class="house-address">${escapeHtml(house.address)}</span>
-          <span class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</span>
+          <span class="house-meta">${escapeHtml(postcode)}${escapeHtml(house.city || api.getActivePlaceCity())}</span>
         </span>
         ${buildStatusBadge(coverageStatus)}
       </summary>
@@ -393,7 +393,7 @@ export function createHouseSelection(context, api) {
       </summary>
 
       <div class="map-collapsible-body">
-        <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || 'Warmenhuizen')}</div>
+        <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || api.getActivePlaceCity())}</div>
         ${buildCompactRankingMarkup(ranking)}
       </div>
     `;

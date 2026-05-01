@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import {
   HVC_IMPORT_CONTAINER_ACCURACY,
   RESTAFVAL_CONTAINER_TYPES
 } from '../src/shared/containers.js';
 import { haversineMeters, roundCoordinate, roundMetric } from '../src/shared/geometry.js';
-
-const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const containerPath = resolve(projectRoot, 'data/container-locations.json');
-const coveragePath = resolve(projectRoot, 'data/house-coverage.json');
+import {
+  getDefaultPlace,
+  projectRoot,
+  readPlacesManifest,
+  resolvePlaceDataPath
+} from './places.mjs';
 
 const OPZET_ADDRESS_URL = 'https://inzamelkalender.hvcgroep.nl/adressen';
 const HVC_LOCATIONS_URL = 'https://www.hvcgroep.nl/proxy/api/app/v3/waste/locations';
@@ -24,6 +25,7 @@ const UNCHANGED_MAX_METERS = 0.5;
 function parseArgs(argv) {
   const options = {
     apply: false,
+    placeId: null,
     outputJson: null,
     help: false
   };
@@ -44,6 +46,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg.startsWith('--place=')) {
+      options.placeId = arg.slice('--place='.length);
+      continue;
+    }
+
     throw new Error(`Unknown option: ${arg}`);
   }
 
@@ -51,11 +58,12 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Usage: node scripts/audit-hvc-existing-containers.mjs [--apply] [--output-json=/tmp/hvc-existing-containers.json]
+  console.log(`Usage: node scripts/audit-hvc-existing-containers.mjs [--place=warmenhuizen] [--apply] [--output-json=/tmp/hvc-existing-containers.json]
 
 Audits existing rest/semi-rest containers against HVC container locations.
 
 Options:
+  --place=ID           Place from data/places.json. Default: warmenhuizen.
   --apply              Update lat/lon, hvcContainerId and accuracy for certain matches.
   --output-json=PATH   Write the audit report as JSON.
   --help              Show this help.
@@ -586,7 +594,7 @@ function formatSummaryLine(result) {
   ].join('  ');
 }
 
-function printReport(results, apply, appliedCount) {
+function printReport(results, apply, appliedCount, placeId) {
   const counts = results.reduce((totals, result) => {
     totals[result.status] = (totals[result.status] || 0) + 1;
     return totals;
@@ -606,7 +614,7 @@ function printReport(results, apply, appliedCount) {
 
   if (apply && appliedCount > 0) {
     console.log('');
-    console.log('Coverage is now stale. Regenerate intentionally with: node scripts/generate-house-coverage.mjs');
+    console.log(`Coverage is now stale. Regenerate intentionally with: node scripts/generate-house-coverage.mjs --place=${placeId}`);
   }
 }
 
@@ -617,15 +625,27 @@ async function main() {
     return;
   }
 
-  const containers = await readJson(containerPath, 'data/container-locations.json');
-  const coverage = await readJson(coveragePath, 'data/house-coverage.json');
+  const places = await readPlacesManifest();
+  const place = options.placeId
+    ? places.find((candidate) => candidate.id === options.placeId)
+    : getDefaultPlace(places);
+
+  if (!place) {
+    const knownPlaces = places.map((candidate) => candidate.id).join(', ');
+    throw new Error(`Unknown place: ${options.placeId}. Known places: ${knownPlaces}`);
+  }
+
+  const containerPath = resolvePlaceDataPath(place, 'containers');
+  const coveragePath = resolvePlaceDataPath(place, 'coverage');
+  const containers = await readJson(containerPath, `${place.id} container-locations.json`);
+  const coverage = await readJson(coveragePath, `${place.id} house-coverage.json`);
 
   if (!Array.isArray(containers)) {
-    throw new Error('data/container-locations.json must contain an array');
+    throw new Error(`${place.id} container-locations.json must contain an array`);
   }
 
   if (!Array.isArray(coverage.houses)) {
-    throw new Error('data/house-coverage.json must contain houses');
+    throw new Error(`${place.id} house-coverage.json must contain houses`);
   }
 
   const addressIndex = createCoverageAddressIndex(coverage.houses);
@@ -652,7 +672,7 @@ async function main() {
     }, null, 2)}\n`);
   }
 
-  printReport(results, options.apply, appliedCount);
+  printReport(results, options.apply, appliedCount, place.id);
 }
 
 main().catch((error) => {

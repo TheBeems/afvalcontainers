@@ -3,7 +3,6 @@ import {
 } from '../config.js';
 import {
   CONTAINER_CATEGORIES,
-  CONTAINER_ID_PATTERN,
   CONTAINER_STATUS_LABELS,
   CONTAINER_TYPE_LABELS,
   MANUAL_CONTAINER_ACCURACY,
@@ -125,20 +124,21 @@ export function createContainerEditor(context, api) {
   }
 
   function downloadContainerLocations() {
+    const filename = api.getContainerDownloadFilename();
     const payload = `${JSON.stringify(api.serializeContainersForDownload(), null, 2)}\n`;
     const blob = new Blob([payload], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
 
     anchor.href = url;
-    anchor.download = 'container-locations.json';
+    anchor.download = filename;
     anchor.rel = 'noopener';
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
 
-    setContainerEditorStatus('container-locations.json is klaargezet als download.', 'success');
+    setContainerEditorStatus(`${filename} is klaargezet als download.`, 'success');
   }
 
   function resetContainerLocations() {
@@ -485,8 +485,8 @@ export function createContainerEditor(context, api) {
   }
 
   function validateContainerEditForm(values, currentContainerKey = null) {
-    if (!CONTAINER_ID_PATTERN.test(values.id)) {
-      return 'Gebruik een id in de vorm WHNN, bijvoorbeeld WH33.';
+    if (!api.getContainerIdPattern().test(values.id)) {
+      return `Gebruik een id in de vorm ${api.getContainerIdFormat()}, bijvoorbeeld ${api.getContainerIdExample()}.`;
     }
 
     const duplicate = state.containers.find((container) => (

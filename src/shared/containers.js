@@ -46,31 +46,40 @@ export const VALID_CONTAINER_TYPES = new Set(Object.keys(CONTAINER_TYPE_LABELS))
 export const VALID_CONTAINER_STATUSES = new Set(Object.keys(CONTAINER_STATUS_LABELS));
 export const VALID_CONTAINER_CATEGORIES = new Set(Object.keys(CONTAINER_CATEGORIES));
 export const RESTAFVAL_CONTAINER_TYPES = new Set(['rest', 'semi-rest']);
-export const CONTAINER_ID_PATTERN = /^WH\d{2}$/;
+export const CONTAINER_ID_PATTERN = /^([A-Z]+)(\d{2})$/;
 export const DEFAULT_CONTAINER_TYPE = 'rest';
 export const DEFAULT_CONTAINER_STATUS = 'new';
 export const PRIVATE_ACCESS_SCOPE = 'private';
 export const MANUAL_CONTAINER_ACCURACY = 'handmatig bepaald (zeer hoog, onzekerheid -1 m)';
 export const HVC_IMPORT_CONTAINER_ACCURACY = 'hvc import (exacte locatie)';
 
-function getContainerIdNumber(id) {
+function getContainerIdParts(id) {
   const match = String(id || '').match(CONTAINER_ID_PATTERN);
-  return match ? Number(match[0].slice(2)) : null;
+  return match ? {
+    prefix: match[1],
+    number: Number(match[2])
+  } : null;
 }
 
 export function compareContainerIds(leftId, rightId) {
-  const leftNumber = getContainerIdNumber(leftId);
-  const rightNumber = getContainerIdNumber(rightId);
+  const leftParts = getContainerIdParts(leftId);
+  const rightParts = getContainerIdParts(rightId);
 
-  if (leftNumber !== null && rightNumber !== null && leftNumber !== rightNumber) {
-    return leftNumber - rightNumber;
+  if (leftParts !== null && rightParts !== null) {
+    const prefixOrder = leftParts.prefix.localeCompare(rightParts.prefix, 'en', { numeric: true });
+    if (prefixOrder !== 0) {
+      return prefixOrder;
+    }
+    if (leftParts.number !== rightParts.number) {
+      return leftParts.number - rightParts.number;
+    }
   }
 
-  if (leftNumber !== null && rightNumber === null) {
+  if (leftParts !== null && rightParts === null) {
     return -1;
   }
 
-  if (leftNumber === null && rightNumber !== null) {
+  if (leftParts === null && rightParts !== null) {
     return 1;
   }
 

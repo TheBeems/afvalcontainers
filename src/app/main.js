@@ -1,9 +1,9 @@
 import { getElements } from './dom.js';
 import { createAppState } from './state.js';
-import { loadJson } from './data/load-json.js';
 import { createMapContext } from './map/setup.js';
 import { installMapControls } from './map/controls.js';
 import { createContainerStore } from './domain/container-store.js';
+import { createPlaceLoader } from './domain/place-loader.js';
 import { createRanking } from './domain/ranking.js';
 import { createLiveRoutes } from './services/live-routes.js';
 import { createContainerEditor } from './ui/container-editor.js';
@@ -46,6 +46,7 @@ function createApp() {
   Object.assign(api, createContainerEditor(context, api));
   Object.assign(api, createContainersUi(context, api));
   Object.assign(api, createHouseSelection(context, api));
+  Object.assign(api, createPlaceLoader(context, api));
   Object.assign(api, createSearch(context, api));
 
   return { api, context };
@@ -67,30 +68,11 @@ async function init(context, api) {
   const { elements, state } = context;
 
   try {
-    const [containers, coverage] = await Promise.all([
-      loadJson('./data/container-locations.json', 'Containerdataset laden'),
-      loadJson('./data/house-coverage.json', 'Huizenlaag laden')
-    ]);
-
-    const loadedContainers = Array.isArray(containers) ? containers : [];
-    api.setOriginalContainers(loadedContainers);
-    state.containers = state.originalContainers.map((container) => api.cloneContainerForState(container, container.clientKey));
-    state.coverage = coverage && typeof coverage === 'object' ? coverage : null;
-    state.houses = Array.isArray(state.coverage?.houses) ? state.coverage.houses : [];
-    api.syncContainerIndex();
-
-    api.renderContainers({ fitBounds: true });
-    api.renderCoverageSummary();
-    api.renderHouseMarkers();
-    api.syncHouseLayerVisibility();
     registerCoreListeners(context, api);
-
-    if (state.houses.length === 0) {
-      api.setCoverageStatus('De viewer kon geen vooraf berekende huizenlaag vinden. Voer de generator uit om deze data te maken.', 'error');
-    }
-
+    await api.initPlaces();
     await api.initSearch();
   } catch (error) {
+    state.placeLoadStatus = 'error';
     elements.coverageSummary.hidden = true;
     elements.houseSummary.hidden = true;
     elements.houseDetails.hidden = false;
