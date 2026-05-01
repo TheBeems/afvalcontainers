@@ -1,5 +1,5 @@
 
-# Loopafstanden naar ondergrondse restafvalcontainers
+# Loopafstanden naar aangekondigde ondergrondse restafvalcontainers in de gemeente Schagen
 
 Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
 
