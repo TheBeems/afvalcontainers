@@ -14,7 +14,7 @@ import {
 } from '../../shared/containers.js';
 import { roundCoordinate } from '../../shared/geometry.js';
 
-export function createContainerStore(context) {
+export function createContainerStore(context, api) {
   const { state } = context;
 
   function createContainerClientKey() {
@@ -198,14 +198,15 @@ export function createContainerStore(context) {
   }
 
   function getNextContainerId() {
+    const prefix = api.getContainerIdPrefix?.() || 'WH';
     for (let index = 1; index <= 99; index += 1) {
-      const id = `WH${String(index).padStart(2, '0')}`;
+      const id = `${prefix}${String(index).padStart(2, '0')}`;
       if (!state.containersById.has(id)) {
         return id;
       }
     }
 
-    return 'WH99';
+    return `${prefix}99`;
   }
 
   return {

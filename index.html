@@ -21,11 +21,17 @@
 <body>
   <div class="app-shell">
     <aside class="sidebar">
+      <section class="panel place-panel" aria-labelledby="place-selector-title">
+        <h2 id="place-selector-title">Dorp</h2>
+        <label class="place-select-label" for="place-select">Selecteer dorp</label>
+        <select id="place-select" class="place-select"></select>
+      </section>
+
       <header class="sidebar-header">
         <details id="sidebar-header-panel" open>
           <summary>
             <hgroup class="sidebar-header-summary-text">
-              <h1>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h1>
+              <h1 id="app-title">Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h1>
               <p class="sidebar-header-hint">
                 <span class="sidebar-header-hint-closed">Toelichting en methode tonen</span>
                 <span class="sidebar-header-hint-open">Toelichting en methode verbergen</span>
@@ -34,7 +40,7 @@
           </summary>
 
           <div class="sidebar-header-body">
-            <p>De gemeente Schagen heeft <a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a> dat huishoudens in Warmenhuizen hun grijze restafvalbak moeten inruilen voor ondergrondse restafvalcontainers. Restafval wordt dan niet meer aan huis opgehaald, maar moet worden weggebracht.</p>
+            <p>De gemeente Schagen heeft <a id="place-source-link" href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a> dat huishoudens in <span data-place-name>Warmenhuizen</span> hun grijze restafvalbak moeten inruilen voor ondergrondse restafvalcontainers. Restafval wordt dan niet meer aan huis opgehaald, maar moet worden weggebracht.</p>
 
             <p>Volgens de gemeente loopt u “maximaal ongeveer 275 meter naar een container”. De gemeente berekent echter deze afstand hemelsbreed. Deze kaart laat zien welke afstand je moet lopen naar de dichtstbijzijnde containers (zie legenda loopafstand). De analyse hieronder laat de totalen zien: een aanzienlijk deel moet 150 meter of meer lopen.</p>
 

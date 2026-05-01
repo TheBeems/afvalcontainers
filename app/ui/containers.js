@@ -73,7 +73,7 @@ export function createContainersUi(context, api) {
       </summary>
 
       <div class="map-collapsible-body">
-        <div class="container-map-info-address">${escapeHtml(container.address)}, Warmenhuizen</div>
+        <div class="container-map-info-address">${escapeHtml(container.address)}, ${escapeHtml(api.getActivePlaceCity())}</div>
         <div class="container-map-info-meta">
           ${categoryPills}
           ${api.buildContainerAccessPill(container)}
