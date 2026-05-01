@@ -24,7 +24,9 @@
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
     "paths": {
-      "containers": "./data/places/tuitjenhorn/container-locations.json"
+      "containers": "./data/places/tuitjenhorn/container-locations.json",
+      "coverage": "./data/places/tuitjenhorn/house-coverage.json",
+      "addressIndex": "./data/places/tuitjenhorn/address-index.json"
     }
   }
 ]

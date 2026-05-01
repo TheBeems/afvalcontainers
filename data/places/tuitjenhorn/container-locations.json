@@ -27,16 +27,17 @@
   },
   {
     "id": "TH03",
-    "address": "Sint Jozefpark",
-    "lat": 52.739546,
-    "lon": 4.747652,
-    "accuracy": "bestaande restcontainer visueel afgeleid uit Schagen overzichtskaart (globaal, controle nodig)",
+    "address": "Sint Jozefpark 119",
+    "lat": 52.739701,
+    "lon": 4.747791,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "80055"
   },
   {
     "id": "TH04",
@@ -297,16 +298,17 @@
   },
   {
     "id": "TH23",
-    "address": "Koolzaad",
-    "lat": 52.734969,
-    "lon": 4.744642,
-    "accuracy": "bestaande restcontainer visueel afgeleid uit Schagen overzichtskaart (globaal, controle nodig)",
+    "address": "Koolzaad 46",
+    "lat": 52.734376,
+    "lon": 4.744126,
+    "accuracy": "hvc import (exacte locatie)",
     "streams": [
       {
         "type": "rest",
         "status": "existing"
       }
-    ]
+    ],
+    "hvcContainerId": "81594"
   },
   {
     "id": "TH24",
