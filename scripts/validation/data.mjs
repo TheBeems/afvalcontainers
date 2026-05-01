@@ -22,7 +22,7 @@ import {
 
 const EXPECTED_COVERAGE_SCHEMA_VERSION = 4;
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
-const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
+const BRT_BUILT_UP_AREA_COLLECTIONS = new Set(['plaats_multivlak', 'plaats_vlak']);
 const VALID_COVERAGE_STATUSES = new Set(COVERAGE_STATUS_KEYS);
 
 function fail(message) {
@@ -305,8 +305,8 @@ function validateAnalysisScope(coverage, houses, place) {
   if (source.dataset !== 'BRT TOP10NL') {
     fail(`analysisScope.source.dataset must be "BRT TOP10NL". Received: ${source.dataset}`);
   }
-  if (source.collection !== BRT_BUILT_UP_AREA_COLLECTION) {
-    fail(`analysisScope.source.collection must be "${BRT_BUILT_UP_AREA_COLLECTION}". Received: ${source.collection}`);
+  if (!BRT_BUILT_UP_AREA_COLLECTIONS.has(source.collection)) {
+    fail(`analysisScope.source.collection must be one of: ${Array.from(BRT_BUILT_UP_AREA_COLLECTIONS).join(', ')}. Received: ${source.collection}`);
   }
   assertString(source.featureId, 'analysisScope.source.featureId');
   if (source.name !== place.name) {

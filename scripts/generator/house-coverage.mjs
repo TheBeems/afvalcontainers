@@ -37,8 +37,8 @@ const ADDRESS_BBOX_TILE_COLUMNS = 2;
 const BBOX_TILE_OVERLAP_DEGREES = 0.000001;
 const PDOK_WOONPLAATS_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/woonplaats/items';
 const PDOK_ADRES_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/adres/items';
-const PDOK_BRT_BUILT_UP_AREA_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak/items';
-const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
+const PDOK_BRT_TOP10NL_COLLECTIONS_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections';
+const BRT_BUILT_UP_AREA_COLLECTIONS = ['plaats_multivlak', 'plaats_vlak'];
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
 const OSRM_BASE_URL = 'https://routing.openstreetmap.de/routed-foot';
 const OSRM_PROFILE = 'foot';
@@ -367,10 +367,26 @@ async function loadRouteCache(outputJsonPath, options) {
   return emptyCache;
 }
 
+function getPolygonalGeometryCoordinates(geometry) {
+  if (geometry?.type === 'MultiPolygon') {
+    return geometry.coordinates || [];
+  }
+
+  if (geometry?.type === 'Polygon') {
+    return [geometry.coordinates || []];
+  }
+
+  return [];
+}
+
+function isPolygonalGeometry(geometry) {
+  return getPolygonalGeometryCoordinates(geometry).length > 0;
+}
+
 function getFeatureCoordinates(geometry) {
   const coordinates = [];
 
-  for (const polygon of geometry.coordinates || []) {
+  for (const polygon of getPolygonalGeometryCoordinates(geometry)) {
     for (const ring of polygon || []) {
       for (const coordinate of ring || []) {
         if (Array.isArray(coordinate) && coordinate.length >= 2) {
@@ -383,10 +399,10 @@ function getFeatureCoordinates(geometry) {
   return coordinates;
 }
 
-function computeBboxFromMultiPolygon(geometry) {
+function computeBboxFromPolygonalGeometry(geometry) {
   const coordinates = getFeatureCoordinates(geometry);
   if (!coordinates.length) {
-    throw new Error('Woonplaatsgeometrie bevat geen bruikbare coördinaten.');
+    throw new Error('Geometrie bevat geen bruikbare coördinaten.');
   }
 
   const lons = coordinates.map((coordinate) => coordinate[0]);
@@ -433,8 +449,8 @@ function isPointInPolygon(point, polygon) {
   return true;
 }
 
-function isPointInMultiPolygon(point, geometry) {
-  return (geometry.coordinates || []).some((polygon) => isPointInPolygon(point, polygon));
+function isPointInPolygonalGeometry(point, geometry) {
+  return getPolygonalGeometryCoordinates(geometry).some((polygon) => isPointInPolygon(point, polygon));
 }
 
 function buildBboxParam(bbox) {
@@ -483,33 +499,73 @@ async function loadPlaceBoundary(place) {
 
 function isPlaceBuiltUpArea(feature, place) {
   const properties = feature?.properties || {};
-  return feature?.geometry?.type === 'MultiPolygon'
+  return isPolygonalGeometry(feature?.geometry)
     && properties.naamnl === place.name
     && properties.bebouwdekom === 'ja'
     && properties.typegebied === 'woonkern'
     && properties.isbagwoonplaats === 'ja';
 }
 
-async function loadPlaceBuiltUpArea(searchBbox, place) {
-  const bboxParam = buildBboxParam(searchBbox);
-  const initialUrl = `${PDOK_BRT_BUILT_UP_AREA_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
-  const { features, pageCount } = await fetchPaginatedFeatures(initialUrl, 'BRT bebouwde-komvlakken laden', { pageLimit: 5 });
-  const builtUpAreas = features.filter((feature) => isPlaceBuiltUpArea(feature, place));
+function getBrtBuiltUpAreaUrl(collectionId) {
+  return `${PDOK_BRT_TOP10NL_COLLECTIONS_URL}/${collectionId}/items`;
+}
 
-  if (builtUpAreas.length !== 1) {
-    const matchingNames = features
-      .map((feature) => {
-        const properties = feature.properties || {};
-        return `${properties.naamnl || 'naam onbekend'} (${properties.bebouwdekom || 'bebouwdekom onbekend'}, ${properties.typegebied || 'type onbekend'}, BAG=${properties.isbagwoonplaats || 'onbekend'})`;
-      })
-      .join('; ');
+function describeBrtFeature(feature, collectionId) {
+  const properties = feature.properties || {};
+  return [
+    collectionId,
+    properties.naamnl || 'naam onbekend',
+    properties.bebouwdekom || 'bebouwdekom onbekend',
+    properties.typegebied || 'type onbekend',
+    `BAG=${properties.isbagwoonplaats || 'onbekend'}`
+  ].join(' / ');
+}
 
-    throw new Error(`BRT-bebouwdekomvlak voor ${place.name} niet eenduidig gevonden. Matches: ${builtUpAreas.length}. Gevonden vlakken: ${matchingNames}`);
+function summarizeBrtFeatures(attempts) {
+  const descriptions = [];
+
+  for (const attempt of attempts) {
+    for (const feature of attempt.features) {
+      descriptions.push(describeBrtFeature(feature, attempt.collectionId));
+    }
   }
 
-  console.log(`BRT bebouwde-komvlakken opgehaald binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} pagina(s).`);
+  const uniqueDescriptions = Array.from(new Set(descriptions));
+  const visibleDescriptions = uniqueDescriptions.slice(0, 20);
+  const suffix = uniqueDescriptions.length > visibleDescriptions.length
+    ? `; ... (${uniqueDescriptions.length - visibleDescriptions.length} extra)`
+    : '';
 
-  return builtUpAreas[0];
+  return `${visibleDescriptions.join('; ') || 'geen'}${suffix}`;
+}
+
+async function loadPlaceBuiltUpArea(searchBbox, place) {
+  const bboxParam = buildBboxParam(searchBbox);
+  const attempts = [];
+
+  for (const collectionId of BRT_BUILT_UP_AREA_COLLECTIONS) {
+    const initialUrl = `${getBrtBuiltUpAreaUrl(collectionId)}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
+    const { features, pageCount } = await fetchPaginatedFeatures(initialUrl, `BRT ${collectionId} laden`, { pageLimit: 5 });
+    const builtUpAreas = features.filter((feature) => isPlaceBuiltUpArea(feature, place));
+    attempts.push({ collectionId, features, pageCount, matchCount: builtUpAreas.length });
+
+    if (builtUpAreas.length === 1) {
+      console.log(`BRT bebouwde-komvlakken opgehaald uit ${collectionId} binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} pagina(s).`);
+      return {
+        collectionId,
+        feature: builtUpAreas[0]
+      };
+    }
+
+    if (builtUpAreas.length > 1) {
+      break;
+    }
+  }
+
+  const matchSummary = attempts
+    .map((attempt) => `${attempt.collectionId}: ${attempt.matchCount}`)
+    .join(', ');
+  throw new Error(`BRT-bebouwdekomvlak voor ${place.name} niet eenduidig gevonden. Matches: ${matchSummary}. Gevonden vlakken: ${summarizeBrtFeatures(attempts)}`);
 }
 
 function getAnalysisScopeLabel(place) {
@@ -536,7 +592,7 @@ function normalizeAddressFeature(feature, boundaryGeometry, place) {
     return null;
   }
 
-  if (coordinates.length < 2 || !isPointInMultiPolygon(coordinates, boundaryGeometry)) {
+  if (coordinates.length < 2 || !isPointInPolygonalGeometry(coordinates, boundaryGeometry)) {
     return null;
   }
 
@@ -567,7 +623,7 @@ function sortHouses(houses) {
 }
 
 async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry, place) {
-  const bbox = computeBboxFromMultiPolygon(boundaryGeometry);
+  const bbox = computeBboxFromPolygonalGeometry(boundaryGeometry);
   const addressBboxes = splitBbox(bbox, ADDRESS_BBOX_TILE_ROWS, ADDRESS_BBOX_TILE_COLUMNS);
   const features = [];
   let pageCount = 0;
@@ -591,7 +647,7 @@ async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry, place) 
   }
 
   const bagHouses = sortHouses(Array.from(uniqueBagHouses.values()));
-  const houses = bagHouses.filter((house) => isPointInMultiPolygon([house.lon, house.lat], analysisBoundaryGeometry));
+  const houses = bagHouses.filter((house) => isPointInPolygonalGeometry([house.lon, house.lat], analysisBoundaryGeometry));
 
   console.log(`BAG-verblijfsobjecten binnen woonplaats ${place.name}: ${bagHouses.length}.`);
   console.log(`Adressen binnen ${getAnalysisScopeLabel(place)}: ${houses.length}; uitgesloten buiten analysegebied: ${bagHouses.length - houses.length}.`);
@@ -942,7 +998,7 @@ function buildSummary(results, options, containers, bbox, addressStats) {
   };
 }
 
-function buildAnalysisScope(builtUpAreaFeature, addressStats, place) {
+function buildAnalysisScope(builtUpAreaFeature, addressStats, place, collectionId) {
   const properties = builtUpAreaFeature.properties || {};
 
   return {
@@ -950,7 +1006,7 @@ function buildAnalysisScope(builtUpAreaFeature, addressStats, place) {
     label: getAnalysisScopeLabel(place),
     source: {
       dataset: 'BRT TOP10NL',
-      collection: BRT_BUILT_UP_AREA_COLLECTION,
+      collection: collectionId,
       featureId: builtUpAreaFeature.id || '',
       name: properties.naamnl || '',
       officialName: properties.naamofficieel || '',
@@ -995,12 +1051,13 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
   console.log(`Zoek woonplaatsgrens voor ${options.place.name}...`);
 
   const boundaryFeature = await loadPlaceBoundary(options.place);
-  const placeBbox = computeBboxFromMultiPolygon(boundaryFeature.geometry);
+  const placeBbox = computeBboxFromPolygonalGeometry(boundaryFeature.geometry);
   console.log(`Woonplaatsgrens gevonden: ${boundaryFeature.properties?.identificatie || 'onbekende identificatie'}.`);
 
   console.log(`Zoek BRT-bebouwdekomvlak voor ${options.place.name}...`);
-  const analysisBoundaryFeature = await loadPlaceBuiltUpArea(placeBbox, options.place);
-  const analysisBbox = computeBboxFromMultiPolygon(analysisBoundaryFeature.geometry);
+  const analysisBoundary = await loadPlaceBuiltUpArea(placeBbox, options.place);
+  const analysisBoundaryFeature = analysisBoundary.feature;
+  const analysisBbox = computeBboxFromPolygonalGeometry(analysisBoundaryFeature.geometry);
   console.log(`BRT-bebouwdekomvlak gevonden: ${analysisBoundaryFeature.id || 'onbekende identificatie'} (${analysisBoundaryFeature.properties?.bronactualiteit || 'bronactualiteit onbekend'}).`);
 
   const { houses: allAddresses, stats: addressStats } = await loadAddresses(boundaryFeature.geometry, analysisBoundaryFeature.geometry, options.place);
@@ -1036,11 +1093,11 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
     schemaVersion: 4,
     generatedAt,
     placeName: options.place.name,
-    analysisScope: buildAnalysisScope(analysisBoundaryFeature, addressStats, options.place),
+    analysisScope: buildAnalysisScope(analysisBoundaryFeature, addressStats, options.place, analysisBoundary.collectionId),
     source: {
       pdokWoonplaatsCollection: 'woonplaats',
       pdokAdresCollection: 'adres',
-      pdokBuiltUpAreaCollection: BRT_BUILT_UP_AREA_COLLECTION,
+      pdokBuiltUpAreaCollection: analysisBoundary.collectionId,
       osrmBaseUrl: OSRM_BASE_URL,
       osrmProfile: OSRM_PROFILE
     },
