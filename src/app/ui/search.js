@@ -39,7 +39,7 @@ export function createSearch(context, api) {
 
     const searchRoot = input.closest('.search-panel') || input;
 
-    const fuse = new Fuse(state.houses, {
+    const fuse = new Fuse(state.addressIndex, {
       keys: ['address', 'postcode'],
       includeScore: true,
       threshold: 0.3
@@ -96,7 +96,7 @@ export function createSearch(context, api) {
       }
     }
 
-    function selectMatch(index = activeIndex) {
+    async function selectMatch(index = activeIndex) {
       const match = matches[index];
 
       if (!match) {
@@ -105,9 +105,12 @@ export function createSearch(context, api) {
 
       const house = match.item;
 
-      api.selectHouse(house, { focusMap: true });
       input.value = house.address;
       closeResults();
+      await api.selectPlace(house.placeId, {
+        selectedHouseId: house.id,
+        focusMap: true
+      });
     }
 
     function renderEmptyResult() {
@@ -119,7 +122,7 @@ export function createSearch(context, api) {
     function createResultButton(result, index) {
       const house = result.item;
       const postcode = house.postcode ? `${house.postcode} ` : '';
-      const city = house.city || 'Warmenhuizen';
+      const city = house.city || api.getPlaceById(house.placeId)?.name || api.getActivePlaceCity();
 
       const button = document.createElement('button');
       button.type = 'button';
@@ -135,7 +138,9 @@ export function createSearch(context, api) {
       `;
 
       button.addEventListener('pointerenter', () => setActiveIndex(index));
-      button.addEventListener('click', () => selectMatch(index));
+      button.addEventListener('click', () => {
+        void selectMatch(index);
+      });
 
       return button;
     }
@@ -196,7 +201,7 @@ export function createSearch(context, api) {
       if (event.key === 'Enter') {
         if (matches.length > 0 && activeIndex >= 0) {
           event.preventDefault();
-          selectMatch();
+          void selectMatch();
         }
 
         return;

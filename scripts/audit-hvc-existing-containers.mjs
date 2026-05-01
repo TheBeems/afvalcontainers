@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 
 import { readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import {
   HVC_IMPORT_CONTAINER_ACCURACY,
   RESTAFVAL_CONTAINER_TYPES
 } from '../src/shared/containers.js';
 import { haversineMeters, roundCoordinate, roundMetric } from '../src/shared/geometry.js';
-
-const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const containerPath = resolve(projectRoot, 'data/container-locations.json');
-const coveragePath = resolve(projectRoot, 'data/house-coverage.json');
+import {
+  getDefaultPlace,
+  projectRoot,
+  readPlacesManifest,
+  resolvePlaceDataPath
+} from './places.mjs';
 
 const OPZET_ADDRESS_URL = 'https://inzamelkalender.hvcgroep.nl/adressen';
 const HVC_LOCATIONS_URL = 'https://www.hvcgroep.nl/proxy/api/app/v3/waste/locations';
+const PDOK_LOCATIESERVER_URL = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/free';
 
 const AUTO_ADDRESS_MATCH_MAX_METERS = 75;
 const AUTO_NEAREST_MATCH_MAX_METERS = 25;
@@ -24,6 +26,7 @@ const UNCHANGED_MAX_METERS = 0.5;
 function parseArgs(argv) {
   const options = {
     apply: false,
+    placeId: null,
     outputJson: null,
     help: false
   };
@@ -44,6 +47,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg.startsWith('--place=')) {
+      options.placeId = arg.slice('--place='.length);
+      continue;
+    }
+
     throw new Error(`Unknown option: ${arg}`);
   }
 
@@ -51,11 +59,12 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Usage: node scripts/audit-hvc-existing-containers.mjs [--apply] [--output-json=/tmp/hvc-existing-containers.json]
+  console.log(`Usage: node scripts/audit-hvc-existing-containers.mjs [--place=warmenhuizen] [--apply] [--output-json=/tmp/hvc-existing-containers.json]
 
 Audits existing rest/semi-rest containers against HVC container locations.
 
 Options:
+  --place=ID           Place from data/places.json. Default: warmenhuizen.
   --apply              Update lat/lon, hvcContainerId and accuracy for certain matches.
   --output-json=PATH   Write the audit report as JSON.
   --help              Show this help.
@@ -67,6 +76,17 @@ async function readJson(path, label) {
     return JSON.parse(await readFile(path, 'utf8'));
   } catch (error) {
     throw new Error(`Could not read ${label}: ${error.message}`);
+  }
+}
+
+async function readOptionalJson(path, label) {
+  try {
+    return await readJson(path, label);
+  } catch (error) {
+    if (error.message.includes('ENOENT')) {
+      return null;
+    }
+    throw error;
   }
 }
 
@@ -266,6 +286,67 @@ function resolvePostcode(container, addressIndex) {
     method: 'not-found',
     matchedAddress: null,
     reason: 'postcode not found in local coverage addresses'
+  };
+}
+
+function parsePoint(value) {
+  const match = String(value || '').match(/^POINT\(([-0-9.]+) ([-0-9.]+)\)$/);
+  return match ? {
+    lon: Number(match[1]),
+    lat: Number(match[2])
+  } : null;
+}
+
+async function resolvePostcodeFromPdok(container, placeName) {
+  const parsedAddress = parseStreetAddress(container.address);
+  if (!parsedAddress) {
+    return {
+      parsedAddress: null,
+      postcode: null,
+      method: 'none',
+      matchedAddress: null,
+      reason: 'container address could not be parsed'
+    };
+  }
+
+  const query = `${container.address} ${placeName}`;
+  const searchParams = new URLSearchParams({
+    q: query,
+    rows: '5'
+  });
+  const data = await fetchJson(`${PDOK_LOCATIESERVER_URL}?${searchParams.toString()}`);
+  const docs = Array.isArray(data?.response?.docs) ? data.response.docs : [];
+  const normalizedStreet = normalizeText(parsedAddress.street);
+  const matches = docs.filter((doc) => {
+    const point = parsePoint(doc.centroide_ll);
+    return doc.type === 'adres'
+      && normalizeText(doc.woonplaatsnaam) === normalizeText(placeName)
+      && normalizeText(doc.straatnaam) === normalizedStreet
+      && Number(doc.huisnummer) === parsedAddress.houseNumber
+      && normalizeText(doc.huis_nlt) === normalizeText(`${parsedAddress.houseNumber}${parsedAddress.houseLetter}${parsedAddress.houseNumberExtension ? ` ${parsedAddress.houseNumberExtension}` : ''}`)
+      && normalizePostcode(doc.postcode)
+      && Number.isFinite(point?.lat)
+      && Number.isFinite(point?.lon);
+  });
+
+  if (matches.length === 1) {
+    return {
+      parsedAddress,
+      postcode: normalizePostcode(matches[0].postcode),
+      method: 'pdok-address',
+      matchedAddress: matches[0].weergavenaam || null,
+      reason: 'postcode resolved by PDOK address lookup'
+    };
+  }
+
+  return {
+    parsedAddress,
+    postcode: null,
+    method: matches.length > 1 ? 'ambiguous-pdok-address' : 'pdok-not-found',
+    matchedAddress: matches.map((match) => match.weergavenaam).join('; ') || null,
+    reason: matches.length > 1
+      ? 'multiple PDOK addresses matched'
+      : 'postcode not found by PDOK address lookup'
   };
 }
 
@@ -496,8 +577,10 @@ async function fetchHvcLocations(address) {
   return locations;
 }
 
-async function auditContainer(container, addressIndex) {
-  const postcodeResolution = resolvePostcode(container, addressIndex);
+async function auditContainer(container, addressIndex, placeName) {
+  const postcodeResolution = addressIndex
+    ? resolvePostcode(container, addressIndex)
+    : await resolvePostcodeFromPdok(container, placeName);
 
   if (!postcodeResolution.parsedAddress) {
     return createManualResult(container, postcodeResolution, postcodeResolution.reason);
@@ -586,7 +669,7 @@ function formatSummaryLine(result) {
   ].join('  ');
 }
 
-function printReport(results, apply, appliedCount) {
+function printReport(results, apply, appliedCount, placeId, hasCoverage) {
   const counts = results.reduce((totals, result) => {
     totals[result.status] = (totals[result.status] || 0) + 1;
     return totals;
@@ -604,9 +687,9 @@ function printReport(results, apply, appliedCount) {
     console.log(formatSummaryLine(result));
   }
 
-  if (apply && appliedCount > 0) {
+  if (apply && appliedCount > 0 && hasCoverage) {
     console.log('');
-    console.log('Coverage is now stale. Regenerate intentionally with: node scripts/generate-house-coverage.mjs');
+    console.log(`Coverage is now stale. Regenerate intentionally with: node scripts/generate-house-coverage.mjs --place=${placeId}`);
   }
 }
 
@@ -617,23 +700,36 @@ async function main() {
     return;
   }
 
-  const containers = await readJson(containerPath, 'data/container-locations.json');
-  const coverage = await readJson(coveragePath, 'data/house-coverage.json');
+  const places = await readPlacesManifest();
+  const place = options.placeId
+    ? places.find((candidate) => candidate.id === options.placeId)
+    : getDefaultPlace(places);
+
+  if (!place) {
+    const knownPlaces = places.map((candidate) => candidate.id).join(', ');
+    throw new Error(`Unknown place: ${options.placeId}. Known places: ${knownPlaces}`);
+  }
+
+  const containerPath = resolvePlaceDataPath(place, 'containers');
+  const containers = await readJson(containerPath, `${place.id} container-locations.json`);
+  const coverage = place.paths?.coverage
+    ? await readOptionalJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`)
+    : null;
 
   if (!Array.isArray(containers)) {
-    throw new Error('data/container-locations.json must contain an array');
+    throw new Error(`${place.id} container-locations.json must contain an array`);
   }
 
-  if (!Array.isArray(coverage.houses)) {
-    throw new Error('data/house-coverage.json must contain houses');
+  if (coverage && !Array.isArray(coverage.houses)) {
+    throw new Error(`${place.id} house-coverage.json must contain houses`);
   }
 
-  const addressIndex = createCoverageAddressIndex(coverage.houses);
+  const addressIndex = coverage ? createCoverageAddressIndex(coverage.houses) : null;
   const existingContainers = containers.filter(isRestExistingContainer);
   const results = [];
 
   for (const container of existingContainers) {
-    results.push(await auditContainer(container, addressIndex));
+    results.push(await auditContainer(container, addressIndex, place.name));
   }
 
   const appliedCount = options.apply ? applyResults(containers, results) : 0;
@@ -652,7 +748,7 @@ async function main() {
     }, null, 2)}\n`);
   }
 
-  printReport(results, options.apply, appliedCount);
+  printReport(results, options.apply, appliedCount, place.id, Boolean(coverage));
 }
 
 main().catch((error) => {

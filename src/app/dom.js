@@ -1,6 +1,10 @@
 export function getElements() {
   return {
     sidebarHeaderPanel: document.getElementById('sidebar-header-panel'),
+    appTitle: document.getElementById('app-title'),
+    placeNameElements: document.querySelectorAll('[data-place-name]'),
+    placeSourceLink: document.getElementById('place-source-link'),
+    placeSelect: document.getElementById('place-select'),
     coverageStatus: document.getElementById('coverage-status'),
     coverageSummaryPanel: document.getElementById('coverage-summary-panel'),
     coverageSummary: document.getElementById('coverage-summary'),

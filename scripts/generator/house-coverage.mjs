@@ -16,11 +16,15 @@ import {
   roundCoordinate,
   roundMetric
 } from '../../src/shared/geometry.js';
+import {
+  getDefaultPlace,
+  readPlacesManifest,
+  resolvePlaceDataPath
+} from '../places.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, '../..');
 
-const WARMENHUIZEN_NAME = 'Warmenhuizen';
 const DEFAULT_PAGE_SIZE = 1000;
 const DEFAULT_CANDIDATE_COUNT = 6;
 const DEFAULT_RESULT_COUNT = 3;
@@ -33,18 +37,18 @@ const ADDRESS_BBOX_TILE_COLUMNS = 2;
 const BBOX_TILE_OVERLAP_DEGREES = 0.000001;
 const PDOK_WOONPLAATS_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/woonplaats/items';
 const PDOK_ADRES_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/adres/items';
-const PDOK_BRT_BUILT_UP_AREA_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak/items';
-const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
+const PDOK_BRT_TOP10NL_COLLECTIONS_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections';
+const BRT_BUILT_UP_AREA_COLLECTIONS = ['plaats_multivlak', 'plaats_vlak'];
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
-const ANALYSIS_SCOPE_LABEL = 'bebouwde kom Warmenhuizen';
 const OSRM_BASE_URL = 'https://routing.openstreetmap.de/routed-foot';
 const OSRM_PROFILE = 'foot';
 const USER_AGENT = 'warmenhuizen-afvalcontainers-batch/1.0';
 const ROUTE_CACHE_VERSION = 'route-v1';
 
 const defaultOptions = {
-  containerPath: resolve(projectRoot, 'data/container-locations.json'),
-  outputJsonPath: resolve(projectRoot, 'data/house-coverage.json'),
+  placeId: null,
+  containerPath: null,
+  outputJsonPath: null,
   candidateCount: DEFAULT_CANDIDATE_COUNT,
   resultCount: DEFAULT_RESULT_COUNT,
   concurrency: DEFAULT_CONCURRENCY,
@@ -61,6 +65,7 @@ Gebruik:
   node scripts/generate-house-coverage.mjs [opties]
 
 Opties:
+  --place=ID           Plaats uit data/places.json. Standaard: warmenhuizen.
   --container-file=PAD   Pad naar de containerdataset JSON.
   --output-json=PAD      Pad voor het gegenereerde JSON-resultaat.
   --candidate-count=N    Aantal hemelsbreed dichtste containers per adres. Standaard: ${DEFAULT_CANDIDATE_COUNT}
@@ -102,6 +107,9 @@ function parseArgs(argv) {
 
     const [key, rawValue] = arg.slice(2).split('=');
     switch (key) {
+      case 'place':
+        options.placeId = rawValue;
+        break;
       case 'container-file':
         options.containerPath = resolve(projectRoot, rawValue);
         break;
@@ -132,6 +140,31 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+async function resolveOptions(argv) {
+  const options = parseArgs(argv);
+  const places = await readPlacesManifest();
+  const place = options.placeId
+    ? places.find((candidate) => candidate.id === options.placeId)
+    : getDefaultPlace(places);
+
+  if (!place) {
+    const knownPlaces = places.map((candidate) => candidate.id).join(', ');
+    throw new Error(`Onbekende plaats: ${options.placeId}. Bekende plaatsen: ${knownPlaces}`);
+  }
+
+  return {
+    ...options,
+    place,
+    placeId: place.id,
+    containerPath: options.containerPath || resolvePlaceDataPath(place, 'containers'),
+    outputJsonPath: options.outputJsonPath || (
+      place.paths?.coverage
+        ? resolvePlaceDataPath(place, 'coverage')
+        : resolve(projectRoot, `data/places/${place.id}/house-coverage.json`)
+    )
+  };
 }
 
 function parsePositiveInteger(value, key) {
@@ -334,10 +367,26 @@ async function loadRouteCache(outputJsonPath, options) {
   return emptyCache;
 }
 
+function getPolygonalGeometryCoordinates(geometry) {
+  if (geometry?.type === 'MultiPolygon') {
+    return geometry.coordinates || [];
+  }
+
+  if (geometry?.type === 'Polygon') {
+    return [geometry.coordinates || []];
+  }
+
+  return [];
+}
+
+function isPolygonalGeometry(geometry) {
+  return getPolygonalGeometryCoordinates(geometry).length > 0;
+}
+
 function getFeatureCoordinates(geometry) {
   const coordinates = [];
 
-  for (const polygon of geometry.coordinates || []) {
+  for (const polygon of getPolygonalGeometryCoordinates(geometry)) {
     for (const ring of polygon || []) {
       for (const coordinate of ring || []) {
         if (Array.isArray(coordinate) && coordinate.length >= 2) {
@@ -350,10 +399,10 @@ function getFeatureCoordinates(geometry) {
   return coordinates;
 }
 
-function computeBboxFromMultiPolygon(geometry) {
+function computeBboxFromPolygonalGeometry(geometry) {
   const coordinates = getFeatureCoordinates(geometry);
   if (!coordinates.length) {
-    throw new Error('Woonplaatsgeometrie bevat geen bruikbare coördinaten.');
+    throw new Error('Geometrie bevat geen bruikbare coördinaten.');
   }
 
   const lons = coordinates.map((coordinate) => coordinate[0]);
@@ -400,8 +449,8 @@ function isPointInPolygon(point, polygon) {
   return true;
 }
 
-function isPointInMultiPolygon(point, geometry) {
-  return (geometry.coordinates || []).some((polygon) => isPointInPolygon(point, polygon));
+function isPointInPolygonalGeometry(point, geometry) {
+  return getPolygonalGeometryCoordinates(geometry).some((polygon) => isPointInPolygon(point, polygon));
 }
 
 function buildBboxParam(bbox) {
@@ -429,57 +478,101 @@ function splitBbox(bbox, rows, columns) {
   return tiles;
 }
 
-async function loadWarmenhuizenBoundary() {
+async function loadPlaceBoundary(place) {
   const initialUrl = `${PDOK_WOONPLAATS_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}`;
   const { stopResult } = await fetchPaginatedFeatures(initialUrl, 'Woonplaatsen laden', {
     pageLimit: 20,
     stopWhen: (pageFeatures) => pageFeatures.find((feature) => {
       const properties = feature.properties || {};
       return feature.geometry?.type === 'MultiPolygon'
-        && properties.woonplaats === WARMENHUIZEN_NAME
+        && properties.woonplaats === place.name
         && properties.status === 'Woonplaats aangewezen';
     })
   });
 
   if (!stopResult) {
-    throw new Error(`Woonplaats ${WARMENHUIZEN_NAME} niet gevonden in de BAG-woonplaatscollectie.`);
+    throw new Error(`Woonplaats ${place.name} niet gevonden in de BAG-woonplaatscollectie.`);
   }
 
   return stopResult;
 }
 
-function isWarmenhuizenBuiltUpArea(feature) {
+function isPlaceBuiltUpArea(feature, place) {
   const properties = feature?.properties || {};
-  return feature?.geometry?.type === 'MultiPolygon'
-    && properties.naamnl === WARMENHUIZEN_NAME
+  return isPolygonalGeometry(feature?.geometry)
+    && properties.naamnl === place.name
     && properties.bebouwdekom === 'ja'
     && properties.typegebied === 'woonkern'
     && properties.isbagwoonplaats === 'ja';
 }
 
-async function loadWarmenhuizenBuiltUpArea(searchBbox) {
-  const bboxParam = buildBboxParam(searchBbox);
-  const initialUrl = `${PDOK_BRT_BUILT_UP_AREA_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
-  const { features, pageCount } = await fetchPaginatedFeatures(initialUrl, 'BRT bebouwde-komvlakken laden', { pageLimit: 5 });
-  const builtUpAreas = features.filter(isWarmenhuizenBuiltUpArea);
-
-  if (builtUpAreas.length !== 1) {
-    const matchingNames = features
-      .map((feature) => {
-        const properties = feature.properties || {};
-        return `${properties.naamnl || 'naam onbekend'} (${properties.bebouwdekom || 'bebouwdekom onbekend'}, ${properties.typegebied || 'type onbekend'}, BAG=${properties.isbagwoonplaats || 'onbekend'})`;
-      })
-      .join('; ');
-
-    throw new Error(`BRT-bebouwdekomvlak voor ${WARMENHUIZEN_NAME} niet eenduidig gevonden. Matches: ${builtUpAreas.length}. Gevonden vlakken: ${matchingNames}`);
-  }
-
-  console.log(`BRT bebouwde-komvlakken opgehaald binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} pagina(s).`);
-
-  return builtUpAreas[0];
+function getBrtBuiltUpAreaUrl(collectionId) {
+  return `${PDOK_BRT_TOP10NL_COLLECTIONS_URL}/${collectionId}/items`;
 }
 
-function normalizeAddressFeature(feature, boundaryGeometry) {
+function describeBrtFeature(feature, collectionId) {
+  const properties = feature.properties || {};
+  return [
+    collectionId,
+    properties.naamnl || 'naam onbekend',
+    properties.bebouwdekom || 'bebouwdekom onbekend',
+    properties.typegebied || 'type onbekend',
+    `BAG=${properties.isbagwoonplaats || 'onbekend'}`
+  ].join(' / ');
+}
+
+function summarizeBrtFeatures(attempts) {
+  const descriptions = [];
+
+  for (const attempt of attempts) {
+    for (const feature of attempt.features) {
+      descriptions.push(describeBrtFeature(feature, attempt.collectionId));
+    }
+  }
+
+  const uniqueDescriptions = Array.from(new Set(descriptions));
+  const visibleDescriptions = uniqueDescriptions.slice(0, 20);
+  const suffix = uniqueDescriptions.length > visibleDescriptions.length
+    ? `; ... (${uniqueDescriptions.length - visibleDescriptions.length} extra)`
+    : '';
+
+  return `${visibleDescriptions.join('; ') || 'geen'}${suffix}`;
+}
+
+async function loadPlaceBuiltUpArea(searchBbox, place) {
+  const bboxParam = buildBboxParam(searchBbox);
+  const attempts = [];
+
+  for (const collectionId of BRT_BUILT_UP_AREA_COLLECTIONS) {
+    const initialUrl = `${getBrtBuiltUpAreaUrl(collectionId)}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
+    const { features, pageCount } = await fetchPaginatedFeatures(initialUrl, `BRT ${collectionId} laden`, { pageLimit: 5 });
+    const builtUpAreas = features.filter((feature) => isPlaceBuiltUpArea(feature, place));
+    attempts.push({ collectionId, features, pageCount, matchCount: builtUpAreas.length });
+
+    if (builtUpAreas.length === 1) {
+      console.log(`BRT bebouwde-komvlakken opgehaald uit ${collectionId} binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} pagina(s).`);
+      return {
+        collectionId,
+        feature: builtUpAreas[0]
+      };
+    }
+
+    if (builtUpAreas.length > 1) {
+      break;
+    }
+  }
+
+  const matchSummary = attempts
+    .map((attempt) => `${attempt.collectionId}: ${attempt.matchCount}`)
+    .join(', ');
+  throw new Error(`BRT-bebouwdekomvlak voor ${place.name} niet eenduidig gevonden. Matches: ${matchSummary}. Gevonden vlakken: ${summarizeBrtFeatures(attempts)}`);
+}
+
+function getAnalysisScopeLabel(place) {
+  return `bebouwde kom ${place.name}`;
+}
+
+function normalizeAddressFeature(feature, boundaryGeometry, place) {
   if (!feature || feature.geometry?.type !== 'Point') {
     return null;
   }
@@ -495,11 +588,11 @@ function normalizeAddressFeature(feature, boundaryGeometry) {
     return null;
   }
 
-  if (properties.woonplaats_naam !== WARMENHUIZEN_NAME) {
+  if (properties.woonplaats_naam !== place.name) {
     return null;
   }
 
-  if (coordinates.length < 2 || !isPointInMultiPolygon(coordinates, boundaryGeometry)) {
+  if (coordinates.length < 2 || !isPointInPolygonalGeometry(coordinates, boundaryGeometry)) {
     return null;
   }
 
@@ -513,7 +606,7 @@ function normalizeAddressFeature(feature, boundaryGeometry) {
     id: feature.id || properties.identificatie,
     address: `${streetName} ${houseNumber}`,
     postcode: properties.postcode || '',
-    city: properties.woonplaats_naam || WARMENHUIZEN_NAME,
+    city: properties.woonplaats_naam || place.name,
     lat: coordinates[1],
     lon: coordinates[0]
   };
@@ -529,8 +622,8 @@ function sortHouses(houses) {
   });
 }
 
-async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry) {
-  const bbox = computeBboxFromMultiPolygon(boundaryGeometry);
+async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry, place) {
+  const bbox = computeBboxFromPolygonalGeometry(boundaryGeometry);
   const addressBboxes = splitBbox(bbox, ADDRESS_BBOX_TILE_ROWS, ADDRESS_BBOX_TILE_COLUMNS);
   const features = [];
   let pageCount = 0;
@@ -547,17 +640,17 @@ async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry) {
 
   const uniqueBagHouses = new Map();
   for (const feature of features) {
-    const house = normalizeAddressFeature(feature, boundaryGeometry);
+    const house = normalizeAddressFeature(feature, boundaryGeometry, place);
     if (house && !uniqueBagHouses.has(house.id)) {
       uniqueBagHouses.set(house.id, house);
     }
   }
 
   const bagHouses = sortHouses(Array.from(uniqueBagHouses.values()));
-  const houses = bagHouses.filter((house) => isPointInMultiPolygon([house.lon, house.lat], analysisBoundaryGeometry));
+  const houses = bagHouses.filter((house) => isPointInPolygonalGeometry([house.lon, house.lat], analysisBoundaryGeometry));
 
-  console.log(`BAG-verblijfsobjecten binnen woonplaats ${WARMENHUIZEN_NAME}: ${bagHouses.length}.`);
-  console.log(`Adressen binnen ${ANALYSIS_SCOPE_LABEL}: ${houses.length}; uitgesloten buiten analysegebied: ${bagHouses.length - houses.length}.`);
+  console.log(`BAG-verblijfsobjecten binnen woonplaats ${place.name}: ${bagHouses.length}.`);
+  console.log(`Adressen binnen ${getAnalysisScopeLabel(place)}: ${houses.length}; uitgesloten buiten analysegebied: ${bagHouses.length - houses.length}.`);
 
   return {
     houses,
@@ -905,15 +998,15 @@ function buildSummary(results, options, containers, bbox, addressStats) {
   };
 }
 
-function buildAnalysisScope(builtUpAreaFeature, addressStats) {
+function buildAnalysisScope(builtUpAreaFeature, addressStats, place, collectionId) {
   const properties = builtUpAreaFeature.properties || {};
 
   return {
     type: ANALYSIS_SCOPE_TYPE,
-    label: ANALYSIS_SCOPE_LABEL,
+    label: getAnalysisScopeLabel(place),
     source: {
       dataset: 'BRT TOP10NL',
-      collection: BRT_BUILT_UP_AREA_COLLECTION,
+      collection: collectionId,
       featureId: builtUpAreaFeature.id || '',
       name: properties.naamnl || '',
       officialName: properties.naamofficieel || '',
@@ -939,12 +1032,13 @@ async function writeOutput(outputJsonPath, payload) {
 }
 
 export async function generateHouseCoverage(argv = process.argv.slice(2)) {
-  const options = parseArgs(argv);
+  const options = await resolveOptions(argv);
   options.osrmRateLimiter = createRateLimiter(options.delayMs);
 
   const containers = await loadContainers(options.containerPath);
   const routeCache = await loadRouteCache(options.outputJsonPath, options);
 
+  console.log(`Plaats: ${options.place.name} (${options.place.id}).`);
   console.log(`Containerdataset geladen: ${containers.length} locaties.`);
   console.log(`OSRM-instellingen: ${options.tableBatchSize} adressen per table-batch, minimaal ${options.delayMs} ms tussen verzoeken.`);
   if (!options.includeRouteGeometries) {
@@ -954,18 +1048,19 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
   } else {
     console.log(`Route-cache geladen: ${routeCache.reusable} bruikbare route(s), ${routeCache.skipped} overgeslagen.`);
   }
-  console.log(`Zoek woonplaatsgrens voor ${WARMENHUIZEN_NAME}...`);
+  console.log(`Zoek woonplaatsgrens voor ${options.place.name}...`);
 
-  const boundaryFeature = await loadWarmenhuizenBoundary();
-  const placeBbox = computeBboxFromMultiPolygon(boundaryFeature.geometry);
+  const boundaryFeature = await loadPlaceBoundary(options.place);
+  const placeBbox = computeBboxFromPolygonalGeometry(boundaryFeature.geometry);
   console.log(`Woonplaatsgrens gevonden: ${boundaryFeature.properties?.identificatie || 'onbekende identificatie'}.`);
 
-  console.log(`Zoek BRT-bebouwdekomvlak voor ${WARMENHUIZEN_NAME}...`);
-  const analysisBoundaryFeature = await loadWarmenhuizenBuiltUpArea(placeBbox);
-  const analysisBbox = computeBboxFromMultiPolygon(analysisBoundaryFeature.geometry);
+  console.log(`Zoek BRT-bebouwdekomvlak voor ${options.place.name}...`);
+  const analysisBoundary = await loadPlaceBuiltUpArea(placeBbox, options.place);
+  const analysisBoundaryFeature = analysisBoundary.feature;
+  const analysisBbox = computeBboxFromPolygonalGeometry(analysisBoundaryFeature.geometry);
   console.log(`BRT-bebouwdekomvlak gevonden: ${analysisBoundaryFeature.id || 'onbekende identificatie'} (${analysisBoundaryFeature.properties?.bronactualiteit || 'bronactualiteit onbekend'}).`);
 
-  const { houses: allAddresses, stats: addressStats } = await loadAddresses(boundaryFeature.geometry, analysisBoundaryFeature.geometry);
+  const { houses: allAddresses, stats: addressStats } = await loadAddresses(boundaryFeature.geometry, analysisBoundaryFeature.geometry, options.place);
   const houses = Number.isInteger(options.limitHouses)
     ? allAddresses.slice(0, options.limitHouses)
     : allAddresses;
@@ -997,12 +1092,12 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
   const payload = {
     schemaVersion: 4,
     generatedAt,
-    placeName: WARMENHUIZEN_NAME,
-    analysisScope: buildAnalysisScope(analysisBoundaryFeature, addressStats),
+    placeName: options.place.name,
+    analysisScope: buildAnalysisScope(analysisBoundaryFeature, addressStats, options.place, analysisBoundary.collectionId),
     source: {
       pdokWoonplaatsCollection: 'woonplaats',
       pdokAdresCollection: 'adres',
-      pdokBuiltUpAreaCollection: BRT_BUILT_UP_AREA_COLLECTION,
+      pdokBuiltUpAreaCollection: analysisBoundary.collectionId,
       osrmBaseUrl: OSRM_BASE_URL,
       osrmProfile: OSRM_PROFILE
     },

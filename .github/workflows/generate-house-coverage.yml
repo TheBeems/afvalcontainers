@@ -3,6 +3,14 @@ name: Generate House Coverage & Deploy (Manual)
 on:
   workflow_dispatch:
     inputs:
+      place:
+        description: 'Dorp waarvoor de data wordt gegenereerd'
+        required: true
+        type: choice
+        default: warmenhuizen
+        options:
+          - warmenhuizen
+          - tuitjenhorn
       include_route_geometries:
         description: 'Prefetch and store route geometries'
         type: boolean
@@ -28,17 +36,25 @@ jobs:
         run: npm ci
 
       - name: Generate house coverage
+        env:
+          PLACE_ID: ${{ inputs.place }}
         run: |
-          args=()
+          args=(--place="$PLACE_ID")
           if [ "${{ inputs.include_route_geometries }}" = "true" ]; then
             args+=(--include-route-geometries)
           fi
           node scripts/generate-house-coverage.mjs "${args[@]}"
 
+      - name: Generate address indexes
+        run: npm run generate:address-indexes
+
       - name: Check for changes
         id: git-check
+        env:
+          PLACE_ID: ${{ inputs.place }}
         run: |
-          if git diff --quiet data/house-coverage.json; then
+          changed_files="$(git status --porcelain -- "data/places/${PLACE_ID}/house-coverage.json" "data/places/${PLACE_ID}/address-index.json")"
+          if [ -z "$changed_files" ]; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
           else
             echo "no_changes=false" >> $GITHUB_OUTPUT
@@ -46,11 +62,16 @@ jobs:
 
       - name: Commit updated data
         if: steps.git-check.outputs.no_changes == 'false'
+        env:
+          PLACE_ID: ${{ inputs.place }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add data/house-coverage.json
-          git commit -m "Auto-generated house coverage on ${{ github.sha }}"
+          git add "data/places/${PLACE_ID}/house-coverage.json"
+          if [ -f "data/places/${PLACE_ID}/address-index.json" ]; then
+            git add "data/places/${PLACE_ID}/address-index.json"
+          fi
+          git commit -m "Auto-generated ${PLACE_ID} house coverage on ${{ github.sha }}"
           # Push met PAT uit secrets
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/TheBeems/afvalcontainers.git HEAD:main
 
