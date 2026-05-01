@@ -93,9 +93,9 @@ export function cloneContainerAccess(access) {
   return {
     scope: access.scope,
     label: access.label,
-    allowedAddressRange: access.allowedAddressRange
-      ? { ...access.allowedAddressRange }
-      : undefined
+    allowedAddresses: Array.isArray(access.allowedAddresses)
+      ? access.allowedAddresses.map((rule) => ({ ...rule }))
+      : []
   };
 }
 

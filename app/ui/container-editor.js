@@ -7,6 +7,7 @@ import {
   CONTAINER_STATUS_LABELS,
   CONTAINER_TYPE_LABELS,
   MANUAL_CONTAINER_ACCURACY,
+  PRIVATE_ACCESS_SCOPE,
   VALID_CONTAINER_STATUSES,
   VALID_CONTAINER_TYPES,
   createDefaultContainerStream,
@@ -14,6 +15,10 @@ import {
   normalizeContainerStatus,
   normalizeContainerType
 } from '../../shared/containers.js';
+import {
+  normalizeAllowedAddressRules,
+  validateAllowedAddressRules
+} from '../../shared/address.js';
 import { escapeHtml } from '../../shared/html.js';
 
 export function createContainerEditor(context, api) {
@@ -204,6 +209,33 @@ export function createContainerEditor(context, api) {
       .join('');
   }
 
+  function buildContainerAccessAddressRow(rule = {}) {
+    return `
+      <div class="container-access-address-row">
+        <label>
+          <span>Straat</span>
+          <input name="access-street" value="${escapeHtml(rule.street || '')}" autocomplete="off" />
+        </label>
+        <label>
+          <span>Huisnummers</span>
+          <input name="access-house-numbers" value="${escapeHtml(rule.houseNumbers || '')}" autocomplete="off" placeholder="23, 25-30" />
+        </label>
+        <button type="button" class="editor-button container-access-address-remove-button">Verwijderen</button>
+      </div>
+    `;
+  }
+
+  function getContainerAccessAddressRows(container) {
+    const rules = normalizeAllowedAddressRules(container.access?.allowedAddresses);
+    return rules.length > 0 ? rules : [{ street: '', houseNumbers: '' }];
+  }
+
+  function buildContainerAccessAddressRowsMarkup(container) {
+    return getContainerAccessAddressRows(container)
+      .map((rule) => buildContainerAccessAddressRow(rule))
+      .join('');
+  }
+
   function getEditableContainer() {
     if (state.pendingNewContainer) {
       return state.pendingNewContainer;
@@ -237,6 +269,8 @@ export function createContainerEditor(context, api) {
     }
 
     const isNew = container === state.pendingNewContainer;
+    const isPrivate = container.access?.scope === PRIVATE_ACCESS_SCOPE;
+    const accessLabel = isPrivate ? container.access?.label || '' : '';
     const locationText = Number.isFinite(container.lat) && Number.isFinite(container.lon)
       ? `${container.lat.toFixed(6)}, ${container.lon.toFixed(6)}`
       : 'onbekend';
@@ -263,6 +297,26 @@ export function createContainerEditor(context, api) {
           </div>
           <button type="button" id="add-container-stream-button" class="editor-button">Type toevoegen</button>
         </fieldset>
+        <fieldset class="container-access-fieldset">
+          <legend>Toegang</legend>
+          <label class="container-private-toggle">
+            <input name="access-private" type="checkbox"${isPrivate ? ' checked' : ''} />
+            <span>Privé container</span>
+          </label>
+          <div id="container-access-settings" class="container-access-settings"${isPrivate ? '' : ' hidden'}>
+            <label>
+              <span>Label</span>
+              <input name="access-label" value="${escapeHtml(accessLabel)}" autocomplete="off" placeholder="Privé Angelapark" />
+            </label>
+            <fieldset class="container-access-addresses-fieldset">
+              <legend>Toegestane adressen</legend>
+              <div id="container-access-address-rows" class="container-access-address-rows">
+                ${buildContainerAccessAddressRowsMarkup(container)}
+              </div>
+              <button type="button" id="add-container-access-address-button" class="editor-button">Adresregel toevoegen</button>
+            </fieldset>
+          </div>
+        </fieldset>
         <div id="container-edit-error" class="container-edit-error" role="alert" hidden></div>
         <div class="container-edit-actions">
           <button type="submit" class="editor-button editor-button-primary">Opslaan</button>
@@ -275,8 +329,10 @@ export function createContainerEditor(context, api) {
     const cancelButton = document.getElementById('cancel-container-edit-button');
     form?.addEventListener('submit', handleContainerEditSubmit);
     form?.addEventListener('click', handleContainerEditFormClick);
+    form?.addEventListener('change', handleContainerEditFormChange);
     cancelButton?.addEventListener('click', cancelContainerEdit);
     syncContainerStreamRowControls(form);
+    syncContainerAccessRowControls(form);
   }
 
   function syncContainerStreamRowControls(form) {
@@ -310,6 +366,47 @@ export function createContainerEditor(context, api) {
     syncContainerStreamRowControls(form);
   }
 
+  function syncContainerAccessVisibility(form) {
+    const settings = form?.querySelector('#container-access-settings');
+    const checkbox = form?.querySelector('input[name="access-private"]');
+    if (!settings || !checkbox) {
+      return;
+    }
+
+    settings.hidden = !checkbox.checked;
+  }
+
+  function syncContainerAccessRowControls(form) {
+    const rows = form?.querySelectorAll('.container-access-address-row') || [];
+    const removeButtons = form?.querySelectorAll('.container-access-address-remove-button') || [];
+    const removeDisabled = rows.length <= 1;
+
+    removeButtons.forEach((button, index) => {
+      button.disabled = removeDisabled;
+      button.setAttribute('aria-label', `Adresregel ${index + 1} verwijderen`);
+    });
+  }
+
+  function addContainerAccessAddressRow(form) {
+    const rowsElement = form.querySelector('#container-access-address-rows');
+    if (!rowsElement) {
+      return;
+    }
+
+    rowsElement.insertAdjacentHTML('beforeend', buildContainerAccessAddressRow());
+    syncContainerAccessRowControls(form);
+  }
+
+  function removeContainerAccessAddressRow(button, form) {
+    const row = button.closest('.container-access-address-row');
+    if (!row) {
+      return;
+    }
+
+    row.remove();
+    syncContainerAccessRowControls(form);
+  }
+
   function handleContainerEditFormClick(event) {
     const form = event.currentTarget;
     const target = event.target;
@@ -325,6 +422,29 @@ export function createContainerEditor(context, api) {
 
     if (target.classList.contains('container-stream-remove-button')) {
       removeContainerStreamRow(target, form);
+      return;
+    }
+
+    if (target.id === 'add-container-access-address-button') {
+      addContainerAccessAddressRow(form);
+      return;
+    }
+
+    if (target.classList.contains('container-access-address-remove-button')) {
+      removeContainerAccessAddressRow(target, form);
+    }
+  }
+
+  function handleContainerEditFormChange(event) {
+    const form = event.currentTarget;
+    const target = event.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    if (target.name === 'access-private') {
+      syncContainerAccessVisibility(form);
     }
   }
 
@@ -342,6 +462,9 @@ export function createContainerEditor(context, api) {
     const formData = new FormData(form);
     const streamTypes = formData.getAll('stream-type');
     const streamStatuses = formData.getAll('stream-status');
+    const accessStreets = formData.getAll('access-street');
+    const accessHouseNumbers = formData.getAll('access-house-numbers');
+    const accessPrivate = formData.get('access-private') === 'on';
 
     return {
       id: String(formData.get('id') || '').trim().toUpperCase(),
@@ -349,7 +472,15 @@ export function createContainerEditor(context, api) {
       streams: streamTypes.map((type, index) => ({
         type: String(type || '').trim(),
         status: String(streamStatuses[index] || '').trim()
-      }))
+      })),
+      access: accessPrivate ? {
+        scope: PRIVATE_ACCESS_SCOPE,
+        label: String(formData.get('access-label') || '').trim(),
+        allowedAddresses: normalizeAllowedAddressRules(accessStreets.map((street, index) => ({
+          street,
+          houseNumbers: accessHouseNumbers[index]
+        })))
+      } : null
     };
   }
 
@@ -390,6 +521,17 @@ export function createContainerEditor(context, api) {
 
       if (!CONTAINER_CATEGORIES[`${stream.status}:${stream.type}`]) {
         return 'Deze combinatie van status en type wordt niet ondersteund.';
+      }
+    }
+
+    if (values.access) {
+      if (!values.access.label) {
+        return 'Vul een label in voor de privé container.';
+      }
+
+      const accessError = validateAllowedAddressRules(values.access.allowedAddresses);
+      if (accessError) {
+        return accessError;
       }
     }
 
@@ -461,6 +603,14 @@ export function createContainerEditor(context, api) {
     container.id = values.id;
     container.address = values.address;
     container.streams = values.streams.map((stream) => ({ ...stream }));
+    if (values.access) {
+      container.access = {
+        ...values.access,
+        allowedAddresses: values.access.allowedAddresses.map((rule) => ({ ...rule }))
+      };
+    } else {
+      delete container.access;
+    }
     delete container.type;
     delete container.status;
     api.syncContainerIndex();
