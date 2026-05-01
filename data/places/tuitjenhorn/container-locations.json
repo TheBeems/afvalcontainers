@@ -2,9 +2,9 @@
   {
     "id": "TH01",
     "address": "Dorpsstraat 109",
-    "lat": 52.742994,
-    "lon": 4.743246,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.743221,
+    "lon": 4.743245,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -15,9 +15,9 @@
   {
     "id": "TH02",
     "address": "Stiegerstraat 31",
-    "lat": 52.74059,
-    "lon": 4.746508,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.740749,
+    "lon": 4.746174,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -37,14 +37,24 @@
         "status": "existing"
       }
     ],
-    "hvcContainerId": "80055"
+    "hvcContainerId": "80055",
+    "access": {
+      "scope": "private",
+      "label": "Privé Sint Jozefpark",
+      "allowedAddresses": [
+        {
+          "street": "Sint Jozefpark",
+          "houseNumbers": "1-260"
+        }
+      ]
+    }
   },
   {
     "id": "TH04",
     "address": "Dorpsstraat 67",
-    "lat": 52.741171,
-    "lon": 4.748741,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.741128,
+    "lon": 4.749017,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -55,9 +65,9 @@
   {
     "id": "TH05",
     "address": "Sportlaan 42",
-    "lat": 52.74062,
-    "lon": 4.755481,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.740657,
+    "lon": 4.755331,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -68,9 +78,9 @@
   {
     "id": "TH06",
     "address": "Kerkbuurt 13",
-    "lat": 52.740117,
-    "lon": 4.758753,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.740214,
+    "lon": 4.758528,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -81,9 +91,9 @@
   {
     "id": "TH07",
     "address": "Pastoor Meijndersstraat 35",
-    "lat": 52.739038,
-    "lon": 4.751452,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.739236,
+    "lon": 4.751375,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -94,9 +104,9 @@
   {
     "id": "TH08",
     "address": "Dorpsstraat 50",
-    "lat": 52.739123,
-    "lon": 4.74904,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.739164,
+    "lon": 4.748779,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -107,9 +117,9 @@
   {
     "id": "TH09",
     "address": "'t Skuitje 55",
-    "lat": 52.737751,
-    "lon": 4.754516,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.737792,
+    "lon": 4.754883,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -120,9 +130,9 @@
   {
     "id": "TH10",
     "address": "Buttersloot 34",
-    "lat": 52.736429,
-    "lon": 4.753797,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.736555,
+    "lon": 4.7537,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -133,9 +143,9 @@
   {
     "id": "TH11",
     "address": "'t Skuitje 25",
-    "lat": 52.735963,
-    "lon": 4.754338,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.735731,
+    "lon": 4.75454,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -164,9 +174,9 @@
   {
     "id": "TH13",
     "address": "De Posten 36",
-    "lat": 52.73592,
-    "lon": 4.757623,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.73603,
+    "lon": 4.75756,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -177,9 +187,9 @@
   {
     "id": "TH14",
     "address": "Koorndijk 2",
-    "lat": 52.73304,
-    "lon": 4.76183,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.732858,
+    "lon": 4.761889,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -190,9 +200,9 @@
   {
     "id": "TH15",
     "address": "De Posten 1",
-    "lat": 52.734839,
-    "lon": 4.756702,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.734599,
+    "lon": 4.756726,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -203,9 +213,9 @@
   {
     "id": "TH16",
     "address": "Noorderlicht 8",
-    "lat": 52.733128,
-    "lon": 4.755622,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.733245,
+    "lon": 4.755701,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -216,9 +226,9 @@
   {
     "id": "TH17",
     "address": "Cumulus 2",
-    "lat": 52.731646,
-    "lon": 4.755031,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.731523,
+    "lon": 4.755197,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -229,9 +239,9 @@
   {
     "id": "TH18",
     "address": "De Regenboog 28",
-    "lat": 52.73354,
-    "lon": 4.751817,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.733594,
+    "lon": 4.752131,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -242,9 +252,9 @@
   {
     "id": "TH19",
     "address": "De Helt 6",
-    "lat": 52.734785,
-    "lon": 4.752911,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.734851,
+    "lon": 4.752571,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -255,9 +265,9 @@
   {
     "id": "TH20",
     "address": "Koorndijk 82",
-    "lat": 52.734798,
-    "lon": 4.750149,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.734632,
+    "lon": 4.75016,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -268,9 +278,9 @@
   {
     "id": "TH21",
     "address": "Kuiperstraat 2a",
-    "lat": 52.736572,
-    "lon": 4.748223,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.736443,
+    "lon": 4.747891,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "rest",
@@ -313,9 +323,9 @@
   {
     "id": "TH24",
     "address": "Willem Dekkerstraat 12",
-    "lat": 52.736446,
-    "lon": 4.750037,
-    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "lat": 52.736483,
+    "lon": 4.750219,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
     "streams": [
       {
         "type": "gfe",
