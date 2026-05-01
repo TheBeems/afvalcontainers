@@ -24,7 +24,6 @@ const EXPECTED_COVERAGE_SCHEMA_VERSION = 4;
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
 const BRT_BUILT_UP_AREA_COLLECTION = 'plaats_multivlak';
 const VALID_COVERAGE_STATUSES = new Set(COVERAGE_STATUS_KEYS);
-const REQUIRED_PLACE_PATHS = ['containers', 'coverage', 'addressIndex'];
 
 function fail(message) {
   throw new Error(message);
@@ -85,8 +84,15 @@ function validatePlacesManifest(places) {
     if (!place.paths || typeof place.paths !== 'object' || Array.isArray(place.paths)) {
       fail(`${label}.paths must be an object.`);
     }
-    for (const key of REQUIRED_PLACE_PATHS) {
-      assertString(place.paths[key], `${label}.paths.${key}`);
+    assertString(place.paths.containers, `${label}.paths.containers`);
+    if (Object.prototype.hasOwnProperty.call(place.paths, 'coverage')) {
+      assertString(place.paths.coverage, `${label}.paths.coverage`);
+    }
+    if (Object.prototype.hasOwnProperty.call(place.paths, 'addressIndex')) {
+      assertString(place.paths.addressIndex, `${label}.paths.addressIndex`);
+    }
+    if (Boolean(place.paths.coverage) !== Boolean(place.paths.addressIndex)) {
+      fail(`${label}.paths.coverage and ${label}.paths.addressIndex must be configured together.`);
     }
   }
 }
@@ -493,18 +499,22 @@ export async function validateData() {
 
   for (const place of places) {
     const containers = await readJson(resolvePlaceDataPath(place, 'containers'), `${place.id} container-locations.json`);
-    const coverage = await readJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`);
-    const addressIndex = await readJson(resolvePlaceDataPath(place, 'addressIndex'), `${place.id} address-index.json`);
-
-    validateCoverageMetadata(coverage, place);
     const containersById = validateContainers(containers, place);
-    const houses = validateHouses(coverage, containersById, place);
-    validateAnalysisScope(coverage, houses, place);
-    validateSummary(coverage, houses, containersById);
-    validateAddressIndex(addressIndex, coverage, place);
 
     totalContainers += containers.length;
-    totalHouses += houses.length;
+
+    if (place.paths.coverage && place.paths.addressIndex) {
+      const coverage = await readJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`);
+      const addressIndex = await readJson(resolvePlaceDataPath(place, 'addressIndex'), `${place.id} address-index.json`);
+
+      validateCoverageMetadata(coverage, place);
+      const houses = validateHouses(coverage, containersById, place);
+      validateAnalysisScope(coverage, houses, place);
+      validateSummary(coverage, houses, containersById);
+      validateAddressIndex(addressIndex, coverage, place);
+
+      totalHouses += houses.length;
+    }
   }
 
   console.log(`Validated ${places.length} place(s), ${totalContainers} containers, and ${totalHouses} covered addresses.`);

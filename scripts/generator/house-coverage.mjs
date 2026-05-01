@@ -159,7 +159,11 @@ async function resolveOptions(argv) {
     place,
     placeId: place.id,
     containerPath: options.containerPath || resolvePlaceDataPath(place, 'containers'),
-    outputJsonPath: options.outputJsonPath || resolvePlaceDataPath(place, 'coverage')
+    outputJsonPath: options.outputJsonPath || (
+      place.paths?.coverage
+        ? resolvePlaceDataPath(place, 'coverage')
+        : resolve(projectRoot, `data/places/${place.id}/house-coverage.json`)
+    )
   };
 }
 

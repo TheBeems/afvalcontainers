@@ -13,5 +13,18 @@
       "coverage": "./data/places/warmenhuizen/house-coverage.json",
       "addressIndex": "./data/places/warmenhuizen/address-index.json"
     }
+  },
+  {
+    "id": "tuitjenhorn",
+    "name": "Tuitjenhorn",
+    "containerIdPrefix": "TH",
+    "map": {
+      "center": [52.7378, 4.7525],
+      "zoom": 15
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
+    "paths": {
+      "containers": "./data/places/tuitjenhorn/container-locations.json"
+    }
   }
 ]

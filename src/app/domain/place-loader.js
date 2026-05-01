@@ -227,6 +227,24 @@ export function createPlaceLoader(context, api) {
 
   function renderLoadedPlace({ selectedHouseId = null, focusMap = true } = {}) {
     api.renderContainers({ fitBounds: true });
+
+    if (!state.coverage || state.houses.length === 0) {
+      if (elements.coverageSummary) {
+        elements.coverageSummary.hidden = true;
+        elements.coverageSummary.innerHTML = '';
+      }
+      if (elements.houseSummary) {
+        elements.houseSummary.hidden = true;
+        elements.houseSummary.innerHTML = '';
+      }
+      if (elements.houseDetails) {
+        elements.houseDetails.hidden = false;
+        elements.houseDetails.innerHTML = '<div class="empty-state">Voor dit dorp is nog geen vooraf berekende huizenanalyse beschikbaar.</div>';
+      }
+      api.setCoverageStatus(`Containerlocaties voor ${getActivePlaceName()} geladen. Er is nog geen huizenanalyse voor dit dorp beschikbaar.`);
+      return;
+    }
+
     api.renderCoverageSummary();
     api.renderHouseMarkers();
     api.syncHouseLayerVisibility();
@@ -236,16 +254,15 @@ export function createPlaceLoader(context, api) {
       return;
     }
 
-    if (state.houses.length === 0) {
-      api.setCoverageStatus(`De viewer kon geen vooraf berekende huizenlaag voor ${getActivePlaceName()} vinden. Voer de generator uit om deze data te maken.`, 'error');
-      return;
-    }
-
     api.renderIdleHouseState();
   }
 
   async function loadAddressIndexes() {
     const indexes = await Promise.all(state.places.map(async (place) => {
+      if (!place.paths.addressIndex) {
+        return [];
+      }
+
       const addressIndex = await loadJson(place.paths.addressIndex, `Adresindex ${place.name} laden`);
       return Array.isArray(addressIndex) ? addressIndex : [];
     }));
@@ -261,7 +278,9 @@ export function createPlaceLoader(context, api) {
     try {
       const [containers, coverage] = await Promise.all([
         loadJson(place.paths.containers, `Containerdataset ${place.name} laden`),
-        loadJson(place.paths.coverage, `Huizenlaag ${place.name} laden`)
+        place.paths.coverage
+          ? loadJson(place.paths.coverage, `Huizenlaag ${place.name} laden`)
+          : Promise.resolve(null)
       ]);
 
       if (selectionId !== state.placeSelectionId) {

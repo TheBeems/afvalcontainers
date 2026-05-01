@@ -38,6 +38,16 @@ export async function generateAddressIndexes({ verbose = true } = {}) {
   const results = [];
 
   for (const place of places) {
+    if (!place.paths?.coverage || !place.paths?.addressIndex) {
+      results.push({
+        placeId: place.id,
+        count: 0,
+        changed: false,
+        skipped: true
+      });
+      continue;
+    }
+
     const coveragePath = resolvePlaceDataPath(place, 'coverage');
     const addressIndexPath = resolvePlaceDataPath(place, 'addressIndex');
     const coverage = await readJson(coveragePath, `${place.id} coverage`);
@@ -60,7 +70,11 @@ export async function generateAddressIndexes({ verbose = true } = {}) {
 
   if (verbose) {
     const summary = results
-      .map((result) => `${result.placeId}: ${result.count} adressen${result.changed ? ' bijgewerkt' : ' actueel'}`)
+      .map((result) => (
+        result.skipped
+          ? `${result.placeId}: overgeslagen`
+          : `${result.placeId}: ${result.count} adressen${result.changed ? ' bijgewerkt' : ' actueel'}`
+      ))
       .join(', ');
     console.log(`Adresindexen: ${summary}.`);
   }

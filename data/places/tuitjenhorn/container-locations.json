@@ -1,0 +1,324 @@
+[
+  {
+    "id": "TH01",
+    "address": "Dorpsstraat 109",
+    "lat": 52.742994,
+    "lon": 4.743246,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH02",
+    "address": "Stiegerstraat 31",
+    "lat": 52.74059,
+    "lon": 4.746508,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH03",
+    "address": "Sint Jozefpark",
+    "lat": 52.739546,
+    "lon": 4.747652,
+    "accuracy": "bestaande restcontainer visueel afgeleid uit Schagen overzichtskaart (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      }
+    ]
+  },
+  {
+    "id": "TH04",
+    "address": "Dorpsstraat 67",
+    "lat": 52.741171,
+    "lon": 4.748741,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH05",
+    "address": "Sportlaan 42",
+    "lat": 52.74062,
+    "lon": 4.755481,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH06",
+    "address": "Kerkbuurt 13",
+    "lat": 52.740117,
+    "lon": 4.758753,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH07",
+    "address": "Pastoor Meijndersstraat 35",
+    "lat": 52.739038,
+    "lon": 4.751452,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH08",
+    "address": "Dorpsstraat 50",
+    "lat": 52.739123,
+    "lon": 4.74904,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH09",
+    "address": "'t Skuitje 55",
+    "lat": 52.737751,
+    "lon": 4.754516,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH10",
+    "address": "Buttersloot 34",
+    "lat": 52.736429,
+    "lon": 4.753797,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH11",
+    "address": "'t Skuitje 25",
+    "lat": 52.735963,
+    "lon": 4.754338,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH12",
+    "address": "Roockershuys 13",
+    "lat": 52.737103,
+    "lon": 4.758285,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      },
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ],
+    "hvcContainerId": "80464"
+  },
+  {
+    "id": "TH13",
+    "address": "De Posten 36",
+    "lat": 52.73592,
+    "lon": 4.757623,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH14",
+    "address": "Koorndijk 2",
+    "lat": 52.73304,
+    "lon": 4.76183,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH15",
+    "address": "De Posten 1",
+    "lat": 52.734839,
+    "lon": 4.756702,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH16",
+    "address": "Noorderlicht 8",
+    "lat": 52.733128,
+    "lon": 4.755622,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH17",
+    "address": "Cumulus 2",
+    "lat": 52.731646,
+    "lon": 4.755031,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH18",
+    "address": "De Regenboog 28",
+    "lat": 52.73354,
+    "lon": 4.751817,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH19",
+    "address": "De Helt 6",
+    "lat": 52.734785,
+    "lon": 4.752911,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH20",
+    "address": "Koorndijk 82",
+    "lat": 52.734798,
+    "lon": 4.750149,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH21",
+    "address": "Kuiperstraat 2a",
+    "lat": 52.736572,
+    "lon": 4.748223,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "TH22",
+    "address": "De Zon 21",
+    "lat": 52.734306,
+    "lon": 4.747797,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      },
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ],
+    "hvcContainerId": "80727"
+  },
+  {
+    "id": "TH23",
+    "address": "Koolzaad",
+    "lat": 52.734969,
+    "lon": 4.744642,
+    "accuracy": "bestaande restcontainer visueel afgeleid uit Schagen overzichtskaart (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      }
+    ]
+  },
+  {
+    "id": "TH24",
+    "address": "Willem Dekkerstraat 12",
+    "lat": 52.736446,
+    "lon": 4.750037,
+    "accuracy": "afgeleid uit Schagen bewonersboekje/overzichtskaart en PDOK-adrespunt (globaal, controle nodig)",
+    "streams": [
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ]
+  }
+]
