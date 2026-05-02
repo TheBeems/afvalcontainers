@@ -119,5 +119,94 @@
       </section>
     </main>
   </div>
+
+  <div id="objection-modal" class="objection-modal" hidden>
+    <div class="objection-modal-overlay" data-objection-close></div>
+    <section
+      id="objection-dialog"
+      class="objection-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="objection-title"
+      tabindex="-1"
+    >
+      <header class="objection-dialog-header">
+        <div>
+          <h2 id="objection-title">Laat de gemeente Schagen weten wat u vindt</h2>
+          <p>Op basis van uw geselecteerde adres en de berekende loopafstand maken we hieronder een conceptmail. Controleer en pas de tekst zelf aan voordat u deze verstuurt.</p>
+        </div>
+        <button id="objection-close-button" class="objection-close-button" type="button" aria-label="Reactievenster sluiten">×</button>
+      </header>
+
+      <div id="objection-error" class="objection-error" role="alert" hidden></div>
+
+      <div id="objection-address-summary" class="objection-address-summary"></div>
+
+      <fieldset class="objection-reasons">
+        <legend>Redenen</legend>
+        <label>
+          <input type="checkbox" name="objection-reason" value="De werkelijke loopafstand is te groot." />
+          <span>De werkelijke loopafstand is te groot.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="De gemeente rekent met hemelsbrede afstand, terwijl de werkelijke loopafstand belangrijker is." />
+          <span>De gemeente rekent met hemelsbrede afstand, terwijl de werkelijke loopafstand belangrijker is.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="Het wegbrengen van restafval wordt onpraktisch met zware afvalzakken." />
+          <span>Het wegbrengen van restafval wordt onpraktisch met zware afvalzakken.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="Dit is extra belastend voor ouderen, mindervaliden of gezinnen met jonge kinderen." />
+          <span>Dit is extra belastend voor ouderen, mindervaliden of gezinnen met jonge kinderen.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="De gekozen containerlocatie voelt niet logisch of eerlijk verdeeld." />
+          <span>De gekozen containerlocatie voelt niet logisch of eerlijk verdeeld.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="Ik maak mij zorgen over zwerfafval, bijplaatsingen of overlast rond containers." />
+          <span>Ik maak mij zorgen over zwerfafval, bijplaatsingen of overlast rond containers.</span>
+        </label>
+        <label>
+          <input type="checkbox" name="objection-reason" value="Ik verzoek de gemeente om extra of alternatieve containerlocaties te onderzoeken." />
+          <span>Ik verzoek de gemeente om extra of alternatieve containerlocaties te onderzoeken.</span>
+        </label>
+      </fieldset>
+
+      <div class="objection-field">
+        <label for="objection-personal-note">Persoonlijke toelichting</label>
+        <textarea id="objection-personal-note" rows="4" placeholder="Voeg hier eventueel uw persoonlijke situatie of zorgen toe..."></textarea>
+      </div>
+
+      <div class="objection-signature-grid">
+        <div class="objection-field">
+          <label for="objection-name">Naam</label>
+          <input id="objection-name" type="text" autocomplete="name" />
+        </div>
+        <div class="objection-field">
+          <label for="objection-address-line">Adresregel</label>
+          <input id="objection-address-line" type="text" autocomplete="street-address" />
+        </div>
+        <div class="objection-field">
+          <label for="objection-city">Woonplaats</label>
+          <input id="objection-city" type="text" autocomplete="address-level2" />
+        </div>
+      </div>
+
+      <div class="objection-field">
+        <label for="objection-generated-text">Conceptmail</label>
+        <textarea id="objection-generated-text" rows="14"></textarea>
+      </div>
+
+      <div class="objection-actions">
+        <button id="objection-mailto-button" class="editor-button editor-button-primary" type="button">Open in mijn mailprogramma</button>
+        <button id="objection-copy-button" class="editor-button" type="button">Kopieer tekst</button>
+        <button id="objection-regenerate-button" class="editor-button objection-tertiary-button" type="button">Tekst opnieuw genereren</button>
+      </div>
+
+      <p class="objection-privacy-note">Deze website verstuurt niets automatisch en slaat uw gegevens niet op. De tekst wordt alleen lokaal in uw browser gemaakt. Controleer zelf of uw reactie als formeel bezwaar kan gelden.</p>
+    </section>
+  </div>
 </body>
 </html>

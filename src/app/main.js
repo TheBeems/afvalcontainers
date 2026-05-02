@@ -15,6 +15,7 @@ import { createContainersUi } from './ui/containers.js';
 import { createCoverageSummary } from './ui/coverage-summary.js';
 import { createHouseSelection } from './ui/house-selection.js';
 import { createMobileSidebar } from './ui/mobile-sidebar.js';
+import { createObjectionMail } from './ui/objection-mail.js';
 import { createSearch } from './ui/search.js';
 import { createStatusUi } from './ui/status.js';
 
@@ -39,6 +40,7 @@ function createApp() {
   Object.assign(api, createCoverageSummary(context, api));
   Object.assign(api, createContainerEditor(context, api));
   Object.assign(api, createContainersUi(context, api));
+  Object.assign(api, createObjectionMail(context, api));
   Object.assign(api, createHouseSelection(context, api));
   Object.assign(api, createPlaceLoader(context, api));
   Object.assign(api, createSearch(context, api));
@@ -57,6 +59,7 @@ function registerCoreListeners(context, api) {
   elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
   api.bindMobileSidebarEvents();
+  api.bindObjectionModalEvents();
 }
 
 async function init(context, api) {

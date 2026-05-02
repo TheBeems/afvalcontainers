@@ -136,6 +136,7 @@ export function createHouseSelection(context, api) {
 
       <div class="sidebar-collapsible-body selected-house-body">
         ${buildMainResultCard(house, ranking)}
+        ${api.buildObjectionActionMarkup()}
         ${buildAlternativeContainersMarkup(ranking)}
         ${buildMeasurementDetails(house, ranking)}
       </div>
@@ -397,6 +398,7 @@ export function createHouseSelection(context, api) {
       <div class="map-collapsible-body">
         <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || api.getActivePlaceCity())}</div>
         ${buildCompactRankingMarkup(ranking)}
+        ${api.buildObjectionActionMarkup({ context: 'map' })}
       </div>
     `;
   }
@@ -471,6 +473,7 @@ export function createHouseSelection(context, api) {
     renderSelectedHouseMarker(house, api.getHouseCoverageStatus(house, ranking));
     renderHouseSummary(house, ranking);
     renderHouseMapInfo(house, ranking);
+    api.refreshObjectionModal();
 
     const routeCounts = drawRoutes(house, ranking);
     const changedRouteStatus = getChangedContainerLiveRouteStatus(house);
