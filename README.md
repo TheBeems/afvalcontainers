@@ -43,13 +43,13 @@ De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
 
 | Afstand | Aantal adressen | Percentage | Kleur op kaart |
 |----------|----------------|-----------|----------------|
-| 0–100 m | 983 | 34,3% | Groen |
-| 100–125 m | 361 | 12,6% | Geel |
-| 125–150 m | 373 | 13,0% | Oranje |
-| 150–275 m | 793 | 27,6% | Rood |
-| >275 m | 358 | 12,5% | Donkerrood |
+| 0–100 m | 986 | 34,4% | Groen |
+| 100–125 m | 374 | 13,0% | Geel |
+| 125–150 m | 353 | 12,3% | Oranje |
+| 150–275 m | 901 | 31,4% | Rood |
+| >275 m | 254 | 8,9% | Donkerrood |
 
-**Conclusie:** 1.151 adressen (40,1%) binnen de bebouwde kom liggen verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
+**Conclusie:** 1.155 adressen (40,3%) binnen de bebouwde kom liggen verder dan 150 meter van een container. Dit is de zone waarin de kans op bezwaar of weerstand volgens officiële onderzoeken significant toeneemt.
 
 ## Gebruik van de website
 - Klik op een container om de hemelsbrede straal te bekijken en klik op een huispunt of zoek je adres om de looproutes te bekijken.
