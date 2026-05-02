@@ -87,7 +87,7 @@ export function installMapControls(context) {
     container.setAttribute('aria-label', 'Legenda containermarkers');
 
     container.innerHTML = `
-      <summary>Containermarkers</summary>
+      <summary>Legenda containers</summary>
       <div class="map-collapsible-body"></div>
     `;
 
