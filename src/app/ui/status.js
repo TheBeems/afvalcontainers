@@ -19,7 +19,7 @@ export function createStatusUi(context) {
     setDetailsOpen(elements.sidebarHeaderPanel, true);
     setDetailsOpen(elements.coverageSummaryPanel, true);
     setDetailsOpen(elements.mapLegend, true);
-    setDetailsOpen(elements.containerMarkerLegend, true);
+    setDetailsOpen(elements.containerMarkerLegend, false);
   }
 
   return {

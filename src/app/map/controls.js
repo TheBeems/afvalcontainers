@@ -84,7 +84,7 @@ export function installMapControls(context) {
   containerMarkerLegendControl.onAdd = () => {
     const container = L.DomUtil.create('details', 'map-collapsible container-marker-legend');
     container.id = 'container-marker-legend';
-    container.open = true;
+    container.open = false;
     container.setAttribute('aria-label', 'Legenda containermarkers');
 
     container.innerHTML = `
