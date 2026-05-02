@@ -12,6 +12,7 @@ export function createRanking(context, api) {
 
   function shouldIgnoreStoredContainerId(house, containerId) {
     const container = state.containersById.get(containerId);
+    // Stored rankings are valid only for the generated container data and access rules.
     return !container
       || !hasRestafvalStream(container)
       || api.requiresLiveContainerRoute(container)

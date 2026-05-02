@@ -30,6 +30,7 @@
     min-height: 0;
   }
 
+  /* On small screens the search sits above the map instead of covering map controls. */
   .map-search-panel {
     position: relative;
     z-index: 1;

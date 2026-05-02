@@ -53,6 +53,7 @@ export function installMapControls(context) {
     containerEditorControl
   } = mapContext;
 
+  // Leaflet owns control DOM placement, so controls are built here and references are stored for other modules.
   mapLegendControl.onAdd = () => {
     const container = L.DomUtil.create('details', 'map-collapsible map-legend');
     container.id = 'map-legend';

@@ -54,6 +54,7 @@
   <h2 id="analysis-title">Analyse</h2>
   <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
 
+  <!-- Summary and selected-address panels are populated from the active place dataset. -->
   <details id="coverage-summary-panel" class="sidebar-collapsible summary-panel" open>
     <summary>Samenvatting bebouwde kom</summary>
     <div class="sidebar-collapsible-body">
@@ -80,6 +81,7 @@
       <div id="map" class="map"></div>
 
       <section class="search-panel map-search-panel" role="search" aria-label="Adres zoeken">
+        <!-- Kept in HTML so the address search has stable accessible combobox markup before JS loads. -->
         <label class="search-label" for="house-search">Zoek je adres</label>
         <input
           class="search-input"

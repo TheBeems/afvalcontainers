@@ -29,6 +29,7 @@
   padding: 12px 14px;
 }
 
+/* Keep native details behavior while using one consistent chevron across browsers. */
 .sidebar-header > details > summary::-webkit-details-marker {
   display: none;
 }

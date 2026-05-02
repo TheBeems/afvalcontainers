@@ -7,6 +7,7 @@ import {
 export function createMapContext() {
   const map = L.map('map', { preferCanvas: true }).setView(MAP_CENTER, MAP_ZOOM);
 
+  // Custom panes keep route and selection overlays above markers without intercepting map clicks.
   map.createPane('houseMarkerPane');
   map.getPane('houseMarkerPane').style.zIndex = 410;
 

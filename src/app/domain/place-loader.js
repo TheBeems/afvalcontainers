@@ -60,6 +60,7 @@ export function createPlaceLoader(context, api) {
     selectionLayer
   } = mapContext;
 
+  // Place loads can overlap when search results switch villages; selection ids discard stale results.
   let activePlaceLoadPromise = null;
 
   function getPlaceById(placeId) {

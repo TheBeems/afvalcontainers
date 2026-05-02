@@ -10,6 +10,7 @@
   display: block;
   width: 42px;
   height: 58px;
+  /* Leaflet handles interaction on the marker element; the SVG should not capture pointer events. */
   pointer-events: none;
   transform-origin: 50% 100%;
   filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.34));

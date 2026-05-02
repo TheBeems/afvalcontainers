@@ -194,6 +194,7 @@ function createRateLimiter(delayMs) {
   let queue = Promise.resolve();
 
   return async function waitForTurn() {
+    // OSRM is a shared public service; serialize attempts so retries respect the same delay.
     const turn = queue.then(async () => {
       const waitMs = Math.max(0, nextRequestAt - Date.now());
       if (waitMs > 0) {
@@ -216,6 +217,7 @@ function chunkArray(items, size) {
 }
 
 function buildRouteCacheKey(house, container) {
+  // Include rounded coordinates so moved houses or containers cannot reuse stale route geometry.
   return [
     ROUTE_CACHE_VERSION,
     OSRM_BASE_URL,
@@ -466,6 +468,7 @@ function splitBbox(bbox, rows, columns) {
 
   for (let row = 0; row < rows; row += 1) {
     for (let column = 0; column < columns; column += 1) {
+      // Tiny overlap avoids missing features that lie exactly on a tile edge.
       tiles.push({
         west: Math.max(bbox.west, bbox.west + (column * width) - BBOX_TILE_OVERLAP_DEGREES),
         south: Math.max(bbox.south, bbox.south + (row * height) - BBOX_TILE_OVERLAP_DEGREES),
@@ -558,6 +561,7 @@ async function loadPlaceBuiltUpArea(searchBbox, place) {
     }
 
     if (builtUpAreas.length > 1) {
+      // Multiple matches would make the analysis boundary ambiguous.
       break;
     }
   }
@@ -809,6 +813,7 @@ async function analyzeDistanceBatch(jobs, options, distanceStats, totalHouses) {
     distanceStats.failedBatches += 1;
 
     if (jobs.length > 1) {
+      // Split failed table batches to isolate bad address/container pairs without losing the rest.
       const midpoint = Math.ceil(jobs.length / 2);
       const left = await analyzeDistanceBatch(jobs.slice(0, midpoint), options, distanceStats, totalHouses);
       const right = await analyzeDistanceBatch(jobs.slice(midpoint), options, distanceStats, totalHouses);

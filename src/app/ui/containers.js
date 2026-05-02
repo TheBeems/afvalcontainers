@@ -114,6 +114,7 @@ export function createContainersUi(context, api) {
   }
 
   function suppressContainerClick() {
+    // Leaflet may emit a click after long-press or drag; ignore that synthetic follow-up briefly.
     state.suppressContainerClickUntil = Date.now() + 800;
   }
 
@@ -219,6 +220,7 @@ export function createContainersUi(context, api) {
         return;
       }
 
+      // Dragging is opt-in per marker so ordinary container clicks stay predictable.
       clearLongPressTimer();
       longPressTimer = window.setTimeout(() => {
         longPressTimer = null;

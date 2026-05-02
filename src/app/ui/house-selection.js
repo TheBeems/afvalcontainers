@@ -559,6 +559,7 @@ export function createHouseSelection(context, api) {
 
     for (const container of requests) {
       api.loadLiveRoute(house, container).then(() => {
+        // The user may switch address or place while fallback routes are loading.
         if (state.houseSelectionId !== selectionId || state.selectedHouse?.id !== house.id) {
           return;
         }

@@ -36,6 +36,7 @@ function createApp() {
   };
 
   const api = {};
+  // Modules share one API object to avoid import cycles between UI, map, and domain code.
   Object.assign(api, installMapControls(context));
   Object.assign(api, createStatusUi(context, api));
   Object.assign(api, createContainerMarkup(context, api));

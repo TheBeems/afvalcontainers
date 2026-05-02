@@ -22,6 +22,7 @@ export function createLiveRoutes(context, api) {
       return AbortSignal.timeout(timeoutMs);
     }
 
+    // Safari and older browsers may not support AbortSignal.timeout yet.
     const controller = new AbortController();
     window.setTimeout(() => controller.abort(), timeoutMs);
     return controller.signal;
@@ -35,6 +36,7 @@ export function createLiveRoutes(context, api) {
     const currentContainer = getCurrentContainer(container);
     const lat = api.normalizeContainerCoordinate(currentContainer.lat);
     const lon = api.normalizeContainerCoordinate(currentContainer.lon);
+    // Edited containers must not reuse a live route fetched for an older marker position.
     return `${currentContainer.id}:${lat},${lon}`;
   }
 
@@ -106,6 +108,7 @@ export function createLiveRoutes(context, api) {
         return entry;
       })
       .catch((error) => {
+        // Cache failures too, so repeated renders do not hammer the public OSRM fallback service.
         const entry = {
           status: 'rejected',
           error: error.message || 'Live route kon niet worden opgehaald.'
