@@ -619,6 +619,8 @@ export function createHouseSelection(context, api) {
     if (focusMap) {
       focusHouseOnMap(house);
     }
+
+    api.closeMobileSidebarIfMobile?.();
   }
 
   return {

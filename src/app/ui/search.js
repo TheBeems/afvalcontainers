@@ -107,6 +107,7 @@ export function createSearch(context, api) {
 
       input.value = house.address;
       closeResults();
+      api.closeMobileSidebarIfMobile?.();
       await api.selectPlace(house.placeId, {
         selectedHouseId: house.id,
         focusMap: true

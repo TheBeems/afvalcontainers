@@ -1,5 +1,8 @@
 export function getElements() {
   return {
+    sidebar: document.getElementById('app-sidebar'),
+    mobileSidebarToggle: document.getElementById('mobile-sidebar-toggle'),
+    mobileSidebarOverlay: document.getElementById('mobile-sidebar-overlay'),
     sidebarHeaderPanel: document.getElementById('sidebar-header-panel'),
     appTitle: document.getElementById('app-title'),
     placeNameElements: document.querySelectorAll('[data-place-name]'),

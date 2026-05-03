@@ -109,8 +109,9 @@ export function createPlaceLoader(context, api) {
       <option value="${escapeHtml(place.id)}"${place.id === state.activePlace?.id ? ' selected' : ''}>${escapeHtml(place.name)}</option>
     `).join('');
     elements.placeSelect.disabled = state.places.length === 0 || state.placeLoadStatus === 'loading';
-    elements.placeSelect.onchange = () => {
-      void selectPlace(elements.placeSelect.value);
+    elements.placeSelect.onchange = async () => {
+      api.closeMobileSidebarIfMobile?.();
+      await selectPlace(elements.placeSelect.value);
     };
   }
 
