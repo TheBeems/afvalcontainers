@@ -5,13 +5,15 @@
     "containerIdPrefix": "WH",
     "map": {
       "center": [52.7235, 4.7385],
-      "zoom": 15
+      "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen",
     "paths": {
       "containers": "./data/places/warmenhuizen/container-locations.json",
-      "coverage": "./data/places/warmenhuizen/house-coverage.json",
-      "addressIndex": "./data/places/warmenhuizen/address-index.json"
+      "coverageSummary": "./data/places/warmenhuizen/coverage-summary.json",
+      "houseMap": "./data/places/warmenhuizen/house-map.json",
+      "addressIndex": "./data/places/warmenhuizen/address-index.compact.json",
+      "houseDetailsBase": "./data/places/warmenhuizen/house-details"
     }
   },
   {
@@ -20,13 +22,15 @@
     "containerIdPrefix": "TH",
     "map": {
       "center": [52.7378, 4.7525],
-      "zoom": 15
+      "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
     "paths": {
       "containers": "./data/places/tuitjenhorn/container-locations.json",
-      "coverage": "./data/places/tuitjenhorn/house-coverage.json",
-      "addressIndex": "./data/places/tuitjenhorn/address-index.json"
+      "coverageSummary": "./data/places/tuitjenhorn/coverage-summary.json",
+      "houseMap": "./data/places/tuitjenhorn/house-map.json",
+      "addressIndex": "./data/places/tuitjenhorn/address-index.compact.json",
+      "houseDetailsBase": "./data/places/tuitjenhorn/house-details"
     }
   }
 ]
