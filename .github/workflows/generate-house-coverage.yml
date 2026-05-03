@@ -45,15 +45,20 @@ jobs:
           fi
           node scripts/generate-house-coverage.mjs "${args[@]}"
 
-      - name: Generate address indexes
-        run: npm run generate:address-indexes
+      - name: Generate split browser data
+        run: npm run generate:coverage-split
 
       - name: Check for changes
         id: git-check
         env:
           PLACE_ID: ${{ inputs.place }}
         run: |
-          changed_files="$(git status --porcelain -- "data/places/${PLACE_ID}/house-coverage.json" "data/places/${PLACE_ID}/address-index.json")"
+          changed_files="$(git status --porcelain -- \
+            "data/places/${PLACE_ID}/house-coverage.json" \
+            "data/places/${PLACE_ID}/coverage-summary.json" \
+            "data/places/${PLACE_ID}/house-map.json" \
+            "data/places/${PLACE_ID}/address-index.compact.json" \
+            "data/places/${PLACE_ID}/house-details")"
           if [ -z "$changed_files" ]; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
           else
@@ -68,9 +73,10 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add "data/places/${PLACE_ID}/house-coverage.json"
-          if [ -f "data/places/${PLACE_ID}/address-index.json" ]; then
-            git add "data/places/${PLACE_ID}/address-index.json"
-          fi
+          git add "data/places/${PLACE_ID}/coverage-summary.json"
+          git add "data/places/${PLACE_ID}/house-map.json"
+          git add "data/places/${PLACE_ID}/address-index.compact.json"
+          git add "data/places/${PLACE_ID}/house-details"
           git commit -m "Auto-generated ${PLACE_ID} house coverage on ${{ github.sha }}"
           # Push met PAT uit secrets
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/TheBeems/afvalcontainers.git HEAD:main

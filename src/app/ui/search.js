@@ -8,25 +8,7 @@ export function createSearch(context, api) {
   const { state } = context;
 
   async function initSearch() {
-    return new Promise((resolve) => {
-      if (typeof Fuse === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js';
-        script.onload = () => {
-          if (typeof Fuse !== 'undefined') {
-            setupSearch();
-          }
-          resolve();
-        };
-        script.onerror = () => {
-          resolve();
-        };
-        document.head.appendChild(script);
-      } else {
-        setupSearch();
-        resolve();
-      }
-    });
+    setupSearch();
   }
 
   function setupSearch() {
@@ -39,14 +21,47 @@ export function createSearch(context, api) {
 
     const searchRoot = input.closest('.search-panel') || input;
 
-    const fuse = new Fuse(state.addressIndex, {
-      keys: ['address', 'postcode'],
-      includeScore: true,
-      threshold: 0.3
-    });
-
     let matches = [];
     let activeIndex = -1;
+    let fuse = null;
+    let fusePlaceId = null;
+    let fuseConstructorPromise = null;
+    let searchRequestId = 0;
+
+    async function getFuseConstructor() {
+      if (!fuseConstructorPromise) {
+        fuseConstructorPromise = import('fuse.js').then((module) => module.default || module);
+      }
+      return fuseConstructorPromise;
+    }
+
+    async function ensureActiveFuse() {
+      const placeId = state.activePlace?.id;
+      if (!placeId) {
+        return false;
+      }
+
+      if (fuse && fusePlaceId === placeId) {
+        return true;
+      }
+
+      const [FuseConstructor, addressIndex] = await Promise.all([
+        getFuseConstructor(),
+        api.loadActiveAddressIndex()
+      ]);
+
+      if (state.activePlace?.id !== placeId) {
+        return false;
+      }
+
+      fuse = new FuseConstructor(addressIndex, {
+        keys: ['address', 'postcode'],
+        includeScore: true,
+        threshold: 0.3
+      });
+      fusePlaceId = placeId;
+      return true;
+    }
 
     function getQuery() {
       return input.value.trim();
@@ -114,8 +129,8 @@ export function createSearch(context, api) {
       });
     }
 
-    function renderEmptyResult() {
-      resultsDiv.innerHTML = '<div class="search-empty" role="status">Geen adres gevonden.</div>';
+    function renderStatusResult(message) {
+      resultsDiv.innerHTML = `<div class="search-empty" role="status">${escapeHtml(message)}</div>`;
       clearActiveResult();
       setExpanded(true);
     }
@@ -146,7 +161,9 @@ export function createSearch(context, api) {
       return button;
     }
 
-    function renderResults() {
+    async function renderResults() {
+      const requestId = searchRequestId + 1;
+      searchRequestId = requestId;
       const query = getQuery();
 
       resultsDiv.innerHTML = '';
@@ -158,10 +175,25 @@ export function createSearch(context, api) {
         return;
       }
 
+      renderStatusResult('Adresindex wordt geladen...');
+
+      try {
+        const isReady = await ensureActiveFuse();
+        if (!isReady || requestId !== searchRequestId || query !== getQuery()) {
+          return;
+        }
+      } catch (error) {
+        if (requestId === searchRequestId) {
+          renderStatusResult('Adresindex kon niet worden geladen.');
+        }
+        return;
+      }
+
+      resultsDiv.innerHTML = '';
       matches = fuse.search(query).slice(0, SEARCH_RESULT_LIMIT);
 
       if (matches.length === 0) {
-        renderEmptyResult();
+        renderStatusResult('Geen adres gevonden.');
         return;
       }
 
@@ -181,7 +213,7 @@ export function createSearch(context, api) {
         event.preventDefault();
 
         if (matches.length === 0) {
-          renderResults();
+          void renderResults();
         }
 
         setActiveIndex(activeIndex + 1);
@@ -192,7 +224,7 @@ export function createSearch(context, api) {
         event.preventDefault();
 
         if (matches.length === 0) {
-          renderResults();
+          void renderResults();
         }
 
         setActiveIndex(activeIndex - 1);
@@ -213,10 +245,12 @@ export function createSearch(context, api) {
       }
     }
 
-    input.addEventListener('input', renderResults);
+    input.addEventListener('input', () => {
+      void renderResults();
+    });
     input.addEventListener('focus', () => {
       if (getQuery()) {
-        renderResults();
+        void renderResults();
       }
     });
     input.addEventListener('keydown', handleSearchKeydown);

@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 
 const projectRoot = resolve(import.meta.dirname, '../..');
 const roots = ['src', 'scripts'];
+const rootFiles = ['vite.config.js'];
 const extensions = new Set(['.js', '.mjs']);
 
 async function collectFiles(directory) {
@@ -28,6 +29,7 @@ async function collectFiles(directory) {
 async function main() {
   const files = (await Promise.all(roots.map((root) => collectFiles(resolve(projectRoot, root)))))
     .flat()
+    .concat(rootFiles.map((file) => resolve(projectRoot, file)))
     .sort();
 
   for (const file of files) {

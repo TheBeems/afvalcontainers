@@ -21,6 +21,7 @@ import {
   readPlacesManifest,
   resolvePlaceDataPath
 } from '../places.mjs';
+import { splitCoverageForPlace } from '../split-house-coverage.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, '../..');
@@ -163,7 +164,8 @@ async function resolveOptions(argv) {
       place.paths?.coverage
         ? resolvePlaceDataPath(place, 'coverage')
         : resolve(projectRoot, `data/places/${place.id}/house-coverage.json`)
-    )
+    ),
+    writeSplitFiles: !options.outputJsonPath
   };
 }
 
@@ -1111,6 +1113,9 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
   };
 
   await writeOutput(options.outputJsonPath, payload);
+  if (options.writeSplitFiles) {
+    await splitCoverageForPlace(options.place, payload);
+  }
 
   console.log('Analyse afgerond.');
   console.log(`0-100 m: ${summary.counts.within_100}`);

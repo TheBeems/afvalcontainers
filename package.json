@@ -11,11 +11,19 @@
   "scripts": {
     "build": "node scripts/build-site.mjs",
     "audit:hvc-existing": "node scripts/audit-hvc-existing-containers.mjs",
-    "check": "npm run check:syntax && npm run generate:address-indexes && npm run check:data && npm run build",
+    "check": "npm run check:syntax && npm run generate:coverage-split && npm run check:data && npm run build",
     "check:data": "node scripts/validate-data.mjs",
     "check:syntax": "node scripts/build/check-syntax.mjs",
     "generate:address-indexes": "node scripts/generate-address-indexes.mjs",
+    "generate:coverage-split": "node scripts/split-house-coverage.mjs",
     "generate:smoke": "node scripts/generate-house-coverage.mjs --limit-houses=10 --output-json=/tmp/house-coverage.json",
     "serve": "python3 -m http.server 8000 --directory dist"
+  },
+  "dependencies": {
+    "fuse.js": "^6.6.2",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "vite": "^8.0.10"
   }
 }

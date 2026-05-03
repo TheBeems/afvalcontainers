@@ -43,7 +43,9 @@ export function createHouseSelection(context, api) {
         fillOpacity: HOUSE_MARKER_FILL_OPACITY
       });
 
-      marker.on('click', () => selectHouse(house));
+      marker.on('click', () => {
+        void api.selectLoadedHouseById(house.id);
+      });
       houseLayer.addLayer(marker);
     }
   }

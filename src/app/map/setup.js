@@ -1,11 +1,7 @@
-import {
-  MAP_CENTER,
-  MAP_MAX_ZOOM,
-  MAP_ZOOM
-} from '../config.js';
+import { MAP_MAX_ZOOM } from '../config.js';
 
 export function createMapContext() {
-  const map = L.map('map', { preferCanvas: true }).setView(MAP_CENTER, MAP_ZOOM);
+  const map = L.map('map', { preferCanvas: true });
 
   // Custom panes keep route and selection overlays above markers without intercepting map clicks.
   map.createPane('houseMarkerPane');
