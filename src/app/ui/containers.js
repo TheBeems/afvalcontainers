@@ -385,14 +385,16 @@ export function createContainersUi(context, api) {
       map.setView([container.lat, container.lon], Math.max(map.getZoom(), 17), { animate: true });
     }
 
-    if (scrollToMap) {
-      scrollMapIntoView();
-    }
-
     const statusText = hasRestafvalStream(container)
       ? `Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`
       : `Geselecteerde container ${container.id}. Deze locatie telt niet mee voor restafval-loopafstanden.`;
     api.setCoverageStatus(statusText);
+
+    api.closeMobileSidebarIfMobile?.();
+
+    if (scrollToMap) {
+      scrollMapIntoView();
+    }
   }
 
   function renderContainers({ fitBounds = false } = {}) {

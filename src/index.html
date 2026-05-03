@@ -20,7 +20,18 @@
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar">
+    <button
+      id="mobile-sidebar-toggle"
+      class="mobile-sidebar-toggle"
+      type="button"
+      aria-controls="app-sidebar"
+      aria-expanded="false"
+      aria-label="Menu openen"
+    >
+      <span class="mobile-sidebar-toggle-icon" aria-hidden="true"></span>
+    </button>
+
+    <aside id="app-sidebar" class="sidebar" aria-labelledby="app-title">
       <section class="panel place-panel" aria-labelledby="place-selector-title">
         <h2 id="place-selector-title">Dorp</h2>
         <label class="place-select-label" for="place-select">Selecteer dorp</label>
@@ -76,6 +87,14 @@
   </div>
 </details>
     </aside>
+
+    <button
+      id="mobile-sidebar-overlay"
+      class="mobile-sidebar-overlay"
+      type="button"
+      aria-label="Menu sluiten"
+      tabindex="-1"
+    ></button>
 
     <main class="map-shell" aria-label="Kaart van Warmenhuizen met containerlocaties en batchanalyse">
       <div id="map" class="map"></div>

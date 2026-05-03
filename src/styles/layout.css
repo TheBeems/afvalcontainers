@@ -12,6 +12,11 @@
   padding: 18px 16px 24px;
 }
 
+.mobile-sidebar-toggle,
+.mobile-sidebar-overlay {
+  display: none;
+}
+
 .sidebar-header > details {
   overflow: hidden;
   border: 1px solid var(--border);
