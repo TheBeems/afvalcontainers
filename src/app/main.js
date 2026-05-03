@@ -1,3 +1,6 @@
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import '../styles.css';
 import { getElements } from './dom.js';
 import { createAppState } from './state.js';
 import { createMapContext } from './map/setup.js';
@@ -15,19 +18,7 @@ import { createMobileSidebar } from './ui/mobile-sidebar.js';
 import { createSearch } from './ui/search.js';
 import { createStatusUi } from './ui/status.js';
 
-async function waitForLeaflet() {
-  if (window.L) {
-    return;
-  }
-
-  await new Promise((resolve) => {
-    window.addEventListener('load', resolve, { once: true });
-  });
-
-  if (!window.L) {
-    throw new Error('Leaflet kon niet worden geladen.');
-  }
-}
+window.L = L;
 
 function createApp() {
   const context = {
@@ -86,7 +77,6 @@ async function init(context, api) {
 }
 
 async function start() {
-  await waitForLeaflet();
   const { api, context } = createApp();
   await init(context, api);
 }

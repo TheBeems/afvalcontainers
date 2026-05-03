@@ -28,6 +28,14 @@ function normalizePlace(place) {
   };
 }
 
+function buildHouseDetailPath(place, detailBundle) {
+  const basePath = place?.paths?.houseDetailsBase;
+  if (!basePath || !detailBundle) {
+    return null;
+  }
+  return `${basePath.replace(/\/$/, '')}/${encodeURIComponent(detailBundle)}.json`;
+}
+
 function getRequestedPlaceId(places) {
   const urlPlaceId = new URLSearchParams(window.location.search).get('plaats');
   if (urlPlaceId && places.some((place) => place.id === urlPlaceId)) {
@@ -158,6 +166,8 @@ export function createPlaceLoader(context, api) {
     state.originalContainers = [];
     state.houses = [];
     state.coverage = null;
+    state.addressIndex = [];
+    state.addressIndexPlaceId = null;
     state.containersById = new Map();
     state.containersByKey = new Map();
     state.originalContainersById = new Map();
@@ -212,14 +222,60 @@ export function createPlaceLoader(context, api) {
     api.syncContainerIndex();
   }
 
-  function selectLoadedHouseById(houseId, { focusMap = true } = {}) {
+  async function loadHouseDetail(place, houseId, detailBundle) {
+    const placeId = place?.id;
+    const detailPath = buildHouseDetailPath(place, detailBundle);
+    if (!placeId || !detailPath) {
+      throw new Error('Adresdetailpad ontbreekt.');
+    }
+
+    if (!state.houseDetailBundlesByPlaceId.has(placeId)) {
+      state.houseDetailBundlesByPlaceId.set(placeId, new Map());
+    }
+
+    const cache = state.houseDetailBundlesByPlaceId.get(placeId);
+    let bundle = cache.get(detailBundle);
+
+    if (!bundle) {
+      bundle = await loadJson(detailPath, 'Adresdetails laden');
+      cache.set(detailBundle, bundle);
+    }
+
+    const houses = Array.isArray(bundle?.houses) ? bundle.houses : [];
+    const house = houses.find((candidate) => candidate.id === houseId);
+    if (!house) {
+      throw new Error('Adresdetail niet gevonden in detailbundel.');
+    }
+
+    return house;
+  }
+
+  async function selectLoadedHouseById(houseId, { focusMap = true } = {}) {
     if (!houseId) {
       return false;
     }
 
-    const house = state.houses.find((candidate) => candidate.id === houseId);
-    if (!house) {
+    const houseMarker = state.houses.find((candidate) => candidate.id === houseId);
+    if (!houseMarker) {
       api.setCoverageStatus(`Adres niet gevonden in ${getActivePlaceName()}.`, 'error');
+      return false;
+    }
+
+    state.houseSelectionId += 1;
+    const selectionId = state.houseSelectionId;
+    const placeSelectionId = state.placeSelectionId;
+    api.setCoverageStatus('Adresdetail wordt geladen...', 'loading');
+
+    let house = null;
+    try {
+      house = await loadHouseDetail(state.activePlace, houseId, houseMarker.detailBundle);
+      if (selectionId !== state.houseSelectionId || placeSelectionId !== state.placeSelectionId) {
+        return false;
+      }
+    } catch (error) {
+      if (selectionId === state.houseSelectionId && placeSelectionId === state.placeSelectionId) {
+        api.setCoverageStatus(error.message || 'Adresdetail kon niet worden geladen.', 'error');
+      }
       return false;
     }
 
@@ -228,7 +284,7 @@ export function createPlaceLoader(context, api) {
   }
 
   function renderLoadedPlace({ selectedHouseId = null, focusMap = true } = {}) {
-    api.renderContainers({ fitBounds: true });
+    api.renderContainers({ fitBounds: false });
 
     if (!state.coverage || state.houses.length === 0) {
       if (elements.coverageSummary) {
@@ -252,24 +308,38 @@ export function createPlaceLoader(context, api) {
     api.syncHouseLayerVisibility();
 
     if (selectedHouseId) {
-      selectLoadedHouseById(selectedHouseId, { focusMap });
+      void selectLoadedHouseById(selectedHouseId, { focusMap });
       return;
     }
 
     api.renderIdleHouseState();
   }
 
-  async function loadAddressIndexes() {
-    const indexes = await Promise.all(state.places.map(async (place) => {
-      if (!place.paths.addressIndex) {
-        return [];
-      }
+  async function loadAddressIndexForPlace(place) {
+    if (!place?.paths?.addressIndex) {
+      return [];
+    }
 
-      const addressIndex = await loadJson(place.paths.addressIndex, `Adresindex ${place.name} laden`);
-      return Array.isArray(addressIndex) ? addressIndex : [];
-    }));
+    if (state.addressIndexByPlaceId.has(place.id)) {
+      return state.addressIndexByPlaceId.get(place.id);
+    }
 
-    state.addressIndex = indexes.flat();
+    const addressIndex = await loadJson(place.paths.addressIndex, `Adresindex ${place.name} laden`);
+    const normalizedIndex = Array.isArray(addressIndex) ? addressIndex : [];
+    state.addressIndexByPlaceId.set(place.id, normalizedIndex);
+    return normalizedIndex;
+  }
+
+  async function loadActiveAddressIndex() {
+    const place = state.activePlace;
+    if (!place) {
+      return [];
+    }
+
+    const addressIndex = await loadAddressIndexForPlace(place);
+    state.addressIndex = addressIndex;
+    state.addressIndexPlaceId = place.id;
+    return addressIndex;
   }
 
   async function loadPlaceData(place, selectionId, options = {}) {
@@ -280,8 +350,11 @@ export function createPlaceLoader(context, api) {
     try {
       const [containers, coverage] = await Promise.all([
         loadJson(place.paths.containers, `Containerdataset ${place.name} laden`),
-        place.paths.coverage
-          ? loadJson(place.paths.coverage, `Huizenlaag ${place.name} laden`)
+        place.paths.coverageSummary && place.paths.houseMap
+          ? Promise.all([
+            loadJson(place.paths.coverageSummary, `Samenvatting ${place.name} laden`),
+            loadJson(place.paths.houseMap, `Huizenkaart ${place.name} laden`)
+          ])
           : Promise.resolve(null)
       ]);
 
@@ -290,8 +363,9 @@ export function createPlaceLoader(context, api) {
       }
 
       loadPlaceContainers(containers);
-      state.coverage = coverage && typeof coverage === 'object' ? coverage : null;
-      state.houses = Array.isArray(state.coverage?.houses) ? state.coverage.houses : [];
+      const [coverageSummary, houseMap] = Array.isArray(coverage) ? coverage : [null, []];
+      state.coverage = coverageSummary && typeof coverageSummary === 'object' ? coverageSummary : null;
+      state.houses = Array.isArray(houseMap) ? houseMap : [];
       state.placeLoadStatus = 'ready';
       renderPlaceSelector();
       renderLoadedPlace(options);
@@ -323,7 +397,7 @@ export function createPlaceLoader(context, api) {
         await activePlaceLoadPromise;
       }
       if (state.placeLoadStatus === 'ready' && options.selectedHouseId) {
-        selectLoadedHouseById(options.selectedHouseId, { focusMap: options.focusMap !== false });
+        await selectLoadedHouseById(options.selectedHouseId, { focusMap: options.focusMap !== false });
       }
       return;
     }
@@ -350,7 +424,6 @@ export function createPlaceLoader(context, api) {
       throw new Error('Er zijn geen dorpen geconfigureerd.');
     }
 
-    await loadAddressIndexes();
     await selectPlace(getRequestedPlaceId(state.places));
   }
 
@@ -367,9 +440,11 @@ export function createPlaceLoader(context, api) {
     updatePlaceText,
     resetPlaceDataState,
     loadPlaceContainers,
+    loadHouseDetail,
     selectLoadedHouseById,
     renderLoadedPlace,
-    loadAddressIndexes,
+    loadAddressIndexForPlace,
+    loadActiveAddressIndex,
     loadPlaceData,
     selectPlace,
     initPlaces

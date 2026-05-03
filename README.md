@@ -70,7 +70,7 @@ Open `http://127.0.0.1:8000/` after `npm run serve`.
 
 - `src/index.html` contains the fixed page structure.
 - `src/styles.css` is the CSS entrypoint and imports focused CSS modules from `src/styles/`.
-- `src/app/main.js` is the browser entrypoint. Feature code lives in `src/app/domain/`, `src/app/map/`, `src/app/services/`, and `src/app/ui/`.
+- `src/app/main.js` is the Vite browser entrypoint. Feature code lives in `src/app/domain/`, `src/app/map/`, `src/app/services/`, and `src/app/ui/`.
 - `src/shared/` contains pure helpers and constants reused by the browser app and Node scripts.
 - `scripts/build-site.mjs`, `scripts/validate-data.mjs`, and `scripts/generate-house-coverage.mjs` remain the public CLI entrypoints; their implementation modules live under `scripts/build/`, `scripts/validation/`, and `scripts/generator/`.
 
@@ -78,20 +78,22 @@ Open `http://127.0.0.1:8000/` after `npm run serve`.
 
 - `data/places.json` is the manifest for configured villages, their map defaults, data paths, source URL, and container ID prefix.
 - `data/places/warmenhuizen/container-locations.json` is the editable Warmenhuizen container source.
-- `data/places/warmenhuizen/house-coverage.json` is generated Warmenhuizen coverage output for addresses within the BRT TOP10NL built-up area, with distance bands, top-3 container rankings, and stored route geometry.
-- `data/places/warmenhuizen/address-index.json` is the lightweight generated search index used for address search.
+- `data/places/warmenhuizen/house-coverage.json` is the legacy generated Warmenhuizen coverage cache used by scripts and route reuse; it is not copied to `dist/`.
+- `data/places/warmenhuizen/coverage-summary.json`, `house-map.json`, `address-index.compact.json`, and `house-details/*.json` are generated browser runtime data split from the coverage cache.
 - `data/places/tuitjenhorn/` contains the same dataset types for Tuitjenhorn.
-- Browser code reads committed JSON data for container data, coverage, rankings, distance bands, and summary statistics.
+- Browser code initially reads only active-place container data, coverage summary, and house marker data. Address indexes and house route details are lazy-loaded.
 - When stored route geometry is missing or invalid for a selected house/container pair, the map may fetch live OSRM route geometry as a visual fallback only.
 - Distance bands are based on walking distance: green `0-100 m`, yellow `100-125 m`, orange `125-150 m`, red `150-275 m`, dark red `>275 m`, and gray when no route is available.
 
 ## Dorpskern toevoegen
 
-Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebruik een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix`, kaartinstellingen en paden naar de drie JSON-bestanden voor die kern:
+Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebruik een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix`, kaartinstellingen en paden naar de runtime JSON-bestanden voor die kern:
 
 - `container-locations.json`: handmatig beheerde containerlocaties.
-- `house-coverage.json`: gegenereerde loopafstandsanalyse.
-- `address-index.json`: gegenereerde zoekindex voor adressen.
+- `coverage-summary.json`: samenvatting en metadata voor de analyse.
+- `house-map.json`: compacte huizenlaag voor kaartmarkers.
+- `address-index.compact.json`: compacte lazy zoekindex voor adressen.
+- `house-details/`: lazy straatgebundelde detailbestanden met maximaal 75 adressen per bestand.
 
 Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Zie de aankondiging voor jouw dorp op de website van de gemeente Schagen.
 
@@ -99,11 +101,11 @@ Genereer vervolgens de analyse en zoekindex:
 
 ```sh
 node scripts/generate-house-coverage.mjs --place=<plaats-id>
-npm run generate:address-indexes
+npm run generate:coverage-split
 npm run check
 ```
 
-De generator gebruikt de plaats uit `data/places.json`, haalt adressen en de bebouwde-komgrens op via PDOK, berekent loopafstanden via OSRM en schrijft de output naar het `coverage`-pad van die plaats. Commit de brondata en gegenereerde JSON-bestanden voor de dorpskern; commit geen `dist/` output.
+De generator gebruikt de plaats uit `data/places.json`, haalt adressen en de bebouwde-komgrens op via PDOK, berekent loopafstanden via OSRM, schrijft de legacy coverage-cache en splitst die naar de browserdata. Commit de brondata en gegenereerde JSON-bestanden voor de dorpskern; commit geen `dist/` output.
 
 Smoke-test the generator without touching committed coverage data:
 

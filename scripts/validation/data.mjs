@@ -1,8 +1,9 @@
-import { generateAddressIndexes } from '../generate-address-indexes.mjs';
+import { splitHouseCoverage } from '../split-house-coverage.mjs';
 import {
   readJson,
   readPlacesManifest,
-  resolvePlaceDataPath
+  resolvePlaceDataPath,
+  resolveProjectPath
 } from '../places.mjs';
 import { COVERAGE_STATUS_KEYS } from '../../src/shared/coverage.js';
 import {
@@ -21,6 +22,7 @@ import {
 } from '../../src/shared/address.js';
 
 const EXPECTED_COVERAGE_SCHEMA_VERSION = 4;
+const MAX_HOUSES_PER_DETAIL_BUNDLE = 75;
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
 const BRT_BUILT_UP_AREA_COLLECTIONS = new Set(['plaats_multivlak', 'plaats_vlak']);
 const VALID_COVERAGE_STATUSES = new Set(COVERAGE_STATUS_KEYS);
@@ -85,15 +87,10 @@ function validatePlacesManifest(places) {
       fail(`${label}.paths must be an object.`);
     }
     assertString(place.paths.containers, `${label}.paths.containers`);
-    if (Object.prototype.hasOwnProperty.call(place.paths, 'coverage')) {
-      assertString(place.paths.coverage, `${label}.paths.coverage`);
-    }
-    if (Object.prototype.hasOwnProperty.call(place.paths, 'addressIndex')) {
-      assertString(place.paths.addressIndex, `${label}.paths.addressIndex`);
-    }
-    if (Boolean(place.paths.coverage) !== Boolean(place.paths.addressIndex)) {
-      fail(`${label}.paths.coverage and ${label}.paths.addressIndex must be configured together.`);
-    }
+    assertString(place.paths.coverageSummary, `${label}.paths.coverageSummary`);
+    assertString(place.paths.houseMap, `${label}.paths.houseMap`);
+    assertString(place.paths.addressIndex, `${label}.paths.addressIndex`);
+    assertString(place.paths.houseDetailsBase, `${label}.paths.houseDetailsBase`);
   }
 }
 
@@ -250,11 +247,15 @@ function validateContainers(containers, place) {
   return containersById;
 }
 
-function validateSummary(coverage, houses, containers) {
+function getHouseDetailsPath(place, detailBundle) {
+  return resolveProjectPath(`${place.paths.houseDetailsBase.replace(/\/$/, '')}/${detailBundle}.json`);
+}
+
+function validateSummary(coverage, houseMap, containers) {
   const summary = coverage.summary || {};
   const restafvalContainerCount = countRestafvalContainers(Array.from(containers.values()));
-  if (summary.totalAddresses !== houses.length) {
-    fail(`summary.totalAddresses (${summary.totalAddresses}) must equal houses.length (${houses.length}).`);
+  if (summary.totalAddresses !== houseMap.length) {
+    fail(`summary.totalAddresses (${summary.totalAddresses}) must equal house-map length (${houseMap.length}).`);
   }
   if (summary.containerCount !== restafvalContainerCount) {
     fail(`summary.containerCount (${summary.containerCount}) must equal restafval container count (${restafvalContainerCount}).`);
@@ -272,7 +273,7 @@ function validateSummary(coverage, houses, containers) {
     unreachable: 0
   };
 
-  for (const house of houses) {
+  for (const house of houseMap) {
     actualCounts[house.coverageStatus] += 1;
   }
 
@@ -437,6 +438,31 @@ function validateHouses(coverage, containersById, place) {
   return houses;
 }
 
+function validateHouseMap(houseMap, place) {
+  if (!Array.isArray(houseMap)) {
+    fail(`${place.id} house-map.json must contain an array.`);
+  }
+
+  const seenIds = new Set();
+
+  for (const [index, house] of houseMap.entries()) {
+    const label = `${place.id} house-map entry at index ${index}`;
+    assertString(house.id, `${label}.id`);
+    if (seenIds.has(house.id)) {
+      fail(`${place.id} house-map.json contains duplicate house id ${house.id}.`);
+    }
+    seenIds.add(house.id);
+    assertNumber(house.lat, `${label}.lat`);
+    assertNumber(house.lon, `${label}.lon`);
+    assertString(house.detailBundle, `${label}.detailBundle`);
+    if (!VALID_COVERAGE_STATUSES.has(house.coverageStatus)) {
+      fail(`${label}.coverageStatus is invalid: ${house.coverageStatus}`);
+    }
+  }
+
+  return houseMap;
+}
+
 function validateCoverageMetadata(coverage, place) {
   if (coverage.schemaVersion !== EXPECTED_COVERAGE_SCHEMA_VERSION) {
     fail(`${place.id} house-coverage.json schemaVersion must be ${EXPECTED_COVERAGE_SCHEMA_VERSION}. Received: ${coverage.schemaVersion}`);
@@ -446,21 +472,21 @@ function validateCoverageMetadata(coverage, place) {
   }
 }
 
-function validateAddressIndex(addressIndex, coverage, place) {
+function validateAddressIndex(addressIndex, houseDetailsById, houseMapById, place) {
   if (!Array.isArray(addressIndex)) {
     fail(`${place.id} address-index.json must contain an array.`);
   }
 
-  const houses = Array.isArray(coverage.houses) ? coverage.houses : [];
-  if (addressIndex.length !== houses.length) {
-    fail(`${place.id} address-index.json length (${addressIndex.length}) must equal houses.length (${houses.length}).`);
+  if (addressIndex.length !== houseDetailsById.size) {
+    fail(`${place.id} address-index.json length (${addressIndex.length}) must equal detail file count (${houseDetailsById.size}).`);
   }
 
-  const allowedKeys = ['address', 'city', 'id', 'lat', 'lon', 'placeId', 'postcode'];
+  const allowedKeys = ['address', 'city', 'detailBundle', 'id', 'placeId', 'postcode'];
   const indexById = new Map(addressIndex.map((entry) => [entry.id, entry]));
 
-  for (const [index, house] of houses.entries()) {
+  for (const [houseId, house] of houseDetailsById) {
     const entry = indexById.get(house.id);
+    const houseMarker = houseMapById.get(house.id);
     if (!entry) {
       fail(`${place.id} address-index.json is missing house id ${house.id}.`);
     }
@@ -473,8 +499,11 @@ function validateAddressIndex(addressIndex, coverage, place) {
     if (entry.placeId !== place.id) {
       fail(`${place.id} address-index entry ${house.id}.placeId must be "${place.id}".`);
     }
+    if (entry.detailBundle !== houseMarker?.detailBundle) {
+      fail(`${place.id} address-index entry ${house.id}.detailBundle must match house-map.json.`);
+    }
     if (entry.address !== house.address) {
-      fail(`${place.id} address-index entry ${house.id}.address must match coverage house at index ${index}.`);
+      fail(`${place.id} address-index entry ${house.id}.address must match house detail ${houseId}.`);
     }
     if ((entry.postcode || '') !== (house.postcode || '')) {
       fail(`${place.id} address-index entry ${house.id}.postcode must match coverage.`);
@@ -482,14 +511,11 @@ function validateAddressIndex(addressIndex, coverage, place) {
     if ((entry.city || '') !== (house.city || place.name)) {
       fail(`${place.id} address-index entry ${house.id}.city must match coverage.`);
     }
-    if (entry.lat !== house.lat || entry.lon !== house.lon) {
-      fail(`${place.id} address-index entry ${house.id} coordinates must match coverage.`);
-    }
   }
 }
 
 export async function validateData() {
-  await generateAddressIndexes({ verbose: false });
+  await splitHouseCoverage({ verbose: false });
 
   const places = await readPlacesManifest();
   validatePlacesManifest(places);
@@ -503,18 +529,71 @@ export async function validateData() {
 
     totalContainers += containers.length;
 
-    if (place.paths.coverage && place.paths.addressIndex) {
-      const coverage = await readJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`);
-      const addressIndex = await readJson(resolvePlaceDataPath(place, 'addressIndex'), `${place.id} address-index.json`);
+    const coverageSummary = await readJson(resolvePlaceDataPath(place, 'coverageSummary'), `${place.id} coverage-summary.json`);
+    const houseMap = validateHouseMap(
+      await readJson(resolvePlaceDataPath(place, 'houseMap'), `${place.id} house-map.json`),
+      place
+    );
+    const addressIndex = await readJson(resolvePlaceDataPath(place, 'addressIndex'), `${place.id} address-index.json`);
+    const detailHouses = [];
+    const detailHousesById = new Map();
+    const houseMapById = new Map(houseMap.map((house) => [house.id, house]));
+    const detailBundles = new Set(houseMap.map((house) => house.detailBundle));
 
-      validateCoverageMetadata(coverage, place);
-      const houses = validateHouses(coverage, containersById, place);
-      validateAnalysisScope(coverage, houses, place);
-      validateSummary(coverage, houses, containersById);
-      validateAddressIndex(addressIndex, coverage, place);
+    for (const detailBundle of detailBundles) {
+      const bundle = await readJson(getHouseDetailsPath(place, detailBundle), `${place.id} house-details/${detailBundle}.json`);
+      if (!bundle || typeof bundle !== 'object' || Array.isArray(bundle)) {
+        fail(`${place.id} house-details/${detailBundle}.json must contain an object.`);
+      }
+      if (bundle.detailBundle !== detailBundle) {
+        fail(`${place.id} house-details/${detailBundle}.json detailBundle must match its filename.`);
+      }
+      assertString(bundle.street, `${place.id} house-details/${detailBundle}.street`);
+      if (!Array.isArray(bundle.houses) || bundle.houses.length === 0) {
+        fail(`${place.id} house-details/${detailBundle}.houses must be a non-empty array.`);
+      }
+      if (bundle.houses.length > MAX_HOUSES_PER_DETAIL_BUNDLE) {
+        fail(`${place.id} house-details/${detailBundle}.houses must contain at most ${MAX_HOUSES_PER_DETAIL_BUNDLE} entries.`);
+      }
 
-      totalHouses += houses.length;
+      for (const house of bundle.houses) {
+        const houseMarker = houseMapById.get(house.id);
+        if (!houseMarker) {
+          fail(`${place.id} house detail ${house.id} is missing from house-map.json.`);
+        }
+        if (houseMarker.detailBundle !== detailBundle) {
+          fail(`${place.id} house detail ${house.id} must be stored in ${houseMarker.detailBundle}, not ${detailBundle}.`);
+        }
+        if (house.lat !== houseMarker.lat || house.lon !== houseMarker.lon) {
+          fail(`${place.id} house detail ${house.id} coordinates must match house-map.json.`);
+        }
+        if (house.coverageStatus !== houseMarker.coverageStatus) {
+          fail(`${place.id} house detail ${house.id}.coverageStatus must match house-map.json.`);
+        }
+        if (detailHousesById.has(house.id)) {
+          fail(`${place.id} house detail ${house.id} appears in multiple detail bundles.`);
+        }
+        detailHouses.push(house);
+        detailHousesById.set(house.id, house);
+      }
     }
+
+    if (detailHousesById.size !== houseMap.length) {
+      fail(`${place.id} detail bundles contain ${detailHousesById.size} unique houses, but house-map.json contains ${houseMap.length}.`);
+    }
+
+    const coverageForDetails = {
+      ...coverageSummary,
+      houses: detailHouses
+    };
+
+    validateCoverageMetadata(coverageForDetails, place);
+    const houses = validateHouses(coverageForDetails, containersById, place);
+    validateAnalysisScope(coverageForDetails, houseMap, place);
+    validateSummary(coverageForDetails, houseMap, containersById);
+    validateAddressIndex(addressIndex, detailHousesById, houseMapById, place);
+
+    totalHouses += houses.length;
   }
 
   console.log(`Validated ${places.length} place(s), ${totalContainers} containers, and ${totalHouses} covered addresses.`);

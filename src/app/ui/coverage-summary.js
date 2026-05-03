@@ -20,7 +20,7 @@ export function createCoverageSummary(context) {
     `;
   }
 
-  function getSummaryCounts(coverage) {
+  function getSummaryCounts(houses = []) {
     const counts = {
       within_100: 0,
       between_100_125: 0,
@@ -30,7 +30,7 @@ export function createCoverageSummary(context) {
       unreachable: 0
     };
 
-    for (const house of coverage?.houses || []) {
+    for (const house of houses) {
       if (Object.prototype.hasOwnProperty.call(counts, house.coverageStatus)) {
         counts[house.coverageStatus] += 1;
       }
@@ -41,7 +41,7 @@ export function createCoverageSummary(context) {
 
   function renderCoverageSummary() {
     const summary = state.coverage?.summary || {};
-    const counts = summary.counts || getSummaryCounts(state.coverage);
+    const counts = summary.counts || getSummaryCounts(state.houses);
     const totalAddresses = Number.isFinite(summary.totalAddresses)
       ? summary.totalAddresses
       : state.houses.length;

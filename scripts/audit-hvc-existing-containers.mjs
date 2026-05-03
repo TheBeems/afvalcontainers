@@ -11,7 +11,8 @@ import {
   getDefaultPlace,
   projectRoot,
   readPlacesManifest,
-  resolvePlaceDataPath
+  resolvePlaceDataPath,
+  resolveProjectPath
 } from './places.mjs';
 
 const OPZET_ADDRESS_URL = 'https://inzamelkalender.hvcgroep.nl/adressen';
@@ -712,9 +713,10 @@ async function main() {
 
   const containerPath = resolvePlaceDataPath(place, 'containers');
   const containers = await readJson(containerPath, `${place.id} container-locations.json`);
-  const coverage = place.paths?.coverage
-    ? await readOptionalJson(resolvePlaceDataPath(place, 'coverage'), `${place.id} house-coverage.json`)
-    : null;
+  const coveragePath = place.paths?.coverage
+    ? resolvePlaceDataPath(place, 'coverage')
+    : resolveProjectPath(`data/places/${place.id}/house-coverage.json`);
+  const coverage = await readOptionalJson(coveragePath, `${place.id} house-coverage.json`);
 
   if (!Array.isArray(containers)) {
     throw new Error(`${place.id} container-locations.json must contain an array`);
