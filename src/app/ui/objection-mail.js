@@ -3,11 +3,11 @@ import { escapeHtml } from '../../shared/html.js';
 import { formatMeters } from '../../shared/format.js';
 
 const OBJECTION_RECIPIENTS = [
-  'afvalscheiden@schagen.nl'
+  'griffie@schagen.nl'
 ];
 
 const OBJECTION_CC_RECIPIENTS = [
-  'griffie@schagen.nl',
+  'afvalscheiden@schagen.nl',
   'raadslid@gemeente.nl',
   'projectleider@gemeente.nl'
 ];
