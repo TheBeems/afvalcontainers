@@ -3,12 +3,12 @@ import { escapeHtml } from '../../shared/html.js';
 import { formatMeters } from '../../shared/format.js';
 
 const OBJECTION_RECIPIENTS = [
-  'griffie@schagen.nl'
+  'afvalscheiden@schagen.nl'
 ];
 
 const OBJECTION_CC_RECIPIENTS = [
-  'raadslid1@gemeente.nl',
-  'raadslid2@gemeente.nl',
+  'griffie@schagen.nl',
+  'raadslid@gemeente.nl',
   'projectleider@gemeente.nl'
 ];
 const COPY_SUCCESS_TEXT = 'Tekst gekopieerd';
@@ -50,6 +50,7 @@ export function createObjectionMail(context, api) {
     const nearest = ranking[0] || null;
     const walkingDistance = nearest?.walkingDistance ?? house.walkingDistance;
     const coverageStatus = nearest?.coverageStatus ?? house.coverageStatus;
+    const straightDistance = nearest?.straightDistance ?? house.straightDistance;
     const placeName = api.getActivePlaceName();
     const city = house.city || api.getActivePlaceCity() || placeName;
     const containerLocation = nearest
@@ -68,6 +69,8 @@ export function createObjectionMail(context, api) {
       placeName,
       walkingDistance,
       walkingDistanceText: formatMeters(walkingDistance),
+      straightDistance,
+      straightDistanceText: formatMeters(straightDistance),
       containerLocation: containerLocation || 'onbekend',
       coverageLabel: getCoverageStatus(coverageStatus).label,
       hasCompleteRouteData
@@ -77,7 +80,7 @@ export function createObjectionMail(context, api) {
   function buildObjectionSubject(data) {
     const placeName = data?.placeName || api.getActivePlaceName();
     const address = data?.address || 'geselecteerd adres';
-    return `Reactie ondergrondse restafvalcontainers ${placeName} - ${address}`;
+    return `Reactie op invoering ondergrondse restafvalcontainers ${placeName} - ${address}`;
   }
 
   function buildObjectionBody(data) {
@@ -92,32 +95,33 @@ export function createObjectionMail(context, api) {
     const personalNote = elements.objectionPersonalNote?.value.trim();
     const personalNoteSection = personalNote ? `\n\n${personalNote}` : '';
     const name = getInputValue(elements.objectionName, '[naam]');
-    const addressLine = getInputValue(elements.objectionAddressLine, '[adres]');
-    const city = getInputValue(elements.objectionCity, '[woonplaats]');
+    //const addressLine = getInputValue(elements.objectionAddressLine, '[adres]');
+    //const city = getInputValue(elements.objectionCity, '[woonplaats]');
 
     return `Geachte gemeenteraad, geacht college,
 
-Via deze website heb ik de werkelijke loopafstand vanaf mijn adres (${data.address}, ${data.placeName}) naar de aangekondigde restafvalcontainers opgezocht:
+Via deze website heb ik de werkelijke loopafstand vanaf mijn adres (${data.address}, ${data.placeName}) naar de aangekondigde ondergrondse restafvalcontainers opgezocht:
 https://thebeems.github.io/afvalcontainers/
 
-Voor mijn adres bedraagt de geschatte werkelijke loopafstand naar de dichtstbijzijnde ondergrondse restafvalcontainer ongeveer ${data.walkingDistanceText}. De dichtstbijzijnde container is volgens de kaart: ${data.containerLocation}.
+Voor mijn adres bedraagt de geschatte werkelijke loopafstand naar de dichtstbijzijnde ondergrondse restafvalcontainer ongeveer ${data.walkingDistanceText}. De dichtstbijzijnde container is volgens de kaart: ${data.containerLocation}, met een hemelsbrede afstand van ${data.straightDistanceText}.
 
-Ik maak mij zorgen over deze loopafstand en de invoering van ondergrondse restafvalcontainers in ${data.placeName}.
+Ik maak mij zorgen over de invoering van ondergrondse restafvalcontainers in ${data.placeName} en over de praktische gevolgen daarvan voor bewoners.
 
 Mijn redenen zijn:
 ${reasonLines}${personalNoteSection}
 
 Ik verzoek de gemeente om:
-1. de werkelijke loopafstand als uitgangspunt te nemen en niet de hemelsbrede afstand;
-2. opnieuw te beoordelen of de voorgestelde containerlocaties eerlijk en praktisch verdeeld zijn;
-3. extra of alternatieve containerlocaties te onderzoeken voor adressen met een grote loopafstand;
-4. deze reactie te delen met de gemeenteraad, het college en de projectleider van het project ondergrondse restafvalcontainers ${data.placeName}.
+1. de werkelijke loopafstand als uitgangspunt te nemen, en niet alleen de hemelsbrede afstand;
+2. opnieuw te beoordelen of de voorgestelde containerlocaties praktisch, evenwichtig en redelijk verdeeld zijn;
+3. extra of alternatieve containerlocaties te onderzoeken voor adressen waar de werkelijke loopafstand of de praktische belasting te groot is;
+4. duidelijk te maken hoe reacties van bewoners worden meegewogen in de verdere besluitvorming;
+5. deze reactie te delen met de gemeenteraad, het college en de projectleider van het project ondergrondse restafvalcontainers in Warmenhuizen. ${data.placeName}.
 
 Met vriendelijke groet,
 
 ${name}
-${addressLine}
-${city}`;
+${data.address}
+${data.placeName}`;
   }
 
   function createObjectionMailtoUrl(subject, body) {
@@ -333,9 +337,9 @@ ${city}`;
 
     [
       elements.objectionPersonalNote,
-      elements.objectionName,
-      elements.objectionAddressLine,
-      elements.objectionCity
+      elements.objectionName//,
+      //elements.objectionAddressLine,
+      //elements.objectionCity
     ].forEach((input) => {
       input?.addEventListener('input', () => updateGeneratedObjectionText());
     });
