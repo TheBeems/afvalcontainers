@@ -2,7 +2,15 @@ import { getCoverageStatus } from '../../shared/coverage.js';
 import { escapeHtml } from '../../shared/html.js';
 import { formatMeters } from '../../shared/format.js';
 
-const OBJECTION_RECIPIENT = 'griffie@schagen.nl';
+const OBJECTION_RECIPIENTS = [
+  'griffie@schagen.nl'
+];
+
+const OBJECTION_CC_RECIPIENTS = [
+  'raadslid1@gemeente.nl',
+  'raadslid2@gemeente.nl',
+  'projectleider@gemeente.nl'
+];
 const COPY_SUCCESS_TEXT = 'Tekst gekopieerd';
 const COPY_DEFAULT_TEXT = 'Kopieer tekst';
 const COPY_RESET_DELAY_MS = 2200;
@@ -89,7 +97,8 @@ export function createObjectionMail(context, api) {
 
     return `Geachte gemeenteraad, geacht college,
 
-Via deze <a href="https://thebeems.github.io/afvalcontainers/" target="_blank">website</a> met werkelijke loopafstanden naar de aangekondigde restafvalcontainers,heb ik mijn adres opgezocht: ${data.address}, ${data.placeName}.
+Via deze website heb ik de werkelijke loopafstand vanaf mijn adres (${data.address}, ${data.placeName}) naar de aangekondigde restafvalcontainers opgezocht:
+https://thebeems.github.io/afvalcontainers/
 
 Voor mijn adres bedraagt de geschatte werkelijke loopafstand naar de dichtstbijzijnde ondergrondse restafvalcontainer ongeveer ${data.walkingDistanceText}. De dichtstbijzijnde container is volgens de kaart: ${data.containerLocation}.
 
@@ -112,7 +121,16 @@ ${city}`;
   }
 
   function createObjectionMailtoUrl(subject, body) {
-    return `mailto:${OBJECTION_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const params = [
+      `subject=${encodeURIComponent(subject)}`,
+      `body=${encodeURIComponent(body)}`
+    ];
+
+    if (OBJECTION_CC_RECIPIENTS.length > 0) {
+      params.push(`cc=${encodeURIComponent(OBJECTION_CC_RECIPIENTS.join(','))}`);
+    }
+
+    return `mailto:${OBJECTION_RECIPIENTS.join(',')}?${params.join('&')}`;
   }
 
   function clearObjectionError() {
