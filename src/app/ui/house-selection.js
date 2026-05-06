@@ -11,7 +11,7 @@ import {
   getWalkingDistanceColor
 } from '../../shared/coverage.js';
 import { isContainerAllowedForHouse } from '../../shared/address.js';
-import { getContainerAccessLabel, hasRestafvalStream } from '../../shared/containers.js';
+import { hasRestafvalStream } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
 import { formatDuration, formatMeters } from '../../shared/format.js';
 import { isValidRouteGeometry } from '../../shared/geometry.js';
@@ -98,9 +98,6 @@ export function createHouseSelection(context, api) {
   function renderIdleHouseState() {
     api.resetUiForIdleState();
 
-    elements.houseSummary.hidden = true;
-    elements.houseSummary.innerHTML = '';
-
     elements.houseDetails.hidden = false;
     elements.houseDetails.innerHTML = '<div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>';
 
@@ -117,14 +114,11 @@ export function createHouseSelection(context, api) {
     api.setCoverageStatus(`Klik op een huispunt om de opgeslagen dekking en maximaal 3 looproutes te zien. ${state.houses.length.toLocaleString('nl-NL')} adressen binnen de bebouwde kom geladen.`);
   }
 
-  function renderHouseSummary(house, ranking) {
+  function buildSelectedHouseSummaryMarkup(house, ranking, bodyClass) {
     const postcode = house.postcode ? `${house.postcode} ` : '';
     const coverageStatus = api.getHouseCoverageStatus(house, ranking);
 
-    elements.houseSummary.hidden = false;
-    elements.houseSummary.open = true;
-
-    elements.houseSummary.innerHTML = `
+    return `
       <summary>
         <span class="house-summary-heading">
           <span class="house-summary-title">Geselecteerd adres</span>
@@ -134,10 +128,9 @@ export function createHouseSelection(context, api) {
         ${buildStatusBadge(coverageStatus)}
       </summary>
 
-      <div class="sidebar-collapsible-body selected-house-body">
+      <div class="${bodyClass} selected-house-body">
         ${buildMainResultCard(house, ranking)}
         ${buildAlternativeContainersMarkup(ranking)}
-        ${buildMeasurementDetails(house, ranking)}
       </div>
     `;
   }
@@ -145,6 +138,22 @@ export function createHouseSelection(context, api) {
   function buildStatusBadge(status) {
     const coverageStatus = getCoverageStatus(status);
     return `<span class="status-badge" style="background:${coverageStatus.color}">${escapeHtml(coverageStatus.label)}</span>`;
+  }
+
+  function buildContainerSelectButton(container, className = 'container-select-button') {
+    if (!container?.id) {
+      return api.buildContainerTitleMarkup(container);
+    }
+
+    return `
+      <button
+        type="button"
+        class="${className}"
+        data-container-id="${escapeHtml(container.id)}"
+      >
+        ${api.buildContainerTitleMarkup(container)}
+      </button>
+    `;
   }
 
   function buildMainResultCard(house, ranking) {
@@ -155,7 +164,7 @@ export function createHouseSelection(context, api) {
     const straightDistance = nearest?.straightDistance ?? house.straightDistance;
     const coverageStatus = nearest?.coverageStatus ?? house.coverageStatus;
 
-    const containerText = api.buildContainerTitleMarkup(nearest);
+    const containerText = buildContainerSelectButton(nearest);
 
     const resultColor = getCoverageStatus(coverageStatus).color;
 
@@ -187,8 +196,8 @@ export function createHouseSelection(context, api) {
     }
 
     return `
-      <section class="detail-section">
-        <h3 class="detail-section-title">Andere containers in de buurt</h3>
+      <details class="detail-section alternative-containers-section">
+        <summary class="detail-section-title">Andere containers in de buurt</summary>
 
         <div class="ranking-list ranking-list-compact">
           ${alternatives.map((container, index) => {
@@ -196,59 +205,24 @@ export function createHouseSelection(context, api) {
             const color = getWalkingDistanceColor(container.walkingDistance);
 
             return `
-              <div class="ranking-item">
+              <button
+                type="button"
+                class="ranking-item ranking-item-button"
+                data-container-id="${escapeHtml(container.id)}"
+              >
                 <span class="ranking-rank" style="--rank-color:${color}">${rank}</span>
                 <div>
                   <div class="ranking-title">
                     ${api.buildContainerTitleMarkup(container)}
                   </div>
                   <div class="ranking-meta">
-                    ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
-                    · hemelsbreed ${escapeHtml(formatMeters(container.straightDistance))}
+                    <span>${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}</span>
+                    <span>Hemelsbreed: ${escapeHtml(formatMeters(container.straightDistance))}</span>
                   </div>
                 </div>
-              </div>
+              </button>
             `;
           }).join('')}
-        </div>
-      </section>
-    `;
-  }
-
-  function buildMeasurementRow(label, value) {
-    return `
-      <div class="measurement-row">
-        <span>${escapeHtml(label)}</span>
-        <strong>${value}</strong>
-      </div>
-    `;
-  }
-
-  function buildMeasurementDetails(house, ranking) {
-    const nearest = ranking[0] || null;
-    const routeDisplay = nearest ? api.getRouteDisplay(house, nearest) : null;
-
-    const routeText = routeDisplay
-      ? `${escapeHtml(routeDisplay.label)}${routeDisplay.details ? ` (${escapeHtml(routeDisplay.details)})` : ''}`
-      : 'Geen routegegevens';
-
-    const analysisError = house.analysisError
-      ? buildMeasurementRow('Opmerking', escapeHtml(house.analysisError))
-      : '';
-    const accessLabel = getContainerAccessLabel(nearest);
-    const accessRow = accessLabel
-      ? buildMeasurementRow('Toegang', escapeHtml(accessLabel))
-      : '';
-
-    return `
-      <details class="measurement-details">
-        <summary>Meetdetails en nauwkeurigheid</summary>
-
-        <div class="measurement-list">
-          ${buildMeasurementRow('Nauwkeurigheid locatie', escapeHtml(nearest?.accuracy || 'onbekend'))}
-          ${accessRow}
-          ${buildMeasurementRow('Routegegevens', routeText)}
-          ${analysisError}
         </div>
       </details>
     `;
@@ -348,32 +322,6 @@ export function createHouseSelection(context, api) {
     return routeCounts;
   }
 
-  function buildCompactRankingMarkup(ranking) {
-    const topThree = ranking.slice(0, 3);
-
-    if (topThree.length === 0) {
-      return '<div class="house-map-info-empty">Geen container-ranking opgeslagen.</div>';
-    }
-
-    return `
-      <ol class="house-map-ranking">
-        ${topThree.map((container, index) => `
-          <li>
-            <span class="ranking-rank" style="--rank-color:${getWalkingDistanceColor(container.walkingDistance)}">${index + 1}</span>
-            <div>
-              <div class="house-map-ranking-title">
-                ${api.buildContainerTitleMarkup(container)}
-              </div>
-              <div class="house-map-ranking-meta">
-                ${escapeHtml(formatMeters(container.walkingDistance))} - ${escapeHtml(formatDuration(container.walkingDuration))}
-              </div>
-            </div>
-          </li>
-        `).join('')}
-      </ol>
-    `;
-  }
-
   function renderHouseMapInfo(house, ranking = []) {
     if (!elements.houseMapInfo) {
       return;
@@ -385,20 +333,27 @@ export function createHouseSelection(context, api) {
       return;
     }
 
-    const postcode = house.postcode ? `${house.postcode} ` : '';
-
     elements.houseMapInfo.hidden = false;
     elements.houseMapInfo.open = !state.houseInfoCollapsed;
-    elements.houseMapInfo.innerHTML = `
-      <summary>
-        <span class="house-map-info-address">${escapeHtml(house.address)}</span>
-      </summary>
+    elements.houseMapInfo.innerHTML = buildSelectedHouseSummaryMarkup(house, ranking, 'map-collapsible-body');
+    bindHouseMapInfoContainerButtons();
+  }
 
-      <div class="map-collapsible-body">
-        <div class="house-map-info-meta">${escapeHtml(postcode)}${escapeHtml(house.city || api.getActivePlaceCity())}</div>
-        ${buildCompactRankingMarkup(ranking)}
-      </div>
-    `;
+  function selectContainerFromHouseInfo(containerId) {
+    const index = api.getContainerIndexById(containerId);
+    if (index < 0) {
+      return;
+    }
+
+    api.selectContainer(index, { focusMap: true });
+  }
+
+  function bindHouseMapInfoContainerButtons() {
+    elements.houseMapInfo.querySelectorAll('[data-container-id]').forEach((button) => {
+      button.addEventListener('click', () => {
+        selectContainerFromHouseInfo(button.dataset.containerId);
+      });
+    });
   }
 
   function renderSelectedHouseMarker(house, coverageStatus) {
@@ -469,7 +424,6 @@ export function createHouseSelection(context, api) {
 
   function renderHouseSelection(house, ranking) {
     renderSelectedHouseMarker(house, api.getHouseCoverageStatus(house, ranking));
-    renderHouseSummary(house, ranking);
     renderHouseMapInfo(house, ranking);
 
     const routeCounts = drawRoutes(house, ranking);
@@ -632,16 +586,16 @@ export function createHouseSelection(context, api) {
     resetHouseSelectionVisuals,
     clearHouseSelection,
     renderIdleHouseState,
-    renderHouseSummary,
+    buildSelectedHouseSummaryMarkup,
     buildStatusBadge,
+    buildContainerSelectButton,
     buildMainResultCard,
     buildAlternativeContainersMarkup,
-    buildMeasurementRow,
-    buildMeasurementDetails,
     highlightRanking,
     drawRoutes,
-    buildCompactRankingMarkup,
     renderHouseMapInfo,
+    selectContainerFromHouseInfo,
+    bindHouseMapInfoContainerButtons,
     renderSelectedHouseMarker,
     getChangedContainerLiveRouteStatus,
     renderHouseSelection,

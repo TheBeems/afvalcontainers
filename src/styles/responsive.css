@@ -235,41 +235,39 @@
     max-height: 36vh;
   }
 
-  .container-map-info .map-collapsible-body,
-  .house-map-info .map-collapsible-body {
+  .house-map-info {
+    width: min(280px, calc(100vw - 40px));
+    max-height: none;
+  }
+
+  .container-map-info .map-collapsible-body {
     max-height: calc(36vh - 40px);
   }
 
-  .container-map-info-title,
-  .house-map-info-address {
+  .container-map-info-title {
     font-size: 13px;
   }
 
   .container-map-info-address,
-  .container-map-info-meta,
-  .house-map-info-meta,
-  .house-map-ranking-meta,
-  .house-map-info-empty {
+  .container-map-info-meta {
     font-size: 11px;
   }
 
-  .house-map-ranking {
-    gap: 6px;
-    margin-top: 8px;
+  .house-map-info .status-badge {
+    margin-top: 15px;
   }
 
-  .house-map-ranking li {
-    grid-template-columns: 20px minmax(0, 1fr);
-    gap: 7px;
+  .house-map-info .selected-result-distance {
+    font-size: 20px;
+  }
+
+  .house-map-info .house-address {
+    font-size: 14px;
   }
 
   .house-map-info .ranking-rank {
     width: 20px;
     height: 20px;
     font-size: 11px;
-  }
-
-  .house-map-ranking-title {
-    font-size: 12px;
   }
 }

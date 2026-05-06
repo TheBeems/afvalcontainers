@@ -17,13 +17,18 @@
     "generate:address-indexes": "node scripts/generate-address-indexes.mjs",
     "generate:coverage-split": "node scripts/split-house-coverage.mjs",
     "generate:smoke": "node scripts/generate-house-coverage.mjs --limit-houses=10 --output-json=/tmp/house-coverage.json",
-    "serve": "python3 -m http.server 8000 --directory dist"
+    "serve": "python3 -m http.server 8000 --directory dist",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "fuse.js": "^6.6.2",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "vite": "^8.0.10"
   }
 }

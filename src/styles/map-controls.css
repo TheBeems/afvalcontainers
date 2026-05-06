@@ -133,14 +133,44 @@
   max-height: min(45vh, 320px);
 }
 
-.container-map-info .map-collapsible-body,
-.house-map-info .map-collapsible-body {
+.house-map-info {
+  width: min(330px, calc(100vw - 48px));
+  max-height: none;
+}
+
+.container-map-info .map-collapsible-body {
   max-height: calc(min(45vh, 320px) - 42px);
   overflow: auto;
 }
 
-.container-map-info-title,
-.house-map-info-address {
+.house-map-info > summary {
+  align-items: flex-start;
+}
+
+.house-map-info .status-badge {
+  flex: none;
+  margin-top: 16px;
+}
+
+.house-map-info > summary::after {
+  margin-top: 18px;
+}
+
+.house-map-info .house-summary-title {
+  font-size: 11px;
+}
+
+.house-map-info .house-address {
+  font-size: 15px;
+}
+
+.house-map-info .house-meta {
+  margin-top: 1px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.container-map-info-title {
   font-size: 14px;
   font-weight: 800;
   line-height: 1.3;
@@ -153,10 +183,7 @@
   line-height: 1.35;
 }
 
-.container-map-info-meta,
-.house-map-info-meta,
-.house-map-ranking-meta,
-.house-map-info-empty {
+.container-map-info-meta {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.4;
@@ -167,10 +194,6 @@
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-}
-
-.house-map-info-meta {
-  margin-top: 2px;
 }
 
 .container-category-pill {
@@ -208,35 +231,6 @@
   border-radius: 999px;
   background: #ffffff;
   flex: none;
-}
-
-.house-map-ranking {
-  display: grid;
-  gap: 8px;
-  margin: 10px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.house-map-ranking li {
-  display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-}
-
-.house-map-ranking-title {
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.house-map-ranking-meta {
-  margin-top: 2px;
-  font-weight: 700;
-}
-
-.house-map-info-empty {
-  margin-top: 10px;
 }
 
 .leaflet-popup-content {

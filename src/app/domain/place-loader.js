@@ -197,10 +197,6 @@ export function createPlaceLoader(context, api) {
       elements.coverageSummary.hidden = true;
       elements.coverageSummary.innerHTML = '';
     }
-    if (elements.houseSummary) {
-      elements.houseSummary.hidden = true;
-      elements.houseSummary.innerHTML = '';
-    }
     if (elements.houseDetails) {
       elements.houseDetails.hidden = false;
       elements.houseDetails.innerHTML = '<div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>';
@@ -291,10 +287,6 @@ export function createPlaceLoader(context, api) {
         elements.coverageSummary.hidden = true;
         elements.coverageSummary.innerHTML = '';
       }
-      if (elements.houseSummary) {
-        elements.houseSummary.hidden = true;
-        elements.houseSummary.innerHTML = '';
-      }
       if (elements.houseDetails) {
         elements.houseDetails.hidden = false;
         elements.houseDetails.innerHTML = '<div class="empty-state">Voor dit dorp is nog geen vooraf berekende huizenanalyse beschikbaar.</div>';
@@ -377,7 +369,6 @@ export function createPlaceLoader(context, api) {
       state.placeLoadStatus = 'error';
       renderPlaceSelector();
       elements.coverageSummary.hidden = true;
-      elements.houseSummary.hidden = true;
       elements.houseDetails.hidden = false;
       elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
       api.setCoverageStatus(error.message || `De viewer kon de batchlaag voor ${place.name} niet laden.`, 'error');

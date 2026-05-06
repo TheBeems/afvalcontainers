@@ -1,6 +1,12 @@
 import { getContainerCategories } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
+import { MOBILE_MAP_SCROLL_QUERY } from '../config.js';
 import { createContainerMarkerSvg } from '../ui/container-marker.js';
+
+function isMobileMapViewport() {
+  return typeof window.matchMedia === 'function'
+    && window.matchMedia(MOBILE_MAP_SCROLL_QUERY).matches;
+}
 
 function getContainerLegendItems(containers) {
   const seenKeys = new Set();
@@ -57,7 +63,7 @@ export function installMapControls(context) {
   mapLegendControl.onAdd = () => {
     const container = L.DomUtil.create('details', 'map-collapsible map-legend');
     container.id = 'map-legend';
-    container.open = true;
+    container.open = !isMobileMapViewport();
     container.setAttribute('aria-label', 'Legenda loopafstand');
 
     container.innerHTML = `

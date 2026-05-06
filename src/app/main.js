@@ -69,7 +69,6 @@ async function init(context, api) {
   } catch (error) {
     state.placeLoadStatus = 'error';
     elements.coverageSummary.hidden = true;
-    elements.houseSummary.hidden = true;
     elements.houseDetails.hidden = false;
     elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
     api.setCoverageStatus(error.message || 'De viewer kon de batchlaag niet laden.', 'error');

@@ -131,6 +131,17 @@ npm run serve
 
 Open `http://127.0.0.1:8000/` after `npm run serve`.
 
+### Playwright
+
+Chromium e2e tests run against the built static site:
+
+```sh
+npx playwright install --with-deps chromium
+npm run test:e2e
+```
+
+Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for the Playwright UI, and `npm run test:e2e:report` to reopen the HTML report. On WSL2 ARM64, install only Chromium first unless you intentionally need broader browser coverage.
+
 ## Repository structure
 
 - `src/index.html` contains the fixed page structure.

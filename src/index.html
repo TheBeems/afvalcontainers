@@ -61,15 +61,10 @@
   <h2 id="analysis-title">Analyse</h2>
   <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
 
-  <!-- Summary and selected-address panels are populated from the active place dataset. -->
-  <details id="coverage-summary-panel" class="sidebar-collapsible summary-panel" open>
-    <summary>Samenvatting bebouwde kom</summary>
-    <div class="sidebar-collapsible-body">
-      <div id="coverage-summary" class="summary-grid" hidden></div>
-    </div>
-  </details>
-
-  <details id="house-summary" class="house-summary sidebar-collapsible" hidden></details>
+  <section id="coverage-summary-panel" class="summary-panel" aria-labelledby="coverage-summary-title">
+    <h3 id="coverage-summary-title">Samenvatting bebouwde kom</h3>
+    <div id="coverage-summary" class="summary-grid" hidden></div>
+  </section>
 
   <div id="house-details" class="detail-list">
     <div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>

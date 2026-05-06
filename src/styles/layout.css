@@ -190,10 +190,6 @@
   padding: 0 12px 12px;
 }
 
-.summary-panel {
-  margin-top: 12px;
-}
-
 .panel > summary:focus-visible,
 .sidebar-header > details > summary:focus-visible,
 .sidebar-collapsible > summary:focus-visible,

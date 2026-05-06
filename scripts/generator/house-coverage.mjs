@@ -10,11 +10,14 @@ import {
   hasRestafvalStream
 } from '../../src/shared/containers.js';
 import {
+  adjustWalkingDurationSeconds,
   formatRouteCacheCoordinate,
   haversineMeters,
   isValidRouteGeometry,
   roundCoordinate,
-  roundMetric
+  roundMetric,
+  WALKING_DURATION_MULTIPLIER,
+  WALKING_DURATION_SPEED_KMH
 } from '../../src/shared/geometry.js';
 import {
   getDefaultPlace,
@@ -784,10 +787,11 @@ function buildRankedCandidates(job, matrix, sourceIndex, destinationIndexById) {
   return job.candidates
     .map((candidate) => {
       const destinationIndex = destinationIndexById.get(candidate.id);
+      const walkingDistance = distances[destinationIndex];
       return {
         ...candidate,
-        walkingDistance: distances[destinationIndex],
-        walkingDuration: durations[destinationIndex]
+        walkingDistance,
+        walkingDuration: adjustWalkingDurationSeconds(durations[destinationIndex])
       };
     })
     .filter((candidate) => Number.isFinite(candidate.walkingDistance) && Number.isFinite(candidate.walkingDuration))
@@ -1106,7 +1110,9 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
       pdokAdresCollection: 'adres',
       pdokBuiltUpAreaCollection: analysisBoundary.collectionId,
       osrmBaseUrl: OSRM_BASE_URL,
-      osrmProfile: OSRM_PROFILE
+      osrmProfile: OSRM_PROFILE,
+      walkingDurationSpeedKmh: WALKING_DURATION_SPEED_KMH,
+      walkingDurationMultiplier: WALKING_DURATION_MULTIPLIER
     },
     summary,
     houses: results
