@@ -7,7 +7,6 @@ export function getElements() {
     appTitle: document.getElementById('app-title'),
     placeNameElements: document.querySelectorAll('[data-place-name]'),
     placeSourceLink: document.getElementById('place-source-link'),
-    storyLongDistancePercent: document.getElementById('story-long-distance-percent'),
     storyLongDistanceCount: document.getElementById('story-long-distance-count'),
     storyTotalAddressCount: document.getElementById('story-total-address-count'),
     storyOverReferenceCount: document.getElementById('story-over-reference-count'),

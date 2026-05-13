@@ -46,9 +46,6 @@ export function createCoverageSummary(context) {
     const longDistancePercent = formatPercent(longDistanceCount, totalAddresses);
     const overReferencePercent = formatPercent(overReferenceCount, totalAddresses);
 
-    if (elements.storyLongDistancePercent) {
-      elements.storyLongDistancePercent.textContent = longDistancePercent;
-    }
     if (elements.storyLongDistanceCount) {
       elements.storyLongDistanceCount.textContent = longDistanceCount.toLocaleString('nl-NL');
     }

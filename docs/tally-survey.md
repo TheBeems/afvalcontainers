@@ -21,30 +21,17 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
 
 ## Vragen
 
-1. `Hoe goed vind je deze containerlocatie bereikbaar?`
-   - Type: schaal 1-5
-   - Verplicht: ja
-
-2. `Hoe vaak verwacht je restafval weg te brengen?`
+1. `Vind je de wijziging van restafval ophalen naar zelf brengen acceptabel?`
    - Type: meerkeuze
-   - Opties: `Meerdere keren per week`, `Ongeveer 1 keer per week`, `Minder dan 1 keer per week`, `Weet ik nog niet`
+   - Opties: `Ja`, `Nee`
    - Verplicht: ja
 
-3. `Is de loopafstand voor jou acceptabel?`
+2. `Wat zijn de redenen dat je het niet acceptabel vindt?`
    - Type: meerkeuze
-   - Opties: `Ja`, `Nee`, `Twijfel`
+   - Opties: `De loopafstand is te ver`, `Vanwege rommel naast de container`, `Stankoverlast`, `Overvolle containers`, `Onpraktisch voor ouderen en minder validen`, `Andere redenen`
    - Verplicht: ja
-
-4. `Waarom wel of niet?`
-   - Type: lange tekst
-   - Verplicht: nee
-
-5. `Heb je bijzonderheden zoals mobiliteit, zware zakken of gezinssituatie die meespelen?`
-   - Type: meerkeuze, meerdere antwoorden toegestaan
-   - Opties: `Mobiliteit of gezondheid`, `Zware afvalzakken`, `Luiers`, `Kattengrind`, `Gezinssituatie`, `Anders`, `Niet van toepassing`
-   - Verplicht: nee
 
 6. `Mag er contact met je worden opgenomen?`
-   - Type: ja/nee
+   - Type: invoer
    - Verplicht: nee
-   - Toon alleen bij `Ja`: `E-mailadres`
+   - Toon alleen bij: `E-mailadres`

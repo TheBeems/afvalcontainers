@@ -35,10 +35,11 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
 
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Inzicht voor Warmenhuizen' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Afstand bepaalt de ervaring' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Meer dan 40% loopt 150 meter of meer' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ga naar stap 2: Van bak aan huis naar zelf wegbrengen' })).toBeVisible();
 
-  await page.getByRole('link', { name: 'Zoek mijn adres' }).click();
+  await page.getByRole('link', { name: 'Zoek mijn loopafstand' }).click();
 
   await expect(page).toHaveURL(/#kaart$/);
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
@@ -51,7 +52,7 @@ test('keeps the mobile menu out of the visual introduction', async ({ page }) =>
   const toggle = page.locator('#mobile-sidebar-toggle');
   await expect(toggle).toBeHidden();
 
-  await page.getByRole('link', { name: 'Zoek mijn adres' }).click();
+  await page.getByRole('link', { name: 'Zoek mijn loopafstand' }).click();
   await expect(toggle).toBeVisible();
 });
 
