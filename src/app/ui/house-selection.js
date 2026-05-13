@@ -15,6 +15,10 @@ import { hasRestafvalStream } from '../../shared/containers.js';
 import { escapeHtml } from '../../shared/html.js';
 import { formatDuration, formatMeters } from '../../shared/format.js';
 import { isValidRouteGeometry } from '../../shared/geometry.js';
+import {
+  buildTallySurveyButtonMarkup,
+  openTallySurvey
+} from '../services/tally-survey.js';
 
 export function createHouseSelection(context, api) {
   const { elements, mapContext, state } = context;
@@ -130,6 +134,7 @@ export function createHouseSelection(context, api) {
 
       <div class="${bodyClass} selected-house-body">
         ${buildMainResultCard(house, ranking)}
+        ${buildTallySurveyButtonMarkup(house, ranking, api.getActivePlaceCity())}
         ${buildAlternativeContainersMarkup(ranking)}
       </div>
     `;
@@ -337,6 +342,7 @@ export function createHouseSelection(context, api) {
     elements.houseMapInfo.open = !state.houseInfoCollapsed;
     elements.houseMapInfo.innerHTML = buildSelectedHouseSummaryMarkup(house, ranking, 'map-collapsible-body');
     bindHouseMapInfoContainerButtons();
+    bindHouseMapInfoSurveyButton();
   }
 
   function selectContainerFromHouseInfo(containerId) {
@@ -353,6 +359,20 @@ export function createHouseSelection(context, api) {
       button.addEventListener('click', () => {
         selectContainerFromHouseInfo(button.dataset.containerId);
       });
+    });
+  }
+
+  function bindHouseMapInfoSurveyButton() {
+    const button = elements.houseMapInfo.querySelector('[data-survey-button]');
+
+    if (!button) {
+      return;
+    }
+
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      void openTallySurvey(button, api.setCoverageStatus);
     });
   }
 
@@ -596,6 +616,7 @@ export function createHouseSelection(context, api) {
     renderHouseMapInfo,
     selectContainerFromHouseInfo,
     bindHouseMapInfoContainerButtons,
+    bindHouseMapInfoSurveyButton,
     renderSelectedHouseMarker,
     getChangedContainerLiveRouteStatus,
     renderHouseSelection,

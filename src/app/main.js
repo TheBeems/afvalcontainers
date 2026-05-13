@@ -17,6 +17,7 @@ import { createHouseSelection } from './ui/house-selection.js';
 import { createMobileSidebar } from './ui/mobile-sidebar.js';
 import { createSearch } from './ui/search.js';
 import { createStatusUi } from './ui/status.js';
+import { bindStoryIntroEvents } from './ui/story-intro.js';
 
 window.L = L;
 
@@ -57,6 +58,7 @@ function registerCoreListeners(context, api) {
   elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
   api.bindMobileSidebarEvents();
+  bindStoryIntroEvents();
 }
 
 async function init(context, api) {

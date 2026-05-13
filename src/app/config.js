@@ -18,6 +18,16 @@ export const LIVE_ROUTE_TIMEOUT_MS = 15000;
 export const CONTAINER_LONG_PRESS_MS = 600;
 export const MOBILE_MAP_SCROLL_QUERY = '(max-width: 960px)';
 export const CHANGED_CONTAINER_PREVIEW_LIMIT = 4;
+export const TALLY_FORM_ID = 'REPLACE_WITH_TALLY_FORM_ID';
+export const TALLY_WIDGET_URL = 'https://tally.so/widgets/embed.js';
+export const TALLY_HIDDEN_FIELDS = {
+  place: 'place',
+  street: 'street',
+  coverageStatus: 'coverage_status',
+  walkingDistance: 'walking_distance_m',
+  walkingDuration: 'walking_duration_s',
+  containerId: 'container_id'
+};
 
 export const ROUTE_STYLES = [
   { weight: 6, opacity: 0.95 },

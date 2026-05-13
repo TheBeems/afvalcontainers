@@ -39,6 +39,39 @@ export function createCoverageSummary(context) {
     return counts;
   }
 
+  function renderIntroHighlights(counts, totalAddresses) {
+    const longDistanceCount = (counts.between_150_275 || 0)
+      + (counts.over_275 || 0);
+    const overReferenceCount = counts.over_275 || 0;
+    const longDistancePercent = formatPercent(longDistanceCount, totalAddresses);
+    const overReferencePercent = formatPercent(overReferenceCount, totalAddresses);
+
+    if (elements.storyLongDistancePercent) {
+      elements.storyLongDistancePercent.textContent = longDistancePercent;
+    }
+    if (elements.storyLongDistanceCount) {
+      elements.storyLongDistanceCount.textContent = longDistanceCount.toLocaleString('nl-NL');
+    }
+    if (elements.storyTotalAddressCount) {
+      elements.storyTotalAddressCount.textContent = totalAddresses.toLocaleString('nl-NL');
+    }
+    if (elements.storyOverReferenceCount) {
+      elements.storyOverReferenceCount.textContent = overReferenceCount.toLocaleString('nl-NL');
+    }
+    if (elements.introLongDistanceCount) {
+      elements.introLongDistanceCount.textContent = longDistanceCount.toLocaleString('nl-NL');
+    }
+    if (elements.introTotalAddressCount) {
+      elements.introTotalAddressCount.textContent = totalAddresses.toLocaleString('nl-NL');
+    }
+    if (elements.introLongDistancePercent) {
+      elements.introLongDistancePercent.textContent = longDistancePercent;
+    }
+    if (elements.introOverReferenceText) {
+      elements.introOverReferenceText.textContent = `Daarvan liggen ${overReferenceCount.toLocaleString('nl-NL')} adressen boven 275 meter (${overReferencePercent}).`;
+    }
+  }
+
   function renderCoverageSummary() {
     const summary = state.coverage?.summary || {};
     const counts = summary.counts || getSummaryCounts(state.houses);
@@ -67,6 +100,8 @@ export function createCoverageSummary(context) {
         showPercent: true
       }))
       .join('');
+
+    renderIntroHighlights(counts, totalAddresses);
 
     elements.coverageSummary.hidden = false;
     elements.coverageSummary.innerHTML = `
