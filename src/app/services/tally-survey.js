@@ -42,20 +42,24 @@ export function buildTallySurveyButtonMarkup(house, ranking, activePlaceCity) {
   const hiddenFields = buildTallySurveyHiddenFields(house, nearest, activePlaceCity);
 
   return `
-    <button
-      type="button"
-      class="survey-button"
-      data-survey-button
-      data-tally-open="${escapeHtml(TALLY_FORM_ID)}"
-      data-tally-place="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.place])}"
-      data-tally-street="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.street])}"
-      data-tally-coverage-status="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.coverageStatus])}"
-      data-tally-walking-distance="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDistance])}"
-      data-tally-walking-duration="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDuration])}"
-      data-tally-container-id="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.containerId])}"
-    >
-      Deel jouw mening met de dorpsraad
-    </button>
+    <aside class="survey-callout" aria-label="Enquête over containers">
+      <p class="survey-callout-title">Wat vind jij van de containers?</p>
+      <p class="survey-callout-text">Je reactie helpt de dorpsraad van Warmenhuizen zicht te krijgen op de meningen van de dorpsbewoners.</p>
+      <button
+        type="button"
+        class="survey-button"
+        data-survey-button
+        data-tally-open="${escapeHtml(TALLY_FORM_ID)}"
+        data-tally-place="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.place])}"
+        data-tally-street="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.street])}"
+        data-tally-coverage-status="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.coverageStatus])}"
+        data-tally-walking-distance="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDistance])}"
+        data-tally-walking-duration="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDuration])}"
+        data-tally-container-id="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.containerId])}"
+      >
+        Geef je mening
+      </button>
+    </aside>
   `;
 }
 
