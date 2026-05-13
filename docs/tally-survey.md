@@ -1,12 +1,13 @@
 # Tally form-specificatie
 
-Deze specificatie is bedoeld om handmatig een Tally-formulier aan te maken. Vul daarna de echte form-id in bij `TALLY_FORM_ID` in `src/app/config.js`.
+Deze specificatie is bedoeld om via de Tally API een kort feedbackformulier aan te maken. Vul na aanmaak de echte form-id in bij `TALLY_FORM_ID` in `src/app/config.js`.
 
 ## Basis
 
-- Titel: `Ervaring met loopafstand naar restafvalcontainer`
-- Intro: `We horen graag hoe u de loopafstand naar de geselecteerde restafvalcontainer ervaart. Uw reactie helpt om de praktische gevolgen per locatie beter zichtbaar te maken.`
-- Bedankpagina: `Dank voor je reactie. Je feedback helpt om de gevolgen per locatie beter zichtbaar te maken.`
+- Titel: `Jouw mening over aangekondige restafvalcontainers`
+- Intro: `We horen graag hoe je de wijziging van restafval ophalen naar zelf wegbrengen ervaart. Je reactie helpt ons om de praktische gevolgen per straat en containerlocatie beter zichtbaar te maken en dit terug te koppelen aan de gemeente Schagen.`
+- Privacytekst: `Je reactie wordt beveiligd opgeslagen. We slaan geen specifiek adres, huisnummer of postcode op. Vanuit de kaart sturen we alleen woonplaats, straat, loopafstand, looptijd en dichtstbijzijnde container-ID mee. Je e-mailadres is optioneel en is alleen bekend bij de dorpsraad van Warmenhuizen.`
+- Bedankpagina: `Dank voor je reactie. Je feedback helpt ons om de gevolgen per locatie beter zichtbaar te maken.`
 
 ## Hidden fields
 
@@ -21,17 +22,47 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
 
 ## Vragen
 
-1. `Vind je de wijziging van restafval ophalen naar zelf brengen acceptabel?`
+1. `Vind je de wijziging van restafval ophalen naar zelf wegbrengen acceptabel?`
    - Type: meerkeuze
    - Opties: `Ja`, `Nee`
    - Verplicht: ja
 
-2. `Wat zijn de redenen dat je het niet acceptabel vindt?`
-   - Type: meerkeuze
-   - Opties: `De loopafstand is te ver`, `Vanwege rommel naast de container`, `Stankoverlast`, `Overvolle containers`, `Onpraktisch voor ouderen en minder validen`, `Andere redenen`
+2. `Waarom vind je dit niet acceptabel?`
+   - Type: selectievakjes
+   - Opties: `De loopafstand is te ver`, `Vanwege rommel naast de container`, `Stankoverlast`, `Overvolle containers`, `Aantasting van het dorpsaanzicht`, `Onpraktisch voor ouderen en minder validen`, `Andere reden`
    - Verplicht: ja
+   - Toon alleen bij: vraag 1 is `Nee`
 
-6. `Mag er contact met je worden opgenomen?`
-   - Type: invoer
+3. `Waarom vind je dit acceptabel?`
+   - Type: alinea
    - Verplicht: nee
-   - Toon alleen bij: `E-mailadres`
+   - Toon alleen bij: vraag 1 is `Ja`
+
+5. `E-mailadres, optioneel`
+   - Type: e-mail
+   - Helptekst: `Alleen invullen als we contact met je mogen opnemen over je reactie.`
+   - Verplicht: nee
+
+## Tally API
+
+- Gebruik `POST https://api.tally.so/forms` om het formulier aan te maken.
+- Gebruik een `HiddenFieldsBlock` voor de hidden fields hierboven.
+- Gebruik blokken voor titel, intro/privacytekst, meerkeuze, selectievakjes, tekst/alinea, e-mail en bedankpagina.
+- Gebruik conditionele logica:
+  - Toon vraag 2 als vraag 1 `Nee` is.
+  - Maak vraag 2 verplicht als vraag 1 `Nee` is.
+  - Toon vraag 3 als vraag 2 `Andere reden` bevat.
+  - Maak vraag 3 verplicht als vraag 2 `Andere reden` bevat.
+  - Toon vraag 4 als vraag 1 `Ja` is.
+- Sla de Tally API-key niet op in de repo. Gebruik lokaal een environment variable zoals `TALLY_API_KEY`.
+
+## Controle
+
+- In Tally preview:
+  - `Ja` toont alleen de positieve toelichting en het optionele e-mailveld.
+  - `Nee` toont de redenen; `Andere reden` toont pas het tekstveld.
+  - Verplichte velden blokkeren alleen waar bedoeld.
+- Vanuit de kaart:
+  - Controleer dat hidden fields gevuld worden met woonplaats, straat, loopafstand, looptijd en container-ID.
+  - Controleer dat geen volledig adres, huisnummer of postcode naar Tally wordt meegestuurd.
+- Run daarna `npm run check`.
