@@ -29,7 +29,7 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
 
 2. `Waarom vind je dit niet acceptabel?`
    - Type: selectievakjes
-   - Opties: `De loopafstand is te ver`, `Vanwege rommel naast de container`, `Stankoverlast`, `Overvolle containers`, `Aantasting van het dorpsaanzicht`, `Onpraktisch voor ouderen en minder validen`, `Andere reden`
+   - Opties: `De loopafstand is te ver`, `Afval naast de containers / zwerfafval`, `Aantasting van uitzicht, straatbeeld en woongenot`, `Onpraktisch voor ouderen en mindervaliden`, `Overlast van stank en ongedierte`, `Waardedaling woning`, `Andere reden`
    - Verplicht: ja
    - Toon alleen bij: vraag 1 is `Nee`
 
@@ -38,7 +38,7 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
    - Verplicht: nee
    - Toon alleen bij: vraag 1 is `Ja`
 
-5. `E-mailadres, optioneel`
+4. `E-mailadres, optioneel`
    - Type: e-mail
    - Helptekst: `Alleen invullen als we contact met je mogen opnemen over je reactie.`
    - Verplicht: nee
@@ -50,17 +50,13 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
 - Gebruik blokken voor titel, intro/privacytekst, meerkeuze, selectievakjes, tekst/alinea, e-mail en bedankpagina.
 - Gebruik conditionele logica:
   - Toon vraag 2 als vraag 1 `Nee` is.
-  - Maak vraag 2 verplicht als vraag 1 `Nee` is.
-  - Toon vraag 3 als vraag 2 `Andere reden` bevat.
-  - Maak vraag 3 verplicht als vraag 2 `Andere reden` bevat.
-  - Toon vraag 4 als vraag 1 `Ja` is.
+  - Toon vraag 3 als vraag 1 `Ja` is.
 - Sla de Tally API-key niet op in de repo. Gebruik lokaal een environment variable zoals `TALLY_API_KEY`.
 
 ## Controle
 
 - In Tally preview:
   - `Ja` toont alleen de positieve toelichting en het optionele e-mailveld.
-  - `Nee` toont de redenen; `Andere reden` toont pas het tekstveld.
   - Verplichte velden blokkeren alleen waar bedoeld.
 - Vanuit de kaart:
   - Controleer dat hidden fields gevuld worden met woonplaats, straat, loopafstand, looptijd en container-ID.
