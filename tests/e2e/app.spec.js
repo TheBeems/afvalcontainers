@@ -75,7 +75,16 @@ test('opens and closes the mobile sidebar', async ({ page }) => {
   await expect(toggle).toHaveAttribute('aria-label', 'Menu openen');
 });
 
-test('opens address feedback entry point without a configured Tally form', async ({ page }) => {
+test('opens address feedback entry point with privacy-safe Tally hidden fields', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__tallyOpenPopupCalls = [];
+    window.Tally = {
+      openPopup: (...args) => {
+        window.__tallyOpenPopupCalls.push(args);
+      }
+    };
+  });
+
   await page.goto('/#kaart');
 
   const search = page.getByRole('combobox', { name: 'Zoek je adres' });
@@ -84,8 +93,26 @@ test('opens address feedback entry point without a configured Tally form', async
 
   const surveyButton = page.getByRole('button', { name: 'Deel wat deze afstand voor jou betekent' });
   await expect(surveyButton).toBeVisible();
+  await expect(surveyButton).toHaveAttribute('data-tally-open', 'WODW1v');
   await expect(surveyButton).toHaveAttribute('data-tally-street', 'Appelvinkstraat');
 
   await surveyButton.click();
-  await expect(page.locator('#coverage-status')).toContainText('Enquêteformulier is nog niet gekoppeld');
+
+  const calls = await page.evaluate(() => window.__tallyOpenPopupCalls);
+  expect(calls).toHaveLength(1);
+
+  const [formId, options] = calls[0];
+  expect(formId).toBe('WODW1v');
+  expect(options.hiddenFields).toMatchObject({
+    place: 'Warmenhuizen',
+    street: 'Appelvinkstraat',
+    coverage_status: expect.any(String),
+    walking_distance_m: expect.any(String),
+    walking_duration_s: expect.any(String),
+    container_id: expect.any(String)
+  });
+  expect(options.hiddenFields).not.toHaveProperty('address');
+  expect(options.hiddenFields).not.toHaveProperty('house_number');
+  expect(options.hiddenFields).not.toHaveProperty('postcode');
+  expect(Object.values(options.hiddenFields)).not.toContain('Appelvinkstraat 12');
 });

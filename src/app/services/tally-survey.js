@@ -54,7 +54,7 @@ export function buildTallySurveyButtonMarkup(house, ranking, activePlaceCity) {
       data-tally-walking-duration="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDuration])}"
       data-tally-container-id="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.containerId])}"
     >
-      Deel wat deze afstand voor jou betekent
+      Deel jouw mening met de dorpsraad
     </button>
   `;
 }
