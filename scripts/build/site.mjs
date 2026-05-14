@@ -1,11 +1,12 @@
-import { copyFile, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { build as viteBuild } from 'vite';
 import { splitHouseCoverage } from '../split-house-coverage.mjs';
 import { readPlacesManifest, resolveProjectPath } from '../places.mjs';
 import { escapeHtml } from '../../src/shared/html.js';
-import { formatPercent } from '../../src/shared/format.js';
+import { formatDuration, formatMeters, formatPercent } from '../../src/shared/format.js';
 import {
+  getAnalysesUrl,
   getMethodologyUrl,
   getPlaceDescription,
   getPlaceOgDescription,
@@ -203,6 +204,26 @@ function buildMethodologyStructuredData() {
   };
 }
 
+function buildAnalysesStructuredData() {
+  const url = getAnalysesUrl();
+  const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      buildWebsiteStructuredData(),
+      {
+        '@type': 'WebPage',
+        '@id': `${url}#webpage`,
+        url,
+        name: 'Analyses loopafstanden',
+        description,
+        isPartOf: { '@id': `${SITE_URL}#website` },
+        inLanguage: 'nl'
+      }
+    ]
+  };
+}
+
 function getIntroMetrics(coverageSummary) {
   const summary = coverageSummary?.summary || {};
   const counts = summary.counts || {};
@@ -265,11 +286,199 @@ function rewriteAppRelativePaths(html, assetPrefix) {
   return html
     .replaceAll('src="./assets/', `src="${assetPrefix}assets/`)
     .replaceAll('href="./assets/', `href="${assetPrefix}assets/`)
+    .replaceAll('href="./analyses/"', `href="${assetPrefix}analyses/"`)
     .replaceAll('href="./methodiek/"', `href="${assetPrefix}methodiek/"`);
 }
 
 async function readCoverageSummary(place) {
   return JSON.parse(await readFile(resolveProjectPath(place.paths.coverageSummary), 'utf8'));
+}
+
+function getNearestRoute(house) {
+  return house.nearestContainers?.[0] || {
+    id: house.nearestContainerId,
+    walkingDistance: house.walkingDistance,
+    walkingDuration: house.walkingDuration,
+    coverageStatus: house.coverageStatus
+  };
+}
+
+function getMedian(sortedNumbers) {
+  if (sortedNumbers.length === 0) {
+    return 0;
+  }
+
+  const midpoint = Math.floor(sortedNumbers.length / 2);
+  return sortedNumbers.length % 2 === 1
+    ? sortedNumbers[midpoint]
+    : (sortedNumbers[midpoint - 1] + sortedNumbers[midpoint]) / 2;
+}
+
+function getPercentile(sortedNumbers, percentile) {
+  if (sortedNumbers.length === 0) {
+    return 0;
+  }
+
+  const index = Math.min(sortedNumbers.length - 1, Math.ceil(sortedNumbers.length * percentile) - 1);
+  return sortedNumbers[index];
+}
+
+function summarizeRows(rows) {
+  if (rows.length === 0) {
+    return {
+      addressCount: 0,
+      averageDistance: 0,
+      averageDuration: 0,
+      medianDistance: 0,
+      p90Distance: 0,
+      maxDistance: 0,
+      maxAddress: '',
+      over150Count: 0,
+      over275Count: 0
+    };
+  }
+
+  const sortedDistances = rows.map((row) => row.walkingDistance).sort((a, b) => a - b);
+  const totalDistance = rows.reduce((sum, row) => sum + row.walkingDistance, 0);
+  const totalDuration = rows.reduce((sum, row) => sum + (row.walkingDuration || 0), 0);
+  const over150Count = rows.filter((row) => row.walkingDistance >= 150).length;
+  const over275Count = rows.filter((row) => row.walkingDistance > 275).length;
+  const maxRow = rows.reduce((current, row) => (
+    !current || row.walkingDistance > current.walkingDistance ? row : current
+  ), null);
+
+  return {
+    addressCount: rows.length,
+    averageDistance: totalDistance / rows.length,
+    averageDuration: totalDuration / rows.length,
+    medianDistance: getMedian(sortedDistances),
+    p90Distance: getPercentile(sortedDistances, 0.9),
+    maxDistance: maxRow?.walkingDistance || 0,
+    maxAddress: maxRow?.address || '',
+    over150Count,
+    over275Count
+  };
+}
+
+function getMostCommonContainerId(rows) {
+  const counts = new Map();
+  for (const row of rows) {
+    if (row.containerId) {
+      counts.set(row.containerId, (counts.get(row.containerId) || 0) + 1);
+    }
+  }
+
+  return Array.from(counts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+}
+
+async function readPlaceAnalysis(place) {
+  const coverageSummary = await readCoverageSummary(place);
+  const detailDirectory = resolveProjectPath(place.paths.houseDetailsBase);
+  const detailFiles = (await readdir(detailDirectory))
+    .filter((fileName) => fileName.endsWith('.json'))
+    .sort((a, b) => a.localeCompare(b, 'nl'));
+  const rowsByStreet = new Map();
+  const rows = [];
+
+  for (const detailFile of detailFiles) {
+    const bundle = JSON.parse(await readFile(resolve(detailDirectory, detailFile), 'utf8'));
+    const streetRows = rowsByStreet.get(bundle.street) || [];
+
+    for (const house of bundle.houses || []) {
+      const nearestRoute = getNearestRoute(house);
+      const walkingDistance = nearestRoute.walkingDistance;
+
+      if (!Number.isFinite(walkingDistance)) {
+        continue;
+      }
+
+      const row = {
+        street: bundle.street,
+        address: house.address,
+        containerId: house.nearestContainerId || nearestRoute.id || '',
+        straightDistance: nearestRoute.straightDistance,
+        walkingDistance,
+        walkingDuration: nearestRoute.walkingDuration,
+        coverageStatus: nearestRoute.coverageStatus || house.coverageStatus
+      };
+
+      rows.push(row);
+      streetRows.push(row);
+    }
+
+    rowsByStreet.set(bundle.street, streetRows);
+  }
+
+  const streetStats = Array.from(rowsByStreet.entries())
+    .map(([street, streetRows]) => {
+      const summary = summarizeRows(streetRows);
+      return {
+        street,
+        ...summary,
+        over150Percent: summary.addressCount > 0 ? summary.over150Count / summary.addressCount : 0,
+        over275Percent: summary.addressCount > 0 ? summary.over275Count / summary.addressCount : 0,
+        mainContainerId: getMostCommonContainerId(streetRows)
+      };
+    })
+    .sort((a, b) => a.street.localeCompare(b.street, 'nl'));
+
+  const containerRows = new Map();
+  for (const row of rows) {
+    if (!row.containerId) {
+      continue;
+    }
+
+    const values = containerRows.get(row.containerId) || [];
+    values.push(row);
+    containerRows.set(row.containerId, values);
+  }
+
+  const containerStats = Array.from(containerRows.entries())
+    .map(([containerId, containerStatRows]) => ({
+      containerId,
+      ...summarizeRows(containerStatRows)
+    }))
+    .sort((a, b) => b.addressCount - a.addressCount || a.containerId.localeCompare(b.containerId, 'nl'));
+
+  const routeRatioStats = Array.from(rowsByStreet.entries())
+    .map(([street, streetRows]) => {
+      const ratioRows = streetRows
+        .filter((row) => Number.isFinite(row.straightDistance) && row.straightDistance > 25)
+        .map((row) => ({
+          ...row,
+          ratio: row.walkingDistance / row.straightDistance
+        }))
+        .filter((row) => Number.isFinite(row.ratio));
+
+      if (ratioRows.length === 0) {
+        return null;
+      }
+
+      const highestRatioRow = ratioRows.reduce((current, row) => (
+        !current || row.ratio > current.ratio ? row : current
+      ), null);
+
+      return {
+        street,
+        addressCount: ratioRows.length,
+        averageRatio: ratioRows.reduce((sum, row) => sum + row.ratio, 0) / ratioRows.length,
+        highestRatio: highestRatioRow.ratio,
+        highestRatioAddress: highestRatioRow.address,
+        highestRatioStraightDistance: highestRatioRow.straightDistance,
+        highestRatioWalkingDistance: highestRatioRow.walkingDistance
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.averageRatio - a.averageRatio);
+
+  return {
+    place,
+    coverageSummary,
+    summary: coverageSummary.summary || {},
+    streetStats,
+    containerStats,
+    routeRatioStats
+  };
 }
 
 async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix }) {
@@ -486,6 +695,379 @@ ${seoBlock}
 `;
 }
 
+function formatInteger(value) {
+  return Math.round(value || 0).toLocaleString('nl-NL');
+}
+
+function formatRatio(value) {
+  return `${value.toFixed(2).replace('.', ',')}x`;
+}
+
+function formatCompactPercent(value) {
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'percent',
+    maximumFractionDigits: 0
+  }).format(value || 0);
+}
+
+function renderAnalysisTable(headers, rows, renderRow) {
+  return `<div class="table-scroll">
+      <table>
+        <thead>
+          <tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${rows.map(renderRow).join('\n          ')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderStreetRow(row) {
+  return `<tr>
+            <td>${escapeHtml(row.street)}</td>
+            <td>${formatInteger(row.addressCount)}</td>
+            <td>${escapeHtml(formatMeters(row.averageDistance))}</td>
+            <td>${escapeHtml(formatDuration(row.averageDuration))}</td>
+            <td>${escapeHtml(formatMeters(row.medianDistance))}</td>
+            <td>${escapeHtml(formatMeters(row.p90Distance))}</td>
+            <td>${escapeHtml(formatMeters(row.maxDistance))}</td>
+            <td>${formatInteger(row.over150Count)} (${formatCompactPercent(row.over150Percent)})</td>
+            <td>${formatInteger(row.over275Count)} (${formatCompactPercent(row.over275Percent)})</td>
+            <td>${escapeHtml(row.mainContainerId)}</td>
+          </tr>`;
+}
+
+function renderContainerRow(row) {
+  return `<tr>
+            <td>${escapeHtml(row.containerId)}</td>
+            <td>${formatInteger(row.addressCount)}</td>
+            <td>${escapeHtml(formatMeters(row.averageDistance))}</td>
+            <td>${escapeHtml(formatMeters(row.maxDistance))}</td>
+            <td>${formatInteger(row.over150Count)}</td>
+            <td>${formatInteger(row.over275Count)}</td>
+          </tr>`;
+}
+
+function renderRouteRatioRow(row) {
+  return `<tr>
+            <td>${escapeHtml(row.street)}</td>
+            <td>${formatInteger(row.addressCount)}</td>
+            <td>${formatRatio(row.averageRatio)}</td>
+            <td>${escapeHtml(row.highestRatioAddress)}</td>
+            <td>${formatRatio(row.highestRatio)}</td>
+            <td>${escapeHtml(formatMeters(row.highestRatioStraightDistance))} naar ${escapeHtml(formatMeters(row.highestRatioWalkingDistance))}</td>
+          </tr>`;
+}
+
+function renderPlaceOverviewRow(analysis) {
+  const summary = analysis.summary;
+  const counts = summary.counts || {};
+  const totalAddresses = summary.totalAddresses || 0;
+  const longDistanceCount = (counts.between_150_275 || 0) + (counts.over_275 || 0);
+
+  return `<tr>
+            <td><a href="../${escapeHtml(getPlaceSlug(analysis.place))}/">${escapeHtml(analysis.place.name)}</a></td>
+            <td>${formatInteger(totalAddresses)}</td>
+            <td>${escapeHtml(formatMeters(summary.averageWalkingDistance))}</td>
+            <td>${escapeHtml(formatDuration(summary.averageWalkingDuration))}</td>
+            <td>${formatInteger(longDistanceCount)} (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})</td>
+            <td>${formatInteger(counts.over_275 || 0)} (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))})</td>
+            <td>${formatInteger(analysis.streetStats.length)}</td>
+            <td>${formatInteger(analysis.streetStats.filter((row) => row.averageDistance >= 150).length)}</td>
+          </tr>`;
+}
+
+async function buildAnalysesPage(places) {
+  const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
+  const warmenhuizenAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
+  const summary = warmenhuizenAnalysis.summary;
+  const counts = summary.counts || {};
+  const totalAddresses = summary.totalAddresses || 0;
+  const longDistanceCount = (counts.between_150_275 || 0) + (counts.over_275 || 0);
+  const averageDistanceTop = warmenhuizenAnalysis.streetStats
+    .filter((row) => row.addressCount >= 5)
+    .sort((a, b) => b.averageDistance - a.averageDistance)
+    .slice(0, 15);
+  const over275Top = warmenhuizenAnalysis.streetStats
+    .filter((row) => row.over275Count > 0)
+    .sort((a, b) => b.over275Count - a.over275Count || b.over275Percent - a.over275Percent)
+    .slice(0, 15);
+  const over150Top = warmenhuizenAnalysis.streetStats
+    .filter((row) => row.over150Count > 0)
+    .sort((a, b) => b.over150Count - a.over150Count || b.over150Percent - a.over150Percent)
+    .slice(0, 15);
+  const bestCoverageTop = warmenhuizenAnalysis.streetStats
+    .filter((row) => row.addressCount >= 20)
+    .sort((a, b) => a.averageDistance - b.averageDistance)
+    .slice(0, 12);
+  const routeRatioTop = warmenhuizenAnalysis.routeRatioStats
+    .filter((row) => row.addressCount >= 5)
+    .slice(0, 12);
+  const streetHeaders = [
+    'Straat',
+    'Adressen',
+    'Gem. afstand',
+    'Gem. tijd',
+    'Mediaan',
+    'P90',
+    'Max.',
+    '>=150 m',
+    '>275 m',
+    'Meest dichtbij'
+  ];
+  const title = 'Analyses loopafstanden';
+  const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
+  const seoBlock = buildSeoBlock({
+    title,
+    description,
+    ogDescription: description,
+    canonicalUrl: getAnalysesUrl(),
+    runtimeBasePath: '../',
+    assetPrefix: '../',
+    structuredData: buildAnalysesStructuredData()
+  });
+
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+${seoBlock}
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --accent: #0f766e;
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --soft: #e2e8f0;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    a {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0 0 16px;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.05;
+    }
+
+    .lead {
+      max-width: 820px;
+      color: var(--text);
+      font-size: 21px;
+    }
+
+    h2 {
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+      padding-top: 30px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--text);
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      background: var(--panel);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 15px;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    details {
+      margin-top: 18px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .note {
+      max-width: 840px;
+    }
+
+    @media (max-width: 780px) {
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: min(100% - 24px, 1120px);
+        padding-top: 32px;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Hoofdnavigatie">
+      <a href="../warmenhuizen/">Kaart Warmenhuizen</a>
+      <a href="../tuitjenhorn/">Kaart Tuitjenhorn</a>
+      <a href="../methodiek/">Methodiek</a>
+    </nav>
+
+    <h1>Analyses loopafstanden</h1>
+    <p class="lead">Deze pagina vat de vooraf berekende loopafstanden samen per dorp, straat en dichtstbijzijnde container. De cijfers komen uit dezelfde JSON-data als de kaart.</p>
+
+    <h2>Kerncijfers Warmenhuizen</h2>
+    <div class="metric-grid" aria-label="Kerncijfers Warmenhuizen">
+      <div class="metric"><strong>${formatInteger(totalAddresses)}</strong><span>adressen binnen de bebouwde kom</span></div>
+      <div class="metric"><strong>${escapeHtml(formatMeters(summary.averageWalkingDistance))}</strong><span>gemiddelde loopafstand</span></div>
+      <div class="metric"><strong>${escapeHtml(formatDuration(summary.averageWalkingDuration))}</strong><span>gemiddelde looptijd</span></div>
+      <div class="metric"><strong>${formatInteger(longDistanceCount)}</strong><span>adressen op 150 meter of meer (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})</span></div>
+    </div>
+    <p class="note">Er ${(counts.over_275 || 0) === 1 ? 'ligt' : 'liggen'} in Warmenhuizen ${formatInteger(counts.over_275 || 0)} adres${(counts.over_275 || 0) === 1 ? '' : 'sen'} boven 275 meter (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))}). Dat maakt vooral straten met veel rode en donkerrode adressen belangrijk voor overleg over locatiekeuzes.</p>
+
+    <h2>Vergelijking per dorp</h2>
+    ${renderAnalysisTable(
+    ['Dorp', 'Adressen', 'Gem. afstand', 'Gem. tijd', '>=150 m', '>275 m', 'Straten', 'Straten gem. >=150 m'],
+    analyses,
+    renderPlaceOverviewRow
+  )}
+
+    <h2>Aandachtsstraten Warmenhuizen</h2>
+    <p class="note">Deze ranglijst kijkt naar straten met minstens vijf adressen en sorteert op de hoogste gemiddelde loopafstand.</p>
+    ${renderAnalysisTable(streetHeaders, averageDistanceTop, renderStreetRow)}
+
+    <h3>Meeste adressen boven 275 meter</h3>
+    ${renderAnalysisTable(streetHeaders, over275Top, renderStreetRow)}
+
+    <h3>Meeste adressen op 150 meter of meer</h3>
+    ${renderAnalysisTable(streetHeaders, over150Top, renderStreetRow)}
+
+    <h3>Beste dekking bij grotere straten</h3>
+    <p class="note">Straten met minstens twintig adressen, gesorteerd op de laagste gemiddelde loopafstand.</p>
+    ${renderAnalysisTable(streetHeaders, bestCoverageTop, renderStreetRow)}
+
+    <h2>Hemelsbreed versus werkelijke route</h2>
+    <p class="note">Hier staat waar de looproute gemiddeld het sterkst afwijkt van de rechte lijn. Dit laat zien waarom een container hemelsbreed dichtbij kan lijken, terwijl de werkelijke route veel langer is.</p>
+    ${renderAnalysisTable(
+    ['Straat', 'Adressen', 'Gem. omweg', 'Hoogste adres', 'Hoogste omweg', 'Hemelsbreed naar lopen'],
+    routeRatioTop,
+    renderRouteRatioRow
+  )}
+
+    <h2>Containerbereik Warmenhuizen</h2>
+    <p class="note">Deze tabel telt voor hoeveel adressen een container de dichtstbijzijnde optie is. Dit is geen capaciteitsberekening, omdat afvalvolume en ledigingsfrequentie niet in de dataset zitten.</p>
+    ${renderAnalysisTable(
+    ['Container', 'Dichtstbij voor adressen', 'Gem. afstand', 'Max. afstand', '>=150 m', '>275 m'],
+    warmenhuizenAnalysis.containerStats,
+    renderContainerRow
+  )}
+
+    <details>
+      <summary>Volledige straattabel Warmenhuizen</summary>
+      ${renderAnalysisTable(streetHeaders, warmenhuizenAnalysis.streetStats, renderStreetRow)}
+    </details>
+  </main>
+</body>
+</html>
+`;
+}
+
 async function copySeoAssets() {
   await copyFile(resolve(projectRoot, 'src/assets/seo/favicon.svg'), resolve(distDir, 'favicon.svg'));
   await copyFile(resolve(projectRoot, 'src/assets/seo/favicon.png'), resolve(distDir, 'favicon.png'));
@@ -517,6 +1099,9 @@ async function writeSeoPages(places) {
 
   await mkdir(resolve(distDir, 'methodiek'), { recursive: true });
   await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(), 'utf8');
+
+  await mkdir(resolve(distDir, 'analyses'), { recursive: true });
+  await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
 }
 
 async function writeRobotsTxt() {
@@ -529,6 +1114,7 @@ Sitemap: ${SITE_URL}sitemap.xml
 async function writeSitemap(places) {
   const urls = [
     ...places.map((place) => getPlaceUrl(place)),
+    getAnalysesUrl(),
     getMethodologyUrl()
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

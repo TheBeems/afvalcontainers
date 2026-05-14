@@ -233,6 +233,10 @@ export function createPlaceLoader(context, api) {
       elements.methodologyLink.href = getRuntimePath('methodiek/');
     }
 
+    if (elements.analysesLink) {
+      elements.analysesLink.href = getRuntimePath('analyses/');
+    }
+
     if (elements.mapShell) {
       elements.mapShell.setAttribute('aria-label', `Kaart van ${place.name} met containerlocaties en batchanalyse`);
     }
