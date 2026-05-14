@@ -6,6 +6,11 @@ export function normalizeWhitespace(value) {
   return String(value || '').trim().replace(/\s+/g, ' ');
 }
 
+export function getAddressStreet(address) {
+  const normalizedAddress = normalizeWhitespace(address);
+  return normalizeWhitespace(normalizedAddress.replace(/\s+\d.*$/, ''));
+}
+
 export function getAddressBaseHouseNumber(address, street) {
   const normalizedStreet = normalizeWhitespace(street);
   const normalizedAddress = normalizeWhitespace(address);

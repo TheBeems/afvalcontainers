@@ -4,18 +4,113 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</title>
-  <meta name="description" content="Bekijk de werkelijke loopafstand van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers. De kaart toont per huispunt de afstand tot de dichtstbijzijnde containers." />
+  <meta name="description" content="Bekijk de werkelijke loopafstand van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers. Deze analyse is verbonden aan de Dorpsraad Warmenhuizen." />
   <link rel="canonical" href="https://thebeems.github.io/afvalcontainers/" />
-
+  <meta name="google-site-verification" content="ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU" />
   <meta property="og:title" content="Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen" />
-  <meta property="og:description" content="Interactieve kaart met loopafstanden van adressen binnen de bebouwde kom Warmenhuizen naar de geplande ondergrondse restafvalcontainers." />
+  <meta property="og:description" content="Interactieve kaart van de Dorpsraad Warmenhuizen met loopafstanden naar de geplande ondergrondse restafvalcontainers." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://thebeems.github.io/afvalcontainers/" />
   <link rel="preconnect" href="https://tile.openstreetmap.org" />
   <script type="module" src="./app/main.js"></script>
 </head>
 <body>
-  <div class="app-shell">
+  <section id="visuele-uitleg" class="visual-story" aria-labelledby="story-title">
+    <article id="story-ophalen" class="visual-story-panel visual-story-panel-first" aria-labelledby="story-title">
+      <img
+        class="visual-story-image"
+        src="./assets/story/ophalen-aan-huis.png"
+        alt="Bewoner zet restafval klaar bij een woning terwijl een inzamelwagen door het dorp rijdt."
+      />
+      <div class="visual-story-scrim" aria-hidden="true"></div>
+      <div class="visual-story-copy">
+        <p class="visual-story-step">Stap 1 van 5</p>
+        <h2 id="story-title">Inzicht voor <span data-place-name>Warmenhuizen</span></h2>
+        <p>Deze website is verbonden aan de Dorpsraad Warmenhuizen en laat per adres zien wat de geplande restafvalcontainers betekenen qua loopafstand.</p>
+        <a class="visual-story-link" href="#story-brengsysteem">Lees verder</a>
+        <a class="visual-story-link" href="#kaart" data-focus-search>Direct naar kaart</a>
+      </div>
+      <a class="visual-story-next" href="#story-brengsysteem" aria-label="Ga naar stap 2: Van bak aan huis naar zelf wegbrengen">
+        <span>Volgende</span>
+        <span class="visual-story-next-icon" aria-hidden="true"></span>
+      </a>
+    </article>
+
+    <article id="story-brengsysteem" class="visual-story-panel" aria-labelledby="story-brengsysteem-title">
+      <img
+        class="visual-story-image"
+        src="./assets/story/brengsysteem.png"
+        alt="Bewoner loopt met een restafvalzak naar ondergrondse containers in een dorpsstraat."
+      />
+      <div class="visual-story-scrim" aria-hidden="true"></div>
+      <div class="visual-story-copy">
+        <p class="visual-story-step">Stap 2 van 5</p>
+        <h2 id="story-brengsysteem-title">Van bak aan huis naar zelf wegbrengen</h2>
+        <p>De gemeente Schagen wil dat huishoudens hun grijze restafvalbak aan huis inruilen voor ondergrondse restafvalcontainers. Van afval ophalen naar zelf wegbrengen.</p>
+      </div>
+      <a class="visual-story-next" href="#story-looproute" aria-label="Ga naar stap 3: Hemelsbreed is niet hetzelfde als lopen">
+        <span>Volgende</span>
+        <span class="visual-story-next-icon" aria-hidden="true"></span>
+      </a>
+    </article>
+
+    <article id="story-looproute" class="visual-story-panel" aria-labelledby="story-looproute-title">
+      <img
+        class="visual-story-image"
+        src="./assets/story/werkelijke-looproute.png"
+        alt="Kaartbeeld met een huis, een container, een rechte lijn en een langere looproute via straten."
+      />
+      <div class="visual-story-scrim" aria-hidden="true"></div>
+      <div class="visual-story-copy">
+        <p class="visual-story-step">Stap 3 van 5</p>
+        <h2 id="story-looproute-title">Hemelsbreed is niet hetzelfde als werkelijke loopafstand</h2>
+        <p>De gemeente noemt maximaal 275 meter als loopafstand, maar rekent dit hemelsbreed. Deze kaart berekent werkelijke loopafstanden via straten en paden naar de dichtstbijzijnde containers.</p>
+      </div>
+      <a class="visual-story-next" href="#story-ervaring" aria-label="Ga naar stap 4: Afstand bepaalt de ervaring">
+        <span>Volgende</span>
+        <span class="visual-story-next-icon" aria-hidden="true"></span>
+      </a>
+    </article>
+
+    <article id="story-ervaring" class="visual-story-panel" aria-labelledby="story-ervaring-title">
+      <img
+        class="visual-story-image"
+        src="./assets/story/loopafstand-ervaring.png"
+        alt="Oudere bewoner, ouder met kinderwagen en bewoner met zware afvalzak lopen door een dorpsstraat richting een ondergrondse container."
+      />
+      <div class="visual-story-scrim" aria-hidden="true"></div>
+      <div class="visual-story-copy">
+        <p class="visual-story-step">Stap 4 van 5</p>
+        <h2 id="story-ervaring-title">Afstand bepaalt de ervaring</h2>
+        <p>Evaluaties in andere gemeenten laten zien dat tevredenheid afneemt als de loopafstand oploopt, vooral boven 100 meter. Voor ouderen, minder mobiele bewoners en gezinnen met zware afvalzakken, luiers of kattenbakvulling kan dat extra belastend zijn.</p>
+      </div>
+      <a class="visual-story-next" href="#story-gevolgen" aria-label="Ga naar stap 5: Meer dan 40% loopt 150 meter of meer">
+        <span>Volgende</span>
+        <span class="visual-story-next-icon" aria-hidden="true"></span>
+      </a>
+    </article>
+
+    <article id="story-gevolgen" class="visual-story-panel" aria-labelledby="story-gevolgen-title">
+      <img
+        class="visual-story-image"
+        src="./assets/story/praktische-gevolgen.png"
+        alt="Bewoners met afvalzak, kinderwagen en rollator staan bij een ondergrondse container."
+      />
+      <div class="visual-story-scrim" aria-hidden="true"></div>
+      <div class="visual-story-copy">
+        <p class="visual-story-step">Stap 5 van 5</p>
+        <h2 id="story-gevolgen-title">Meer dan 40% loopt 150 meter of meer</h2>
+        <p>In <span data-place-name>Warmenhuizen</span> liggen <span id="story-long-distance-count">1.155</span> van de <span id="story-total-address-count">2.868</span> adressen binnen de bebouwde kom op 150 meter of meer loopafstand. Voor <span id="story-over-reference-count">254</span> adressen is dat meer dan 275 meter!</p>
+        <a class="visual-story-link visual-story-link-primary" href="#kaart" data-focus-search>Bekijk mijn loopafstand</a>
+      </div>
+      <a class="visual-story-next" href="#kaart" data-focus-search aria-label="Ga naar de kaart en zoek je adres">
+        <span>Naar kaart</span>
+        <span class="visual-story-next-icon" aria-hidden="true"></span>
+      </a>
+    </article>
+  </section>
+
+  <div id="kaart" class="app-shell">
     <button
       id="mobile-sidebar-toggle"
       class="mobile-sidebar-toggle"
@@ -47,12 +142,15 @@
           </summary>
 
           <div class="sidebar-header-body">
-            <p>De gemeente Schagen heeft <a id="place-source-link" href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a> dat huishoudens in <span data-place-name>Warmenhuizen</span> hun grijze restafvalbak moeten inruilen voor ondergrondse restafvalcontainers. Restafval wordt dan niet meer aan huis opgehaald, maar moet worden weggebracht.</p>
+            <p>Deze website is verbonden aan de <strong>Dorpsraad Warmenhuizen</strong>. Het doel is bewoners inzicht te geven in de <strong>werkelijke loopafstand</strong> naar de geplande ondergrondse restafvalcontainers, zodat de gevolgen per straat en adres beter kenbaar worden voor iedereen.</p>
 
-            <p>Volgens de gemeente loopt u “maximaal ongeveer 275 meter naar een container”. De gemeente berekent echter deze afstand hemelsbreed. Deze kaart laat zien welke afstand je moet lopen naar de dichtstbijzijnde containers (zie legenda loopafstand). De analyse hieronder laat de totalen zien: een aanzienlijk deel moet 150 meter of meer lopen.</p>
+            <p>De <strong>gemeente Schagen</strong> heeft <a id="place-source-link" href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a> dat huishoudens in <span data-place-name>Warmenhuizen</span> hun grijze restafvalbak moeten inruilen voor ondergrondse restafvalcontainers. Restafval wordt dan <em>niet</em> meer aan huis opgehaald, maar moet worden <strong>weggebracht</strong>.</p>
 
-            <p>Uit officiële evaluaties in andere gemeenten blijkt echter dat de ervaren loopafstand een grote invloed heeft op de tevredenheid van bewoners. Dat geldt met name wanneer de loopafstand boven de 100 meter komt. Ouderen, mindervaliden, gezinnen met zware luierzakken of kattenliefhebbers met hun vuile kattengrind moeten dan ver lopen of met de auto hun afval wegbrengen (wat ook niet heel duurzaam is.)</p>
+            <p>Volgens de gemeente loopt u “<em>maximaal ongeveer 275 meter naar een container</em>”. De gemeente rekent daarbij met <strong>hemelsbrede</strong> afstanden. Deze kaart berekent de <strong>werkelijke</strong> looproute via straten en paden naar de dichtstbijzijnde containers. Voor <span data-place-name>Warmenhuizen</span> laat de analyse zien dat <strong><span id="intro-long-distance-count">1.155</span></strong> van de <span id="intro-total-address-count">2.868</span> adressen binnen de bebouwde kom op <strong>150 meter of meer</strong> loopafstand liggen (<span id="intro-long-distance-percent">40,3%</span>). <span id="intro-over-reference-text">Daarvan liggen <strong>254</strong> adressen boven <em>275 meter</em> (8,9%).</span></p>
+
+            <p>Uit <strong>officiële evaluaties</strong> in andere gemeenten blijkt dat de ervaren loopafstand <strong>grote invloed</strong> heeft op de tevredenheid van bewoners. Dat geldt met name wanneer de loopafstand <strong>boven de 100 meter</strong> komt. Voor ouderen, minder mobiele bewoners en gezinnen met zware afvalzakken, luiers of kattenbakvulling kan de afstand in de praktijk <strong>extra belastend</strong> zijn.</p>
             <p>Lees <a href="https://github.com/TheBeems/afvalcontainers/blob/main/README.md">hier</a> de methodiek, bronnen en vergelijking met andere gemeenten.</p>
+            <p><a href="#visuele-uitleg">Bekijk de visuele uitleg opnieuw</a></p>
           </div>
         </details>
       </header>
