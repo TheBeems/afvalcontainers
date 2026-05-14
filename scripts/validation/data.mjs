@@ -83,6 +83,28 @@ function validatePlacesManifest(places) {
 
     assertString(place.sourceUrl, `${label}.sourceUrl`);
 
+    if (Object.prototype.hasOwnProperty.call(place, 'seo')) {
+      if (!place.seo || typeof place.seo !== 'object' || Array.isArray(place.seo)) {
+        fail(`${label}.seo must be an object.`);
+      }
+
+      if (Object.prototype.hasOwnProperty.call(place.seo, 'slug')) {
+        assertString(place.seo.slug, `${label}.seo.slug`);
+        if (!/^[a-z0-9-]+$/.test(place.seo.slug)) {
+          fail(`${label}.seo.slug must use lowercase letters, numbers, and hyphens.`);
+        }
+      }
+      if (Object.prototype.hasOwnProperty.call(place.seo, 'title')) {
+        assertString(place.seo.title, `${label}.seo.title`);
+      }
+      if (Object.prototype.hasOwnProperty.call(place.seo, 'description')) {
+        assertString(place.seo.description, `${label}.seo.description`);
+      }
+      if (Object.prototype.hasOwnProperty.call(place.seo, 'ogDescription')) {
+        assertString(place.seo.ogDescription, `${label}.seo.ogDescription`);
+      }
+    }
+
     if (!place.paths || typeof place.paths !== 'object' || Array.isArray(place.paths)) {
       fail(`${label}.paths must be an object.`);
     }

@@ -8,6 +8,12 @@
       "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen",
+    "seo": {
+      "slug": "warmenhuizen",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen",
+      "description": "Bekijk per adres in Warmenhuizen de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Warmenhuizen met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
     "paths": {
       "containers": "./data/places/warmenhuizen/container-locations.json",
       "coverageSummary": "./data/places/warmenhuizen/coverage-summary.json",
@@ -25,6 +31,12 @@
       "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
+    "seo": {
+      "slug": "tuitjenhorn",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn",
+      "description": "Bekijk per adres in Tuitjenhorn de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Tuitjenhorn met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
     "paths": {
       "containers": "./data/places/tuitjenhorn/container-locations.json",
       "coverageSummary": "./data/places/tuitjenhorn/coverage-summary.json",

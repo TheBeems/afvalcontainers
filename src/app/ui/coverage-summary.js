@@ -43,9 +43,15 @@ export function createCoverageSummary(context) {
     const longDistanceCount = (counts.between_150_275 || 0)
       + (counts.over_275 || 0);
     const overReferenceCount = counts.over_275 || 0;
+    const roundedLongDistancePercent = totalAddresses > 0
+      ? Math.floor((longDistanceCount / totalAddresses) * 100)
+      : 0;
     const longDistancePercent = formatPercent(longDistanceCount, totalAddresses);
     const overReferencePercent = formatPercent(overReferenceCount, totalAddresses);
 
+    if (elements.storyLongDistanceTitle) {
+      elements.storyLongDistanceTitle.textContent = `Meer dan ${roundedLongDistancePercent}% loopt 150 meter of meer`;
+    }
     if (elements.storyLongDistanceCount) {
       elements.storyLongDistanceCount.textContent = longDistanceCount.toLocaleString('nl-NL');
     }

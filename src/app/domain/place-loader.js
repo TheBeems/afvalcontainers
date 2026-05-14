@@ -6,6 +6,14 @@ import {
 } from '../config.js';
 import { loadJson } from '../data/load-json.js';
 import { escapeHtml } from '../../shared/html.js';
+import {
+  getPlaceDescription,
+  getPlaceOgDescription,
+  getPlaceSlug,
+  getPlaceTitle,
+  getPlaceUrl,
+  SOCIAL_IMAGE_URL
+} from '../../shared/seo.js';
 
 function getMapCenter(place) {
   return Array.isArray(place?.map?.center) && place.map.center.length === 2
@@ -36,24 +44,92 @@ function buildHouseDetailPath(place, detailBundle) {
   return `${basePath.replace(/\/$/, '')}/${encodeURIComponent(detailBundle)}.json`;
 }
 
-function getRequestedPlaceId(places) {
-  const urlPlaceId = new URLSearchParams(window.location.search).get('plaats');
-  if (urlPlaceId && places.some((place) => place.id === urlPlaceId)) {
-    return urlPlaceId;
-  }
-
-  return places.some((place) => place.id === DEFAULT_PLACE_ID)
-    ? DEFAULT_PLACE_ID
-    : places[0]?.id;
+function getPathPlaceId(places) {
+  const pathSegments = window.location.pathname.split('/').filter(Boolean);
+  const place = places.find((candidate) => {
+    const slug = getPlaceSlug(candidate);
+    return slug && pathSegments.includes(slug);
+  });
+  return place?.id || null;
 }
 
-function updatePlaceUrl(place) {
+function getRequestedPlaceId(places) {
+  const pathPlaceId = getPathPlaceId(places);
+  if (pathPlaceId) {
+    return { placeId: pathPlaceId, shouldUseCleanUrl: false };
+  }
+
+  const urlPlaceId = new URLSearchParams(window.location.search).get('plaats');
+  if (urlPlaceId && places.some((place) => place.id === urlPlaceId)) {
+    return { placeId: urlPlaceId, shouldUseCleanUrl: true };
+  }
+
+  const defaultPlaceId = places.some((place) => place.id === DEFAULT_PLACE_ID)
+    ? DEFAULT_PLACE_ID
+    : places[0]?.id;
+  return { placeId: defaultPlaceId, shouldUseCleanUrl: false };
+}
+
+function updateMetaContent(selector, value) {
+  const meta = document.querySelector(selector);
+  if (meta) {
+    meta.setAttribute('content', value);
+  }
+}
+
+function updateLinkHref(selector, value) {
+  const link = document.querySelector(selector);
+  if (link) {
+    link.setAttribute('href', value);
+  }
+}
+
+function updateIconLinks() {
+  updateLinkHref('link[rel="icon"][type="image/svg+xml"]', getRuntimePath('favicon.svg'));
+  updateLinkHref('link[rel="icon"][type="image/png"]', getRuntimePath('favicon.png'));
+}
+
+let runtimeBaseUrl = null;
+
+function getRuntimeBaseUrl() {
+  if (runtimeBaseUrl) {
+    return runtimeBaseUrl;
+  }
+
+  const basePath = document.querySelector('meta[name="app-base-path"]')?.getAttribute('content') || './';
+  runtimeBaseUrl = new URL(basePath, document.baseURI);
+  return runtimeBaseUrl;
+}
+
+function getRuntimePath(path) {
+  return new URL(path, getRuntimeBaseUrl()).toString();
+}
+
+function getCleanPlaceUrl(place, places) {
+  const url = new URL(window.location.href);
+  const slug = getPlaceSlug(place);
+  const placeSlugs = new Set(places.map((candidate) => getPlaceSlug(candidate)).filter(Boolean));
+  const pathSegments = url.pathname.split('/').filter(Boolean);
+  const placeSegmentIndex = pathSegments.findIndex((segment) => placeSlugs.has(segment));
+
+  if (placeSegmentIndex >= 0) {
+    pathSegments[placeSegmentIndex] = slug;
+    pathSegments.length = placeSegmentIndex + 1;
+  } else {
+    pathSegments.push(slug);
+  }
+
+  url.pathname = `/${pathSegments.join('/')}/`;
+  url.searchParams.delete('plaats');
+  return url;
+}
+
+function updatePlaceUrl(place, places) {
   if (!place || typeof window.history?.replaceState !== 'function') {
     return;
   }
 
-  const url = new URL(window.location.href);
-  url.searchParams.set('plaats', place.id);
+  const url = getCleanPlaceUrl(place, places);
   window.history.replaceState({}, '', url);
 }
 
@@ -124,13 +200,22 @@ export function createPlaceLoader(context, api) {
   }
 
   function updatePlaceText(place) {
-    const title = `Werkelijke loopafstand naar restafvalcontainers in ${place.name}`;
+    const title = getPlaceTitle(place);
+    const description = getPlaceDescription(place);
+    const ogDescription = getPlaceOgDescription(place);
+    const url = getPlaceUrl(place);
     document.title = title;
 
-    const titleMeta = document.querySelector('meta[property="og:title"]');
-    if (titleMeta) {
-      titleMeta.setAttribute('content', title);
-    }
+    updateMetaContent('meta[name="description"]', description);
+    updateLinkHref('link[rel="canonical"]', url);
+    updateMetaContent('meta[property="og:title"]', title);
+    updateMetaContent('meta[property="og:description"]', ogDescription);
+    updateMetaContent('meta[property="og:url"]', url);
+    updateMetaContent('meta[property="og:image"]', SOCIAL_IMAGE_URL);
+    updateMetaContent('meta[name="twitter:title"]', title);
+    updateMetaContent('meta[name="twitter:description"]', ogDescription);
+    updateMetaContent('meta[name="twitter:image"]', SOCIAL_IMAGE_URL);
+    updateIconLinks();
 
     if (elements.appTitle) {
       elements.appTitle.textContent = title;
@@ -142,6 +227,10 @@ export function createPlaceLoader(context, api) {
 
     if (elements.placeSourceLink) {
       elements.placeSourceLink.href = place.sourceUrl;
+    }
+
+    if (elements.methodologyLink) {
+      elements.methodologyLink.href = getRuntimePath('methodiek/');
     }
 
     if (elements.mapShell) {
@@ -381,9 +470,12 @@ export function createPlaceLoader(context, api) {
       api.setCoverageStatus(`Onbekend dorp: ${placeId}`, 'error');
       return;
     }
+    const shouldUpdateUrl = options.updateUrl !== false;
 
     if (state.activePlace?.id === place.id) {
-      updatePlaceUrl(place);
+      if (shouldUpdateUrl) {
+        updatePlaceUrl(place, state.places);
+      }
       if (state.placeLoadStatus === 'loading' && activePlaceLoadPromise) {
         await activePlaceLoadPromise;
       }
@@ -397,7 +489,9 @@ export function createPlaceLoader(context, api) {
     const selectionId = state.placeSelectionId;
     state.activePlace = place;
     updatePlaceText(place);
-    updatePlaceUrl(place);
+    if (shouldUpdateUrl) {
+      updatePlaceUrl(place, state.places);
+    }
     resetPlaceDataState();
     renderPlaceSelector();
     map.setView(getMapCenter(place), getMapZoom(place));
@@ -415,7 +509,8 @@ export function createPlaceLoader(context, api) {
       throw new Error('Er zijn geen dorpen geconfigureerd.');
     }
 
-    await selectPlace(getRequestedPlaceId(state.places));
+    const requestedPlace = getRequestedPlaceId(state.places);
+    await selectPlace(requestedPlace.placeId, { updateUrl: requestedPlace.shouldUseCleanUrl });
   }
 
   return {
