@@ -103,6 +103,30 @@
   margin-top: 1em;
 }
 
+.sidebar-methodology-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 42px;
+  border-radius: 8px;
+  background: #0f766e;
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+}
+
+.sidebar-methodology-button:hover {
+  background: #115e59;
+}
+
+.sidebar-methodology-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .note {
   margin-top: 12px;
   color: var(--muted);

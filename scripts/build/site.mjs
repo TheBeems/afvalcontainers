@@ -185,6 +185,7 @@ function buildPlaceStructuredData(place, coverageSummary) {
 
 function buildMethodologyStructuredData() {
   const url = getMethodologyUrl();
+  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -193,8 +194,8 @@ function buildMethodologyStructuredData() {
         '@type': 'WebPage',
         '@id': `${url}#webpage`,
         url,
-        name: 'Methodiek en bronnen voor de loopafstandsanalyse',
-        description: 'Uitleg van de databronnen, afstandscategorieen en berekening van werkelijke loopafstanden naar restafvalcontainers.',
+        name: 'Methodiek en onderzoeksbasis',
+        description,
         isPartOf: { '@id': `${SITE_URL}#website` },
         inLanguage: 'nl'
       }
@@ -291,8 +292,8 @@ async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix
 }
 
 function buildMethodologyPage() {
-  const title = 'Methodiek en bronnen voor de loopafstandsanalyse';
-  const description = 'Uitleg van databronnen, afstandscategorieen en berekening van werkelijke loopafstanden naar restafvalcontainers in de gemeente Schagen.';
+  const title = 'Methodiek en onderzoeksbasis';
+  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   const seoBlock = buildSeoBlock({
     title,
     description,
@@ -352,6 +353,12 @@ ${seoBlock}
       line-height: 1.05;
     }
 
+    .lead {
+      max-width: 760px;
+      color: var(--text);
+      font-size: 21px;
+    }
+
     h2 {
       margin-top: 40px;
       border-top: 1px solid var(--line);
@@ -384,6 +391,12 @@ ${seoBlock}
       background: #e2e8f0;
       color: var(--text);
     }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+      padding-left: 22px;
+    }
   </style>
 </head>
 <body>
@@ -393,11 +406,16 @@ ${seoBlock}
       <a href="../tuitjenhorn/">Kaart Tuitjenhorn</a>
     </nav>
 
-    <h1>Methodiek en bronnen</h1>
-    <p>Deze website berekent per woonadres binnen de bebouwde kom de werkelijke loopafstand naar de dichtstbijzijnde restafvalcontainers. De analyse gebruikt looproutes via wegen en paden, omdat hemelsbrede afstanden in de praktijk niet laten zien hoe ver bewoners echt moeten lopen.</p>
+    <h1>Methodiek en onderzoeksbasis</h1>
+    <p class="lead">Deze pagina legt kort uit hoe de kaart voor Warmenhuizen is gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
 
-    <h2>Berekening</h2>
-    <p>Adressen komen uit PDOK BAG. De bebouwde-komgrens komt uit BRT TOP10NL. Looproutes worden batchgewijs berekend met OSRM op basis van OpenStreetMap. De browser gebruikt de vooraf berekende JSON-data; alleen wanneer een opgeslagen routegeometrie ontbreekt, mag de kaart live OSRM gebruiken als visuele fallback.</p>
+    <h2>Wat laat de kaart zien?</h2>
+    <p>De kaart kijkt naar woonadressen binnen de bebouwde kom van Warmenhuizen en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
+    <p>Daarbij telt niet de rechte lijn op de kaart, maar de route via straten en paden. Dat verschil is belangrijk: een container kan hemelsbreed dichtbij lijken, terwijl de werkelijke looproute langer is.</p>
+
+    <h2>Waarom deze methode?</h2>
+    <p>De gemeente Schagen noemt een afstand van maximaal ongeveer 275 meter. Deze website maakt zichtbaar wat dat in de praktijk betekent per straat en per adres.</p>
+    <p>De analyse is vooraf gemaakt met openbare adres- en kaartgegevens. De uitkomst is bedoeld als hulpmiddel voor bewoners: waar is de afstand beperkt, waar wordt het onhandig en welke adressen vragen extra aandacht?</p>
 
     <h2>Afstandscategorieen</h2>
     <table>
@@ -409,23 +427,58 @@ ${seoBlock}
         </tr>
       </thead>
       <tbody>
-        <tr><td>0-100 m</td><td>Laag risico op afstandsklachten.</td><td>Groen</td></tr>
-        <tr><td>100-125 m</td><td>Overgangszone waarin route en bereikbaarheid belangrijker worden.</td><td>Geel</td></tr>
-        <tr><td>125-150 m</td><td>Waarschuwingszone rond een striktere afstandsnorm.</td><td>Oranje</td></tr>
-        <tr><td>150-275 m</td><td>Verhoogde kans op ontevredenheid, ook al valt dit binnen de Schagense richtafstand.</td><td>Rood</td></tr>
-        <tr><td>&gt;275 m</td><td>Boven de door Schagen genoemde richtafstand.</td><td>Donkerrood</td></tr>
+        <tr><td>0-100 m</td><td>Dichtbij. In onderzoeken blijft tevredenheid hier meestal hoger.</td><td>Groen</td></tr>
+        <tr><td>100-125 m</td><td>Nog beperkt, maar de route en bereikbaarheid gaan meer tellen.</td><td>Geel</td></tr>
+        <tr><td>125-150 m</td><td>Aandachtsgebied. Sommige gemeenten kiezen juist rond 150 meter als strengere grens.</td><td>Oranje</td></tr>
+        <tr><td>150-275 m</td><td>Binnen de Schagense richtafstand, maar met meer kans op klachten over afstand en gemak.</td><td>Rood</td></tr>
+        <tr><td>&gt;275 m</td><td>Verder dan de afstand die Schagen ongeveer noemt. Deze adressen vragen extra aandacht.</td><td>Donkerrood</td></tr>
       </tbody>
     </table>
 
+    <h2>Onderzoeksbasis</h2>
+    <p>Er is geen landelijke vaste grens waarbij iedereen tevreden of ontevreden wordt. Gemeenten meten dat verschillend. De lijn in de evaluaties is wel duidelijk: hoe verder of lastiger de route voelt, hoe lager de tevredenheid meestal wordt.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Onderzoek</th>
+          <th>Belangrijkste les voor Warmenhuizen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Woerden / Kamerik</td><td>De afstand tot de container was een sterke voorspeller van tevredenheid. Bewoners die moesten fietsen of rijden waren duidelijk minder tevreden dan bewoners die lopend konden gaan.</td></tr>
+        <tr><td>Wageningen</td><td>Bij laagbouw daalde de waardering voor restafval toen bewoners hun afval moesten wegbrengen. Vooral afstand en moeite speelden mee.</td></tr>
+        <tr><td>Nijmegen</td><td>Boven 100 meter daalde de tevredenheid over de loopafstand duidelijk. Daarom krijgt de grens van 100 meter een aparte plek in deze kaart.</td></tr>
+        <tr><td>Zeist</td><td>Een deel van de bewoners vond de afstand acceptabel, maar langere routes zorgden vaker voor moeite met het wegbrengen van restafval.</td></tr>
+        <tr><td>Amersfoort / Nieuwland</td><td>Bij een norm rond 150 meter was de acceptatie relatief hoog. Dat ondersteunt 150 meter als belangrijk omslagpunt.</td></tr>
+        <tr><td>Lisse</td><td>Bewoners noemden naast afstand ook volle containers, bijplaatsingen en de wens om minder ver te lopen.</td></tr>
+        <tr><td>Vijfheerenlanden / Vianen</td><td>Ontevredenheid hing samen met loopafstand, hulpbehoefte en de praktische werking van het systeem.</td></tr>
+        <tr><td>Papendrecht</td><td>Afstand, draagvlak, communicatie en maatwerk voor lastig bereikbare delen bleven belangrijke discussiepunten.</td></tr>
+        <tr><td>Hoonhorst / Dalfsen</td><td>Draagvlak kan er zijn, maar vooral wanneer de uitvoering praktisch werkbaar is en bewoners goed worden meegenomen.</td></tr>
+        <tr><td>Roosendaal</td><td>Restafval op afstand kan alleen rekenen op draagvlak als de loopafstand beperkt blijft.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Wat betekent dit?</h2>
+    <p>Voor Warmenhuizen is vooral de vergelijking met dorpen en laagbouwwijken relevant. Daar is de verandering groot: van een grijze bak aan huis naar zelf restafval wegbrengen.</p>
+    <p>Een afstand van 275 meter op papier betekent daarom niet automatisch dat de voorziening voor bewoners redelijk voelt. De werkelijke route, oversteken, sociale veiligheid, volle containers en fysieke belasting bepalen samen of het systeem werkbaar is.</p>
+
+    <h2>Broncode</h2>
+    <p>De broncode van deze website is openbaar te bekijken op GitHub: <a href="https://github.com/TheBeems/afvalcontainers">github.com/TheBeems/afvalcontainers</a>.</p>
+
     <h2>Bronnen</h2>
-    <ul>
+    <ul class="source-list">
       <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">Gemeente Schagen: Warmenhuizen</a></li>
       <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn">Gemeente Schagen: Tuitjenhorn</a></li>
-      <li><a href="https://www.pdok.nl/introductie/-/article/basisregistratie-adressen-en-gebouwen-ba-1">PDOK BAG</a></li>
-      <li><a href="https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak?f=html">PDOK BRT TOP10NL</a></li>
-      <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a></li>
-      <li><a href="https://project-osrm.org/">OSRM</a></li>
-      <li><a href="https://github.com/TheBeems/afvalcontainers/blob/main/README.md">Volledige onderzoeksbasis en evaluatiebronnen</a></li>
+      <li><a href="https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf">Omgekeerd inzamelen in Woerden</a></li>
+      <li><a href="https://vang-hha.nl/kennisbibliotheek/resultaten-nieuwe/">Resultaten het nieuwe inzamelen Wageningen</a></li>
+      <li><a href="https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645">Onderzoek ondergrondse restafvalcontainers Nijmegen</a></li>
+      <li><a href="https://zeist.raadsinformatie.nl/document/7330194/1/01-19RV006_Omgekeerd_inzamelen_afval_-_Bijlage_1_Adviesnota_RMN_omgekeerd_inzamelen_Zeist">Adviesnota omgekeerd inzamelen Zeist</a></li>
+      <li><a href="https://vang-hha.nl/kennisbibliotheek/resultaten-pilot-1/">Resultaten pilot omgekeerd inzamelen Amersfoort</a></li>
+      <li><a href="https://vang-hha.nl/publish/pages/195170/gemeente-lisse-evaluatie-afvalbeleid_2017-2018-bijlage-2-burgeronderzoek.pdf">Burgeronderzoek evaluatie afvalbeleid Lisse</a></li>
+      <li><a href="https://www.waardlanden.nl/images/Tussentijdse_evaluatie_Strategienota_2021-2025_Waardlanden_def2_copy.pdf">Tussentijdse evaluatie Waardlanden</a></li>
+      <li><a href="https://raad.papendrecht.nl/Documenten/Bijlage-1-Evaluatie-en-voorstel-na-pilot-omgekeerd-inzamelen-Gft-campagne-en-onderzoek-nascheiding.pdf">Evaluatie en voorstel na pilot Papendrecht</a></li>
+      <li><a href="https://ris.dalfsen.nl/Vergaderingen/Gemeenteraad/2012/26-november/19%3A30/Afvalbeleid/20121126---6---Afvalbeleid--resultaten-Hoonhorst.pdf">Resultaten afvalbeleid Hoonhorst</a></li>
+      <li><a href="https://raad.roosendaal.nl/Vergaderingen/Inspraakbijeenkomst/2019/28-februari/19%3A30/Bijlage-1-Roosendaal-evaluatie-restafval-op-afstand.pdf">Evaluatie restafval op afstand Roosendaal</a></li>
     </ul>
   </main>
 </body>
