@@ -408,6 +408,7 @@ async function readPlaceAnalysis(place) {
         street: bundle.street,
         address: house.address,
         containerId: house.nearestContainerId || nearestRoute.id || '',
+        containerAddress: house.nearestContainerAddress || nearestRoute.address || '',
         straightDistance: nearestRoute.straightDistance,
         walkingDistance,
         walkingDuration: nearestRoute.walkingDuration,
@@ -476,6 +477,8 @@ async function readPlaceAnalysis(place) {
         averageRatio: ratioRows.reduce((sum, row) => sum + row.ratio, 0) / ratioRows.length,
         highestRatio: highestRatioRow.ratio,
         highestRatioAddress: highestRatioRow.address,
+        highestRatioContainerId: highestRatioRow.containerId,
+        highestRatioContainerAddress: highestRatioRow.containerAddress,
         highestRatioStraightDistance: highestRatioRow.straightDistance,
         highestRatioWalkingDistance: highestRatioRow.walkingDistance
       };
@@ -739,6 +742,17 @@ function renderContainerLink(place, containerId) {
   return `<a href="${getPlaceMapPath(place)}?container=${containerParam}#kaart">${escapeHtml(containerId)}</a>`;
 }
 
+function renderContainerReference(place, containerId, containerAddress) {
+  const containerLink = renderContainerLink(place, containerId);
+  const address = String(containerAddress || '').trim();
+
+  if (!containerLink) {
+    return address ? escapeHtml(address) : '';
+  }
+
+  return address ? `${containerLink}<br>${escapeHtml(address)}` : containerLink;
+}
+
 function renderAnalysisTable(headers, rows, renderRow) {
   const normalizedHeaders = headers.map((header) => (
     typeof header === 'string'
@@ -799,13 +813,14 @@ function renderContainerRow(place, row) {
           </tr>`;
 }
 
-function renderRouteRatioRow(row) {
+function renderRouteRatioRow(place, row) {
   return `<tr>
             ${renderCell(escapeHtml(row.street), row.street)}
             ${renderCell(formatInteger(row.addressCount), row.addressCount)}
             ${renderCell(formatRatio(row.averageRatio), row.averageRatio)}
             ${renderCell(escapeHtml(row.highestRatioAddress), row.highestRatioAddress)}
             ${renderCell(formatRatio(row.highestRatio), row.highestRatio)}
+            ${renderCell(renderContainerReference(place, row.highestRatioContainerId, row.highestRatioContainerAddress), row.highestRatioContainerId)}
             ${renderCell(`${escapeHtml(formatMeters(row.highestRatioStraightDistance))} naar ${escapeHtml(formatMeters(row.highestRatioWalkingDistance))}`, row.highestRatioWalkingDistance)}
           </tr>`;
 }
@@ -899,9 +914,9 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
     <h2>Hemelsbreed versus werkelijke route</h2>
     <p class="note">Hier staat waar de looproute gemiddeld het sterkst afwijkt van de rechte lijn. Dit laat zien waarom een container hemelsbreed dichtbij kan lijken, terwijl de werkelijke route veel langer is.</p>
     ${renderAnalysisTable(
-    ['Straat', 'Adressen', 'Gem. omweg', 'Hoogste adres', 'Hoogste omweg', 'Hemelsbreed naar lopen'],
+    ['Straat', 'Adressen', 'Gem. omweg', 'Hoogste adres', 'Hoogste omweg', 'Container', 'Hemelsbreed naar lopen'],
     slices.routeRatioTop,
-    renderRouteRatioRow
+    (row) => renderRouteRatioRow(place, row)
   )}
 
     <h2>Containerbereik ${escapeHtml(place.name)}</h2>
