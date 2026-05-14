@@ -32,3 +32,7 @@ export function getPlaceUrl(place) {
 export function getMethodologyUrl() {
   return `${SITE_URL}methodiek/`;
 }
+
+export function getAnalysesUrl() {
+  return `${SITE_URL}analyses/`;
+}

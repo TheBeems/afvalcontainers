@@ -78,7 +78,7 @@ export function createHouseSelection(context, api) {
       map.removeLayer(houseLayer);
     }
 
-    if (!state.selectedHouse) {
+    if (!state.selectedHouse && state.activeContainerIndex === null) {
       renderIdleHouseState();
     }
   }

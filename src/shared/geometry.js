@@ -1,6 +1,6 @@
 export const ROUTE_GEOMETRY_DECIMALS = 6;
 export const WALKING_DURATION_SPEED_KMH = 4;
-export const WALKING_DURATION_MULTIPLIER = 1.125;
+export const WALKING_DURATION_SECONDS_PER_METER = 3600 / (WALKING_DURATION_SPEED_KMH * 1000);
 
 export function roundMetric(value) {
   if (!Number.isFinite(value)) {
@@ -10,12 +10,12 @@ export function roundMetric(value) {
   return Math.round(value * 10) / 10;
 }
 
-export function adjustWalkingDurationSeconds(durationSeconds) {
-  if (!Number.isFinite(durationSeconds)) {
+export function computeWalkingDurationSeconds(distanceMeters) {
+  if (!Number.isFinite(distanceMeters)) {
     return null;
   }
 
-  return roundMetric(Math.max(0, durationSeconds) * WALKING_DURATION_MULTIPLIER);
+  return roundMetric(Math.max(0, distanceMeters) * WALKING_DURATION_SECONDS_PER_METER);
 }
 
 export function roundCoordinate(value) {

@@ -10,13 +10,12 @@ import {
   hasRestafvalStream
 } from '../../src/shared/containers.js';
 import {
-  adjustWalkingDurationSeconds,
+  computeWalkingDurationSeconds,
   formatRouteCacheCoordinate,
   haversineMeters,
   isValidRouteGeometry,
   roundCoordinate,
   roundMetric,
-  WALKING_DURATION_MULTIPLIER,
   WALKING_DURATION_SPEED_KMH
 } from '../../src/shared/geometry.js';
 import {
@@ -782,7 +781,6 @@ function buildHouseJobs(houses, containers, options) {
 
 function buildRankedCandidates(job, matrix, sourceIndex, destinationIndexById) {
   const distances = matrix.distances?.[sourceIndex] || [];
-  const durations = matrix.durations?.[sourceIndex] || [];
 
   return job.candidates
     .map((candidate) => {
@@ -791,7 +789,7 @@ function buildRankedCandidates(job, matrix, sourceIndex, destinationIndexById) {
       return {
         ...candidate,
         walkingDistance,
-        walkingDuration: adjustWalkingDurationSeconds(durations[destinationIndex])
+        walkingDuration: computeWalkingDurationSeconds(walkingDistance)
       };
     })
     .filter((candidate) => Number.isFinite(candidate.walkingDistance) && Number.isFinite(candidate.walkingDuration))
@@ -1111,8 +1109,7 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
       pdokBuiltUpAreaCollection: analysisBoundary.collectionId,
       osrmBaseUrl: OSRM_BASE_URL,
       osrmProfile: OSRM_PROFILE,
-      walkingDurationSpeedKmh: WALKING_DURATION_SPEED_KMH,
-      walkingDurationMultiplier: WALKING_DURATION_MULTIPLIER
+      walkingDurationSpeedKmh: WALKING_DURATION_SPEED_KMH
     },
     summary,
     houses: results

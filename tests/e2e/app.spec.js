@@ -77,7 +77,8 @@ test('serves place-specific SEO metadata from clean place URLs', async ({ page }
   await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
   await expect(page.locator('#coverage-summary')).toContainText('adressen binnen bebouwde kom');
-  await expect(page.getByRole('link', { name: 'hier' })).toHaveAttribute('href', 'http://127.0.0.1:8000/methodiek/');
+  await expect(page.getByRole('link', { name: 'Bekijk uitgebreide analyses' })).toHaveAttribute('href', 'http://127.0.0.1:8000/analyses/');
+  await expect(page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' })).toHaveAttribute('href', 'http://127.0.0.1:8000/methodiek/');
 });
 
 test('replaces query place URLs with clean place URLs', async ({ page }) => {
@@ -86,9 +87,9 @@ test('replaces query place URLs with clean place URLs', async ({ page }) => {
   await expect(page).toHaveURL(/\/tuitjenhorn\/$/);
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
-  await page.getByRole('link', { name: 'hier' }).click();
+  await page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' }).click();
   await expect(page).toHaveURL('http://127.0.0.1:8000/methodiek/');
-  await expect(page.getByRole('heading', { name: 'Methodiek en bronnen' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Methodiek en onderzoeksbasis' })).toBeVisible();
 });
 
 test('serves crawl support files and methodology page', async ({ page }) => {
@@ -102,14 +103,48 @@ test('serves crawl support files and methodology page', async ({ page }) => {
   const sitemapText = await sitemap.text();
   expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/warmenhuizen/');
   expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/analyses/');
   expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/methodiek/');
   expect(sitemapText).not.toContain('<loc>https://thebeems.github.io/afvalcontainers/</loc>');
 
   const methodology = await page.request.get('/methodiek/');
   expect(methodology.status()).toBe(200);
   const methodologyText = await methodology.text();
-  expect(methodologyText).toContain('Methodiek en bronnen');
-  expect(methodologyText).toContain('PDOK BAG');
+  expect(methodologyText).toContain('Methodiek en onderzoeksbasis');
+  expect(methodologyText).toContain('Gemeente Schagen');
+});
+
+test('serves sortable analyses for each place with container map links', async ({ page }) => {
+  await page.goto('/analyses/');
+
+  await expect(page).toHaveTitle('Analyses loopafstanden');
+  await expect(page.getByRole('heading', { name: 'Analyses loopafstanden' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kerncijfers Warmenhuizen' })).toBeVisible();
+
+  const placeSelect = page.getByLabel('Selecteer dorp');
+  await placeSelect.selectOption('tuitjenhorn');
+  await expect(page.getByRole('heading', { name: 'Kerncijfers Tuitjenhorn' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kerncijfers Warmenhuizen' })).toBeHidden();
+
+  await page.getByRole('button', { name: 'Sorteer op Adressen' }).first().click();
+  await expect(page.getByRole('button', { name: 'Sorteer op Adressen' }).first()).toHaveAttribute('aria-sort', 'ascending');
+  await page.getByRole('button', { name: 'Sorteer op Adressen' }).first().click();
+  await expect(page.getByRole('button', { name: 'Sorteer op Adressen' }).first()).toHaveAttribute('aria-sort', 'descending');
+
+  await expect(page.getByRole('link', { name: /^TH\d{2}$/ }).first()).toHaveAttribute('href', /\/tuitjenhorn\/\?container=TH\d{2}#kaart$/);
+});
+
+test('opens container deeplinks with the intro collapsed', async ({ page }) => {
+  await page.goto('/tuitjenhorn/?container=TH21#kaart');
+
+  await expect(page).toHaveURL(/\/tuitjenhorn\/\?container=TH21#kaart$/);
+  await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container TH21');
+  await page.waitForTimeout(500);
+  await expect(page.locator('#sidebar-header-panel')).not.toHaveAttribute('open', '');
+
+  await page.getByLabel('Selecteer dorp').selectOption('warmenhuizen');
+
+  await expect(page).toHaveURL(/\/warmenhuizen\/#kaart$/);
 });
 
 test('opens and closes the mobile sidebar', async ({ page }) => {
