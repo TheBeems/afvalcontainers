@@ -74,6 +74,17 @@ function getRequestedContainerId() {
   return new URLSearchParams(window.location.search).get('container') || null;
 }
 
+function getContainerIdPatternForPlace(place) {
+  const prefix = place?.containerIdPrefix || '';
+  return prefix
+    ? new RegExp(`^${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\d{2}$`)
+    : /^[A-Z]+\d{2}$/;
+}
+
+function isContainerIdForPlace(place, containerId) {
+  return typeof containerId === 'string' && getContainerIdPatternForPlace(place).test(containerId.trim());
+}
+
 function updateMetaContent(selector, value) {
   const meta = document.querySelector(selector);
   if (meta) {
@@ -128,12 +139,18 @@ function getCleanPlaceUrl(place, places) {
   return url;
 }
 
-function updatePlaceUrl(place, places) {
+function updatePlaceUrl(place, places, options = {}) {
   if (!place || typeof window.history?.replaceState !== 'function') {
     return;
   }
 
   const url = getCleanPlaceUrl(place, places);
+  const selectedContainerId = String(options.selectedContainerId || '').trim();
+  if (selectedContainerId && isContainerIdForPlace(place, selectedContainerId)) {
+    url.searchParams.set('container', selectedContainerId);
+  } else {
+    url.searchParams.delete('container');
+  }
   window.history.replaceState({}, '', url);
 }
 
@@ -182,10 +199,7 @@ export function createPlaceLoader(context, api) {
   }
 
   function getContainerIdPattern() {
-    const prefix = getContainerIdPrefix();
-    return prefix
-      ? new RegExp(`^${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\d{2}$`)
-      : /^[A-Z]+\d{2}$/;
+    return getContainerIdPatternForPlace(state.activePlace);
   }
 
   function renderPlaceSelector() {
@@ -513,7 +527,7 @@ export function createPlaceLoader(context, api) {
 
     if (state.activePlace?.id === place.id) {
       if (shouldUpdateUrl) {
-        updatePlaceUrl(place, state.places);
+        updatePlaceUrl(place, state.places, { selectedContainerId: options.selectedContainerId });
       }
       if (state.placeLoadStatus === 'loading' && activePlaceLoadPromise) {
         await activePlaceLoadPromise;
@@ -535,7 +549,7 @@ export function createPlaceLoader(context, api) {
     state.activePlace = place;
     updatePlaceText(place);
     if (shouldUpdateUrl) {
-      updatePlaceUrl(place, state.places);
+      updatePlaceUrl(place, state.places, { selectedContainerId: options.selectedContainerId });
     }
     resetPlaceDataState();
     renderPlaceSelector();

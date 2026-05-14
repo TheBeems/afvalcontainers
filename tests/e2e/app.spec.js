@@ -141,6 +141,10 @@ test('opens container deeplinks with the intro collapsed', async ({ page }) => {
   await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container TH21');
   await page.waitForTimeout(500);
   await expect(page.locator('#sidebar-header-panel')).not.toHaveAttribute('open', '');
+
+  await page.getByLabel('Selecteer dorp').selectOption('warmenhuizen');
+
+  await expect(page).toHaveURL(/\/warmenhuizen\/#kaart$/);
 });
 
 test('opens and closes the mobile sidebar', async ({ page }) => {
