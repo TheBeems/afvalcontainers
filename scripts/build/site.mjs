@@ -753,14 +753,15 @@ function renderContainerReference(place, containerId, containerAddress) {
   return address ? `${containerLink}<br>${escapeHtml(address)}` : containerLink;
 }
 
-function renderAnalysisTable(headers, rows, renderRow) {
+function renderAnalysisTable(headers, rows, renderRow, { className = '' } = {}) {
   const normalizedHeaders = headers.map((header) => (
     typeof header === 'string'
       ? { label: header, description: ANALYSIS_HEADER_DESCRIPTIONS[header] || '' }
       : { description: ANALYSIS_HEADER_DESCRIPTIONS[header.label] || '', ...header }
   ));
+  const wrapperClass = ['table-scroll', className].filter(Boolean).join(' ');
 
-  return `<div class="table-scroll">
+  return `<div class="${escapeHtml(wrapperClass)}">
       <table data-sortable-table>
         <thead>
           <tr>${normalizedHeaders.map((header, index) => `<th><button type="button" data-sort-index="${index}" aria-label="${escapeHtml(getSortButtonLabel(header))}">${renderTableHeaderLabel(header)}</button></th>`).join('')}</tr>
@@ -1142,6 +1143,55 @@ ${seoBlock}
       min-width: 0;
     }
 
+    .table-scroll--place-overview table {
+      min-width: 760px;
+    }
+
+    .table-scroll--place-overview th,
+    .table-scroll--place-overview td {
+      padding-right: 9px;
+      padding-left: 9px;
+    }
+
+    @media (min-width: 900px) {
+      .table-scroll--place-overview table {
+        min-width: 0;
+        table-layout: fixed;
+      }
+
+      .table-scroll--place-overview th:nth-child(1) {
+        width: 14%;
+      }
+
+      .table-scroll--place-overview th:nth-child(2) {
+        width: 10%;
+      }
+
+      .table-scroll--place-overview th:nth-child(3) {
+        width: 14%;
+      }
+
+      .table-scroll--place-overview th:nth-child(4) {
+        width: 13%;
+      }
+
+      .table-scroll--place-overview th:nth-child(5) {
+        width: 13%;
+      }
+
+      .table-scroll--place-overview th:nth-child(6) {
+        width: 12%;
+      }
+
+      .table-scroll--place-overview th:nth-child(7) {
+        width: 8%;
+      }
+
+      .table-scroll--place-overview th:nth-child(8) {
+        width: 16%;
+      }
+    }
+
     .table-tooltip {
       position: relative;
       display: inline-flex;
@@ -1186,10 +1236,21 @@ ${seoBlock}
       white-space: normal;
     }
 
+    th:last-child .table-tooltip-text {
+      right: 0;
+      left: auto;
+      transform: translate(0, 4px);
+    }
+
     th button:hover .table-tooltip-text,
     th button:focus-visible .table-tooltip-text {
       opacity: 1;
       transform: translate(-50%, 0);
+    }
+
+    th:last-child button:hover .table-tooltip-text,
+    th:last-child button:focus-visible .table-tooltip-text {
+      transform: translate(0, 0);
     }
 
     th button[aria-sort="ascending"]::after {
@@ -1261,7 +1322,8 @@ ${seoBlock}
     ${renderAnalysisTable(
     ['Dorp', 'Adressen', 'Gem. afstand', 'Gem. tijd', '>=150 m', '>275 m', 'Straten', 'Straten gem. >=150 m'],
     analyses,
-    renderPlaceOverviewRow
+    renderPlaceOverviewRow,
+    { className: 'table-scroll--place-overview' }
   )}
 
     ${analyses.map((analysis) => renderPlaceAnalysisSection(analysis, {
