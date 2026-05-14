@@ -15,7 +15,12 @@ export function formatDuration(durationSeconds) {
     return 'onbekende tijd';
   }
 
-  return `${Math.max(1, Math.round(durationSeconds / 60))} min lopen`;
+  const roundedMinutes = Math.max(0.5, Math.round((durationSeconds / 60) * 2) / 2);
+  const formattedMinutes = Number.isInteger(roundedMinutes)
+    ? String(roundedMinutes)
+    : roundedMinutes.toFixed(1).replace('.', ',');
+
+  return `${formattedMinutes} min lopen`;
 }
 
 export function formatPercent(count, total) {

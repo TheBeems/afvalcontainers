@@ -710,11 +710,32 @@ function formatCompactPercent(value) {
   }).format(value || 0);
 }
 
+function getPlaceMapPath(place) {
+  return `../${escapeHtml(getPlaceSlug(place))}/`;
+}
+
+function renderCell(content, sortValue = '') {
+  return `<td data-sort-value="${escapeHtml(String(sortValue ?? ''))}">${content}</td>`;
+}
+
+function renderContainerLink(place, containerId) {
+  if (!containerId) {
+    return '';
+  }
+
+  const containerParam = encodeURIComponent(containerId);
+  return `<a href="${getPlaceMapPath(place)}?container=${containerParam}#kaart">${escapeHtml(containerId)}</a>`;
+}
+
 function renderAnalysisTable(headers, rows, renderRow) {
+  const normalizedHeaders = headers.map((header) => (
+    typeof header === 'string' ? { label: header } : header
+  ));
+
   return `<div class="table-scroll">
-      <table>
+      <table data-sortable-table>
         <thead>
-          <tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('')}</tr>
+          <tr>${normalizedHeaders.map((header, index) => `<th><button type="button" data-sort-index="${index}" aria-label="Sorteer op ${escapeHtml(header.label)}">${escapeHtml(header.label)}</button></th>`).join('')}</tr>
         </thead>
         <tbody>
           ${rows.map(renderRow).join('\n          ')}
@@ -723,40 +744,40 @@ function renderAnalysisTable(headers, rows, renderRow) {
     </div>`;
 }
 
-function renderStreetRow(row) {
+function renderStreetRow(place, row) {
   return `<tr>
-            <td>${escapeHtml(row.street)}</td>
-            <td>${formatInteger(row.addressCount)}</td>
-            <td>${escapeHtml(formatMeters(row.averageDistance))}</td>
-            <td>${escapeHtml(formatDuration(row.averageDuration))}</td>
-            <td>${escapeHtml(formatMeters(row.medianDistance))}</td>
-            <td>${escapeHtml(formatMeters(row.p90Distance))}</td>
-            <td>${escapeHtml(formatMeters(row.maxDistance))}</td>
-            <td>${formatInteger(row.over150Count)} (${formatCompactPercent(row.over150Percent)})</td>
-            <td>${formatInteger(row.over275Count)} (${formatCompactPercent(row.over275Percent)})</td>
-            <td>${escapeHtml(row.mainContainerId)}</td>
+            ${renderCell(escapeHtml(row.street), row.street)}
+            ${renderCell(formatInteger(row.addressCount), row.addressCount)}
+            ${renderCell(escapeHtml(formatMeters(row.averageDistance)), row.averageDistance)}
+            ${renderCell(escapeHtml(formatDuration(row.averageDuration)), row.averageDuration)}
+            ${renderCell(escapeHtml(formatMeters(row.medianDistance)), row.medianDistance)}
+            ${renderCell(escapeHtml(formatMeters(row.p90Distance)), row.p90Distance)}
+            ${renderCell(escapeHtml(formatMeters(row.maxDistance)), row.maxDistance)}
+            ${renderCell(`${formatInteger(row.over150Count)} (${formatCompactPercent(row.over150Percent)})`, row.over150Count)}
+            ${renderCell(`${formatInteger(row.over275Count)} (${formatCompactPercent(row.over275Percent)})`, row.over275Count)}
+            ${renderCell(renderContainerLink(place, row.mainContainerId), row.mainContainerId)}
           </tr>`;
 }
 
-function renderContainerRow(row) {
+function renderContainerRow(place, row) {
   return `<tr>
-            <td>${escapeHtml(row.containerId)}</td>
-            <td>${formatInteger(row.addressCount)}</td>
-            <td>${escapeHtml(formatMeters(row.averageDistance))}</td>
-            <td>${escapeHtml(formatMeters(row.maxDistance))}</td>
-            <td>${formatInteger(row.over150Count)}</td>
-            <td>${formatInteger(row.over275Count)}</td>
+            ${renderCell(renderContainerLink(place, row.containerId), row.containerId)}
+            ${renderCell(formatInteger(row.addressCount), row.addressCount)}
+            ${renderCell(escapeHtml(formatMeters(row.averageDistance)), row.averageDistance)}
+            ${renderCell(escapeHtml(formatMeters(row.maxDistance)), row.maxDistance)}
+            ${renderCell(formatInteger(row.over150Count), row.over150Count)}
+            ${renderCell(formatInteger(row.over275Count), row.over275Count)}
           </tr>`;
 }
 
 function renderRouteRatioRow(row) {
   return `<tr>
-            <td>${escapeHtml(row.street)}</td>
-            <td>${formatInteger(row.addressCount)}</td>
-            <td>${formatRatio(row.averageRatio)}</td>
-            <td>${escapeHtml(row.highestRatioAddress)}</td>
-            <td>${formatRatio(row.highestRatio)}</td>
-            <td>${escapeHtml(formatMeters(row.highestRatioStraightDistance))} naar ${escapeHtml(formatMeters(row.highestRatioWalkingDistance))}</td>
+            ${renderCell(escapeHtml(row.street), row.street)}
+            ${renderCell(formatInteger(row.addressCount), row.addressCount)}
+            ${renderCell(formatRatio(row.averageRatio), row.averageRatio)}
+            ${renderCell(escapeHtml(row.highestRatioAddress), row.highestRatioAddress)}
+            ${renderCell(formatRatio(row.highestRatio), row.highestRatio)}
+            ${renderCell(`${escapeHtml(formatMeters(row.highestRatioStraightDistance))} naar ${escapeHtml(formatMeters(row.highestRatioWalkingDistance))}`, row.highestRatioWalkingDistance)}
           </tr>`;
 }
 
@@ -767,43 +788,48 @@ function renderPlaceOverviewRow(analysis) {
   const longDistanceCount = (counts.between_150_275 || 0) + (counts.over_275 || 0);
 
   return `<tr>
-            <td><a href="../${escapeHtml(getPlaceSlug(analysis.place))}/">${escapeHtml(analysis.place.name)}</a></td>
-            <td>${formatInteger(totalAddresses)}</td>
-            <td>${escapeHtml(formatMeters(summary.averageWalkingDistance))}</td>
-            <td>${escapeHtml(formatDuration(summary.averageWalkingDuration))}</td>
-            <td>${formatInteger(longDistanceCount)} (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})</td>
-            <td>${formatInteger(counts.over_275 || 0)} (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))})</td>
-            <td>${formatInteger(analysis.streetStats.length)}</td>
-            <td>${formatInteger(analysis.streetStats.filter((row) => row.averageDistance >= 150).length)}</td>
+            ${renderCell(`<a href="${getPlaceMapPath(analysis.place)}">${escapeHtml(analysis.place.name)}</a>`, analysis.place.name)}
+            ${renderCell(formatInteger(totalAddresses), totalAddresses)}
+            ${renderCell(escapeHtml(formatMeters(summary.averageWalkingDistance)), summary.averageWalkingDistance)}
+            ${renderCell(escapeHtml(formatDuration(summary.averageWalkingDuration)), summary.averageWalkingDuration)}
+            ${renderCell(`${formatInteger(longDistanceCount)} (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})`, longDistanceCount)}
+            ${renderCell(`${formatInteger(counts.over_275 || 0)} (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))})`, counts.over_275 || 0)}
+            ${renderCell(formatInteger(analysis.streetStats.length), analysis.streetStats.length)}
+            ${renderCell(formatInteger(analysis.streetStats.filter((row) => row.averageDistance >= 150).length), analysis.streetStats.filter((row) => row.averageDistance >= 150).length)}
           </tr>`;
 }
 
-async function buildAnalysesPage(places) {
-  const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
-  const warmenhuizenAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
-  const summary = warmenhuizenAnalysis.summary;
+function getAnalysisSlices(analysis) {
+  return {
+    averageDistanceTop: analysis.streetStats
+      .filter((row) => row.addressCount >= 5)
+      .sort((a, b) => b.averageDistance - a.averageDistance)
+      .slice(0, 15),
+    over275Top: analysis.streetStats
+      .filter((row) => row.over275Count > 0)
+      .sort((a, b) => b.over275Count - a.over275Count || b.over275Percent - a.over275Percent)
+      .slice(0, 15),
+    over150Top: analysis.streetStats
+      .filter((row) => row.over150Count > 0)
+      .sort((a, b) => b.over150Count - a.over150Count || b.over150Percent - a.over150Percent)
+      .slice(0, 15),
+    bestCoverageTop: analysis.streetStats
+      .filter((row) => row.addressCount >= 20)
+      .sort((a, b) => a.averageDistance - b.averageDistance)
+      .slice(0, 12),
+    routeRatioTop: analysis.routeRatioStats
+      .filter((row) => row.addressCount >= 5)
+      .slice(0, 12)
+  };
+}
+
+function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
+  const { place } = analysis;
+  const summary = analysis.summary;
   const counts = summary.counts || {};
   const totalAddresses = summary.totalAddresses || 0;
   const longDistanceCount = (counts.between_150_275 || 0) + (counts.over_275 || 0);
-  const averageDistanceTop = warmenhuizenAnalysis.streetStats
-    .filter((row) => row.addressCount >= 5)
-    .sort((a, b) => b.averageDistance - a.averageDistance)
-    .slice(0, 15);
-  const over275Top = warmenhuizenAnalysis.streetStats
-    .filter((row) => row.over275Count > 0)
-    .sort((a, b) => b.over275Count - a.over275Count || b.over275Percent - a.over275Percent)
-    .slice(0, 15);
-  const over150Top = warmenhuizenAnalysis.streetStats
-    .filter((row) => row.over150Count > 0)
-    .sort((a, b) => b.over150Count - a.over150Count || b.over150Percent - a.over150Percent)
-    .slice(0, 15);
-  const bestCoverageTop = warmenhuizenAnalysis.streetStats
-    .filter((row) => row.addressCount >= 20)
-    .sort((a, b) => a.averageDistance - b.averageDistance)
-    .slice(0, 12);
-  const routeRatioTop = warmenhuizenAnalysis.routeRatioStats
-    .filter((row) => row.addressCount >= 5)
-    .slice(0, 12);
+  const slices = getAnalysisSlices(analysis);
   const streetHeaders = [
     'Straat',
     'Adressen',
@@ -816,6 +842,57 @@ async function buildAnalysesPage(places) {
     '>275 m',
     'Meest dichtbij'
   ];
+
+  return `<section data-analysis-place="${escapeHtml(place.id)}"${hidden ? ' hidden' : ''}>
+    <h2>Kerncijfers ${escapeHtml(place.name)}</h2>
+    <div class="metric-grid" aria-label="Kerncijfers ${escapeHtml(place.name)}">
+      <div class="metric"><strong>${formatInteger(totalAddresses)}</strong><span>adressen binnen de bebouwde kom</span></div>
+      <div class="metric"><strong>${escapeHtml(formatMeters(summary.averageWalkingDistance))}</strong><span>gemiddelde loopafstand</span></div>
+      <div class="metric"><strong>${escapeHtml(formatDuration(summary.averageWalkingDuration))}</strong><span>gemiddelde looptijd bij 4 km/u</span></div>
+      <div class="metric"><strong>${formatInteger(longDistanceCount)}</strong><span>adressen op 150 meter of meer (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})</span></div>
+    </div>
+    <p class="note">Er ${(counts.over_275 || 0) === 1 ? 'ligt' : 'liggen'} in ${escapeHtml(place.name)} ${formatInteger(counts.over_275 || 0)} adres${(counts.over_275 || 0) === 1 ? '' : 'sen'} boven 275 meter (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))}). Dat maakt vooral straten met veel rode en donkerrode adressen belangrijk voor overleg over locatiekeuzes.</p>
+
+    <h2>Aandachtsstraten ${escapeHtml(place.name)}</h2>
+    <p class="note">Deze ranglijst kijkt naar straten met minstens vijf adressen en sorteert op de hoogste gemiddelde loopafstand.</p>
+    ${renderAnalysisTable(streetHeaders, slices.averageDistanceTop, (row) => renderStreetRow(place, row))}
+
+    <h3>Meeste adressen boven 275 meter</h3>
+    ${renderAnalysisTable(streetHeaders, slices.over275Top, (row) => renderStreetRow(place, row))}
+
+    <h3>Meeste adressen op 150 meter of meer</h3>
+    ${renderAnalysisTable(streetHeaders, slices.over150Top, (row) => renderStreetRow(place, row))}
+
+    <h3>Beste dekking bij grotere straten</h3>
+    <p class="note">Straten met minstens twintig adressen, gesorteerd op de laagste gemiddelde loopafstand.</p>
+    ${renderAnalysisTable(streetHeaders, slices.bestCoverageTop, (row) => renderStreetRow(place, row))}
+
+    <h2>Hemelsbreed versus werkelijke route</h2>
+    <p class="note">Hier staat waar de looproute gemiddeld het sterkst afwijkt van de rechte lijn. Dit laat zien waarom een container hemelsbreed dichtbij kan lijken, terwijl de werkelijke route veel langer is.</p>
+    ${renderAnalysisTable(
+    ['Straat', 'Adressen', 'Gem. omweg', 'Hoogste adres', 'Hoogste omweg', 'Hemelsbreed naar lopen'],
+    slices.routeRatioTop,
+    renderRouteRatioRow
+  )}
+
+    <h2>Containerbereik ${escapeHtml(place.name)}</h2>
+    <p class="note">Deze tabel telt voor hoeveel adressen een container de dichtstbijzijnde optie is. Dit is geen capaciteitsberekening, omdat afvalvolume en ledigingsfrequentie niet in de dataset zitten.</p>
+    ${renderAnalysisTable(
+    ['Container', 'Dichtstbij voor adressen', 'Gem. afstand', 'Max. afstand', '>=150 m', '>275 m'],
+    analysis.containerStats,
+    (row) => renderContainerRow(place, row)
+  )}
+
+    <details>
+      <summary>Volledige straattabel ${escapeHtml(place.name)}</summary>
+      ${renderAnalysisTable(streetHeaders, analysis.streetStats, (row) => renderStreetRow(place, row))}
+    </details>
+  </section>`;
+}
+
+async function buildAnalysesPage(places) {
+  const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
+  const defaultAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
   const title = 'Analyses loopafstanden';
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const seoBlock = buildSeoBlock({
@@ -905,6 +982,37 @@ ${seoBlock}
       font-size: 18px;
     }
 
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    select {
+      width: min(360px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    select:focus-visible,
+    th button:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .analysis-selector {
+      margin: 28px 0 8px;
+    }
+
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -964,6 +1072,38 @@ ${seoBlock}
       font-size: 14px;
     }
 
+    th button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: inherit;
+      font: inherit;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    th button::after {
+      content: "\\2195";
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    th button[aria-sort="ascending"]::after {
+      content: "\\2191";
+      color: var(--accent);
+    }
+
+    th button[aria-sort="descending"]::after {
+      content: "\\2193";
+      color: var(--accent);
+    }
+
     tr:last-child td {
       border-bottom: 0;
     }
@@ -1012,14 +1152,12 @@ ${seoBlock}
     <h1>Analyses loopafstanden</h1>
     <p class="lead">Deze pagina vat de vooraf berekende loopafstanden samen per dorp, straat en dichtstbijzijnde container. De cijfers komen uit dezelfde JSON-data als de kaart.</p>
 
-    <h2>Kerncijfers Warmenhuizen</h2>
-    <div class="metric-grid" aria-label="Kerncijfers Warmenhuizen">
-      <div class="metric"><strong>${formatInteger(totalAddresses)}</strong><span>adressen binnen de bebouwde kom</span></div>
-      <div class="metric"><strong>${escapeHtml(formatMeters(summary.averageWalkingDistance))}</strong><span>gemiddelde loopafstand</span></div>
-      <div class="metric"><strong>${escapeHtml(formatDuration(summary.averageWalkingDuration))}</strong><span>gemiddelde looptijd</span></div>
-      <div class="metric"><strong>${formatInteger(longDistanceCount)}</strong><span>adressen op 150 meter of meer (${escapeHtml(formatPercent(longDistanceCount, totalAddresses))})</span></div>
+    <div class="analysis-selector">
+      <label for="analysis-place-select">Selecteer dorp</label>
+      <select id="analysis-place-select">
+        ${analyses.map((analysis) => `<option value="${escapeHtml(analysis.place.id)}"${analysis.place.id === defaultAnalysis.place.id ? ' selected' : ''}>${escapeHtml(analysis.place.name)}</option>`).join('\n        ')}
+      </select>
     </div>
-    <p class="note">Er ${(counts.over_275 || 0) === 1 ? 'ligt' : 'liggen'} in Warmenhuizen ${formatInteger(counts.over_275 || 0)} adres${(counts.over_275 || 0) === 1 ? '' : 'sen'} boven 275 meter (${escapeHtml(formatPercent(counts.over_275 || 0, totalAddresses))}). Dat maakt vooral straten met veel rode en donkerrode adressen belangrijk voor overleg over locatiekeuzes.</p>
 
     <h2>Vergelijking per dorp</h2>
     ${renderAnalysisTable(
@@ -1028,41 +1166,55 @@ ${seoBlock}
     renderPlaceOverviewRow
   )}
 
-    <h2>Aandachtsstraten Warmenhuizen</h2>
-    <p class="note">Deze ranglijst kijkt naar straten met minstens vijf adressen en sorteert op de hoogste gemiddelde loopafstand.</p>
-    ${renderAnalysisTable(streetHeaders, averageDistanceTop, renderStreetRow)}
-
-    <h3>Meeste adressen boven 275 meter</h3>
-    ${renderAnalysisTable(streetHeaders, over275Top, renderStreetRow)}
-
-    <h3>Meeste adressen op 150 meter of meer</h3>
-    ${renderAnalysisTable(streetHeaders, over150Top, renderStreetRow)}
-
-    <h3>Beste dekking bij grotere straten</h3>
-    <p class="note">Straten met minstens twintig adressen, gesorteerd op de laagste gemiddelde loopafstand.</p>
-    ${renderAnalysisTable(streetHeaders, bestCoverageTop, renderStreetRow)}
-
-    <h2>Hemelsbreed versus werkelijke route</h2>
-    <p class="note">Hier staat waar de looproute gemiddeld het sterkst afwijkt van de rechte lijn. Dit laat zien waarom een container hemelsbreed dichtbij kan lijken, terwijl de werkelijke route veel langer is.</p>
-    ${renderAnalysisTable(
-    ['Straat', 'Adressen', 'Gem. omweg', 'Hoogste adres', 'Hoogste omweg', 'Hemelsbreed naar lopen'],
-    routeRatioTop,
-    renderRouteRatioRow
-  )}
-
-    <h2>Containerbereik Warmenhuizen</h2>
-    <p class="note">Deze tabel telt voor hoeveel adressen een container de dichtstbijzijnde optie is. Dit is geen capaciteitsberekening, omdat afvalvolume en ledigingsfrequentie niet in de dataset zitten.</p>
-    ${renderAnalysisTable(
-    ['Container', 'Dichtstbij voor adressen', 'Gem. afstand', 'Max. afstand', '>=150 m', '>275 m'],
-    warmenhuizenAnalysis.containerStats,
-    renderContainerRow
-  )}
-
-    <details>
-      <summary>Volledige straattabel Warmenhuizen</summary>
-      ${renderAnalysisTable(streetHeaders, warmenhuizenAnalysis.streetStats, renderStreetRow)}
-    </details>
+    ${analyses.map((analysis) => renderPlaceAnalysisSection(analysis, {
+    hidden: analysis.place.id !== defaultAnalysis.place.id
+  })).join('\n\n    ')}
   </main>
+  <script>
+    (() => {
+      function getSortValue(row, index) {
+        const cell = row.cells[index];
+        const value = cell?.dataset.sortValue ?? cell?.textContent ?? '';
+        const numericValue = Number(value);
+        return Number.isFinite(numericValue) ? numericValue : value.toLocaleLowerCase('nl-NL');
+      }
+
+      function sortTable(table, index, direction) {
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.rows);
+        rows.sort((left, right) => {
+          const leftValue = getSortValue(left, index);
+          const rightValue = getSortValue(right, index);
+          const result = typeof leftValue === 'number' && typeof rightValue === 'number'
+            ? leftValue - rightValue
+            : String(leftValue).localeCompare(String(rightValue), 'nl-NL', { numeric: true });
+          return direction === 'ascending' ? result : -result;
+        });
+        tbody.append(...rows);
+      }
+
+      document.querySelectorAll('[data-sortable-table]').forEach((table) => {
+        table.querySelectorAll('th button[data-sort-index]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const nextDirection = button.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+            table.querySelectorAll('th button[aria-sort]').forEach((activeButton) => {
+              activeButton.removeAttribute('aria-sort');
+            });
+            button.setAttribute('aria-sort', nextDirection);
+            sortTable(table, Number(button.dataset.sortIndex), nextDirection);
+          });
+        });
+      });
+
+      const placeSelect = document.getElementById('analysis-place-select');
+      const placeSections = Array.from(document.querySelectorAll('[data-analysis-place]'));
+      placeSelect?.addEventListener('change', () => {
+        for (const section of placeSections) {
+          section.hidden = section.dataset.analysisPlace !== placeSelect.value;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
 `;

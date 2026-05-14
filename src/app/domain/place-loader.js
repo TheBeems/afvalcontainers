@@ -70,6 +70,10 @@ function getRequestedPlaceId(places) {
   return { placeId: defaultPlaceId, shouldUseCleanUrl: false };
 }
 
+function getRequestedContainerId() {
+  return new URLSearchParams(window.location.search).get('container') || null;
+}
+
 function updateMetaContent(selector, value) {
   const meta = document.querySelector(selector);
   if (meta) {
@@ -372,7 +376,31 @@ export function createPlaceLoader(context, api) {
     return true;
   }
 
-  function renderLoadedPlace({ selectedHouseId = null, focusMap = true } = {}) {
+  function selectLoadedContainerById(containerId, { focusMap = true, collapseIntro = false } = {}) {
+    if (!containerId) {
+      return false;
+    }
+
+    const containerIndex = api.getContainerIndexById(containerId);
+    if (containerIndex < 0) {
+      api.setCoverageStatus(`Container ${containerId} niet gevonden in ${getActivePlaceName()}.`, 'error');
+      return false;
+    }
+
+    if (collapseIntro && elements.sidebarHeaderPanel) {
+      elements.sidebarHeaderPanel.open = false;
+    }
+
+    api.selectContainer(containerIndex, { focusMap });
+    return true;
+  }
+
+  function renderLoadedPlace({
+    selectedHouseId = null,
+    selectedContainerId = null,
+    focusMap = true,
+    collapseIntroForSelectedContainer = false
+  } = {}) {
     api.renderContainers({ fitBounds: false });
 
     if (!state.coverage || state.houses.length === 0) {
@@ -394,6 +422,13 @@ export function createPlaceLoader(context, api) {
 
     if (selectedHouseId) {
       void selectLoadedHouseById(selectedHouseId, { focusMap });
+      return;
+    }
+
+    if (selectedContainerId && selectLoadedContainerById(selectedContainerId, {
+      focusMap,
+      collapseIntro: collapseIntroForSelectedContainer
+    })) {
       return;
     }
 
@@ -486,6 +521,12 @@ export function createPlaceLoader(context, api) {
       if (state.placeLoadStatus === 'ready' && options.selectedHouseId) {
         await selectLoadedHouseById(options.selectedHouseId, { focusMap: options.focusMap !== false });
       }
+      if (state.placeLoadStatus === 'ready' && options.selectedContainerId) {
+        selectLoadedContainerById(options.selectedContainerId, {
+          focusMap: options.focusMap !== false,
+          collapseIntro: options.collapseIntroForSelectedContainer === true
+        });
+      }
       return;
     }
 
@@ -514,7 +555,12 @@ export function createPlaceLoader(context, api) {
     }
 
     const requestedPlace = getRequestedPlaceId(state.places);
-    await selectPlace(requestedPlace.placeId, { updateUrl: requestedPlace.shouldUseCleanUrl });
+    const requestedContainerId = getRequestedContainerId();
+    await selectPlace(requestedPlace.placeId, {
+      updateUrl: requestedPlace.shouldUseCleanUrl,
+      selectedContainerId: requestedContainerId,
+      collapseIntroForSelectedContainer: Boolean(requestedContainerId)
+    });
   }
 
   return {
@@ -532,6 +578,7 @@ export function createPlaceLoader(context, api) {
     loadPlaceContainers,
     loadHouseDetail,
     selectLoadedHouseById,
+    selectLoadedContainerById,
     renderLoadedPlace,
     loadAddressIndexForPlace,
     loadActiveAddressIndex,

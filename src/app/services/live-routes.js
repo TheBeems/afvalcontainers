@@ -5,7 +5,7 @@ import {
 } from '../config.js';
 import { formatDuration, formatMeters } from '../../shared/format.js';
 import {
-  adjustWalkingDurationSeconds,
+  computeWalkingDurationSeconds,
   isValidRouteGeometry,
   roundCoordinate,
   roundMetric
@@ -91,7 +91,7 @@ export function createLiveRoutes(context, api) {
     return {
       routeGeometry,
       walkingDistance: roundMetric(route.distance),
-      walkingDuration: adjustWalkingDurationSeconds(route.duration)
+      walkingDuration: computeWalkingDurationSeconds(route.distance)
     };
   }
 
