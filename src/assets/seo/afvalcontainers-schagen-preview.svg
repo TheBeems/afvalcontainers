@@ -24,14 +24,14 @@
     <text x="118" y="216" fill="#0f172a" font-family="Arial, Helvetica, sans-serif" font-size="56" font-weight="800">loopafstand</text>
     <text x="118" y="278" fill="#0f766e" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800">restafvalcontainers</text>
     <text x="118" y="340" fill="#334155" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600">Warmenhuizen en Tuitjenhorn</text>
-    <text x="118" y="386" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="24">Routes via straten en paden,</text>
-    <text x="118" y="420" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="24">niet alleen hemelsbreed.</text>
+    <text x="118" y="386" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Bekijk wat je werkelijk moet lopen</text>
+    <text x="118" y="420" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">om je restafval weg te brengen.</text>
     <g transform="translate(118 468)">
-      <rect width="94" height="22" rx="11" fill="#15803d"/>
-      <rect x="108" width="94" height="22" rx="11" fill="#facc15"/>
-      <rect x="216" width="94" height="22" rx="11" fill="#f97316"/>
-      <rect x="324" width="94" height="22" rx="11" fill="#dc2626"/>
-      <rect x="432" width="94" height="22" rx="11" fill="#7f1d1d"/>
+      <rect width="86" height="22" rx="11" fill="#15803d"/>
+      <rect x="104" width="86" height="22" rx="11" fill="#facc15"/>
+      <rect x="208" width="86" height="22" rx="11" fill="#f97316"/>
+      <rect x="312" width="86" height="22" rx="11" fill="#dc2626"/>
+      <rect x="416" width="86" height="22" rx="11" fill="#7f1d1d"/>
     </g>
   </g>
   <g>
