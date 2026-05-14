@@ -23,6 +23,8 @@ test('loads the app shell and precomputed coverage data', async ({ page }) => {
   await page.goto('/');
 
   await expect(page).toHaveTitle(/Werkelijke loopafstand naar restafvalcontainers/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thebeems.github.io/afvalcontainers/warmenhuizen/');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://thebeems.github.io/afvalcontainers/social/afvalcontainers-schagen-preview.png');
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers/ })).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeVisible();
 
@@ -46,7 +48,7 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await expect(page.getByRole('heading', { name: 'Meer dan 40% loopt 150 meter of meer' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ga naar stap 2: Van bak aan huis naar zelf wegbrengen' })).toBeVisible();
 
-  await page.getByRole('link', { name: 'Zoek mijn loopafstand' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
 
   await expect(page).toHaveURL(/#kaart$/);
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
@@ -59,8 +61,55 @@ test('keeps the mobile menu out of the visual introduction', async ({ page }) =>
   const toggle = page.locator('#mobile-sidebar-toggle');
   await expect(toggle).toBeHidden();
 
-  await page.getByRole('link', { name: 'Zoek mijn loopafstand' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(toggle).toBeVisible();
+});
+
+test('serves place-specific SEO metadata from clean place URLs', async ({ page }) => {
+  await page.goto('/tuitjenhorn/');
+
+  await expect(page).toHaveTitle('Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Tuitjenhorn/);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
+  await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
+  await expect(page.locator('#coverage-summary')).toContainText('adressen binnen bebouwde kom');
+  await expect(page.getByRole('link', { name: 'hier' })).toHaveAttribute('href', 'http://127.0.0.1:8000/methodiek/');
+});
+
+test('replaces query place URLs with clean place URLs', async ({ page }) => {
+  await page.goto('/?plaats=tuitjenhorn');
+
+  await expect(page).toHaveURL(/\/tuitjenhorn\/$/);
+  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
+  await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
+  await page.getByRole('link', { name: 'hier' }).click();
+  await expect(page).toHaveURL('http://127.0.0.1:8000/methodiek/');
+  await expect(page.getByRole('heading', { name: 'Methodiek en bronnen' })).toBeVisible();
+});
+
+test('serves crawl support files and methodology page', async ({ page }) => {
+  const robots = await page.request.get('/robots.txt');
+  expect(robots.status()).toBe(200);
+  const robotsText = await robots.text();
+  expect(robotsText).toContain('Sitemap: https://thebeems.github.io/afvalcontainers/sitemap.xml');
+
+  const sitemap = await page.request.get('/sitemap.xml');
+  expect(sitemap.status()).toBe(200);
+  const sitemapText = await sitemap.text();
+  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/warmenhuizen/');
+  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/methodiek/');
+  expect(sitemapText).not.toContain('<loc>https://thebeems.github.io/afvalcontainers/</loc>');
+
+  const methodology = await page.request.get('/methodiek/');
+  expect(methodology.status()).toBe(200);
+  const methodologyText = await methodology.text();
+  expect(methodologyText).toContain('Methodiek en bronnen');
+  expect(methodologyText).toContain('PDOK BAG');
 });
 
 test('opens and closes the mobile sidebar', async ({ page }) => {
