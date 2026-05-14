@@ -35,6 +35,18 @@ const placeFilePathKeys = [
   'addressIndex'
 ];
 
+const ANALYSIS_HEADER_DESCRIPTIONS = {
+  'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
+  'Gem. tijd': 'De gemiddelde looptijd naar de dichtstbijzijnde container, gerekend met rustig wandelen van 4 km per uur.',
+  'Mediaan': 'De middelste afstand: de helft van de adressen loopt korter en de andere helft loopt langer.',
+  'P90': 'De afstand waar 90% van de adressen onder blijft. Alleen de laatste 10% loopt verder dan dit.',
+  'Max.': 'De grootste loopafstand in deze groep adressen.',
+  'Max. afstand': 'De grootste loopafstand voor adressen waarvoor deze container de dichtstbijzijnde is.',
+  '>=150 m': 'Het aantal adressen dat 150 meter of meer moet lopen naar de dichtstbijzijnde container.',
+  '>275 m': 'Het aantal adressen dat verder dan 275 meter moet lopen naar de dichtstbijzijnde container.',
+  'Straten gem. >=150 m': 'Het aantal straten waarvan de gemiddelde loopafstand 150 meter of meer is.'
+};
+
 function getDistPathForProjectPath(path) {
   return resolve(distDir, relative(projectRoot, path));
 }
@@ -729,19 +741,36 @@ function renderContainerLink(place, containerId) {
 
 function renderAnalysisTable(headers, rows, renderRow) {
   const normalizedHeaders = headers.map((header) => (
-    typeof header === 'string' ? { label: header } : header
+    typeof header === 'string'
+      ? { label: header, description: ANALYSIS_HEADER_DESCRIPTIONS[header] || '' }
+      : { description: ANALYSIS_HEADER_DESCRIPTIONS[header.label] || '', ...header }
   ));
 
   return `<div class="table-scroll">
       <table data-sortable-table>
         <thead>
-          <tr>${normalizedHeaders.map((header, index) => `<th><button type="button" data-sort-index="${index}" aria-label="Sorteer op ${escapeHtml(header.label)}">${escapeHtml(header.label)}</button></th>`).join('')}</tr>
+          <tr>${normalizedHeaders.map((header, index) => `<th><button type="button" data-sort-index="${index}" aria-label="${escapeHtml(getSortButtonLabel(header))}">${renderTableHeaderLabel(header)}</button></th>`).join('')}</tr>
         </thead>
         <tbody>
           ${rows.map(renderRow).join('\n          ')}
         </tbody>
       </table>
     </div>`;
+}
+
+function getSortButtonLabel(header) {
+  const baseLabel = `Sorteer op ${header.label}`;
+  const separator = baseLabel.endsWith('.') ? ' ' : '. ';
+  return header.description ? `${baseLabel}${separator}Uitleg: ${header.description}` : baseLabel;
+}
+
+function renderTableHeaderLabel(header) {
+  const label = escapeHtml(header.label);
+  if (!header.description) {
+    return label;
+  }
+
+  return `<span class="table-header-label">${label}</span><span class="table-tooltip" aria-hidden="true"><span class="table-tooltip-icon">?</span><span class="table-tooltip-text">${escapeHtml(header.description)}</span></span>`;
 }
 
 function renderStreetRow(place, row) {
@@ -1092,6 +1121,60 @@ ${seoBlock}
       color: var(--muted);
       font-size: 12px;
       font-weight: 400;
+    }
+
+    .table-header-label {
+      min-width: 0;
+    }
+
+    .table-tooltip {
+      position: relative;
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .table-tooltip-icon {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      text-align: center;
+    }
+
+    .table-tooltip-text {
+      position: absolute;
+      z-index: 5;
+      top: calc(100% + 8px);
+      left: 50%;
+      width: min(240px, 70vw);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--text);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.35;
+      opacity: 0;
+      padding: 8px 10px;
+      pointer-events: none;
+      text-align: left;
+      transform: translate(-50%, 4px);
+      transition: opacity 120ms ease, transform 120ms ease;
+      white-space: normal;
+    }
+
+    th button:hover .table-tooltip-text,
+    th button:focus-visible .table-tooltip-text {
+      opacity: 1;
+      transform: translate(-50%, 0);
     }
 
     th button[aria-sort="ascending"]::after {
