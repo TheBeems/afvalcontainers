@@ -7,6 +7,13 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://routing.openstreetmap.de/**', async (route) => {
     await route.fulfill({ status: 503, body: '{}' });
   });
+  await page.route('https://tally.so/embed/**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      body: '<!doctype html><title>Tally formulier</title>'
+    });
+  });
 });
 
 test('loads the app shell and precomputed coverage data', async ({ page }) => {
@@ -77,10 +84,13 @@ test('opens and closes the mobile sidebar', async ({ page }) => {
 
 test('opens address feedback entry point with privacy-safe Tally hidden fields', async ({ page }) => {
   await page.addInitScript(() => {
-    window.__tallyOpenPopupCalls = [];
+    window.__tallyLoadEmbedsCalls = 0;
     window.Tally = {
-      openPopup: (...args) => {
-        window.__tallyOpenPopupCalls.push(args);
+      loadEmbeds: () => {
+        window.__tallyLoadEmbedsCalls += 1;
+        document.querySelectorAll('iframe[data-tally-src]:not([src])').forEach((iframe) => {
+          iframe.src = iframe.dataset.tallySrc;
+        });
       }
     };
   });
@@ -91,19 +101,26 @@ test('opens address feedback entry point with privacy-safe Tally hidden fields',
   await search.fill('Appelvinkstraat 12');
   await page.getByRole('option', { name: /Appelvinkstraat 12/ }).click();
 
-  const surveyButton = page.getByRole('button', { name: 'Deel wat deze afstand voor jou betekent' });
+  const surveyButton = page.getByRole('button', { name: 'Geef je mening' });
   await expect(surveyButton).toBeVisible();
-  await expect(surveyButton).toHaveAttribute('data-tally-open', 'WODW1v');
+  await expect(surveyButton).not.toHaveAttribute('data-tally-open', 'WODW1v');
   await expect(surveyButton).toHaveAttribute('data-tally-street', 'Appelvinkstraat');
 
   await surveyButton.click();
 
-  const calls = await page.evaluate(() => window.__tallyOpenPopupCalls);
-  expect(calls).toHaveLength(1);
+  const dialog = page.getByRole('dialog', { name: 'Enquête over containers' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Enquête sluiten' })).toBeVisible();
 
-  const [formId, options] = calls[0];
-  expect(formId).toBe('WODW1v');
-  expect(options.hiddenFields).toMatchObject({
+  const frame = dialog.locator('iframe.tally-survey-frame');
+  const tallySrc = await frame.getAttribute('data-tally-src');
+  const tallyUrl = new URL(tallySrc);
+  expect(tallyUrl.origin).toBe('https://tally.so');
+  expect(tallyUrl.pathname).toBe('/embed/WODW1v');
+  expect(tallyUrl.searchParams.has('alignLeft')).toBe(false);
+  expect(tallyUrl.searchParams.get('transparentBackground')).toBe('1');
+  expect(tallyUrl.searchParams.get('dynamicHeight')).toBe('1');
+  expect(Object.fromEntries(tallyUrl.searchParams)).toMatchObject({
     place: 'Warmenhuizen',
     street: 'Appelvinkstraat',
     coverage_status: expect.any(String),
@@ -111,8 +128,27 @@ test('opens address feedback entry point with privacy-safe Tally hidden fields',
     walking_duration_s: expect.any(String),
     container_id: expect.any(String)
   });
-  expect(options.hiddenFields).not.toHaveProperty('address');
-  expect(options.hiddenFields).not.toHaveProperty('house_number');
-  expect(options.hiddenFields).not.toHaveProperty('postcode');
-  expect(Object.values(options.hiddenFields)).not.toContain('Appelvinkstraat 12');
+  expect(tallyUrl.searchParams.has('address')).toBe(false);
+  expect(tallyUrl.searchParams.has('house_number')).toBe(false);
+  expect(tallyUrl.searchParams.has('postcode')).toBe(false);
+  expect(Array.from(tallyUrl.searchParams.values())).not.toContain('Appelvinkstraat 12');
+  await expect(frame).toHaveAttribute('src', tallySrc);
+  expect(await page.evaluate(() => window.__tallyLoadEmbedsCalls)).toBe(1);
+
+  await dialog.getByRole('button', { name: 'Enquête sluiten' }).click();
+  await expect(page.locator('.tally-survey-dialog')).toHaveCount(0);
+  await expect(surveyButton).toBeFocused();
+
+  await surveyButton.click();
+  await expect(dialog).toBeVisible();
+  await page.evaluate(() => {
+    window.dispatchEvent(new MessageEvent('message', {
+      origin: 'https://tally.so',
+      data: JSON.stringify({
+        event: 'Tally.FormSubmitted',
+        payload: { formId: 'WODW1v' }
+      })
+    }));
+  });
+  await expect(page.locator('.tally-survey-dialog')).toHaveCount(0);
 });

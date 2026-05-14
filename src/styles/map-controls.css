@@ -246,6 +246,83 @@
   transform: none;
 }
 
+.tally-survey-dialog {
+  width: min(820px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+
+.tally-survey-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.tally-survey-dialog-card {
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.36);
+}
+
+.tally-survey-dialog-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 54px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 8px;
+}
+
+.tally-survey-dialog-close {
+  appearance: none;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  width: 38px;
+  min-height: 38px;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.14);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tally-survey-dialog-close:hover {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.32);
+}
+
+.tally-survey-dialog-close:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.tally-survey-frame {
+  display: block;
+  width: 100%;
+  min-height: min(720px, calc(100dvh - 104px - env(safe-area-inset-top) - env(safe-area-inset-bottom)));
+  border: 0;
+  background: #ffffff;
+}
+
 .container-map-info-title {
   font-size: 14px;
   font-weight: 800;
