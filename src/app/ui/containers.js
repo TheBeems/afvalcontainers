@@ -84,7 +84,7 @@ export function createContainersUi(context, api) {
     `;
   }
 
-  function scrollMapIntoView() {
+  function scrollMapIntoView({ behavior = 'smooth' } = {}) {
     if (!elements.mapShell) {
       return;
     }
@@ -95,7 +95,7 @@ export function createContainersUi(context, api) {
 
     elements.mapShell.scrollIntoView({
       block: 'start',
-      behavior: 'smooth'
+      behavior
     });
   }
 

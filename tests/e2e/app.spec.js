@@ -65,6 +65,30 @@ test('keeps the mobile menu out of the visual introduction', async ({ page }) =>
   await expect(toggle).toBeVisible();
 });
 
+test('shows the mobile map behind search when jumping from the story', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const body = page.locator('body');
+  const search = page.getByRole('combobox', { name: 'Zoek je adres' });
+  const mapShell = page.locator('.map-shell');
+  const expectMapAtTop = async () => {
+    await expect.poll(async () => Math.round((await mapShell.boundingBox()).y)).toBe(0);
+  };
+
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(search).toBeFocused();
+  await expect(body).toHaveClass(/mobile-search-active/);
+  await expectMapAtTop();
+
+  await page.goto('/');
+  await page.locator('#story-gevolgen').scrollIntoViewIfNeeded();
+  await page.getByRole('link', { name: 'Ga naar de kaart en zoek je adres' }).click();
+  await expect(search).toBeFocused();
+  await expect(body).toHaveClass(/mobile-search-active/);
+  await expectMapAtTop();
+});
+
 test('keeps the mobile search visible in visual viewport focus mode', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

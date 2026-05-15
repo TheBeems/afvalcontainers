@@ -1,9 +1,16 @@
+import { MOBILE_MAP_SCROLL_QUERY } from '../config.js';
+
 function prefersReducedMotion() {
   return typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function bindStoryIntroEvents() {
+function isMobileMapViewport() {
+  return typeof window.matchMedia === 'function'
+    && window.matchMedia(MOBILE_MAP_SCROLL_QUERY).matches;
+}
+
+export function bindStoryIntroEvents(api = {}) {
   const mapTarget = document.getElementById('kaart');
   const searchInput = document.getElementById('house-search');
 
@@ -32,14 +39,22 @@ export function bindStoryIntroEvents() {
       event.preventDefault();
       document.body.classList.add('map-view-active');
       window.history.replaceState({}, '', '#kaart');
-      mapTarget.scrollIntoView({
-        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-        block: 'start'
-      });
 
-      window.setTimeout(() => {
+      const isMobile = isMobileMapViewport();
+      const behavior = isMobile || prefersReducedMotion() ? 'auto' : 'smooth';
+      if (isMobile && typeof api.scrollMapIntoView === 'function') {
+        api.scrollMapIntoView({ behavior });
+      } else {
+        mapTarget.scrollIntoView({
+          behavior,
+          block: 'start'
+        });
+      }
+
+      window.requestAnimationFrame(() => {
         searchInput?.focus({ preventScroll: true });
-      }, prefersReducedMotion() ? 0 : 420);
+        updateMapViewState();
+      });
     });
   });
 
