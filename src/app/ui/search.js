@@ -371,6 +371,14 @@ export function createSearch(context, api) {
         deactivateMobileSearchMode({ blurInput: true });
       }
     });
+
+    if (searchRoot.contains(document.activeElement)) {
+      activateMobileSearchMode();
+
+      if (getQuery()) {
+        void renderResults();
+      }
+    }
   }
 
   return {

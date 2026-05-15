@@ -58,7 +58,7 @@ function registerCoreListeners(context, api) {
   elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
   api.bindMobileSidebarEvents();
-  bindStoryIntroEvents(api);
+  Object.assign(api, bindStoryIntroEvents(api));
 }
 
 async function init(context, api) {

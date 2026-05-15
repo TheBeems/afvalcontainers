@@ -1,10 +1,20 @@
 .visual-story {
-  background: #0f172a;
+  position: fixed;
+  z-index: 1600;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: transparent;
   color: #ffffff;
+  -webkit-overflow-scrolling: touch;
+}
+
+.visual-story:focus {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  .visual-story {
     scroll-behavior: smooth;
   }
 }
@@ -17,6 +27,11 @@
   min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
+}
+
+.visual-story-reveal {
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .visual-story-image,
@@ -198,7 +213,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
+  .visual-story {
     scroll-behavior: auto;
   }
 }

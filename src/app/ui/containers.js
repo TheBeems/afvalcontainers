@@ -2,8 +2,7 @@ import {
   CONTAINER_LONG_PRESS_MS,
   INITIAL_CONTAINER_BOUNDS_MAX_ZOOM,
   INITIAL_ZOOM_OFFSET,
-  MAP_MAX_ZOOM,
-  MOBILE_MAP_SCROLL_QUERY
+  MAP_MAX_ZOOM
 } from '../config.js';
 import { REFERENCE_RADIUS_METERS } from '../../shared/coverage.js';
 import {
@@ -84,19 +83,8 @@ export function createContainersUi(context, api) {
     `;
   }
 
-  function scrollMapIntoView({ behavior = 'smooth' } = {}) {
-    if (!elements.mapShell) {
-      return;
-    }
-
-    if (typeof window.matchMedia === 'function' && !window.matchMedia(MOBILE_MAP_SCROLL_QUERY).matches) {
-      return;
-    }
-
-    elements.mapShell.scrollIntoView({
-      block: 'start',
-      behavior
-    });
+  function scrollMapIntoView() {
+    api.completeStoryIntro?.();
   }
 
   function getContainerIndexById(containerId) {

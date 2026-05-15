@@ -20,7 +20,7 @@ test('loads the app shell and precomputed coverage data', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error));
 
-  await page.goto('/');
+  await page.goto('/#kaart');
 
   await expect(page).toHaveTitle(/Werkelijke loopafstand naar restafvalcontainers/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thebeems.github.io/afvalcontainers/warmenhuizen/');
@@ -42,6 +42,9 @@ test('loads the app shell and precomputed coverage data', async ({ page }) => {
 test('shows the visual introduction and focuses search from the CTA', async ({ page }) => {
   await page.goto('/');
 
+  const story = page.locator('#visuele-uitleg');
+  const mapShell = page.locator('.map-shell');
+
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Inzicht voor Warmenhuizen' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Afstand bepaalt de ervaring' })).toBeVisible();
@@ -51,6 +54,17 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
 
   await expect(page).toHaveURL(/#kaart$/);
+  await expect(story).toBeHidden();
+  await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
+  await expect.poll(async () => Math.round((await mapShell.boundingBox()).y)).toBe(0);
+
+  await page.getByRole('link', { name: 'Bekijk de visuele uitleg opnieuw' }).click();
+  await expect(page).toHaveURL(/#visuele-uitleg$/);
+  await expect(story).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Inzicht voor Warmenhuizen' })).toBeVisible();
+
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(story).toBeHidden();
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
 });
 
@@ -78,6 +92,7 @@ test('shows the mobile map behind search when jumping from the story', async ({ 
 
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(search).toBeFocused();
+  await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(body).toHaveClass(/mobile-search-active/);
   await expectMapAtTop();
 
@@ -85,6 +100,7 @@ test('shows the mobile map behind search when jumping from the story', async ({ 
   await page.locator('#story-gevolgen').scrollIntoViewIfNeeded();
   await page.getByRole('link', { name: 'Ga naar de kaart en zoek je adres' }).click();
   await expect(search).toBeFocused();
+  await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(body).toHaveClass(/mobile-search-active/);
   await expectMapAtTop();
 });
@@ -161,12 +177,12 @@ test('keeps the mobile search visible in visual viewport focus mode', async ({ p
 
 test('scrolls to the mobile map after selecting an address from search focus mode', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/#kaart');
 
   const search = page.getByRole('combobox', { name: 'Zoek je adres' });
   const mapShell = page.locator('.map-shell');
 
-  await search.evaluate((input) => input.focus({ preventScroll: true }));
+  await search.click();
   await expect(page.locator('body')).toHaveClass(/mobile-search-active/);
   await search.fill('Appelvinkstraat 12');
   await page.getByRole('option', { name: /Appelvinkstraat 12/ }).click();
@@ -185,6 +201,7 @@ test('serves place-specific SEO metadata from clean place URLs', async ({ page }
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
   await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
   await expect(page.locator('#coverage-summary')).toContainText('adressen binnen bebouwde kom');
   await expect(page.getByRole('link', { name: 'Bekijk uitgebreide analyses' })).toHaveAttribute('href', 'http://127.0.0.1:8000/analyses/');
@@ -196,6 +213,8 @@ test('replaces query place URLs with clean place URLs', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/tuitjenhorn\/$/);
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
+  await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
   await page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' }).click();
   await expect(page).toHaveURL('http://127.0.0.1:8000/methodiek/');
@@ -248,6 +267,7 @@ test('opens container deeplinks with the intro collapsed', async ({ page }) => {
   await page.goto('/tuitjenhorn/?container=TH21#kaart');
 
   await expect(page).toHaveURL(/\/tuitjenhorn\/\?container=TH21#kaart$/);
+  await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container TH21');
   await page.waitForTimeout(500);
   await expect(page.locator('#sidebar-header-panel')).not.toHaveAttribute('open', '');
