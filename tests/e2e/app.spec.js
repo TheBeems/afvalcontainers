@@ -65,31 +65,74 @@ test('keeps the mobile menu out of the visual introduction', async ({ page }) =>
   await expect(toggle).toBeVisible();
 });
 
-test('keeps the mobile search anchored while the keyboard viewport settles', async ({ page }) => {
+test('keeps the mobile search visible in visual viewport focus mode', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
   const search = page.getByRole('combobox', { name: 'Zoek je adres' });
-  const mapTarget = page.locator('#kaart');
   const searchPanel = page.locator('.map-search-panel');
-  const getTop = async (locator) => {
-    const top = Math.round((await locator.boundingBox()).y);
-    return Math.abs(top) <= 1 ? 0 : top;
+  const body = page.locator('body');
+
+  const expectInsideVisualViewport = async (locator) => {
+    const bounds = await locator.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const viewport = window.visualViewport;
+      const viewportLeft = viewport?.offsetLeft || 0;
+      const viewportTop = viewport?.offsetTop || 0;
+
+      return {
+        rect: {
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left
+        },
+        viewport: {
+          top: viewportTop,
+          right: viewportLeft + (viewport?.width || window.innerWidth),
+          bottom: viewportTop + (viewport?.height || window.innerHeight),
+          left: viewportLeft
+        }
+      };
+    });
+
+    expect(bounds.rect.top).toBeGreaterThanOrEqual(bounds.viewport.top - 1);
+    expect(bounds.rect.left).toBeGreaterThanOrEqual(bounds.viewport.left - 1);
+    expect(bounds.rect.right).toBeLessThanOrEqual(bounds.viewport.right + 1);
+    expect(bounds.rect.bottom).toBeLessThanOrEqual(bounds.viewport.bottom + 1);
   };
 
   await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(search).toBeFocused();
-  await expect.poll(() => getTop(mapTarget)).toBe(0);
-  await expect.poll(() => getTop(searchPanel)).toBe(0);
+  await expect(body).toHaveClass(/mobile-search-active/);
+  await expect(searchPanel).toHaveCSS('position', 'fixed');
+  await expectInsideVisualViewport(search);
 
   await page.setViewportSize({ width: 390, height: 520 });
-  await expect.poll(() => getTop(mapTarget)).toBe(0);
-  await expect.poll(() => getTop(searchPanel)).toBe(0);
+  await expectInsideVisualViewport(search);
+
+  await search.fill('Appelvinkstraat 12');
+  const option = page.getByRole('option', { name: /Appelvinkstraat 12/ });
+  await expect(option).toBeVisible();
+  await expectInsideVisualViewport(search);
+  await expectInsideVisualViewport(page.locator('#search-results'));
+
+  await option.click();
+  await expect(body).not.toHaveClass(/mobile-search-active/);
+
+  await page.goto('/#kaart');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await search.click();
+  await expect(search).toBeFocused();
+  await expect(body).toHaveClass(/mobile-search-active/);
 
   await search.evaluate((input) => input.blur());
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect.poll(() => getTop(mapTarget)).toBe(0);
-  await expect.poll(() => getTop(searchPanel)).toBe(0);
+  await expect(body).not.toHaveClass(/mobile-search-active/);
+
+  await search.click();
+  await expect(body).toHaveClass(/mobile-search-active/);
+  await page.keyboard.press('Escape');
+  await expect(body).not.toHaveClass(/mobile-search-active/);
 });
 
 test('serves place-specific SEO metadata from clean place URLs', async ({ page }) => {

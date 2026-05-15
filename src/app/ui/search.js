@@ -5,9 +5,11 @@ import {
 } from '../config.js';
 import { escapeHtml } from '../../shared/html.js';
 
-const SEARCH_ANCHOR_GRACE_MS = 800;
-const SEARCH_ANCHOR_OVERSCROLL_PX = 24;
-const SEARCH_ANCHOR_SETTLE_DELAY_MS = 360;
+const MOBILE_SEARCH_ACTIVE_CLASS = 'mobile-search-active';
+
+function formatCssPixel(value) {
+  return `${Number.isFinite(value) ? value.toFixed(2) : '0'}px`;
+}
 
 export function createSearch(context, api) {
   const { state } = context;
@@ -19,7 +21,6 @@ export function createSearch(context, api) {
   function setupSearch() {
     const input = document.getElementById('house-search');
     const resultsDiv = document.getElementById('search-results');
-    const mapTarget = document.getElementById('kaart');
 
     if (!input || !resultsDiv) {
       return;
@@ -34,9 +35,8 @@ export function createSearch(context, api) {
     let fusePlaceId = null;
     let fuseConstructorPromise = null;
     let searchRequestId = 0;
-    let searchAnchorFrame = null;
-    let searchAnchorSettleTimer = null;
-    let keepSearchAnchoredUntil = 0;
+    let isMobileSearchActive = false;
+    let searchViewportFrame = null;
 
     function isMobileSearchViewport() {
       if (!mobileQuery && typeof window.matchMedia === 'function') {
@@ -46,58 +46,84 @@ export function createSearch(context, api) {
       return mobileQuery?.matches || false;
     }
 
-    function shouldKeepSearchAnchored() {
-      return document.activeElement === input || Date.now() <= keepSearchAnchoredUntil;
+    function clearSearchViewportVariables() {
+      searchRoot.style.removeProperty('--search-viewport-top');
+      searchRoot.style.removeProperty('--search-viewport-left');
+      searchRoot.style.removeProperty('--search-viewport-width');
+      searchRoot.style.removeProperty('--search-viewport-height');
     }
 
-    function alignSearchToMapTop() {
-      searchAnchorFrame = null;
+    function syncSearchViewport() {
+      searchViewportFrame = null;
 
-      if (!mapTarget || !isMobileSearchViewport() || !shouldKeepSearchAnchored()) {
+      if (!isMobileSearchActive || !window.visualViewport) {
         return;
       }
 
-      const root = document.documentElement;
-      const previousScrollBehavior = root.style.scrollBehavior;
+      const { offsetTop, offsetLeft, width, height } = window.visualViewport;
 
-      root.style.scrollBehavior = 'auto';
-      window.scrollTo({
-        top: mapTarget.offsetTop + SEARCH_ANCHOR_OVERSCROLL_PX,
-        left: window.scrollX
-      });
-      root.style.scrollBehavior = previousScrollBehavior;
+      searchRoot.style.setProperty('--search-viewport-top', formatCssPixel(offsetTop));
+      searchRoot.style.setProperty('--search-viewport-left', formatCssPixel(offsetLeft));
+      searchRoot.style.setProperty('--search-viewport-width', formatCssPixel(width));
+      searchRoot.style.setProperty('--search-viewport-height', formatCssPixel(height));
     }
 
-    function scheduleSearchAnchor() {
-      if (!mapTarget || searchAnchorFrame !== null) {
+    function scheduleSearchViewportSync() {
+      if (!isMobileSearchActive || searchViewportFrame !== null) {
         return;
       }
 
-      searchAnchorFrame = window.requestAnimationFrame(alignSearchToMapTop);
+      searchViewportFrame = window.requestAnimationFrame(syncSearchViewport);
     }
 
-    function scheduleSearchAnchorSettling() {
-      scheduleSearchAnchor();
-
-      if (searchAnchorSettleTimer !== null) {
-        window.clearTimeout(searchAnchorSettleTimer);
+    function deactivateMobileSearchMode({ blurInput = false } = {}) {
+      if (!isMobileSearchActive && !document.body.classList.contains(MOBILE_SEARCH_ACTIVE_CLASS)) {
+        return;
       }
 
-      searchAnchorSettleTimer = window.setTimeout(() => {
-        searchAnchorSettleTimer = null;
-        scheduleSearchAnchor();
-      }, SEARCH_ANCHOR_SETTLE_DELAY_MS);
+      isMobileSearchActive = false;
+      document.body.classList.remove(MOBILE_SEARCH_ACTIVE_CLASS);
+      clearSearchViewportVariables();
+
+      if (searchViewportFrame !== null) {
+        window.cancelAnimationFrame(searchViewportFrame);
+        searchViewportFrame = null;
+      }
+
+      if (blurInput && document.activeElement === input) {
+        input.blur();
+      }
     }
 
-    function keepSearchAnchoredDuringViewportSettle() {
-      keepSearchAnchoredUntil = Date.now() + SEARCH_ANCHOR_GRACE_MS;
-      scheduleSearchAnchorSettling();
+    function activateMobileSearchMode() {
+      if (!window.visualViewport || !isMobileSearchViewport()) {
+        return;
+      }
+
+      isMobileSearchActive = true;
+      document.body.classList.add(MOBILE_SEARCH_ACTIVE_CLASS);
+      syncSearchViewport();
     }
 
     function handleSearchViewportChange() {
-      if (shouldKeepSearchAnchored()) {
-        scheduleSearchAnchorSettling();
+      if (!isMobileSearchActive) {
+        return;
       }
+
+      if (!isMobileSearchViewport()) {
+        deactivateMobileSearchMode();
+        return;
+      }
+
+      scheduleSearchViewportSync();
+    }
+
+    function handleSearchFocusOut() {
+      window.requestAnimationFrame(() => {
+        if (!searchRoot.contains(document.activeElement)) {
+          deactivateMobileSearchMode();
+        }
+      });
     }
 
     async function getFuseConstructor() {
@@ -194,6 +220,7 @@ export function createSearch(context, api) {
 
       input.value = house.address;
       closeResults();
+      deactivateMobileSearchMode({ blurInput: true });
       api.closeMobileSidebarIfMobile?.();
       await api.selectPlace(house.placeId, {
         selectedHouseId: house.id,
@@ -314,6 +341,7 @@ export function createSearch(context, api) {
 
       if (event.key === 'Escape') {
         closeResults();
+        deactivateMobileSearchMode({ blurInput: true });
       }
     }
 
@@ -321,22 +349,25 @@ export function createSearch(context, api) {
       void renderResults();
     });
     input.addEventListener('focus', () => {
-      keepSearchAnchoredUntil = 0;
-      scheduleSearchAnchorSettling();
+      activateMobileSearchMode();
 
       if (getQuery()) {
         void renderResults();
       }
     });
-    input.addEventListener('blur', keepSearchAnchoredDuringViewportSettle);
     input.addEventListener('keydown', handleSearchKeydown);
+    searchRoot.addEventListener('focusin', activateMobileSearchMode);
+    searchRoot.addEventListener('focusout', handleSearchFocusOut);
 
     window.addEventListener('resize', handleSearchViewportChange);
     window.visualViewport?.addEventListener('resize', handleSearchViewportChange);
+    window.visualViewport?.addEventListener('scroll', handleSearchViewportChange);
+    window.visualViewport?.addEventListener('scrollend', handleSearchViewportChange);
 
     document.addEventListener('pointerdown', (event) => {
       if (!searchRoot.contains(event.target)) {
         closeResults();
+        deactivateMobileSearchMode({ blurInput: true });
       }
     });
   }
