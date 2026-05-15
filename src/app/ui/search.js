@@ -1,8 +1,13 @@
 import {
+  MOBILE_MAP_SCROLL_QUERY,
   SEARCH_MIN_QUERY_LENGTH,
   SEARCH_RESULT_LIMIT
 } from '../config.js';
 import { escapeHtml } from '../../shared/html.js';
+
+const SEARCH_ANCHOR_GRACE_MS = 800;
+const SEARCH_ANCHOR_OVERSCROLL_PX = 24;
+const SEARCH_ANCHOR_SETTLE_DELAY_MS = 360;
 
 export function createSearch(context, api) {
   const { state } = context;
@@ -14,6 +19,7 @@ export function createSearch(context, api) {
   function setupSearch() {
     const input = document.getElementById('house-search');
     const resultsDiv = document.getElementById('search-results');
+    const mapTarget = document.getElementById('kaart');
 
     if (!input || !resultsDiv) {
       return;
@@ -21,12 +27,78 @@ export function createSearch(context, api) {
 
     const searchRoot = input.closest('.search-panel') || input;
 
+    let mobileQuery = null;
     let matches = [];
     let activeIndex = -1;
     let fuse = null;
     let fusePlaceId = null;
     let fuseConstructorPromise = null;
     let searchRequestId = 0;
+    let searchAnchorFrame = null;
+    let searchAnchorSettleTimer = null;
+    let keepSearchAnchoredUntil = 0;
+
+    function isMobileSearchViewport() {
+      if (!mobileQuery && typeof window.matchMedia === 'function') {
+        mobileQuery = window.matchMedia(MOBILE_MAP_SCROLL_QUERY);
+      }
+
+      return mobileQuery?.matches || false;
+    }
+
+    function shouldKeepSearchAnchored() {
+      return document.activeElement === input || Date.now() <= keepSearchAnchoredUntil;
+    }
+
+    function alignSearchToMapTop() {
+      searchAnchorFrame = null;
+
+      if (!mapTarget || !isMobileSearchViewport() || !shouldKeepSearchAnchored()) {
+        return;
+      }
+
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo({
+        top: mapTarget.offsetTop + SEARCH_ANCHOR_OVERSCROLL_PX,
+        left: window.scrollX
+      });
+      root.style.scrollBehavior = previousScrollBehavior;
+    }
+
+    function scheduleSearchAnchor() {
+      if (!mapTarget || searchAnchorFrame !== null) {
+        return;
+      }
+
+      searchAnchorFrame = window.requestAnimationFrame(alignSearchToMapTop);
+    }
+
+    function scheduleSearchAnchorSettling() {
+      scheduleSearchAnchor();
+
+      if (searchAnchorSettleTimer !== null) {
+        window.clearTimeout(searchAnchorSettleTimer);
+      }
+
+      searchAnchorSettleTimer = window.setTimeout(() => {
+        searchAnchorSettleTimer = null;
+        scheduleSearchAnchor();
+      }, SEARCH_ANCHOR_SETTLE_DELAY_MS);
+    }
+
+    function keepSearchAnchoredDuringViewportSettle() {
+      keepSearchAnchoredUntil = Date.now() + SEARCH_ANCHOR_GRACE_MS;
+      scheduleSearchAnchorSettling();
+    }
+
+    function handleSearchViewportChange() {
+      if (shouldKeepSearchAnchored()) {
+        scheduleSearchAnchorSettling();
+      }
+    }
 
     async function getFuseConstructor() {
       if (!fuseConstructorPromise) {
@@ -249,11 +321,18 @@ export function createSearch(context, api) {
       void renderResults();
     });
     input.addEventListener('focus', () => {
+      keepSearchAnchoredUntil = 0;
+      scheduleSearchAnchorSettling();
+
       if (getQuery()) {
         void renderResults();
       }
     });
+    input.addEventListener('blur', keepSearchAnchoredDuringViewportSettle);
     input.addEventListener('keydown', handleSearchKeydown);
+
+    window.addEventListener('resize', handleSearchViewportChange);
+    window.visualViewport?.addEventListener('resize', handleSearchViewportChange);
 
     document.addEventListener('pointerdown', (event) => {
       if (!searchRoot.contains(event.target)) {

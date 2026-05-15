@@ -3,7 +3,8 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     height: auto;
-    min-height: 100dvh;
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .sidebar {
@@ -109,7 +110,8 @@
     grid-row: 1;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    height: 100dvh;
+    height: 100vh;
+    height: 100svh;
     min-height: 0;
     background: var(--panel);
   }
@@ -124,9 +126,9 @@
 
   /* On small screens the search sits above the map instead of covering map controls. */
   .map-search-panel {
-    position: relative;
-    z-index: 1;
-    top: auto;
+    position: sticky;
+    z-index: 1000;
+    top: 0;
     left: auto;
     grid-row: 1;
     width: auto;

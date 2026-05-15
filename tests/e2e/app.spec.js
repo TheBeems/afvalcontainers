@@ -65,6 +65,33 @@ test('keeps the mobile menu out of the visual introduction', async ({ page }) =>
   await expect(toggle).toBeVisible();
 });
 
+test('keeps the mobile search anchored while the keyboard viewport settles', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const search = page.getByRole('combobox', { name: 'Zoek je adres' });
+  const mapTarget = page.locator('#kaart');
+  const searchPanel = page.locator('.map-search-panel');
+  const getTop = async (locator) => {
+    const top = Math.round((await locator.boundingBox()).y);
+    return Math.abs(top) <= 1 ? 0 : top;
+  };
+
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
+  await expect(search).toBeFocused();
+  await expect.poll(() => getTop(mapTarget)).toBe(0);
+  await expect.poll(() => getTop(searchPanel)).toBe(0);
+
+  await page.setViewportSize({ width: 390, height: 520 });
+  await expect.poll(() => getTop(mapTarget)).toBe(0);
+  await expect.poll(() => getTop(searchPanel)).toBe(0);
+
+  await search.evaluate((input) => input.blur());
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(() => getTop(mapTarget)).toBe(0);
+  await expect.poll(() => getTop(searchPanel)).toBe(0);
+});
+
 test('serves place-specific SEO metadata from clean place URLs', async ({ page }) => {
   await page.goto('/tuitjenhorn/');
 
