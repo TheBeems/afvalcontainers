@@ -17,6 +17,7 @@
     "generate:address-indexes": "node scripts/generate-address-indexes.mjs",
     "generate:coverage-split": "node scripts/split-house-coverage.mjs",
     "generate:survey-pdf": "node scripts/generate-survey-pdf.mjs",
+    "generate:story-images": "node scripts/generate-story-images.mjs",
     "generate:smoke": "node scripts/generate-house-coverage.mjs --limit-houses=10 --output-json=/tmp/house-coverage.json",
     "serve": "python3 -m http.server 8000 --directory dist",
     "test:e2e": "playwright test",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "sharp": "^0.34.5",
     "vite": "^8.0.10"
   }
 }
