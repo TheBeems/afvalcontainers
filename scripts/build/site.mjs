@@ -152,20 +152,7 @@ function buildOrganizationStructuredData() {
   };
 }
 
-function buildBreadcrumbStructuredData(url, items) {
-  return {
-    '@type': 'BreadcrumbList',
-    '@id': `${url}#breadcrumb`,
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: item.url
-    }))
-  };
-}
-
-function buildWebPageStructuredData({ url, name, description, breadcrumbItems, image = false }) {
+function buildWebPageStructuredData({ url, name, description, image = false }) {
   const page = {
     '@type': 'WebPage',
     '@id': `${url}#webpage`,
@@ -173,7 +160,6 @@ function buildWebPageStructuredData({ url, name, description, breadcrumbItems, i
     name,
     description,
     isPartOf: { '@id': `${SITE_URL}#website` },
-    breadcrumb: { '@id': `${url}#breadcrumb` },
     publisher: { '@id': ORGANIZATION_ID },
     inLanguage: 'nl'
   };
@@ -190,8 +176,7 @@ function buildWebPageStructuredData({ url, name, description, breadcrumbItems, i
   return [
     buildOrganizationStructuredData(),
     buildWebsiteStructuredData(),
-    page,
-    buildBreadcrumbStructuredData(url, breadcrumbItems)
+    page
   ];
 }
 
@@ -241,9 +226,6 @@ function buildPlaceStructuredData(place, coverageSummary) {
         url: canonicalUrl,
         name: title,
         description,
-        breadcrumbItems: [
-          { name: place.name, url: canonicalUrl }
-        ],
         image: true
       }),
       dataset
@@ -259,10 +241,7 @@ function buildMethodologyStructuredData() {
     '@graph': buildWebPageStructuredData({
       url,
       name: 'Methodiek en onderzoeksbasis',
-      description,
-      breadcrumbItems: [
-        { name: 'Methodiek', url }
-      ]
+      description
     })
   };
 }
@@ -270,15 +249,13 @@ function buildMethodologyStructuredData() {
 function buildAnalysesStructuredData() {
   const url = getAnalysesUrl();
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
+  const title = 'Analyses loopafstanden restafvalcontainers';
   return {
     '@context': 'https://schema.org',
     '@graph': buildWebPageStructuredData({
       url,
-      name: 'Analyses loopafstanden',
-      description,
-      breadcrumbItems: [
-        { name: 'Analyses', url }
-      ]
+      name: title,
+      description
     })
   };
 }
@@ -1015,7 +992,7 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
 async function buildAnalysesPage(places) {
   const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
   const defaultAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
-  const title = 'Analyses loopafstanden';
+  const title = 'Analyses loopafstanden restafvalcontainers';
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const seoBlock = buildSeoBlock({
     title,
@@ -1385,7 +1362,7 @@ ${seoBlock}
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
-    <h1>Analyses loopafstanden</h1>
+    <h1>Analyses loopafstanden restafvalcontainers</h1>
     <p class="lead">Deze pagina vat de vooraf berekende loopafstanden samen per dorp, straat en dichtstbijzijnde container. De cijfers komen uit dezelfde JSON-data als de kaart.</p>
 
     <div class="analysis-selector">

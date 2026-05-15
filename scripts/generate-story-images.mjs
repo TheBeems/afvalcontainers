@@ -40,6 +40,14 @@ async function generateImageVariants(fileName) {
       .webp({ quality: 78, effort: 5 })
       .toFile(getOutputPath(fileName, width, 'webp'));
   }
+
+  await sharp(inputPath)
+    .resize({
+      width: 1672,
+      withoutEnlargement: true
+    })
+    .png({ palette: true, quality: 82, compressionLevel: 9 })
+    .toFile(getOutputPath(fileName, 1672, 'png'));
 }
 
 await mkdir(outputDir, { recursive: true });
@@ -48,4 +56,4 @@ for (const image of images) {
   await generateImageVariants(image);
 }
 
-console.log(`Generated ${images.length * widths.length * 2} story image variants in ${outputDir}`);
+console.log(`Generated ${images.length * ((widths.length * 2) + 1)} story image variants in ${outputDir}`);
