@@ -135,6 +135,22 @@ test('keeps the mobile search visible in visual viewport focus mode', async ({ p
   await expect(body).not.toHaveClass(/mobile-search-active/);
 });
 
+test('scrolls to the mobile map after selecting an address from search focus mode', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const search = page.getByRole('combobox', { name: 'Zoek je adres' });
+  const mapShell = page.locator('.map-shell');
+
+  await search.evaluate((input) => input.focus({ preventScroll: true }));
+  await expect(page.locator('body')).toHaveClass(/mobile-search-active/);
+  await search.fill('Appelvinkstraat 12');
+  await page.getByRole('option', { name: /Appelvinkstraat 12/ }).click();
+
+  await expect(page.locator('body')).not.toHaveClass(/mobile-search-active/);
+  await expect.poll(async () => Math.round((await mapShell.boundingBox()).y)).toBe(0);
+});
+
 test('serves place-specific SEO metadata from clean place URLs', async ({ page }) => {
   await page.goto('/tuitjenhorn/');
 

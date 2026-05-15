@@ -222,6 +222,7 @@ export function createSearch(context, api) {
       closeResults();
       deactivateMobileSearchMode({ blurInput: true });
       api.closeMobileSidebarIfMobile?.();
+      api.scrollMapIntoView?.();
       await api.selectPlace(house.placeId, {
         selectedHouseId: house.id,
         focusMap: true
