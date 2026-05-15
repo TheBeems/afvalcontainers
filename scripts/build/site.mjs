@@ -29,6 +29,7 @@ export const projectRoot = resolve(import.meta.dirname, '../..');
 export const distDir = resolve(projectRoot, 'dist');
 
 const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END -->/;
+const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 
 const placeFilePathKeys = [
   'containers',
@@ -112,7 +113,7 @@ function buildSeoBlock({
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
   <meta name="app-base-path" content="${escapeHtml(runtimeBasePath)}" />
-  <meta name="google-site-verification" content="ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU" />
+  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}" />
   <link rel="icon" href="${escapeHtml(assetPrefix)}favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="${escapeHtml(assetPrefix)}favicon.png" type="image/png" sizes="64x64" />
   <meta property="og:title" content="${escapeHtml(title)}" />
@@ -541,10 +542,18 @@ async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix
   return pageHtml;
 }
 
-function buildRootRedirectPage(place) {
-  const targetUrl = getPlaceUrl(place);
-  const title = `Doorverwijzen naar ${place.name}`;
-  const description = `Deze pagina verwijst door naar de kaart voor ${place.name}.`;
+function buildRootRedirectPage(defaultPlace, places) {
+  const targetUrl = getPlaceUrl(defaultPlace);
+  const redirectPlaces = places.map((place) => ({
+    id: place.id,
+    slug: getPlaceSlug(place),
+    url: getPlaceUrl(place),
+    containerPattern: place.containerIdPrefix
+      ? `^${place.containerIdPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\d{2}$`
+      : '^[A-Z]+\\d{2}$'
+  }));
+  const title = `Doorverwijzen naar ${defaultPlace.name}`;
+  const description = `Deze pagina verwijst door naar de kaart voor ${defaultPlace.name}.`;
   return `<!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -552,16 +561,41 @@ function buildRootRedirectPage(place) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}" />
+  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}" />
   <link rel="canonical" href="${escapeHtml(targetUrl)}" />
   <meta http-equiv="refresh" content="0; url=${escapeHtml(targetUrl)}" />
   <script>
-    window.location.replace(${escapeScriptJson(JSON.stringify(targetUrl))});
+    (() => {
+      const defaultUrl = ${escapeScriptJson(JSON.stringify(targetUrl))};
+      const places = ${escapeScriptJson(JSON.stringify(redirectPlaces))};
+      const params = new URLSearchParams(window.location.search);
+      const requestedPlace = params.get('plaats');
+      const place = places.find((candidate) => (
+        candidate.id === requestedPlace || candidate.slug === requestedPlace
+      )) || places[0];
+      const target = new URL(place?.url || defaultUrl);
+      const containerId = params.get('container');
+
+      if (containerId) {
+        const isValidContainer = new RegExp(place?.containerPattern || '^[A-Z]+\\\\d{2}$').test(containerId);
+
+        if (isValidContainer) {
+          target.searchParams.set('container', containerId);
+        }
+      }
+
+      if (window.location.hash) {
+        target.hash = window.location.hash;
+      }
+
+      window.location.replace(target.toString());
+    })();
   </script>
 </head>
 <body>
   <main>
     <h1>${escapeHtml(title)}</h1>
-    <p><a href="${escapeHtml(targetUrl)}">Ga naar ${escapeHtml(place.name)}</a>.</p>
+    <p><a href="${escapeHtml(targetUrl)}">Ga naar ${escapeHtml(defaultPlace.name)}</a>.</p>
   </main>
 </body>
 </html>
@@ -1448,7 +1482,7 @@ async function writeSeoPages(places) {
   const templateHtml = await readFile(resolve(distDir, 'index.html'), 'utf8');
   const defaultPlace = places.find((place) => place.id === 'warmenhuizen') || places[0];
 
-  await writeFile(resolve(distDir, 'index.html'), buildRootRedirectPage(defaultPlace), 'utf8');
+  await writeFile(resolve(distDir, 'index.html'), buildRootRedirectPage(defaultPlace, places), 'utf8');
 
   for (const place of places) {
     const slug = getPlaceSlug(place);
