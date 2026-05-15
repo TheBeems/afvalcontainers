@@ -12,15 +12,6 @@
   line-height: 1.3;
 }
 
-.place-select-label {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
 .place-select {
   width: 100%;
   border: 1px solid var(--border);

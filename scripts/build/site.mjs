@@ -13,6 +13,8 @@ import {
   getPlaceSlug,
   getPlaceTitle,
   getPlaceUrl,
+  ORGANIZATION_ID,
+  ORGANIZATION_NAME,
   SITE_BASE_PATH,
   SITE_NAME,
   SITE_URL,
@@ -27,6 +29,7 @@ export const projectRoot = resolve(import.meta.dirname, '../..');
 export const distDir = resolve(projectRoot, 'dist');
 
 const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END -->/;
+const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 
 const placeFilePathKeys = [
   'containers',
@@ -110,7 +113,7 @@ function buildSeoBlock({
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
   <meta name="app-base-path" content="${escapeHtml(runtimeBasePath)}" />
-  <meta name="google-site-verification" content="ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU" />
+  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}" />
   <link rel="icon" href="${escapeHtml(assetPrefix)}favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="${escapeHtml(assetPrefix)}favicon.png" type="image/png" sizes="64x64" />
   <meta property="og:title" content="${escapeHtml(title)}" />
@@ -136,8 +139,46 @@ function buildWebsiteStructuredData() {
     '@id': `${SITE_URL}#website`,
     url: SITE_URL,
     name: SITE_NAME,
+    inLanguage: 'nl',
+    publisher: { '@id': ORGANIZATION_ID }
+  };
+}
+
+function buildOrganizationStructuredData() {
+  return {
+    '@type': 'Organization',
+    '@id': ORGANIZATION_ID,
+    name: ORGANIZATION_NAME,
+    url: SITE_URL
+  };
+}
+
+function buildWebPageStructuredData({ url, name, description, image = false }) {
+  const page = {
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    url,
+    name,
+    description,
+    isPartOf: { '@id': `${SITE_URL}#website` },
+    publisher: { '@id': ORGANIZATION_ID },
     inLanguage: 'nl'
   };
+
+  if (image) {
+    page.primaryImageOfPage = {
+      '@type': 'ImageObject',
+      url: SOCIAL_IMAGE_URL,
+      width: SOCIAL_IMAGE_WIDTH,
+      height: SOCIAL_IMAGE_HEIGHT
+    };
+  }
+
+  return [
+    buildOrganizationStructuredData(),
+    buildWebsiteStructuredData(),
+    page
+  ];
 }
 
 function buildPlaceStructuredData(place, coverageSummary) {
@@ -155,13 +196,20 @@ function buildPlaceStructuredData(place, coverageSummary) {
       '@type': 'Place',
       name: place.name
     },
-    creator: {
-      '@type': 'Organization',
-      name: 'Dorpsraad Warmenhuizen'
-    },
+    keywords: [
+      'restafvalcontainers',
+      'loopafstand',
+      'ondergrondse containers',
+      place.name,
+      'gemeente Schagen'
+    ],
+    measurementTechnique: 'Kortste looproute via straten en paden op basis van openbare adres- en kaartgegevens.',
+    creator: { '@id': ORGANIZATION_ID },
+    publisher: { '@id': ORGANIZATION_ID },
     distribution: [
       {
         '@type': 'DataDownload',
+        name: `Samenvatting loopafstandsanalyse ${place.name}`,
         encodingFormat: 'application/json',
         contentUrl: `${SITE_URL}${stripProjectRelativePrefix(place.paths.coverageSummary)}`
       }
@@ -175,22 +223,12 @@ function buildPlaceStructuredData(place, coverageSummary) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      buildWebsiteStructuredData(),
-      {
-        '@type': 'WebPage',
-        '@id': `${canonicalUrl}#webpage`,
+      ...buildWebPageStructuredData({
         url: canonicalUrl,
         name: title,
         description,
-        isPartOf: { '@id': `${SITE_URL}#website` },
-        primaryImageOfPage: {
-          '@type': 'ImageObject',
-          url: SOCIAL_IMAGE_URL,
-          width: SOCIAL_IMAGE_WIDTH,
-          height: SOCIAL_IMAGE_HEIGHT
-        },
-        inLanguage: 'nl'
-      },
+        image: true
+      }),
       dataset
     ]
   };
@@ -201,38 +239,25 @@ function buildMethodologyStructuredData() {
   const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   return {
     '@context': 'https://schema.org',
-    '@graph': [
-      buildWebsiteStructuredData(),
-      {
-        '@type': 'WebPage',
-        '@id': `${url}#webpage`,
-        url,
-        name: 'Methodiek en onderzoeksbasis',
-        description,
-        isPartOf: { '@id': `${SITE_URL}#website` },
-        inLanguage: 'nl'
-      }
-    ]
+    '@graph': buildWebPageStructuredData({
+      url,
+      name: 'Methodiek en onderzoeksbasis',
+      description
+    })
   };
 }
 
 function buildAnalysesStructuredData() {
   const url = getAnalysesUrl();
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
+  const title = 'Analyses loopafstanden restafvalcontainers';
   return {
     '@context': 'https://schema.org',
-    '@graph': [
-      buildWebsiteStructuredData(),
-      {
-        '@type': 'WebPage',
-        '@id': `${url}#webpage`,
-        url,
-        name: 'Analyses loopafstanden',
-        description,
-        isPartOf: { '@id': `${SITE_URL}#website` },
-        inLanguage: 'nl'
-      }
-    ]
+    '@graph': buildWebPageStructuredData({
+      url,
+      name: title,
+      description
+    })
   };
 }
 
@@ -297,6 +322,8 @@ function rewriteAppRelativePaths(html, assetPrefix) {
 
   return html
     .replaceAll('src="./assets/', `src="${assetPrefix}assets/`)
+    .replaceAll('srcset="./assets/', `srcset="${assetPrefix}assets/`)
+    .replaceAll(', ./assets/', `, ${assetPrefix}assets/`)
     .replaceAll('href="./assets/', `href="${assetPrefix}assets/`)
     .replaceAll('href="./analyses/"', `href="${assetPrefix}analyses/"`)
     .replaceAll('href="./methodiek/"', `href="${assetPrefix}methodiek/"`);
@@ -515,6 +542,66 @@ async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix
   return pageHtml;
 }
 
+function buildRootRedirectPage(defaultPlace, places) {
+  const targetUrl = getPlaceUrl(defaultPlace);
+  const redirectPlaces = places.map((place) => ({
+    id: place.id,
+    slug: getPlaceSlug(place),
+    url: getPlaceUrl(place),
+    containerPattern: place.containerIdPrefix
+      ? `^${place.containerIdPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\d{2}$`
+      : '^[A-Z]+\\d{2}$'
+  }));
+  const title = `Doorverwijzen naar ${defaultPlace.name}`;
+  const description = `Deze pagina verwijst door naar de kaart voor ${defaultPlace.name}.`;
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}" />
+  <link rel="canonical" href="${escapeHtml(targetUrl)}" />
+  <meta http-equiv="refresh" content="0; url=${escapeHtml(targetUrl)}" />
+  <script>
+    (() => {
+      const defaultUrl = ${escapeScriptJson(JSON.stringify(targetUrl))};
+      const places = ${escapeScriptJson(JSON.stringify(redirectPlaces))};
+      const params = new URLSearchParams(window.location.search);
+      const requestedPlace = params.get('plaats');
+      const place = places.find((candidate) => (
+        candidate.id === requestedPlace || candidate.slug === requestedPlace
+      )) || places[0];
+      const target = new URL(place?.url || defaultUrl);
+      const containerId = params.get('container');
+
+      if (containerId) {
+        const isValidContainer = new RegExp(place?.containerPattern || '^[A-Z]+\\\\d{2}$').test(containerId);
+
+        if (isValidContainer) {
+          target.searchParams.set('container', containerId);
+        }
+      }
+
+      if (window.location.hash) {
+        target.hash = window.location.hash;
+      }
+
+      window.location.replace(target.toString());
+    })();
+  </script>
+</head>
+<body>
+  <main>
+    <h1>${escapeHtml(title)}</h1>
+    <p><a href="${escapeHtml(targetUrl)}">Ga naar ${escapeHtml(defaultPlace.name)}</a>.</p>
+  </main>
+</body>
+</html>
+`;
+}
+
 function buildMethodologyPage() {
   const title = 'Methodiek en onderzoeksbasis';
   const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
@@ -628,6 +715,7 @@ ${seoBlock}
     <nav aria-label="Hoofdnavigatie">
       <a href="../warmenhuizen/">Kaart Warmenhuizen</a>
       <a href="../tuitjenhorn/">Kaart Tuitjenhorn</a>
+      <a href="../analyses/">Analyses</a>
     </nav>
 
     <h1>Methodiek en onderzoeksbasis</h1>
@@ -938,7 +1026,7 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
 async function buildAnalysesPage(places) {
   const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
   const defaultAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
-  const title = 'Analyses loopafstanden';
+  const title = 'Analyses loopafstanden restafvalcontainers';
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const seoBlock = buildSeoBlock({
     title,
@@ -1308,7 +1396,7 @@ ${seoBlock}
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
-    <h1>Analyses loopafstanden</h1>
+    <h1>Analyses loopafstanden restafvalcontainers</h1>
     <p class="lead">Deze pagina vat de vooraf berekende loopafstanden samen per dorp, straat en dichtstbijzijnde container. De cijfers komen uit dezelfde JSON-data als de kaart.</p>
 
     <div class="analysis-selector">
@@ -1394,10 +1482,7 @@ async function writeSeoPages(places) {
   const templateHtml = await readFile(resolve(distDir, 'index.html'), 'utf8');
   const defaultPlace = places.find((place) => place.id === 'warmenhuizen') || places[0];
 
-  await writeFile(resolve(distDir, 'index.html'), await createAppPage(templateHtml, defaultPlace, {
-    runtimeBasePath: './',
-    assetPrefix: './'
-  }), 'utf8');
+  await writeFile(resolve(distDir, 'index.html'), buildRootRedirectPage(defaultPlace, places), 'utf8');
 
   for (const place of places) {
     const slug = getPlaceSlug(place);
@@ -1423,16 +1508,35 @@ Sitemap: ${SITE_URL}sitemap.xml
 `, 'utf8');
 }
 
+function getValidLastModified(value) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
 async function writeSitemap(places) {
+  const placeEntries = await Promise.all(places.map(async (place) => ({
+    url: getPlaceUrl(place),
+    lastmod: getValidLastModified((await readCoverageSummary(place))?.generatedAt)
+  })));
+  const latestPlaceLastmod = placeEntries
+    .map((entry) => entry.lastmod)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || null;
   const urls = [
-    ...places.map((place) => getPlaceUrl(place)),
-    getAnalysesUrl(),
-    getMethodologyUrl()
+    ...placeEntries,
+    { url: getAnalysesUrl(), lastmod: latestPlaceLastmod },
+    { url: getMethodologyUrl(), lastmod: null }
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url>
-    <loc>${escapeHtml(url)}</loc>
+${urls.map((entry) => `  <url>
+    <loc>${escapeHtml(entry.url)}</loc>${entry.lastmod ? `
+    <lastmod>${escapeHtml(entry.lastmod)}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>
 `;

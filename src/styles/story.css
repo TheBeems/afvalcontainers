@@ -34,14 +34,19 @@
   min-height: 100svh;
 }
 
+.visual-story-media,
 .visual-story-image,
 .visual-story-scrim {
   position: absolute;
   inset: 0;
 }
 
-.visual-story-image {
+.visual-story-media {
   z-index: -2;
+}
+
+.visual-story-image {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -71,6 +76,7 @@
   text-transform: uppercase;
 }
 
+.visual-story h1,
 .visual-story h2 {
   margin: 0;
   font-size: 46px;
@@ -193,6 +199,7 @@
     padding: 88px 0 102px;
   }
 
+  .visual-story h1,
   .visual-story h2 {
     font-size: 34px;
   }

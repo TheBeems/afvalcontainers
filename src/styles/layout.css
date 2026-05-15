@@ -66,7 +66,7 @@
   min-width: 0;
 }
 
-.sidebar-header h1 {
+.sidebar-header h2 {
   margin: 0;
   font-size: 20px;
   line-height: 1.25;
@@ -217,6 +217,34 @@
 
 .sidebar-collapsible-body {
   padding: 0 12px 12px;
+}
+
+.sidebar-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 14px;
+  padding: 2px 2px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.sidebar-footer-nav a {
+  color: var(--muted);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.sidebar-footer-nav a:hover {
+  color: #0f766e;
+}
+
+.sidebar-footer-nav a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .panel > summary:focus-visible,
