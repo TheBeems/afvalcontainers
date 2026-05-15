@@ -1,6 +1,6 @@
 # Loopafstanden naar aangekondigde ondergrondse restafvalcontainers in de gemeente Schagen
 
-Website te bezoeken op: https://thebeems.github.io/afvalcontainers/
+Website te bezoeken op: https://afvalcontainers-warmenhuizen.nl/
 
 ## Inleiding
 Deze website is ontwikkeld om per dorpskern van de gemeente Schagen inzicht te geven in de daadwerkelijke loopafstanden die inwoners moeten afleggen naar de aangekondigde ondergrondse restafvalcontainers. Het doel is om de toegankelijkheid van de containers controleerbaar te maken en containerplannen op basis van werkelijke loopafstand te kunnen vergelijken.

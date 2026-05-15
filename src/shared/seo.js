@@ -1,5 +1,5 @@
-export const SITE_BASE_PATH = '/afvalcontainers/';
-export const SITE_URL = `https://thebeems.github.io${SITE_BASE_PATH}`;
+export const SITE_BASE_PATH = '/';
+export const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
 export const SOCIAL_IMAGE_PATH = 'social/afvalcontainers-schagen-preview.png';
 export const SOCIAL_IMAGE_URL = `${SITE_URL}${SOCIAL_IMAGE_PATH}`;
 export const SOCIAL_IMAGE_WIDTH = 1200;
