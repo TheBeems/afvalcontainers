@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Papieren enquête restafvalcontainers Warmenhuizen</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #1f2933;
+      background: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.35;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      color: #0f3d3e;
+      font-size: 20pt;
+      line-height: 1.1;
+      margin-bottom: 5mm;
+    }
+
+    h2 {
+      color: #0f3d3e;
+      font-size: 12pt;
+      margin-bottom: 3mm;
+    }
+
+    .intro {
+      margin-bottom: 5mm;
+    }
+
+    .privacy {
+      margin-top: 3mm;
+      color: #52606d;
+      font-size: 9pt;
+    }
+
+    .fields {
+      display: grid;
+      gap: 4mm;
+      grid-template-columns: 1fr 1fr;
+      margin: 0 0 6mm;
+    }
+
+    .field,
+    .question {
+      break-inside: avoid;
+    }
+
+    .field-label,
+    .question-title {
+      display: block;
+      color: #102a43;
+      font-weight: 700;
+      margin-bottom: 2mm;
+    }
+
+    .line {
+      border-bottom: 1px solid #9aa5b1;
+      height: 7mm;
+      width: 100%;
+    }
+
+    .question {
+      border-top: 1px solid #d9e2ec;
+      padding-top: 4mm;
+      margin-top: 4mm;
+    }
+
+    .options {
+      display: grid;
+      gap: 2mm;
+      margin-top: 2mm;
+    }
+
+    .option {
+      align-items: start;
+      display: grid;
+      gap: 2mm;
+      grid-template-columns: 4.5mm 1fr;
+    }
+
+    .box {
+      border: 1.4px solid #52606d;
+      display: inline-block;
+      height: 4mm;
+      margin-top: 0.8mm;
+      width: 4mm;
+    }
+
+    .text-area {
+      border: 1px solid #9aa5b1;
+      height: 24mm;
+      margin-top: 2mm;
+      width: 100%;
+    }
+
+    .text-area.small {
+      height: 15mm;
+    }
+
+    .hint {
+      color: #52606d;
+      font-size: 9pt;
+      margin-top: 1mm;
+    }
+
+    .footer {
+      border-top: 1px solid #d9e2ec;
+      color: #52606d;
+      font-size: 9pt;
+      margin-top: 5mm;
+      padding-top: 3mm;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Jouw mening over aangekondigde restafvalcontainers</h1>
+    <p class="intro">We horen graag hoe je de wijziging van <strong>restafval ophalen</strong> naar <strong>zelf wegbrengen</strong> ervaart. Je reactie helpt ons om de praktische gevolgen per straat en containerlocatie beter zichtbaar te maken en dit terug te koppelen aan de gemeente Schagen. Je kunt je werkelijke loopafstand opzoeken via de website: <a href="https://www.afvalcontainers-warmenhuizen.nl">www.afvalcontainers-warmenhuizen.nl</a></p>
+    <p class="privacy">We vragen geen huisnummer of postcode. Je e-mailadres is optioneel en helpt om reacties als afzonderlijke bewonersreacties te kunnen onderbouwen.</p>
+
+    <section class="question" aria-labelledby="gegevens-title">
+      <h2 id="gegevens-title">Gegevens voor verwerking</h2>
+      <div class="fields">
+        <label class="field">
+          <span class="field-label">In welke straat woont u?</span>
+          <span class="line" aria-hidden="true"></span>
+        </label>
+        <label class="field">
+          <span class="field-label">Wat is uw huidige loopafstand tot de dichtstbijzijnde container?</span>
+          <span class="line" aria-hidden="true"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="question">
+      <span class="question-title">1. Vind je de wijziging van restafval ophalen naar zelf wegbrengen acceptabel?</span>
+      <div class="options">
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Ja</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Nee</span></label>
+      </div>
+    </section>
+
+    <section class="question">
+      <span class="question-title">2. Waarom vind je dit niet acceptabel?</span>
+      <p class="hint">Alleen invullen als je bij vraag 1 "Nee" hebt aangekruist. Meerdere antwoorden mogelijk.</p>
+      <div class="options">
+        <label class="option"><span class="box" aria-hidden="true"></span><span>De loopafstand is te ver</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Afval naast de containers / zwerfafval</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Aantasting van uitzicht, straatbeeld en woongenot</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Onpraktisch voor ouderen en mindervaliden</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Overlast van stank en ongedierte</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Waardedaling woning</span></label>
+        <label class="option"><span class="box" aria-hidden="true"></span><span>Andere reden</span></label>
+      </div>
+      <div class="text-area small" aria-hidden="true"></div>
+    </section>
+
+    <section class="question">
+      <span class="question-title">3. Waarom vind je dit acceptabel?</span>
+      <p class="hint">Alleen invullen als je bij vraag 1 "Ja" hebt aangekruist.</p>
+      <div class="text-area" aria-hidden="true"></div>
+    </section>
+
+    <section class="question">
+      <span class="question-title">4. E-mailadres, optioneel</span>
+      <p class="hint">Optioneel. Dit helpt om reacties als afzonderlijke bewonersreacties te kunnen onderbouwen.</p>
+      <div class="line" aria-hidden="true"></div>
+    </section>
+
+    <p class="footer">Dank voor je reactie. Je feedback helpt de Dorpsraad Warmenhuizen om de gevolgen per locatie beter zichtbaar te maken.</p>
+  </main>
+</body>
+</html>
