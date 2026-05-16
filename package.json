@@ -19,6 +19,7 @@
     "generate:survey-pdf": "node scripts/generate-survey-pdf.mjs",
     "generate:story-images": "node scripts/generate-story-images.mjs",
     "generate:smoke": "node scripts/generate-house-coverage.mjs --limit-houses=10 --output-json=/tmp/house-coverage.json",
+    "perf:compare": "node scripts/perf/compare-initial-load.mjs",
     "serve": "python3 -m http.server 8000 --directory dist",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
