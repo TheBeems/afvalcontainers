@@ -17,6 +17,7 @@ export const OSRM_PROFILE = 'foot';
 export const LIVE_ROUTE_TIMEOUT_MS = 15000;
 export const CONTAINER_LONG_PRESS_MS = 600;
 export const MOBILE_MAP_SCROLL_QUERY = '(max-width: 960px)';
+export const MOBILE_HOUSE_FOCUS_FROM_BOTTOM_RATIO = 0.75;
 export const CHANGED_CONTAINER_PREVIEW_LIMIT = 4;
 export const TALLY_FORM_ID = 'WODW1v';
 export const TALLY_WIDGET_URL = 'https://tally.so/widgets/embed.js';

@@ -3,6 +3,8 @@ import {
   HOUSE_MARKER_FILL_OPACITY,
   HOUSE_MARKER_MIN_ZOOM,
   HOUSE_MARKER_MUTED_FILL_OPACITY,
+  MOBILE_HOUSE_FOCUS_FROM_BOTTOM_RATIO,
+  MOBILE_MAP_SCROLL_QUERY,
   SEARCH_FOCUS_ZOOM,
   getRouteStyle
 } from '../config.js';
@@ -547,14 +549,34 @@ export function createHouseSelection(context, api) {
     renderHouseSelection(house, api.getCurrentRanking(house));
   }
 
+  function isMobileMapViewport() {
+    return typeof window.matchMedia === 'function'
+      && window.matchMedia(MOBILE_MAP_SCROLL_QUERY).matches;
+  }
+
+  function getOffsetHouseFocusCenter(latLng, zoom) {
+    const mapSize = map.getSize();
+    const markerFocusY = mapSize.y * (1 - MOBILE_HOUSE_FOCUS_FROM_BOTTOM_RATIO);
+    const centerFocusY = mapSize.y / 2;
+    const centerPoint = map.project(latLng, zoom).add(L.point(0, centerFocusY - markerFocusY));
+
+    return map.unproject(centerPoint, zoom);
+  }
+
   function focusHouseOnMap(house) {
     if (!Number.isFinite(house.lat) || !Number.isFinite(house.lon)) {
       return;
     }
 
+    const houseLatLng = [house.lat, house.lon];
+    const zoom = Math.max(map.getZoom(), SEARCH_FOCUS_ZOOM);
+    const center = isMobileMapViewport()
+      ? getOffsetHouseFocusCenter(houseLatLng, zoom)
+      : houseLatLng;
+
     map.setView(
-      [house.lat, house.lon],
-      Math.max(map.getZoom(), SEARCH_FOCUS_ZOOM),
+      center,
+      zoom,
       { animate: true }
     );
   }
