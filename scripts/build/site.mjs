@@ -264,7 +264,7 @@ function buildPlaceStructuredData(place, coverageSummary) {
 
 function buildMethodologyStructuredData() {
   const url = getMethodologyUrl();
-  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
+  const description = 'Korte uitleg voor bewoners van dorpen in de gemeente Schagen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   return {
     '@context': 'https://schema.org',
     '@graph': buildWebPageStructuredData({
@@ -273,6 +273,13 @@ function buildMethodologyStructuredData() {
       description
     })
   };
+}
+
+function buildMunicipalSourceLinks(places) {
+  return places
+    .filter((place) => place.sourceUrl)
+    .map((place) => `<li><a href="${escapeHtml(place.sourceUrl)}">Gemeente Schagen: ${escapeHtml(place.name)}</a></li>`)
+    .join('\n      ');
 }
 
 function buildAnalysesStructuredData() {
@@ -569,9 +576,9 @@ async function createAppPage(templateHtml, place, places, { runtimeBasePath, ass
   return pageHtml;
 }
 
-function buildMethodologyPage(places) {
+function buildMethodologyPage(places, sourcePlaces = places) {
   const title = 'Methodiek en onderzoeksbasis';
-  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
+  const description = 'Korte uitleg voor bewoners van dorpen in de gemeente Schagen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   const seoBlock = buildSeoBlock({
     title,
     description,
@@ -645,6 +652,12 @@ ${seoBlock}
       line-height: 1.2;
     }
 
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
     p,
     li {
       color: var(--muted);
@@ -685,10 +698,10 @@ ${seoBlock}
     </nav>
 
     <h1>Methodiek en onderzoeksbasis</h1>
-    <p class="lead">Deze pagina legt kort uit hoe de kaart voor Warmenhuizen is gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
+    <p class="lead">Deze pagina legt kort uit hoe de kaarten voor de dorpen in de gemeente Schagen zijn gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
 
     <h2>Wat laat de kaart zien?</h2>
-    <p>De kaart kijkt naar woonadressen binnen de bebouwde kom van Warmenhuizen en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
+    <p>De kaart kijkt per dorp (momenteel alleen Warmenhuizen en Tuitjenhorn) naar woonadressen binnen de bebouwde kom en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
     <p>Daarbij telt niet de rechte lijn op de kaart, maar de route via straten en paden. Dat verschil is belangrijk: een container kan hemelsbreed dichtbij lijken, terwijl de werkelijke looproute langer is.</p>
 
     <h2>Waarom deze methode?</h2>
@@ -719,7 +732,7 @@ ${seoBlock}
       <thead>
         <tr>
           <th>Onderzoek</th>
-          <th>Belangrijkste les voor Warmenhuizen</th>
+          <th>Belangrijkste les voor dorpen en laagbouwwijken</th>
         </tr>
       </thead>
       <tbody>
@@ -737,16 +750,17 @@ ${seoBlock}
     </table>
 
     <h2>Wat betekent dit?</h2>
-    <p>Voor Warmenhuizen is vooral de vergelijking met dorpen en laagbouwwijken relevant. Daar is de verandering groot: van een grijze bak aan huis naar zelf restafval wegbrengen.</p>
+    <p>Voor de dorpen in de gemeente Schagen is vooral de vergelijking met andere dorpen en laagbouwwijken relevant. Daar is de verandering groot: van een grijze bak aan huis naar zelf restafval wegbrengen.</p>
     <p>Een afstand van 275 meter op papier betekent daarom niet automatisch dat de voorziening voor bewoners redelijk voelt. De werkelijke route, oversteken, sociale veiligheid, volle containers en fysieke belasting bepalen samen of het systeem werkbaar is.</p>
 
-    <h2>Broncode</h2>
-    <p>De broncode van deze website is openbaar te bekijken op GitHub: <a href="https://github.com/TheBeems/afvalcontainers">github.com/TheBeems/afvalcontainers</a>.</p>
-
     <h2>Bronnen</h2>
+    <h3>Gemeente Schagen</h3>
     <ul class="source-list">
-      <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">Gemeente Schagen: Warmenhuizen</a></li>
-      <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn">Gemeente Schagen: Tuitjenhorn</a></li>
+      ${buildMunicipalSourceLinks(sourcePlaces)}
+    </ul>
+
+    <h3>Onderzoeken over loopafstand en afvalinzameling</h3>
+    <ul class="source-list">
       <li><a href="https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf">Omgekeerd inzamelen in Woerden</a></li>
       <li><a href="https://vang-hha.nl/kennisbibliotheek/resultaten-nieuwe/">Resultaten het nieuwe inzamelen Wageningen</a></li>
       <li><a href="https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645">Onderzoek ondergrondse restafvalcontainers Nijmegen</a></li>
@@ -758,6 +772,9 @@ ${seoBlock}
       <li><a href="https://ris.dalfsen.nl/Vergaderingen/Gemeenteraad/2012/26-november/19%3A30/Afvalbeleid/20121126---6---Afvalbeleid--resultaten-Hoonhorst.pdf">Resultaten afvalbeleid Hoonhorst</a></li>
       <li><a href="https://raad.roosendaal.nl/Vergaderingen/Inspraakbijeenkomst/2019/28-februari/19%3A30/Bijlage-1-Roosendaal-evaluatie-restafval-op-afstand.pdf">Evaluatie restafval op afstand Roosendaal</a></li>
     </ul>
+
+    <h3>Broncode</h3>
+    <p>De broncode van deze website is openbaar te bekijken op GitHub: <a href="https://github.com/TheBeems/afvalcontainers">github.com/TheBeems/afvalcontainers</a>.</p>
   </main>
 </body>
 </html>
@@ -1443,7 +1460,7 @@ async function copySeoAssets() {
   );
 }
 
-async function writeSeoPages(places) {
+async function writeSeoPages(places, sourcePlaces = places) {
   const templateHtml = await readFile(resolve(distDir, 'index.html'), 'utf8');
   const defaultPlace = getDefaultPlace(places);
 
@@ -1463,7 +1480,7 @@ async function writeSeoPages(places) {
   }
 
   await mkdir(resolve(distDir, 'methodiek'), { recursive: true });
-  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(places), 'utf8');
+  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(places, sourcePlaces), 'utf8');
 
   await mkdir(resolve(distDir, 'analyses'), { recursive: true });
   await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
@@ -1524,7 +1541,7 @@ export async function buildSite() {
   });
   await copyRuntimeData(places);
   await copySeoAssets();
-  await writeSeoPages(places);
+  await writeSeoPages(places, configuredPlaces);
   await writeRobotsTxt();
   await writeSitemap(places);
 

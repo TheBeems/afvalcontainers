@@ -344,6 +344,10 @@ test('serves crawl support files and methodology page', async ({ page }) => {
   const methodologyText = await methodology.text();
   expect(methodologyText).toContain('Methodiek en onderzoeksbasis');
   expect(methodologyText).toContain('Gemeente Schagen');
+  expect(methodologyText).toContain('Onderzoeken over loopafstand en afvalinzameling');
+  for (const villageName of ['Dirkshorn', 'Sint Maarten', 'Waarland', 'Burgerbrug', 'Oudesluis', 'Schagerbrug']) {
+    expect(methodologyText).toContain(`Gemeente Schagen: ${villageName}`);
+  }
 });
 
 test('serves sortable analyses for each place with container map links', async ({ page }) => {
