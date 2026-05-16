@@ -653,8 +653,8 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/">Kaart Tuitjenhorn</a>
+      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
+      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
       <a href="../analyses/">Analyses</a>
     </nav>
 
@@ -1331,8 +1331,8 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/">Kaart Tuitjenhorn</a>
+      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
+      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
