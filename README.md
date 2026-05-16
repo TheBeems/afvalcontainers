@@ -215,6 +215,6 @@ After deploying SEO or content changes, use Google Search Console for the proper
   - `https://afvalcontainers-warmenhuizen.nl/tuitjenhorn/`
   - `https://afvalcontainers-warmenhuizen.nl/analyses/`
   - `https://afvalcontainers-warmenhuizen.nl/methodiek/`
-- Confirm that `https://afvalcontainers-warmenhuizen.nl/` redirects to `https://afvalcontainers-warmenhuizen.nl/warmenhuizen/`.
+- Confirm that `https://afvalcontainers-warmenhuizen.nl/` renders Warmenhuizen directly while the canonical URL remains `https://afvalcontainers-warmenhuizen.nl/warmenhuizen/`.
 - Ask relevant local sites to link to the most useful canonical page, for example Dorpsraad Warmenhuizen, local news pages, village associations, and public discussion pages about the container plans.
 - When sharing on social media or messaging apps, use the canonical village URLs rather than query-string URLs.

@@ -52,6 +52,10 @@
   object-fit: cover;
 }
 
+.visual-story-image:not([src]) {
+  visibility: hidden;
+}
+
 .visual-story-scrim {
   z-index: -1;
   background:

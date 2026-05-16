@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
+
 test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', async (route) => {
     await route.fulfill({ status: 204 });
@@ -23,8 +25,8 @@ test('loads the app shell and precomputed coverage data', async ({ page }) => {
   await page.goto('/#kaart');
 
   await expect(page).toHaveTitle(/Werkelijke loopafstand naar restafvalcontainers/);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thebeems.github.io/afvalcontainers/warmenhuizen/');
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://thebeems.github.io/afvalcontainers/social/afvalcontainers-schagen-preview.png');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${SITE_URL}warmenhuizen/`);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', `${SITE_URL}social/afvalcontainers-schagen-preview.png`);
   await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers/ })).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeVisible();
 
@@ -46,7 +48,7 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   const mapShell = page.locator('.map-shell');
 
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Inzicht voor Warmenhuizen' })).toBeVisible();
+  await expect(page.locator('#story-title')).toContainText('Warmenhuizen');
   await expect(page.getByRole('heading', { name: 'Afstand bepaalt de ervaring' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Meer dan 40% loopt 150 meter of meer' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ga naar stap 2: Van bak aan huis naar zelf wegbrengen' })).toBeVisible();
@@ -61,11 +63,45 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await page.getByRole('link', { name: 'Bekijk de visuele uitleg opnieuw' }).click();
   await expect(page).toHaveURL(/#visuele-uitleg$/);
   await expect(story).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Inzicht voor Warmenhuizen' })).toBeVisible();
+  await expect(page.locator('#story-title')).toContainText('Warmenhuizen');
 
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(story).toBeHidden();
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
+});
+
+test('defers map data and later story media until the map is requested', async ({ page }) => {
+  const requestedUrls = [];
+  page.on('request', (request) => {
+    requestedUrls.push(request.url());
+  });
+
+  await page.goto('/warmenhuizen/');
+  await expect(page.locator('#visuele-uitleg')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Direct naar kaart' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(250);
+
+  expect(requestedUrls.some((url) => url.includes('/house-map.json'))).toBe(false);
+  expect(requestedUrls.some((url) => url.startsWith('https://tile.openstreetmap.org/'))).toBe(false);
+  expect(requestedUrls.some((url) => /brengsysteem|werkelijke-looproute|loopafstand-ervaring|praktische-gevolgen/.test(url))).toBe(false);
+
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(page.locator('#visuele-uitleg')).toBeHidden();
+  await expect(page.locator('#coverage-summary')).toBeVisible();
+  await expect.poll(() => requestedUrls.some((url) => url.includes('/house-map.json'))).toBe(true);
+  await expect.poll(() => requestedUrls.some((url) => url.startsWith('https://tile.openstreetmap.org/'))).toBe(true);
+});
+
+test('serves the root as the Warmenhuizen app without a client-side redirect', async ({ page }) => {
+  const response = await page.request.get('/');
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+
+  expect(html).toContain('id="visuele-uitleg"');
+  expect(html).toContain(`href="${SITE_URL}warmenhuizen/"`);
+  expect(html).not.toContain('http-equiv="refresh"');
+  expect(html).not.toContain('window.location.replace');
 });
 
 test('keeps the mobile menu out of the visual introduction', async ({ page }) => {
@@ -195,14 +231,14 @@ test('serves place-specific SEO metadata from clean place URLs', async ({ page }
   await page.goto('/tuitjenhorn/');
 
   await expect(page).toHaveTitle('Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn');
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${SITE_URL}tuitjenhorn/`);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Tuitjenhorn/);
-  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', 'https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `${SITE_URL}tuitjenhorn/`);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
-  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
-  await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
+  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', '../favicon.svg');
+  await expect(page.locator('#story-title')).toContainText('Tuitjenhorn');
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
-  await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
+  await expect(page.locator('#app-title')).toContainText('Tuitjenhorn');
   await expect(page.locator('#coverage-summary')).toContainText('adressen binnen bebouwde kom');
   await expect(page.getByRole('link', { name: 'Bekijk uitgebreide analyses' })).toHaveAttribute('href', 'http://127.0.0.1:8000/analyses/');
   await expect(page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' })).toHaveAttribute('href', 'http://127.0.0.1:8000/methodiek/');
@@ -213,9 +249,9 @@ test('replaces query place URLs with clean place URLs', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/tuitjenhorn\/$/);
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
-  await expect(page.getByRole('heading', { name: 'Inzicht voor Tuitjenhorn' })).toBeVisible();
+  await expect(page.locator('#story-title')).toContainText('Tuitjenhorn');
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
-  await expect(page.getByRole('heading', { name: /Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn/ })).toBeVisible();
+  await expect(page.locator('#app-title')).toContainText('Tuitjenhorn');
   await page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' }).click();
   await expect(page).toHaveURL('http://127.0.0.1:8000/methodiek/');
   await expect(page.getByRole('heading', { name: 'Methodiek en onderzoeksbasis' })).toBeVisible();
@@ -225,16 +261,16 @@ test('serves crawl support files and methodology page', async ({ page }) => {
   const robots = await page.request.get('/robots.txt');
   expect(robots.status()).toBe(200);
   const robotsText = await robots.text();
-  expect(robotsText).toContain('Sitemap: https://thebeems.github.io/afvalcontainers/sitemap.xml');
+  expect(robotsText).toContain(`Sitemap: ${SITE_URL}sitemap.xml`);
 
   const sitemap = await page.request.get('/sitemap.xml');
   expect(sitemap.status()).toBe(200);
   const sitemapText = await sitemap.text();
-  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/warmenhuizen/');
-  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/tuitjenhorn/');
-  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/analyses/');
-  expect(sitemapText).toContain('https://thebeems.github.io/afvalcontainers/methodiek/');
-  expect(sitemapText).not.toContain('<loc>https://thebeems.github.io/afvalcontainers/</loc>');
+  expect(sitemapText).toContain(`${SITE_URL}warmenhuizen/`);
+  expect(sitemapText).toContain(`${SITE_URL}tuitjenhorn/`);
+  expect(sitemapText).toContain(`${SITE_URL}analyses/`);
+  expect(sitemapText).toContain(`${SITE_URL}methodiek/`);
+  expect(sitemapText).not.toContain(`<loc>${SITE_URL}</loc>`);
 
   const methodology = await page.request.get('/methodiek/');
   expect(methodology.status()).toBe(200);
@@ -246,7 +282,7 @@ test('serves crawl support files and methodology page', async ({ page }) => {
 test('serves sortable analyses for each place with container map links', async ({ page }) => {
   await page.goto('/analyses/');
 
-  await expect(page).toHaveTitle('Analyses loopafstanden');
+  await expect(page).toHaveTitle('Analyses loopafstanden restafvalcontainers');
   await expect(page.getByRole('heading', { name: 'Analyses loopafstanden' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Kerncijfers Warmenhuizen' })).toBeVisible();
 

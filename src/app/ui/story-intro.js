@@ -126,7 +126,9 @@ export function bindStoryIntroEvents(api = {}) {
       behavior: 'auto'
     });
 
-    if (focusSearch) {
+    const mapRequest = api.onMapRequested?.({ focusSearch });
+
+    if (focusSearch && !mapRequest) {
       window.requestAnimationFrame(() => {
         searchInput?.focus({ preventScroll: true });
       });
@@ -167,7 +169,7 @@ export function bindStoryIntroEvents(api = {}) {
     scrollFrame = null;
 
     if (shouldCompleteFromScroll()) {
-      completeStoryIntro();
+      completeStoryIntro({ focusSearch: false });
     }
   }
 
