@@ -1,6 +1,7 @@
 import { loadJson } from '../data/load-json.js';
 import {
   getRequestedPlaceId,
+  loadPlacesCatalog,
   loadPlacesManifest
 } from './place-metadata.js';
 import { escapeHtml } from '../../shared/html.js';
@@ -131,8 +132,16 @@ export function createPlaceLoader(context, api) {
     return state.activePlace?.name || '';
   }
 
+  function getContainerEditorPlace() {
+    return state.containerEditorPlace || state.activePlace;
+  }
+
+  function getContainerEditorPlaceName() {
+    return getContainerEditorPlace()?.name || getActivePlaceName();
+  }
+
   function getContainerIdPrefix() {
-    return state.activePlace?.containerIdPrefix || '';
+    return getContainerEditorPlace()?.containerIdPrefix || '';
   }
 
   function getContainerIdFormat() {
@@ -144,13 +153,25 @@ export function createPlaceLoader(context, api) {
   }
 
   function getContainerDownloadFilename() {
-    return state.activePlace?.id
-      ? `${state.activePlace.id}-container-locations.json`
+    return getContainerEditorPlace()?.id
+      ? `${getContainerEditorPlace().id}-container-locations.json`
       : 'container-locations.json';
   }
 
   function getContainerIdPattern() {
-    return getContainerIdPatternForPlace(state.activePlace);
+    return getContainerIdPatternForPlace(getContainerEditorPlace());
+  }
+
+  function renderContainerEditorPlaceSelector() {
+    if (!elements.containerEditorPlaceSelect) {
+      return;
+    }
+
+    const places = state.placeCatalog.length ? state.placeCatalog : state.places;
+    elements.containerEditorPlaceSelect.innerHTML = places.map((place) => `
+      <option value="${escapeHtml(place.id)}"${place.id === getContainerEditorPlace()?.id ? ' selected' : ''}>${escapeHtml(place.name)}</option>
+    `).join('');
+    elements.containerEditorPlaceSelect.disabled = places.length === 0 || state.placeLoadStatus === 'loading';
   }
 
   function renderPlaceSelector() {
@@ -226,9 +247,13 @@ export function createPlaceLoader(context, api) {
     resultLayer.clearLayers();
     routeLayer.clearLayers();
     selectionLayer.clearLayers();
+    if (state.coverageCircle) {
+      map.removeLayer(state.coverageCircle);
+    }
 
     state.containers = [];
     state.originalContainers = [];
+    state.containerEditorPlace = state.activePlace;
     state.houses = [];
     state.coverage = null;
     state.addressIndex = [];
@@ -274,13 +299,95 @@ export function createPlaceLoader(context, api) {
     api.renderHouseMapInfo?.(null);
     api.renderContainerMarkerLegend?.();
     api.updateContainerEditorControls?.();
+    renderContainerEditorPlaceSelector();
   }
 
-  function loadPlaceContainers(containers) {
+  function loadPlaceContainers(containers, currentContainers = containers) {
     const loadedContainers = Array.isArray(containers) ? containers : [];
+    const loadedCurrentContainers = Array.isArray(currentContainers) ? currentContainers : loadedContainers;
     api.setOriginalContainers(loadedContainers);
-    state.containers = state.originalContainers.map((container) => api.cloneContainerForState(container, container.clientKey));
+    state.containers = loadedCurrentContainers.map((container) => {
+      const original = state.originalContainersById.get(container.id);
+      return api.cloneContainerForState(container, original?.clientKey);
+    });
     api.syncContainerIndex();
+  }
+
+  function cacheContainerEditorDataset() {
+    const placeId = getContainerEditorPlace()?.id;
+    if (!placeId || !api.serializeOriginalContainersForDownload || !api.serializeContainersForDownload) {
+      return;
+    }
+
+    state.containerEditorDatasetsByPlaceId.set(placeId, {
+      originalContainers: api.serializeOriginalContainersForDownload(),
+      containers: api.serializeContainersForDownload()
+    });
+  }
+
+  function clearContainerEditorMapState() {
+    api.lockUnlockedContainer?.();
+    map.closePopup();
+    if (map.hasLayer(houseLayer)) {
+      map.removeLayer(houseLayer);
+    }
+
+    containerLayer.clearLayers();
+    houseLayer.clearLayers();
+    resultLayer.clearLayers();
+    routeLayer.clearLayers();
+    selectionLayer.clearLayers();
+    if (state.coverageCircle) {
+      map.removeLayer(state.coverageCircle);
+    }
+
+    state.houses = [];
+    state.coverage = null;
+    state.addressIndex = [];
+    state.addressIndexPlaceId = null;
+    state.activeContainerIndex = null;
+    state.activeContainerKey = null;
+    state.selectedHouse = null;
+    state.coverageCircle = null;
+    state.selectedHouseMarker = null;
+    state.containerMarkers = [];
+    state.containerButtons = [];
+    state.liveRouteCache.clear();
+    state.houseSelectionId += 1;
+    state.containerInfoCollapsed = false;
+    state.houseInfoCollapsed = false;
+    state.addContainerMode = false;
+    state.pendingNewContainer = null;
+    state.editingContainerKey = null;
+    state.unlockedContainerKey = null;
+    state.containerDragStart = null;
+    state.suppressContainerClickUntil = 0;
+
+    map.getContainer().classList.remove('adding-container');
+
+    if (elements.coverageSummary) {
+      elements.coverageSummary.hidden = true;
+      elements.coverageSummary.innerHTML = '';
+    }
+    if (elements.houseDetails) {
+      elements.houseDetails.hidden = false;
+      elements.houseDetails.innerHTML = '<div class="empty-state">Deze editor toont alleen containerlocaties. Genereer de analyse om huizen en loopafstanden te bekijken.</div>';
+    }
+
+    api.renderContainerMapInfo?.(null);
+    api.renderHouseMapInfo?.(null);
+  }
+
+  async function loadOptionalContainers(place) {
+    try {
+      const containers = await loadJson(place.paths.containers, `Containerdataset ${place.name} laden`);
+      return Array.isArray(containers) ? containers : [];
+    } catch (error) {
+      if (String(error.message || '').includes('(404)')) {
+        return [];
+      }
+      throw error;
+    }
   }
 
   async function loadHouseDetail(place, houseId, detailBundle) {
@@ -450,12 +557,15 @@ export function createPlaceLoader(context, api) {
         return;
       }
 
+      state.containerEditorPlace = place;
       loadPlaceContainers(containers);
+      cacheContainerEditorDataset();
       const [coverageSummary, houseMap] = Array.isArray(coverage) ? coverage : [null, []];
       state.coverage = coverageSummary && typeof coverageSummary === 'object' ? coverageSummary : null;
       state.houses = Array.isArray(houseMap) ? houseMap : [];
       state.placeLoadStatus = 'ready';
       renderPlaceSelector();
+      renderContainerEditorPlaceSelector();
       renderLoadedPlace(options);
     } catch (error) {
       if (selectionId !== state.placeSelectionId) {
@@ -468,6 +578,52 @@ export function createPlaceLoader(context, api) {
       elements.houseDetails.hidden = false;
       elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';
       api.setCoverageStatus(error.message || `De viewer kon de batchlaag voor ${place.name} niet laden.`, 'error');
+    }
+  }
+
+  async function selectContainerEditorPlace(placeId) {
+    const place = state.placeCatalogById.get(placeId) || state.placesById.get(placeId);
+    if (!place) {
+      api.setContainerEditorStatus?.(`Onbekend dorp: ${placeId}`, 'error');
+      renderContainerEditorPlaceSelector();
+      return;
+    }
+
+    if (getContainerEditorPlace()?.id === place.id) {
+      renderContainerEditorPlaceSelector();
+      return;
+    }
+
+    cacheContainerEditorDataset();
+    state.containerEditorPlace = place;
+    clearContainerEditorMapState();
+
+    try {
+      const cachedDataset = state.containerEditorDatasetsByPlaceId.get(place.id);
+      if (cachedDataset) {
+        loadPlaceContainers(cachedDataset.originalContainers, cachedDataset.containers);
+      } else {
+        const containers = await loadOptionalContainers(place);
+        loadPlaceContainers(containers);
+        cacheContainerEditorDataset();
+      }
+
+      map.setView(place.map.center, place.map.zoom);
+      api.renderContainers({ fitBounds: false });
+      api.setCoverageStatus(`Containereditor voor ${place.name}. Genereer de analyse om huizen en loopafstanden te bekijken.`);
+      api.setContainerEditorStatus?.(
+        state.originalContainers.length === 0
+          ? `Nieuwe containerdataset voor ${place.name}. Klik op Nieuwe container om te beginnen.`
+          : `Containerdataset voor ${place.name} geladen.`,
+        state.originalContainers.length === 0 ? 'active' : 'success'
+      );
+    } catch (error) {
+      loadPlaceContainers([]);
+      api.renderContainers({ fitBounds: false });
+      api.setContainerEditorStatus?.(error.message || `Containerdataset voor ${place.name} kon niet worden geladen.`, 'error');
+    } finally {
+      renderContainerEditorPlaceSelector();
+      api.updateContainerEditorControls?.();
     }
   }
 
@@ -516,6 +672,8 @@ export function createPlaceLoader(context, api) {
   async function initPlaces(options = {}) {
     state.places = await loadPlacesManifest();
     state.placesById = new Map(state.places.map((place) => [place.id, place]));
+    state.placeCatalog = await loadPlacesCatalog();
+    state.placeCatalogById = new Map(state.placeCatalog.map((place) => [place.id, place]));
 
     if (state.places.length === 0) {
       throw new Error('Er zijn geen dorpen geconfigureerd.');
@@ -530,18 +688,21 @@ export function createPlaceLoader(context, api) {
       selectedContainerId: options.selectedPlaceId ? null : requestedContainerId,
       collapseIntroForSelectedContainer: Boolean(requestedContainerId) && !options.selectedPlaceId
     });
+    renderContainerEditorPlaceSelector();
   }
 
   return {
     getPlaceById,
     getActivePlaceName,
     getActivePlaceCity,
+    getContainerEditorPlaceName,
     getContainerIdPrefix,
     getContainerIdFormat,
     getContainerIdExample,
     getContainerDownloadFilename,
     getContainerIdPattern,
     renderPlaceSelector,
+    renderContainerEditorPlaceSelector,
     updatePlaceText,
     resetPlaceDataState,
     loadPlaceContainers,
@@ -552,6 +713,7 @@ export function createPlaceLoader(context, api) {
     loadAddressIndexForPlace,
     loadActiveAddressIndex,
     loadPlaceData,
+    selectContainerEditorPlace,
     selectPlace,
     initPlaces
   };

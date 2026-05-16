@@ -34,6 +34,7 @@ export function getElements() {
     containerEditorBadge: null,
     containerEditorPanel: null,
     containerEditorStatus: null,
+    containerEditorPlaceSelect: null,
     containerChangeCount: null,
     containerChangeList: null,
     containerEditPanel: null,

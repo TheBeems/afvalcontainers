@@ -9,6 +9,7 @@ export const MAP_CENTER = [52.7235, 4.7385];
 export const MAP_ZOOM = 16;
 export const DEFAULT_PLACE_ID = 'warmenhuizen';
 export const PLACES_MANIFEST_PATH = './data/places.json';
+export const PLACES_CATALOG_PATH = './data/places-catalog.json';
 export const INITIAL_CONTAINER_BOUNDS_MAX_ZOOM = 16;
 export const INITIAL_ZOOM_OFFSET = 1;
 export const MAP_MAX_ZOOM = 19;

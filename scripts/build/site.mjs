@@ -65,10 +65,15 @@ async function copyProjectDirectory(path) {
   await cp(path, destination, { recursive: true });
 }
 
-async function copyRuntimeData(places) {
-  const manifestDestination = resolve(distDir, 'data/places.json');
+async function writeRuntimeManifest(fileName, places) {
+  const manifestDestination = resolve(distDir, `data/${fileName}`);
   await mkdir(dirname(manifestDestination), { recursive: true });
   await writeFile(manifestDestination, `${JSON.stringify(places, null, 2)}\n`, 'utf8');
+}
+
+async function copyRuntimeData(places, sourcePlaces = places) {
+  await writeRuntimeManifest('places.json', places);
+  await writeRuntimeManifest('places-catalog.json', sourcePlaces);
 
   for (const place of places) {
     for (const key of publishablePlaceFilePathKeys) {
@@ -1539,7 +1544,7 @@ export async function buildSite() {
   await viteBuild({
     configFile: resolve(projectRoot, 'vite.config.js')
   });
-  await copyRuntimeData(places);
+  await copyRuntimeData(places, configuredPlaces);
   await copySeoAssets();
   await writeSeoPages(places, configuredPlaces);
   await writeRobotsTxt();

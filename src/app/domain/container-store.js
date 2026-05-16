@@ -197,6 +197,10 @@ export function createContainerStore(context, api) {
     return sortContainersById(state.containers).map(cloneContainer);
   }
 
+  function serializeOriginalContainersForDownload() {
+    return sortContainersById(state.originalContainers).map(cloneContainer);
+  }
+
   function getNextContainerId() {
     const prefix = api.getContainerIdPrefix?.() || 'WH';
     for (let index = 1; index <= 99; index += 1) {
@@ -237,6 +241,7 @@ export function createContainerStore(context, api) {
     getChangedContainerCount,
     getContainerChangeLabel,
     serializeContainersForDownload,
+    serializeOriginalContainersForDownload,
     getNextContainerId,
     DEFAULT_CONTAINER_TYPE,
     DEFAULT_CONTAINER_STATUS

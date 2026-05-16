@@ -171,6 +171,71 @@ test('hides configured villages without complete runtime data from public pages'
   }
 });
 
+test('creates a container JSON draft for an unpublished catalog village from the editor', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__containerEditorDownloads = [];
+    const originalCreateObjectUrl = URL.createObjectURL.bind(URL);
+    const originalAnchorClick = HTMLAnchorElement.prototype.click;
+
+    URL.createObjectURL = (blob) => {
+      const url = originalCreateObjectUrl(blob);
+      if (blob instanceof Blob) {
+        void blob.text().then((text) => {
+          window.__containerEditorDownloads.push({ url, text });
+        });
+      }
+      return url;
+    };
+
+    HTMLAnchorElement.prototype.click = function click() {
+      window.__containerEditorDownloads.push({
+        download: this.download,
+        href: this.href
+      });
+      return originalAnchorClick.call(this);
+    };
+  });
+
+  await page.goto('/#kaart');
+
+  const publicPlaceSelect = page.getByLabel('Selecteer dorp');
+  await expect.poll(() => publicPlaceSelect.locator('option').count()).toBe(2);
+
+  await page.getByRole('button', { name: 'Containereditor openen' }).click();
+  const editorPlaceSelect = page.getByLabel('Containerdataset voor dorp');
+  await expect(editorPlaceSelect).toBeVisible();
+  await expect(editorPlaceSelect).toContainText('Waarland');
+  await editorPlaceSelect.selectOption('waarland');
+
+  await expect(page.locator('#container-editor-status')).toContainText('Nieuwe containerdataset voor Waarland');
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  const idInput = page.locator('#container-edit-form input[name="id"]');
+  await expect(idInput).toHaveValue('WL01');
+  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Waarland');
+  await page.getByRole('button', { name: 'Opslaan' }).click();
+
+  const downloadButton = page.getByRole('button', { name: 'Download JSON' });
+  await expect(downloadButton).toBeEnabled();
+  await downloadButton.dispatchEvent('click');
+  await expect.poll(() => page.evaluate(() => window.__containerEditorDownloads.length)).toBeGreaterThanOrEqual(2);
+  const downloads = await page.evaluate(() => window.__containerEditorDownloads);
+  const clickEntry = downloads.find((entry) => entry.download);
+  const blobEntry = downloads.find((entry) => entry.text);
+  expect(clickEntry.download).toBe('waarland-container-locations.json');
+
+  const payload = JSON.parse(blobEntry.text);
+
+  expect(payload).toHaveLength(1);
+  expect(payload[0]).toMatchObject({
+    id: 'WL01',
+    address: 'Testlocatie Waarland',
+    accuracy: 'handmatig bepaald (zeer hoog, onzekerheid -1 m)'
+  });
+});
+
 test('keeps the mobile menu out of the visual introduction', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

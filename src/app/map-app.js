@@ -52,6 +52,9 @@ function registerCoreListeners(context, api) {
   mapContext.map.on('click', api.handleMapClick);
 
   elements.addContainerButton?.addEventListener('click', api.beginAddContainerMode);
+  elements.containerEditorPlaceSelect?.addEventListener('change', (event) => {
+    void api.selectContainerEditorPlace(event.target.value);
+  });
   elements.containerEditorToggle?.addEventListener('click', api.toggleContainerEditor);
   elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
