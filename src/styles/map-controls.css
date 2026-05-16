@@ -25,6 +25,26 @@
   display: none;
 }
 
+.map-collapsible-summary-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: var(--text);
+}
+
+.map-collapsible-icon-svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.container-marker-svg--legend-toggle {
+  width: 22px;
+  height: 30px;
+  filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.32));
+}
+
 .map-collapsible > summary::after {
   content: "";
   width: 7px;
