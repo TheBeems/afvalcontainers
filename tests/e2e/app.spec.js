@@ -2,6 +2,47 @@ import { expect, test } from '@playwright/test';
 
 const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
 
+async function captureContainerDownloads(page) {
+  await page.addInitScript(() => {
+    window.__containerEditorDownloads = [];
+    const originalCreateObjectUrl = URL.createObjectURL.bind(URL);
+    const originalAnchorClick = HTMLAnchorElement.prototype.click;
+
+    URL.createObjectURL = (blob) => {
+      const url = originalCreateObjectUrl(blob);
+      if (blob instanceof Blob) {
+        void blob.text().then((text) => {
+          window.__containerEditorDownloads.push({ url, text });
+        });
+      }
+      return url;
+    };
+
+    HTMLAnchorElement.prototype.click = function click() {
+      window.__containerEditorDownloads.push({
+        download: this.download,
+        href: this.href
+      });
+      return originalAnchorClick.call(this);
+    };
+  });
+}
+
+async function downloadContainerDataset(page) {
+  const downloadButton = page.getByRole('button', { name: 'Download JSON' });
+  await expect(downloadButton).toBeEnabled();
+  await downloadButton.dispatchEvent('click');
+  await expect.poll(() => page.evaluate(() => window.__containerEditorDownloads.length)).toBeGreaterThanOrEqual(2);
+  const downloads = await page.evaluate(() => window.__containerEditorDownloads);
+  const clickEntry = downloads.find((entry) => entry.download);
+  const blobEntry = downloads.find((entry) => entry.text);
+
+  return {
+    filename: clickEntry.download,
+    payload: JSON.parse(blobEntry.text)
+  };
+}
+
 test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', async (route) => {
     await route.fulfill({ status: 204 });
@@ -172,29 +213,7 @@ test('hides configured villages without complete runtime data from public pages'
 });
 
 test('creates a container JSON draft for an unpublished catalog village from the editor', async ({ page }) => {
-  await page.addInitScript(() => {
-    window.__containerEditorDownloads = [];
-    const originalCreateObjectUrl = URL.createObjectURL.bind(URL);
-    const originalAnchorClick = HTMLAnchorElement.prototype.click;
-
-    URL.createObjectURL = (blob) => {
-      const url = originalCreateObjectUrl(blob);
-      if (blob instanceof Blob) {
-        void blob.text().then((text) => {
-          window.__containerEditorDownloads.push({ url, text });
-        });
-      }
-      return url;
-    };
-
-    HTMLAnchorElement.prototype.click = function click() {
-      window.__containerEditorDownloads.push({
-        download: this.download,
-        href: this.href
-      });
-      return originalAnchorClick.call(this);
-    };
-  });
+  await captureContainerDownloads(page);
 
   await page.goto('/#kaart');
 
@@ -217,23 +236,67 @@ test('creates a container JSON draft for an unpublished catalog village from the
   await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Waarland');
   await page.getByRole('button', { name: 'Opslaan' }).click();
 
-  const downloadButton = page.getByRole('button', { name: 'Download JSON' });
-  await expect(downloadButton).toBeEnabled();
-  await downloadButton.dispatchEvent('click');
-  await expect.poll(() => page.evaluate(() => window.__containerEditorDownloads.length)).toBeGreaterThanOrEqual(2);
-  const downloads = await page.evaluate(() => window.__containerEditorDownloads);
-  const clickEntry = downloads.find((entry) => entry.download);
-  const blobEntry = downloads.find((entry) => entry.text);
-  expect(clickEntry.download).toBe('waarland-container-locations.json');
+  const { filename, payload } = await downloadContainerDataset(page);
 
-  const payload = JSON.parse(blobEntry.text);
-
+  expect(filename).toBe('waarland-container-locations.json');
   expect(payload).toHaveLength(1);
   expect(payload[0]).toMatchObject({
     id: 'WL01',
     address: 'Testlocatie Waarland',
     accuracy: 'handmatig bepaald (zeer hoog, onzekerheid -1 m)'
   });
+});
+
+test('ignores stale container-editor loads after switching villages quickly', async ({ page }) => {
+  await captureContainerDownloads(page);
+
+  let releaseWaarlandContainers;
+  const waarlandContainerDelay = new Promise((resolve) => {
+    releaseWaarlandContainers = resolve;
+  });
+  let waarlandContainersRequested = false;
+
+  await page.route('**/data/places/waarland/container-locations.json', async (route) => {
+    waarlandContainersRequested = true;
+    await waarlandContainerDelay;
+    await route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: '{}'
+    });
+  });
+
+  await page.goto('/#kaart');
+
+  await page.getByRole('button', { name: 'Containereditor openen' }).click();
+  const editorPlaceSelect = page.getByLabel('Containerdataset voor dorp');
+  await editorPlaceSelect.selectOption('waarland');
+  await expect.poll(() => waarlandContainersRequested).toBe(true);
+
+  await editorPlaceSelect.selectOption('tuitjenhorn');
+  await expect(page.locator('#container-editor-status')).toContainText('Containerdataset voor Tuitjenhorn geladen.');
+
+  releaseWaarlandContainers();
+  await expect(editorPlaceSelect).toHaveValue('tuitjenhorn');
+  await expect(page.locator('#container-editor-status')).toContainText('Containerdataset voor Tuitjenhorn geladen.');
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  const idInput = page.locator('#container-edit-form input[name="id"]');
+  await expect(idInput).toHaveValue('TH25');
+  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Tuitjenhorn');
+  await page.getByRole('button', { name: 'Opslaan' }).click();
+
+  const { filename, payload } = await downloadContainerDataset(page);
+
+  expect(filename).toBe('tuitjenhorn-container-locations.json');
+  expect(payload).toHaveLength(25);
+  expect(payload.at(-1)).toMatchObject({
+    id: 'TH25',
+    address: 'Testlocatie Tuitjenhorn'
+  });
+  expect(payload.every((container) => container.id.startsWith('TH'))).toBe(true);
 });
 
 test('keeps the mobile menu out of the visual introduction', async ({ page }) => {

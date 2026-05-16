@@ -11,6 +11,7 @@ export function createAppState() {
     activePlace: null,
     containerEditorPlace: null,
     containerEditorDatasetsByPlaceId: new Map(),
+    containerEditorSelectionId: 0,
     placeLoadStatus: 'idle',
     placeSelectionId: 0,
     addressIndex: [],

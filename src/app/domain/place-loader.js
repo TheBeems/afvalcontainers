@@ -254,6 +254,7 @@ export function createPlaceLoader(context, api) {
     state.containers = [];
     state.originalContainers = [];
     state.containerEditorPlace = state.activePlace;
+    state.containerEditorSelectionId += 1;
     state.houses = [];
     state.coverage = null;
     state.addressIndex = [];
@@ -595,6 +596,8 @@ export function createPlaceLoader(context, api) {
     }
 
     cacheContainerEditorDataset();
+    state.containerEditorSelectionId += 1;
+    const selectionId = state.containerEditorSelectionId;
     state.containerEditorPlace = place;
     clearContainerEditorMapState();
 
@@ -604,8 +607,16 @@ export function createPlaceLoader(context, api) {
         loadPlaceContainers(cachedDataset.originalContainers, cachedDataset.containers);
       } else {
         const containers = await loadOptionalContainers(place);
+        if (selectionId !== state.containerEditorSelectionId || getContainerEditorPlace()?.id !== place.id) {
+          return;
+        }
+
         loadPlaceContainers(containers);
         cacheContainerEditorDataset();
+      }
+
+      if (selectionId !== state.containerEditorSelectionId || getContainerEditorPlace()?.id !== place.id) {
+        return;
       }
 
       map.setView(place.map.center, place.map.zoom);
@@ -618,12 +629,18 @@ export function createPlaceLoader(context, api) {
         state.originalContainers.length === 0 ? 'active' : 'success'
       );
     } catch (error) {
+      if (selectionId !== state.containerEditorSelectionId || getContainerEditorPlace()?.id !== place.id) {
+        return;
+      }
+
       loadPlaceContainers([]);
       api.renderContainers({ fitBounds: false });
       api.setContainerEditorStatus?.(error.message || `Containerdataset voor ${place.name} kon niet worden geladen.`, 'error');
     } finally {
-      renderContainerEditorPlaceSelector();
-      api.updateContainerEditorControls?.();
+      if (selectionId === state.containerEditorSelectionId && getContainerEditorPlace()?.id === place.id) {
+        renderContainerEditorPlaceSelector();
+        api.updateContainerEditorControls?.();
+      }
     }
   }
 
