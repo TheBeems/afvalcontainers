@@ -231,7 +231,23 @@ test('creates a container JSON draft for an unpublished catalog village from the
   await page.getByRole('button', { name: 'Nieuwe container' }).click();
   await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
 
+  const containerMarkers = page.locator('.container-marker-icon');
+  await expect(containerMarkers).toHaveCount(1);
+  await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
+
   const idInput = page.locator('#container-edit-form input[name="id"]');
+  await expect(idInput).toHaveValue('WL01');
+  await expect(page.getByRole('button', { name: 'Download JSON' })).toBeDisabled();
+
+  await page.locator('#cancel-container-edit-button').click();
+  await expect(containerMarkers).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Download JSON' })).toBeDisabled();
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  await expect(containerMarkers).toHaveCount(1);
+  await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
   await expect(idInput).toHaveValue('WL01');
   await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Waarland');
   await page.getByRole('button', { name: 'Opslaan' }).click();
