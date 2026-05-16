@@ -72,7 +72,7 @@ export function createContainersUi(context, api) {
       </summary>
 
       <div class="map-collapsible-body">
-        <div class="container-map-info-address">${escapeHtml(container.address)}, ${escapeHtml(api.getActivePlaceCity())}</div>
+        <div class="container-map-info-address">${escapeHtml(container.address)}, ${escapeHtml(api.getContainerEditorPlaceName?.() || api.getActivePlaceCity())}</div>
         <div class="container-map-info-meta">
           ${categoryPills}
           ${api.buildContainerAccessPill(container)}
@@ -262,6 +262,17 @@ export function createContainersUi(context, api) {
       bounds.push([container.lat, container.lon]);
     });
 
+    if (state.pendingNewContainer) {
+      const pendingMarker = L.marker([state.pendingNewContainer.lat, state.pendingNewContainer.lon], {
+        interactive: false,
+        icon: createContainerMarkerIcon(state.pendingNewContainer, true),
+        title: `${state.pendingNewContainer.id} - nieuwe container`
+      });
+
+      pendingMarker.addTo(containerLayer);
+      bounds.push([state.pendingNewContainer.lat, state.pendingNewContainer.lon]);
+    }
+
     if (fitBounds && bounds.length > 0) {
       map.fitBounds(bounds, { padding: [32, 32], maxZoom: INITIAL_CONTAINER_BOUNDS_MAX_ZOOM });
       map.setZoom(Math.min(map.getZoom() + INITIAL_ZOOM_OFFSET, MAP_MAX_ZOOM));
@@ -360,9 +371,14 @@ export function createContainersUi(context, api) {
       return;
     }
 
+    const hadPendingContainer = Boolean(state.pendingNewContainer);
     state.pendingNewContainer = null;
     state.addContainerMode = false;
     map.getContainer().classList.remove('adding-container');
+    if (hadPendingContainer) {
+      renderContainers();
+    }
+
     showCoverageCircle(container);
     updateActiveContainer(index);
     renderContainerMapInfo(container);

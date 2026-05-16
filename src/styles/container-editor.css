@@ -118,6 +118,26 @@
   color: #0f766e;
 }
 
+.container-editor-place-field {
+  display: grid;
+  gap: 4px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.container-editor-place-select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 7px 8px;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
 .container-editor-status.error {
   color: #b91c1c;
 }
@@ -246,6 +266,7 @@
 
 .container-edit-form input:focus-visible,
 .container-edit-form select:focus-visible,
+.container-editor-place-select:focus-visible,
 .editor-button:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;

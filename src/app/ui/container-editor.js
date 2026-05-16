@@ -543,6 +543,7 @@ export function createContainerEditor(context, api) {
       state.pendingNewContainer = null;
       state.addContainerMode = false;
       map.getContainer().classList.remove('adding-container');
+      api.renderContainers();
       setContainerEditorStatus('Nieuwe container toevoegen is geannuleerd.');
     } else {
       setContainerEditorStatus('Bewerking is geannuleerd.');
@@ -636,6 +637,7 @@ export function createContainerEditor(context, api) {
 
   function beginAddContainerMode() {
     api.lockUnlockedContainer();
+    const hadPendingContainer = Boolean(state.pendingNewContainer);
     state.pendingNewContainer = null;
     state.editingContainerKey = null;
     const nextMode = !state.addContainerMode;
@@ -645,6 +647,9 @@ export function createContainerEditor(context, api) {
         ? 'Klik op de kaart om de nieuwe containerpositie te kiezen.'
         : 'Nieuwe container toevoegen is geannuleerd.'
     );
+    if (hadPendingContainer) {
+      api.renderContainers();
+    }
   }
 
   function addContainerAtLatLng(latlng) {
@@ -657,7 +662,7 @@ export function createContainerEditor(context, api) {
       streams: [createDefaultContainerStream()]
     });
     setAddContainerMode(false);
-    updateContainerEditorControls();
+    api.renderContainers();
     setContainerEditorStatus('Vul de gegevens voor de nieuwe container in.', 'active');
   }
 

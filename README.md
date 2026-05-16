@@ -152,7 +152,7 @@ Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for th
 
 ## Data
 
-- `data/places.json` is the manifest for configured villages, their map defaults, data paths, source URL, and container ID prefix.
+- `data/places.json` is the catalog for configured villages, their map defaults, optional source URL, and container ID prefix. Standard data paths are derived from `data/places/<plaats-id>/`.
 - `data/places/warmenhuizen/container-locations.json` is the editable Warmenhuizen container source.
 - `data/places/warmenhuizen/house-coverage.json` is the legacy generated Warmenhuizen coverage cache used by scripts and route reuse; it is not copied to `dist/`.
 - `data/places/warmenhuizen/coverage-summary.json`, `house-map.json`, `address-index.compact.json`, and `house-details/*.json` are generated browser runtime data split from the coverage cache.
@@ -163,7 +163,7 @@ Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for th
 
 ## Dorpskern toevoegen
 
-Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebruik een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix`, kaartinstellingen en paden naar de runtime JSON-bestanden voor die kern:
+Nieuwe dorpskernen staan vooraf in `data/places.json`. Gebruik daar een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix` en kaartinstellingen. De standaardpaden worden automatisch afgeleid uit `data/places/<plaats-id>/`:
 
 - `container-locations.json`: handmatig beheerde containerlocaties.
 - `coverage-summary.json`: samenvatting en metadata voor de analyse.
@@ -171,17 +171,55 @@ Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebrui
 - `address-index.compact.json`: compacte lazy zoekindex voor adressen.
 - `house-details/`: lazy straatgebundelde detailbestanden met maximaal 75 adressen per bestand.
 
-Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Zie de aankondiging voor jouw dorp op de website van de gemeente Schagen.
+Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Een dorp met alleen `container-locations.json` kan al door generator- en auditscripts worden gebruikt, maar wordt nog niet gepubliceerd op de website.
 
-Genereer vervolgens de analyse en zoekindex:
+Een dorp wordt pas zichtbaar in de kaart, navigatie, analyses en sitemap wanneer de runtime-data compleet is: `container-locations.json`, `coverage-summary.json`, `house-map.json`, `address-index.compact.json`, en `house-details/*.json`.
+
+Minimale stappen voor een dorp dat al in `data/places.json` staat, bijvoorbeeld Waarland:
+
+1. Maak `data/places/waarland/`.
+2. Voeg `data/places/waarland/container-locations.json` toe.
+3. Gebruik container-ID's met de prefix uit `data/places.json`, bijvoorbeeld `WL01`, `WL02`, enzovoort.
+4. Genereer de analyse:
 
 ```sh
-node scripts/generate-house-coverage.mjs --place=<plaats-id>
-npm run generate:coverage-split
+node scripts/generate-house-coverage.mjs --place=waarland
+```
+
+5. Controleer alles:
+
+```sh
 npm run check
 ```
 
-De generator gebruikt de plaats uit `data/places.json`, haalt adressen en de bebouwde-komgrens op via PDOK, berekent loopafstanden via OSRM, schrijft de legacy coverage-cache en splitst die naar de browserdata. Commit de brondata en gegenereerde JSON-bestanden voor de dorpskern; commit geen `dist/` output.
+6. Commit de brondata en gegenereerde runtime-data:
+   - `data/places/waarland/container-locations.json`
+   - `data/places/waarland/house-coverage.json`
+   - `data/places/waarland/coverage-summary.json`
+   - `data/places/waarland/house-map.json`
+   - `data/places/waarland/address-index.compact.json`
+   - `data/places/waarland/house-details/`
+
+7. Als het dorp ook via de handmatige GitHub Action gegenereerd moet kunnen worden, zet de bijbehorende optie aan in `.github/workflows/generate-house-coverage.yml`.
+
+Na merge en deploy verschijnt het dorp automatisch op de site zodra de runtime-data compleet is. Commit geen `dist/` output.
+
+De generator gebruikt de plaats uit `data/places.json`, haalt adressen en de bebouwde-komgrens op via PDOK, berekent loopafstanden via OSRM, schrijft de legacy coverage-cache en splitst die naar de browserdata.
+
+### Containerlocaties via de website maken of bewerken
+
+Je kunt `container-locations.json` ook via de kaart voorbereiden of bijwerken. De gewone dorpskeuze toont alleen dorpen die al publiceerbaar zijn, maar de containereditor heeft een eigen dorpskeuze met alle dorpen uit `data/places.json`.
+
+1. Open de kaart.
+2. Klik rechtsboven op de edit-knop met het potlood.
+3. Kies bij `Containerdataset voor dorp` het dorp waarvoor je containerlocaties wilt maken of aanpassen.
+4. Klik op `Nieuwe container` en klik daarna op de kaart waar de container moet komen.
+5. Vul het container-ID, adres of omschrijving, containertype en status in. De editor gebruikt automatisch de prefix van het gekozen dorp, bijvoorbeeld `WHNN`, `THNN` of `WLNN`.
+6. Houd een bestaande marker ingedrukt om die te ontgrendelen en te verslepen.
+7. Klik op `Download JSON` wanneer alle wijzigingen klaar zijn.
+8. Sla de gedownloade inhoud op als `data/places/<plaats-id>/container-locations.json`. De downloadnaam bevat het dorp, bijvoorbeeld `waarland-container-locations.json`; hernoem die in de repo naar `container-locations.json`.
+
+Voor een dorp zonder bestaande containerdata start de editor met een lege containerlijst. Na generatie van de runtime-data verschijnt het dorp automatisch in de gewone dorpskeuze, navigatie, analyses en sitemap.
 
 Smoke-test the generator without touching committed coverage data:
 

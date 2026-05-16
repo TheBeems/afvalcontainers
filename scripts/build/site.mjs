@@ -2,7 +2,13 @@ import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/p
 import { dirname, relative, resolve } from 'node:path';
 import { build as viteBuild } from 'vite';
 import { splitHouseCoverage } from '../split-house-coverage.mjs';
-import { readPlacesManifest, resolveProjectPath } from '../places.mjs';
+import {
+  getDefaultPlace,
+  getPublishablePlaces,
+  publishablePlaceFilePathKeys,
+  readPlacesManifest,
+  resolveProjectPath
+} from '../places.mjs';
 import { escapeHtml } from '../../src/shared/html.js';
 import { formatDuration, formatMeters, formatPercent } from '../../src/shared/format.js';
 import {
@@ -30,13 +36,6 @@ export const distDir = resolve(projectRoot, 'dist');
 
 const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END -->/;
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
-
-const placeFilePathKeys = [
-  'containers',
-  'coverageSummary',
-  'houseMap',
-  'addressIndex'
-];
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -66,11 +65,18 @@ async function copyProjectDirectory(path) {
   await cp(path, destination, { recursive: true });
 }
 
-async function copyRuntimeData(places) {
-  await copyProjectFile(resolve(projectRoot, 'data/places.json'));
+async function writeRuntimeManifest(fileName, places) {
+  const manifestDestination = resolve(distDir, `data/${fileName}`);
+  await mkdir(dirname(manifestDestination), { recursive: true });
+  await writeFile(manifestDestination, `${JSON.stringify(places, null, 2)}\n`, 'utf8');
+}
+
+async function copyRuntimeData(places, sourcePlaces = places) {
+  await writeRuntimeManifest('places.json', places);
+  await writeRuntimeManifest('places-catalog.json', sourcePlaces);
 
   for (const place of places) {
-    for (const key of placeFilePathKeys) {
+    for (const key of publishablePlaceFilePathKeys) {
       await copyProjectFile(resolveProjectPath(place.paths[key]));
     }
     await copyProjectDirectory(resolveProjectPath(place.paths.houseDetailsBase));
@@ -88,6 +94,33 @@ function escapeScriptJson(json) {
 function replaceElementHtml(html, id, value) {
   const pattern = new RegExp(`(<([a-z0-9-]+)[^>]+id="${id}"[^>]*>)[\\s\\S]*?(</\\2>)`, 'i');
   return html.replace(pattern, `$1${value}$3`);
+}
+
+function buildPlaceMapLinks(places, prefix = './') {
+  return places
+    .map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/#kaart">Kaart ${escapeHtml(place.name)}</a>`)
+    .join('\n      ');
+}
+
+function buildFooterLinks(places, prefix = './') {
+  return [
+    ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
+    `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
+    `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`
+  ].join('\n        ');
+}
+
+function replaceSidebarFooterNav(html, places, prefix) {
+  const footerNav = `<nav class="sidebar-footer-nav" aria-label="Secundaire navigatie">
+        ${buildFooterLinks(places, prefix)}
+      </nav>`;
+  return html.replace(/<nav class="sidebar-footer-nav"[\s\S]*?<\/nav>/, footerNav);
+}
+
+function buildPlaceSourceReference(place) {
+  return place.sourceUrl
+    ? `<a id="place-source-link" href="${escapeHtml(place.sourceUrl)}">aangekondigd</a>`
+    : '<span id="place-source-link">aangekondigd</span>';
 }
 
 function replaceSeoBlock(html, seoBlock) {
@@ -236,7 +269,7 @@ function buildPlaceStructuredData(place, coverageSummary) {
 
 function buildMethodologyStructuredData() {
   const url = getMethodologyUrl();
-  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
+  const description = 'Korte uitleg voor bewoners van dorpen in de gemeente Schagen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   return {
     '@context': 'https://schema.org',
     '@graph': buildWebPageStructuredData({
@@ -245,6 +278,13 @@ function buildMethodologyStructuredData() {
       description
     })
   };
+}
+
+function buildMunicipalSourceLinks(places) {
+  return places
+    .filter((place) => place.sourceUrl)
+    .map((place) => `<li><a href="${escapeHtml(place.sourceUrl)}">Gemeente Schagen: ${escapeHtml(place.name)}</a></li>`)
+    .join('\n      ');
 }
 
 function buildAnalysesStructuredData() {
@@ -281,9 +321,9 @@ function getIntroMetrics(coverageSummary) {
   };
 }
 
-function applyInitialPlaceContent(html, place, coverageSummary) {
+function applyInitialPlaceContent(html, place, coverageSummary, places, { navigationPrefix = './' } = {}) {
   const metrics = getIntroMetrics(coverageSummary);
-  let pageHtml = html;
+  let pageHtml = replaceSidebarFooterNav(html, places, navigationPrefix);
 
   pageHtml = pageHtml.replace(/(<span data-place-name>)([\s\S]*?)(<\/span>)/g, `$1${escapeHtml(place.name)}$3`);
   pageHtml = replaceElementHtml(pageHtml, 'app-title', escapeHtml(getPlaceTitle(place)));
@@ -303,10 +343,7 @@ function applyInitialPlaceContent(html, place, coverageSummary) {
     'intro-over-reference-text',
     `Daarvan liggen <strong>${metrics.overReferenceCount.toLocaleString('nl-NL')}</strong> adressen boven <em>275 meter</em> (${metrics.overReferencePercent}).`
   );
-  pageHtml = pageHtml.replace(
-    /(<a id="place-source-link" href=")[^"]+(")/,
-    `$1${escapeHtml(place.sourceUrl)}$2`
-  );
+  pageHtml = replaceElementHtml(pageHtml, 'place-source-reference', buildPlaceSourceReference(place));
   pageHtml = pageHtml.replace(
     /aria-label="Kaart van [^"]+"/,
     `aria-label="Kaart van ${escapeHtml(place.name)} met containerlocaties en batchanalyse"`
@@ -523,11 +560,13 @@ async function readPlaceAnalysis(place) {
   };
 }
 
-async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix }) {
+async function createAppPage(templateHtml, place, places, { runtimeBasePath, assetPrefix }) {
   const coverageSummary = await readCoverageSummary(place);
   const title = getPlaceTitle(place);
   const pageHtml = replaceSeoBlock(
-    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary),
+    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary, places, {
+      navigationPrefix: assetPrefix
+    }),
     buildSeoBlock({
       title,
       description: getPlaceDescription(place),
@@ -542,9 +581,9 @@ async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix
   return pageHtml;
 }
 
-function buildMethodologyPage() {
+function buildMethodologyPage(places, sourcePlaces = places) {
   const title = 'Methodiek en onderzoeksbasis';
-  const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
+  const description = 'Korte uitleg voor bewoners van dorpen in de gemeente Schagen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   const seoBlock = buildSeoBlock({
     title,
     description,
@@ -618,6 +657,12 @@ ${seoBlock}
       line-height: 1.2;
     }
 
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
     p,
     li {
       color: var(--muted);
@@ -653,16 +698,15 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
+      ${buildPlaceMapLinks(places, '../')}
       <a href="../analyses/">Analyses</a>
     </nav>
 
     <h1>Methodiek en onderzoeksbasis</h1>
-    <p class="lead">Deze pagina legt kort uit hoe de kaart voor Warmenhuizen is gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
+    <p class="lead">Deze pagina legt kort uit hoe de kaarten voor de dorpen in de gemeente Schagen zijn gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
 
     <h2>Wat laat de kaart zien?</h2>
-    <p>De kaart kijkt naar woonadressen binnen de bebouwde kom van Warmenhuizen en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
+    <p>De kaart kijkt per dorp (momenteel alleen Warmenhuizen en Tuitjenhorn) naar woonadressen binnen de bebouwde kom en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
     <p>Daarbij telt niet de rechte lijn op de kaart, maar de route via straten en paden. Dat verschil is belangrijk: een container kan hemelsbreed dichtbij lijken, terwijl de werkelijke looproute langer is.</p>
 
     <h2>Waarom deze methode?</h2>
@@ -693,7 +737,7 @@ ${seoBlock}
       <thead>
         <tr>
           <th>Onderzoek</th>
-          <th>Belangrijkste les voor Warmenhuizen</th>
+          <th>Belangrijkste les voor dorpen en laagbouwwijken</th>
         </tr>
       </thead>
       <tbody>
@@ -711,16 +755,17 @@ ${seoBlock}
     </table>
 
     <h2>Wat betekent dit?</h2>
-    <p>Voor Warmenhuizen is vooral de vergelijking met dorpen en laagbouwwijken relevant. Daar is de verandering groot: van een grijze bak aan huis naar zelf restafval wegbrengen.</p>
+    <p>Voor de dorpen in de gemeente Schagen is vooral de vergelijking met andere dorpen en laagbouwwijken relevant. Daar is de verandering groot: van een grijze bak aan huis naar zelf restafval wegbrengen.</p>
     <p>Een afstand van 275 meter op papier betekent daarom niet automatisch dat de voorziening voor bewoners redelijk voelt. De werkelijke route, oversteken, sociale veiligheid, volle containers en fysieke belasting bepalen samen of het systeem werkbaar is.</p>
 
-    <h2>Broncode</h2>
-    <p>De broncode van deze website is openbaar te bekijken op GitHub: <a href="https://github.com/TheBeems/afvalcontainers">github.com/TheBeems/afvalcontainers</a>.</p>
-
     <h2>Bronnen</h2>
+    <h3>Gemeente Schagen</h3>
     <ul class="source-list">
-      <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">Gemeente Schagen: Warmenhuizen</a></li>
-      <li><a href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn">Gemeente Schagen: Tuitjenhorn</a></li>
+      ${buildMunicipalSourceLinks(sourcePlaces)}
+    </ul>
+
+    <h3>Onderzoeken over loopafstand en afvalinzameling</h3>
+    <ul class="source-list">
       <li><a href="https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf">Omgekeerd inzamelen in Woerden</a></li>
       <li><a href="https://vang-hha.nl/kennisbibliotheek/resultaten-nieuwe/">Resultaten het nieuwe inzamelen Wageningen</a></li>
       <li><a href="https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645">Onderzoek ondergrondse restafvalcontainers Nijmegen</a></li>
@@ -732,6 +777,9 @@ ${seoBlock}
       <li><a href="https://ris.dalfsen.nl/Vergaderingen/Gemeenteraad/2012/26-november/19%3A30/Afvalbeleid/20121126---6---Afvalbeleid--resultaten-Hoonhorst.pdf">Resultaten afvalbeleid Hoonhorst</a></li>
       <li><a href="https://raad.roosendaal.nl/Vergaderingen/Inspraakbijeenkomst/2019/28-februari/19%3A30/Bijlage-1-Roosendaal-evaluatie-restafval-op-afstand.pdf">Evaluatie restafval op afstand Roosendaal</a></li>
     </ul>
+
+    <h3>Broncode</h3>
+    <p>De broncode van deze website is openbaar te bekijken op GitHub: <a href="https://github.com/TheBeems/afvalcontainers">github.com/TheBeems/afvalcontainers</a>.</p>
   </main>
 </body>
 </html>
@@ -965,7 +1013,7 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
 
 async function buildAnalysesPage(places) {
   const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
-  const defaultAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
+  const defaultAnalysis = analyses.find((analysis) => analysis.place.id === getDefaultPlace(places).id) || analyses[0];
   const title = 'Analyses loopafstanden restafvalcontainers';
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const seoBlock = buildSeoBlock({
@@ -1331,8 +1379,7 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
+      ${buildPlaceMapLinks(places, '../')}
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
@@ -1418,11 +1465,11 @@ async function copySeoAssets() {
   );
 }
 
-async function writeSeoPages(places) {
+async function writeSeoPages(places, sourcePlaces = places) {
   const templateHtml = await readFile(resolve(distDir, 'index.html'), 'utf8');
-  const defaultPlace = places.find((place) => place.id === 'warmenhuizen') || places[0];
+  const defaultPlace = getDefaultPlace(places);
 
-  await writeFile(resolve(distDir, 'index.html'), await createAppPage(templateHtml, defaultPlace, {
+  await writeFile(resolve(distDir, 'index.html'), await createAppPage(templateHtml, defaultPlace, places, {
     runtimeBasePath: './',
     assetPrefix: './'
   }), 'utf8');
@@ -1431,14 +1478,14 @@ async function writeSeoPages(places) {
     const slug = getPlaceSlug(place);
     const placeDir = resolve(distDir, slug);
     await mkdir(placeDir, { recursive: true });
-    await writeFile(resolve(placeDir, 'index.html'), await createAppPage(templateHtml, place, {
+    await writeFile(resolve(placeDir, 'index.html'), await createAppPage(templateHtml, place, places, {
       runtimeBasePath: '../',
       assetPrefix: '../'
     }), 'utf8');
   }
 
   await mkdir(resolve(distDir, 'methodiek'), { recursive: true });
-  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(), 'utf8');
+  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(places, sourcePlaces), 'utf8');
 
   await mkdir(resolve(distDir, 'analyses'), { recursive: true });
   await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
@@ -1489,13 +1536,17 @@ ${urls.map((entry) => `  <url>
 export async function buildSite() {
   await splitHouseCoverage({ verbose: false });
   await rm(distDir, { recursive: true, force: true });
-  const places = await readPlacesManifest();
+  const configuredPlaces = await readPlacesManifest();
+  const places = await getPublishablePlaces(configuredPlaces);
+  if (places.length === 0) {
+    throw new Error('No publishable places found. Add complete runtime data under data/places/<id>/ before building.');
+  }
   await viteBuild({
     configFile: resolve(projectRoot, 'vite.config.js')
   });
-  await copyRuntimeData(places);
+  await copyRuntimeData(places, configuredPlaces);
   await copySeoAssets();
-  await writeSeoPages(places);
+  await writeSeoPages(places, configuredPlaces);
   await writeRobotsTxt();
   await writeSitemap(places);
 

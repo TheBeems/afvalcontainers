@@ -1,5 +1,6 @@
 import { splitHouseCoverage } from '../split-house-coverage.mjs';
 import {
+  getPublishablePlaces,
   readJson,
   readPlacesManifest,
   resolvePlaceDataPath,
@@ -81,7 +82,9 @@ function validatePlacesManifest(places) {
     assertNumber(place.map.center[1], `${label}.map.center[1]`);
     assertNumber(place.map.zoom, `${label}.map.zoom`);
 
-    assertString(place.sourceUrl, `${label}.sourceUrl`);
+    if (Object.prototype.hasOwnProperty.call(place, 'sourceUrl')) {
+      assertString(place.sourceUrl, `${label}.sourceUrl`);
+    }
 
     if (Object.prototype.hasOwnProperty.call(place, 'seo')) {
       if (!place.seo || typeof place.seo !== 'object' || Array.isArray(place.seo)) {
@@ -105,14 +108,14 @@ function validatePlacesManifest(places) {
       }
     }
 
-    if (!place.paths || typeof place.paths !== 'object' || Array.isArray(place.paths)) {
-      fail(`${label}.paths must be an object.`);
+    if (Object.prototype.hasOwnProperty.call(place, 'paths')) {
+      if (!place.paths || typeof place.paths !== 'object' || Array.isArray(place.paths)) {
+        fail(`${label}.paths must be an object.`);
+      }
+      for (const [key, value] of Object.entries(place.paths)) {
+        assertString(value, `${label}.paths.${key}`);
+      }
     }
-    assertString(place.paths.containers, `${label}.paths.containers`);
-    assertString(place.paths.coverageSummary, `${label}.paths.coverageSummary`);
-    assertString(place.paths.houseMap, `${label}.paths.houseMap`);
-    assertString(place.paths.addressIndex, `${label}.paths.addressIndex`);
-    assertString(place.paths.houseDetailsBase, `${label}.paths.houseDetailsBase`);
   }
 }
 
@@ -270,7 +273,7 @@ function validateContainers(containers, place) {
 }
 
 function getHouseDetailsPath(place, detailBundle) {
-  return resolveProjectPath(`${place.paths.houseDetailsBase.replace(/\/$/, '')}/${detailBundle}.json`);
+  return resolveProjectPath(`${resolvePlaceDataPath(place, 'houseDetailsBase').replace(/\/$/, '')}/${detailBundle}.json`);
 }
 
 function validateSummary(coverage, houseMap, containers) {
@@ -539,8 +542,9 @@ function validateAddressIndex(addressIndex, houseDetailsById, houseMapById, plac
 export async function validateData() {
   await splitHouseCoverage({ verbose: false });
 
-  const places = await readPlacesManifest();
-  validatePlacesManifest(places);
+  const configuredPlaces = await readPlacesManifest();
+  validatePlacesManifest(configuredPlaces);
+  const places = await getPublishablePlaces(configuredPlaces);
 
   let totalContainers = 0;
   let totalHouses = 0;
@@ -618,5 +622,5 @@ export async function validateData() {
     totalHouses += houses.length;
   }
 
-  console.log(`Validated ${places.length} place(s), ${totalContainers} containers, and ${totalHouses} covered addresses.`);
+  console.log(`Validated ${places.length} publishable place(s), ${totalContainers} containers, and ${totalHouses} covered addresses (${configuredPlaces.length} configured).`);
 }

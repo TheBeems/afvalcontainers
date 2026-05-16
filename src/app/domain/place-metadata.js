@@ -2,6 +2,7 @@ import {
   DEFAULT_PLACE_ID,
   MAP_CENTER,
   MAP_ZOOM,
+  PLACES_CATALOG_PATH,
   PLACES_MANIFEST_PATH
 } from '../config.js';
 import { loadJson } from '../data/load-json.js';
@@ -31,6 +32,15 @@ export function normalizePlace(place) {
 export async function loadPlacesManifest() {
   const places = await loadJson(PLACES_MANIFEST_PATH, 'Plaatsen laden');
   return Array.isArray(places) ? places.map(normalizePlace) : [];
+}
+
+export async function loadPlacesCatalog() {
+  try {
+    const places = await loadJson(PLACES_CATALOG_PATH, 'Plaatscatalogus laden');
+    return Array.isArray(places) ? places.map(normalizePlace) : [];
+  } catch {
+    return loadPlacesManifest();
+  }
 }
 
 export function getPathPlaceId(places, pathname = window.location.pathname) {

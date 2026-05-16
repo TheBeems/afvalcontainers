@@ -2,6 +2,47 @@ import { expect, test } from '@playwright/test';
 
 const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
 
+async function captureContainerDownloads(page) {
+  await page.addInitScript(() => {
+    window.__containerEditorDownloads = [];
+    const originalCreateObjectUrl = URL.createObjectURL.bind(URL);
+    const originalAnchorClick = HTMLAnchorElement.prototype.click;
+
+    URL.createObjectURL = (blob) => {
+      const url = originalCreateObjectUrl(blob);
+      if (blob instanceof Blob) {
+        void blob.text().then((text) => {
+          window.__containerEditorDownloads.push({ url, text });
+        });
+      }
+      return url;
+    };
+
+    HTMLAnchorElement.prototype.click = function click() {
+      window.__containerEditorDownloads.push({
+        download: this.download,
+        href: this.href
+      });
+      return originalAnchorClick.call(this);
+    };
+  });
+}
+
+async function downloadContainerDataset(page) {
+  const downloadButton = page.getByRole('button', { name: 'Download JSON' });
+  await expect(downloadButton).toBeEnabled();
+  await downloadButton.dispatchEvent('click');
+  await expect.poll(() => page.evaluate(() => window.__containerEditorDownloads.length)).toBeGreaterThanOrEqual(2);
+  const downloads = await page.evaluate(() => window.__containerEditorDownloads);
+  const clickEntry = downloads.find((entry) => entry.download);
+  const blobEntry = downloads.find((entry) => entry.text);
+
+  return {
+    filename: clickEntry.download,
+    payload: JSON.parse(blobEntry.text)
+  };
+}
+
 test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', async (route) => {
     await route.fulfill({ status: 204 });
@@ -134,6 +175,144 @@ test('serves the root as the Warmenhuizen app without a client-side redirect', a
   expect(html).toContain(`href="${SITE_URL}warmenhuizen/"`);
   expect(html).not.toContain('http-equiv="refresh"');
   expect(html).not.toContain('window.location.replace');
+});
+
+test('hides configured villages without complete runtime data from public pages', async ({ page }) => {
+  const hiddenVillageNames = [
+    'Dirkshorn',
+    'Sint Maarten',
+    'Waarland',
+    'Burgerbrug',
+    'Oudesluis',
+    'Schagerbrug'
+  ];
+
+  await page.goto('/#kaart');
+
+  const placeSelect = page.getByLabel('Selecteer dorp');
+  await expect(placeSelect).toBeVisible();
+  await expect.poll(() => placeSelect.locator('option').count()).toBe(2);
+  const optionText = await placeSelect.locator('option').allTextContents();
+  expect(optionText).toEqual(['Warmenhuizen', 'Tuitjenhorn']);
+
+  const footerText = await page.locator('.sidebar-footer-nav').innerText();
+  for (const villageName of hiddenVillageNames) {
+    expect(footerText).not.toContain(villageName);
+  }
+
+  await page.goto('/analyses/');
+  const analysesText = await page.locator('main').innerText();
+  for (const villageName of hiddenVillageNames) {
+    expect(analysesText).not.toContain(villageName);
+  }
+
+  const sitemap = await (await page.request.get('/sitemap.xml')).text();
+  for (const villageSlug of ['dirkshorn', 'sint-maarten', 'waarland', 'burgerbrug', 'oudesluis', 'schagerbrug']) {
+    expect(sitemap).not.toContain(`/${villageSlug}/`);
+  }
+});
+
+test('creates a container JSON draft for an unpublished catalog village from the editor', async ({ page }) => {
+  await captureContainerDownloads(page);
+
+  await page.goto('/#kaart');
+
+  const publicPlaceSelect = page.getByLabel('Selecteer dorp');
+  await expect.poll(() => publicPlaceSelect.locator('option').count()).toBe(2);
+
+  await page.getByRole('button', { name: 'Containereditor openen' }).click();
+  const editorPlaceSelect = page.getByLabel('Containerdataset voor dorp');
+  await expect(editorPlaceSelect).toBeVisible();
+  await expect(editorPlaceSelect).toContainText('Waarland');
+  await editorPlaceSelect.selectOption('waarland');
+
+  await expect(page.locator('#container-editor-status')).toContainText('Nieuwe containerdataset voor Waarland');
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  const containerMarkers = page.locator('.container-marker-icon');
+  await expect(containerMarkers).toHaveCount(1);
+  await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
+
+  const idInput = page.locator('#container-edit-form input[name="id"]');
+  await expect(idInput).toHaveValue('WL01');
+  await expect(page.getByRole('button', { name: 'Download JSON' })).toBeDisabled();
+
+  await page.locator('#cancel-container-edit-button').click();
+  await expect(containerMarkers).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Download JSON' })).toBeDisabled();
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  await expect(containerMarkers).toHaveCount(1);
+  await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
+  await expect(idInput).toHaveValue('WL01');
+  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Waarland');
+  await page.getByRole('button', { name: 'Opslaan' }).click();
+
+  const { filename, payload } = await downloadContainerDataset(page);
+
+  expect(filename).toBe('waarland-container-locations.json');
+  expect(payload).toHaveLength(1);
+  expect(payload[0]).toMatchObject({
+    id: 'WL01',
+    address: 'Testlocatie Waarland',
+    accuracy: 'handmatig bepaald (zeer hoog, onzekerheid -1 m)'
+  });
+});
+
+test('ignores stale container-editor loads after switching villages quickly', async ({ page }) => {
+  await captureContainerDownloads(page);
+
+  let releaseWaarlandContainers;
+  const waarlandContainerDelay = new Promise((resolve) => {
+    releaseWaarlandContainers = resolve;
+  });
+  let waarlandContainersRequested = false;
+
+  await page.route('**/data/places/waarland/container-locations.json', async (route) => {
+    waarlandContainersRequested = true;
+    await waarlandContainerDelay;
+    await route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: '{}'
+    });
+  });
+
+  await page.goto('/#kaart');
+
+  await page.getByRole('button', { name: 'Containereditor openen' }).click();
+  const editorPlaceSelect = page.getByLabel('Containerdataset voor dorp');
+  await editorPlaceSelect.selectOption('waarland');
+  await expect.poll(() => waarlandContainersRequested).toBe(true);
+
+  await editorPlaceSelect.selectOption('tuitjenhorn');
+  await expect(page.locator('#container-editor-status')).toContainText('Containerdataset voor Tuitjenhorn geladen.');
+
+  releaseWaarlandContainers();
+  await expect(editorPlaceSelect).toHaveValue('tuitjenhorn');
+  await expect(page.locator('#container-editor-status')).toContainText('Containerdataset voor Tuitjenhorn geladen.');
+
+  await page.getByRole('button', { name: 'Nieuwe container' }).click();
+  await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
+
+  const idInput = page.locator('#container-edit-form input[name="id"]');
+  await expect(idInput).toHaveValue('TH25');
+  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Tuitjenhorn');
+  await page.getByRole('button', { name: 'Opslaan' }).click();
+
+  const { filename, payload } = await downloadContainerDataset(page);
+
+  expect(filename).toBe('tuitjenhorn-container-locations.json');
+  expect(payload).toHaveLength(25);
+  expect(payload.at(-1)).toMatchObject({
+    id: 'TH25',
+    address: 'Testlocatie Tuitjenhorn'
+  });
+  expect(payload.every((container) => container.id.startsWith('TH'))).toBe(true);
 });
 
 test('keeps the mobile menu out of the visual introduction', async ({ page }) => {
@@ -309,6 +488,10 @@ test('serves crawl support files and methodology page', async ({ page }) => {
   const methodologyText = await methodology.text();
   expect(methodologyText).toContain('Methodiek en onderzoeksbasis');
   expect(methodologyText).toContain('Gemeente Schagen');
+  expect(methodologyText).toContain('Onderzoeken over loopafstand en afvalinzameling');
+  for (const villageName of ['Dirkshorn', 'Sint Maarten', 'Waarland', 'Burgerbrug', 'Oudesluis', 'Schagerbrug']) {
+    expect(methodologyText).toContain(`Gemeente Schagen: ${villageName}`);
+  }
 });
 
 test('serves sortable analyses for each place with container map links', async ({ page }) => {

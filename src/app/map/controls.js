@@ -167,6 +167,10 @@ export function installMapControls(context) {
           </div>
           <div id="container-editor-status" class="container-editor-status" aria-live="polite">Houd een marker ingedrukt om te verplaatsen.</div>
         </div>
+        <label class="container-editor-place-field">
+          <span>Containerdataset voor dorp</span>
+          <select id="container-editor-place-select" class="container-editor-place-select" aria-label="Containerdataset voor dorp"></select>
+        </label>
         <div id="container-change-list" class="container-change-list" hidden></div>
         <div id="container-edit-panel" class="container-edit-panel" hidden></div>
         <div class="container-editor-actions">
@@ -189,6 +193,7 @@ export function installMapControls(context) {
   elements.containerEditorBadge = document.getElementById('container-editor-badge');
   elements.containerEditorPanel = document.getElementById('container-editor-panel');
   elements.containerEditorStatus = document.getElementById('container-editor-status');
+  elements.containerEditorPlaceSelect = document.getElementById('container-editor-place-select');
   elements.containerChangeCount = document.getElementById('container-change-count');
   elements.containerChangeList = document.getElementById('container-change-list');
   elements.containerEditPanel = document.getElementById('container-edit-panel');
