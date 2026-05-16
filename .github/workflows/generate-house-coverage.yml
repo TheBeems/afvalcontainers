@@ -11,12 +11,12 @@ on:
         options:
           - warmenhuizen
           - tuitjenhorn
-          - dirkshorn
-          - sint-maarten
-          - waarland
-          - burgerbrug
-          - oudesluis
-          - schagerbrug
+          # - dirkshorn
+          # - sint-maarten
+          # - waarland
+          # - burgerbrug
+          # - oudesluis
+          # - schagerbrug
       include_route_geometries:
         description: 'Prefetch and store route geometries'
         type: boolean
