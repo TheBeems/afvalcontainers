@@ -11,6 +11,12 @@ on:
         options:
           - warmenhuizen
           - tuitjenhorn
+          - dirkshorn
+          - sint-maarten
+          - waarland
+          - burgerbrug
+          - oudesluis
+          - schagerbrug
       include_route_geometries:
         description: 'Prefetch and store route geometries'
         type: boolean
@@ -47,6 +53,9 @@ jobs:
 
       - name: Generate split browser data
         run: npm run generate:coverage-split
+
+      - name: Check generated data and build
+        run: npm run check
 
       - name: Check for changes
         id: git-check
