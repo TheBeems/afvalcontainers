@@ -6,6 +6,7 @@ export function getElements() {
     sidebarHeaderPanel: document.getElementById('sidebar-header-panel'),
     appTitle: document.getElementById('app-title'),
     placeNameElements: document.querySelectorAll('[data-place-name]'),
+    placeSourceReference: document.getElementById('place-source-reference'),
     placeSourceLink: document.getElementById('place-source-link'),
     analysesLink: document.getElementById('analyses-link'),
     methodologyLink: document.getElementById('methodology-link'),

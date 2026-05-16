@@ -152,7 +152,7 @@ Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for th
 
 ## Data
 
-- `data/places.json` is the manifest for configured villages, their map defaults, data paths, source URL, and container ID prefix.
+- `data/places.json` is the catalog for configured villages, their map defaults, optional source URL, and container ID prefix. Standard data paths are derived from `data/places/<plaats-id>/`.
 - `data/places/warmenhuizen/container-locations.json` is the editable Warmenhuizen container source.
 - `data/places/warmenhuizen/house-coverage.json` is the legacy generated Warmenhuizen coverage cache used by scripts and route reuse; it is not copied to `dist/`.
 - `data/places/warmenhuizen/coverage-summary.json`, `house-map.json`, `address-index.compact.json`, and `house-details/*.json` are generated browser runtime data split from the coverage cache.
@@ -163,7 +163,7 @@ Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for th
 
 ## Dorpskern toevoegen
 
-Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebruik een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix`, kaartinstellingen en paden naar de runtime JSON-bestanden voor die kern:
+Nieuwe dorpskernen staan vooraf in `data/places.json`. Gebruik daar een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix` en kaartinstellingen. De standaardpaden worden automatisch afgeleid uit `data/places/<plaats-id>/`:
 
 - `container-locations.json`: handmatig beheerde containerlocaties.
 - `coverage-summary.json`: samenvatting en metadata voor de analyse.
@@ -171,7 +171,9 @@ Voeg voor een nieuwe dorpskern een eigen item toe aan `data/places.json`. Gebrui
 - `address-index.compact.json`: compacte lazy zoekindex voor adressen.
 - `house-details/`: lazy straatgebundelde detailbestanden met maximaal 75 adressen per bestand.
 
-Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Zie de aankondiging voor jouw dorp op de website van de gemeente Schagen.
+Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Een dorp met alleen `container-locations.json` kan al door generator- en auditscripts worden gebruikt, maar wordt nog niet gepubliceerd op de website.
+
+Een dorp wordt pas zichtbaar in de kaart, navigatie, analyses en sitemap wanneer de runtime-data compleet is: `container-locations.json`, `coverage-summary.json`, `house-map.json`, `address-index.compact.json`, en `house-details/*.json`.
 
 Genereer vervolgens de analyse en zoekindex:
 

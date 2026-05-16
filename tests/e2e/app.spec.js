@@ -136,6 +136,41 @@ test('serves the root as the Warmenhuizen app without a client-side redirect', a
   expect(html).not.toContain('window.location.replace');
 });
 
+test('hides configured villages without complete runtime data from public pages', async ({ page }) => {
+  const hiddenVillageNames = [
+    'Dirkshorn',
+    'Sint Maarten',
+    'Waarland',
+    'Burgerbrug',
+    'Oudesluis',
+    'Schagerbrug'
+  ];
+
+  await page.goto('/#kaart');
+
+  const placeSelect = page.getByLabel('Selecteer dorp');
+  await expect(placeSelect).toBeVisible();
+  await expect.poll(() => placeSelect.locator('option').count()).toBe(2);
+  const optionText = await placeSelect.locator('option').allTextContents();
+  expect(optionText).toEqual(['Warmenhuizen', 'Tuitjenhorn']);
+
+  const footerText = await page.locator('.sidebar-footer-nav').innerText();
+  for (const villageName of hiddenVillageNames) {
+    expect(footerText).not.toContain(villageName);
+  }
+
+  await page.goto('/analyses/');
+  const analysesText = await page.locator('main').innerText();
+  for (const villageName of hiddenVillageNames) {
+    expect(analysesText).not.toContain(villageName);
+  }
+
+  const sitemap = await (await page.request.get('/sitemap.xml')).text();
+  for (const villageSlug of ['dirkshorn', 'sint-maarten', 'waarland', 'burgerbrug', 'oudesluis', 'schagerbrug']) {
+    expect(sitemap).not.toContain(`/${villageSlug}/`);
+  }
+});
+
 test('keeps the mobile menu out of the visual introduction', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

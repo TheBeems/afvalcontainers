@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import {
   readJson,
@@ -166,6 +166,15 @@ async function writeJson(path, payload) {
   await writeFile(path, `${JSON.stringify(payload)}\n`, 'utf8');
 }
 
+async function fileExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function splitCoverageForPlace(place, coverage) {
   const houses = Array.isArray(coverage.houses) ? coverage.houses : [];
   const houseDetailsBasePath = resolveProjectPath(place.paths.houseDetailsBase);
@@ -192,7 +201,8 @@ export async function splitHouseCoverage({ verbose = true } = {}) {
   const results = [];
 
   for (const place of places) {
-    if (!place.paths?.coverageSummary || !place.paths?.houseMap || !place.paths?.addressIndex || !place.paths?.houseDetailsBase) {
+    const legacyCoveragePath = getLegacyCoveragePath(place);
+    if (!await fileExists(legacyCoveragePath)) {
       results.push({
         placeId: place.id,
         count: 0,
@@ -201,7 +211,7 @@ export async function splitHouseCoverage({ verbose = true } = {}) {
       continue;
     }
 
-    const coverage = await readJson(getLegacyCoveragePath(place), `${place.id} legacy coverage`);
+    const coverage = await readJson(legacyCoveragePath, `${place.id} legacy coverage`);
     const count = await splitCoverageForPlace(place, coverage);
 
     results.push({

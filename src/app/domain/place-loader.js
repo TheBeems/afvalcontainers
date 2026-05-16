@@ -194,8 +194,11 @@ export function createPlaceLoader(context, api) {
       element.textContent = place.name;
     });
 
-    if (elements.placeSourceLink) {
-      elements.placeSourceLink.href = place.sourceUrl;
+    if (elements.placeSourceReference) {
+      elements.placeSourceReference.innerHTML = place.sourceUrl
+        ? `<a id="place-source-link" href="${escapeHtml(place.sourceUrl)}">aangekondigd</a>`
+        : '<span id="place-source-link">aangekondigd</span>';
+      elements.placeSourceLink = document.getElementById('place-source-link');
     }
 
     if (elements.methodologyLink) {

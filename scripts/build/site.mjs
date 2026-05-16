@@ -2,7 +2,13 @@ import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/p
 import { dirname, relative, resolve } from 'node:path';
 import { build as viteBuild } from 'vite';
 import { splitHouseCoverage } from '../split-house-coverage.mjs';
-import { readPlacesManifest, resolveProjectPath } from '../places.mjs';
+import {
+  getDefaultPlace,
+  getPublishablePlaces,
+  publishablePlaceFilePathKeys,
+  readPlacesManifest,
+  resolveProjectPath
+} from '../places.mjs';
 import { escapeHtml } from '../../src/shared/html.js';
 import { formatDuration, formatMeters, formatPercent } from '../../src/shared/format.js';
 import {
@@ -30,13 +36,6 @@ export const distDir = resolve(projectRoot, 'dist');
 
 const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END -->/;
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
-
-const placeFilePathKeys = [
-  'containers',
-  'coverageSummary',
-  'houseMap',
-  'addressIndex'
-];
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -67,10 +66,12 @@ async function copyProjectDirectory(path) {
 }
 
 async function copyRuntimeData(places) {
-  await copyProjectFile(resolve(projectRoot, 'data/places.json'));
+  const manifestDestination = resolve(distDir, 'data/places.json');
+  await mkdir(dirname(manifestDestination), { recursive: true });
+  await writeFile(manifestDestination, `${JSON.stringify(places, null, 2)}\n`, 'utf8');
 
   for (const place of places) {
-    for (const key of placeFilePathKeys) {
+    for (const key of publishablePlaceFilePathKeys) {
       await copyProjectFile(resolveProjectPath(place.paths[key]));
     }
     await copyProjectDirectory(resolveProjectPath(place.paths.houseDetailsBase));
@@ -88,6 +89,33 @@ function escapeScriptJson(json) {
 function replaceElementHtml(html, id, value) {
   const pattern = new RegExp(`(<([a-z0-9-]+)[^>]+id="${id}"[^>]*>)[\\s\\S]*?(</\\2>)`, 'i');
   return html.replace(pattern, `$1${value}$3`);
+}
+
+function buildPlaceMapLinks(places, prefix = './') {
+  return places
+    .map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/#kaart">Kaart ${escapeHtml(place.name)}</a>`)
+    .join('\n      ');
+}
+
+function buildFooterLinks(places, prefix = './') {
+  return [
+    ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
+    `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
+    `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`
+  ].join('\n        ');
+}
+
+function replaceSidebarFooterNav(html, places, prefix) {
+  const footerNav = `<nav class="sidebar-footer-nav" aria-label="Secundaire navigatie">
+        ${buildFooterLinks(places, prefix)}
+      </nav>`;
+  return html.replace(/<nav class="sidebar-footer-nav"[\s\S]*?<\/nav>/, footerNav);
+}
+
+function buildPlaceSourceReference(place) {
+  return place.sourceUrl
+    ? `<a id="place-source-link" href="${escapeHtml(place.sourceUrl)}">aangekondigd</a>`
+    : '<span id="place-source-link">aangekondigd</span>';
 }
 
 function replaceSeoBlock(html, seoBlock) {
@@ -281,9 +309,9 @@ function getIntroMetrics(coverageSummary) {
   };
 }
 
-function applyInitialPlaceContent(html, place, coverageSummary) {
+function applyInitialPlaceContent(html, place, coverageSummary, places, { navigationPrefix = './' } = {}) {
   const metrics = getIntroMetrics(coverageSummary);
-  let pageHtml = html;
+  let pageHtml = replaceSidebarFooterNav(html, places, navigationPrefix);
 
   pageHtml = pageHtml.replace(/(<span data-place-name>)([\s\S]*?)(<\/span>)/g, `$1${escapeHtml(place.name)}$3`);
   pageHtml = replaceElementHtml(pageHtml, 'app-title', escapeHtml(getPlaceTitle(place)));
@@ -303,10 +331,7 @@ function applyInitialPlaceContent(html, place, coverageSummary) {
     'intro-over-reference-text',
     `Daarvan liggen <strong>${metrics.overReferenceCount.toLocaleString('nl-NL')}</strong> adressen boven <em>275 meter</em> (${metrics.overReferencePercent}).`
   );
-  pageHtml = pageHtml.replace(
-    /(<a id="place-source-link" href=")[^"]+(")/,
-    `$1${escapeHtml(place.sourceUrl)}$2`
-  );
+  pageHtml = replaceElementHtml(pageHtml, 'place-source-reference', buildPlaceSourceReference(place));
   pageHtml = pageHtml.replace(
     /aria-label="Kaart van [^"]+"/,
     `aria-label="Kaart van ${escapeHtml(place.name)} met containerlocaties en batchanalyse"`
@@ -523,11 +548,13 @@ async function readPlaceAnalysis(place) {
   };
 }
 
-async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix }) {
+async function createAppPage(templateHtml, place, places, { runtimeBasePath, assetPrefix }) {
   const coverageSummary = await readCoverageSummary(place);
   const title = getPlaceTitle(place);
   const pageHtml = replaceSeoBlock(
-    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary),
+    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary, places, {
+      navigationPrefix: assetPrefix
+    }),
     buildSeoBlock({
       title,
       description: getPlaceDescription(place),
@@ -542,7 +569,7 @@ async function createAppPage(templateHtml, place, { runtimeBasePath, assetPrefix
   return pageHtml;
 }
 
-function buildMethodologyPage() {
+function buildMethodologyPage(places) {
   const title = 'Methodiek en onderzoeksbasis';
   const description = 'Korte uitleg voor bewoners van Warmenhuizen over de loopafstandsanalyse en de onderzoeken waarop de afstandscategorieen zijn gebaseerd.';
   const seoBlock = buildSeoBlock({
@@ -653,8 +680,7 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
+      ${buildPlaceMapLinks(places, '../')}
       <a href="../analyses/">Analyses</a>
     </nav>
 
@@ -965,7 +991,7 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
 
 async function buildAnalysesPage(places) {
   const analyses = await Promise.all(places.map((place) => readPlaceAnalysis(place)));
-  const defaultAnalysis = analyses.find((analysis) => analysis.place.id === 'warmenhuizen') || analyses[0];
+  const defaultAnalysis = analyses.find((analysis) => analysis.place.id === getDefaultPlace(places).id) || analyses[0];
   const title = 'Analyses loopafstanden restafvalcontainers';
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const seoBlock = buildSeoBlock({
@@ -1331,8 +1357,7 @@ ${seoBlock}
 <body>
   <main>
     <nav aria-label="Hoofdnavigatie">
-      <a href="../warmenhuizen/#kaart">Kaart Warmenhuizen</a>
-      <a href="../tuitjenhorn/#kaart">Kaart Tuitjenhorn</a>
+      ${buildPlaceMapLinks(places, '../')}
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
@@ -1420,9 +1445,9 @@ async function copySeoAssets() {
 
 async function writeSeoPages(places) {
   const templateHtml = await readFile(resolve(distDir, 'index.html'), 'utf8');
-  const defaultPlace = places.find((place) => place.id === 'warmenhuizen') || places[0];
+  const defaultPlace = getDefaultPlace(places);
 
-  await writeFile(resolve(distDir, 'index.html'), await createAppPage(templateHtml, defaultPlace, {
+  await writeFile(resolve(distDir, 'index.html'), await createAppPage(templateHtml, defaultPlace, places, {
     runtimeBasePath: './',
     assetPrefix: './'
   }), 'utf8');
@@ -1431,14 +1456,14 @@ async function writeSeoPages(places) {
     const slug = getPlaceSlug(place);
     const placeDir = resolve(distDir, slug);
     await mkdir(placeDir, { recursive: true });
-    await writeFile(resolve(placeDir, 'index.html'), await createAppPage(templateHtml, place, {
+    await writeFile(resolve(placeDir, 'index.html'), await createAppPage(templateHtml, place, places, {
       runtimeBasePath: '../',
       assetPrefix: '../'
     }), 'utf8');
   }
 
   await mkdir(resolve(distDir, 'methodiek'), { recursive: true });
-  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(), 'utf8');
+  await writeFile(resolve(distDir, 'methodiek/index.html'), buildMethodologyPage(places), 'utf8');
 
   await mkdir(resolve(distDir, 'analyses'), { recursive: true });
   await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
@@ -1489,7 +1514,11 @@ ${urls.map((entry) => `  <url>
 export async function buildSite() {
   await splitHouseCoverage({ verbose: false });
   await rm(distDir, { recursive: true, force: true });
-  const places = await readPlacesManifest();
+  const configuredPlaces = await readPlacesManifest();
+  const places = await getPublishablePlaces(configuredPlaces);
+  if (places.length === 0) {
+    throw new Error('No publishable places found. Add complete runtime data under data/places/<id>/ before building.');
+  }
   await viteBuild({
     configFile: resolve(projectRoot, 'vite.config.js')
   });

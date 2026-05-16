@@ -11,9 +11,10 @@
   "scripts": {
     "build": "node scripts/build-site.mjs",
     "audit:hvc-existing": "node scripts/audit-hvc-existing-containers.mjs",
-    "check": "npm run check:syntax && npm run generate:coverage-split && npm run check:data && npm run build",
+    "check": "npm run check:syntax && npm run check:unit && npm run generate:coverage-split && npm run check:data && npm run build",
     "check:data": "node scripts/validate-data.mjs",
     "check:syntax": "node scripts/build/check-syntax.mjs",
+    "check:unit": "node --test tests/unit/*.test.mjs",
     "generate:address-indexes": "node scripts/generate-address-indexes.mjs",
     "generate:coverage-split": "node scripts/split-house-coverage.mjs",
     "generate:survey-pdf": "node scripts/generate-survey-pdf.mjs",
