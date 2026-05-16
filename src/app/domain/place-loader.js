@@ -1,10 +1,8 @@
-import {
-  DEFAULT_PLACE_ID,
-  MAP_CENTER,
-  MAP_ZOOM,
-  PLACES_MANIFEST_PATH
-} from '../config.js';
 import { loadJson } from '../data/load-json.js';
+import {
+  getRequestedPlaceId,
+  loadPlacesManifest
+} from './place-metadata.js';
 import { escapeHtml } from '../../shared/html.js';
 import {
   getPlaceDescription,
@@ -15,59 +13,12 @@ import {
   SOCIAL_IMAGE_URL
 } from '../../shared/seo.js';
 
-function getMapCenter(place) {
-  return Array.isArray(place?.map?.center) && place.map.center.length === 2
-    ? place.map.center
-    : MAP_CENTER;
-}
-
-function getMapZoom(place) {
-  return Number.isFinite(place?.map?.zoom) ? place.map.zoom : MAP_ZOOM;
-}
-
-function normalizePlace(place) {
-  return {
-    ...place,
-    paths: place.paths || {},
-    map: {
-      center: getMapCenter(place),
-      zoom: getMapZoom(place)
-    }
-  };
-}
-
 function buildHouseDetailPath(place, detailBundle) {
   const basePath = place?.paths?.houseDetailsBase;
   if (!basePath || !detailBundle) {
     return null;
   }
   return `${basePath.replace(/\/$/, '')}/${encodeURIComponent(detailBundle)}.json`;
-}
-
-function getPathPlaceId(places) {
-  const pathSegments = window.location.pathname.split('/').filter(Boolean);
-  const place = places.find((candidate) => {
-    const slug = getPlaceSlug(candidate);
-    return slug && pathSegments.includes(slug);
-  });
-  return place?.id || null;
-}
-
-function getRequestedPlaceId(places) {
-  const pathPlaceId = getPathPlaceId(places);
-  if (pathPlaceId) {
-    return { placeId: pathPlaceId, shouldUseCleanUrl: false };
-  }
-
-  const urlPlaceId = new URLSearchParams(window.location.search).get('plaats');
-  if (urlPlaceId && places.some((place) => place.id === urlPlaceId)) {
-    return { placeId: urlPlaceId, shouldUseCleanUrl: true };
-  }
-
-  const defaultPlaceId = places.some((place) => place.id === DEFAULT_PLACE_ID)
-    ? DEFAULT_PLACE_ID
-    : places[0]?.id;
-  return { placeId: defaultPlaceId, shouldUseCleanUrl: false };
 }
 
 function getRequestedContainerId() {
@@ -553,15 +504,14 @@ export function createPlaceLoader(context, api) {
     }
     resetPlaceDataState();
     renderPlaceSelector();
-    map.setView(getMapCenter(place), getMapZoom(place));
+    map.setView(place.map.center, place.map.zoom);
 
     activePlaceLoadPromise = loadPlaceData(place, selectionId, options);
     await activePlaceLoadPromise;
   }
 
-  async function initPlaces() {
-    const places = await loadJson(PLACES_MANIFEST_PATH, 'Plaatsen laden');
-    state.places = Array.isArray(places) ? places.map(normalizePlace) : [];
+  async function initPlaces(options = {}) {
+    state.places = await loadPlacesManifest();
     state.placesById = new Map(state.places.map((place) => [place.id, place]));
 
     if (state.places.length === 0) {
@@ -570,10 +520,12 @@ export function createPlaceLoader(context, api) {
 
     const requestedPlace = getRequestedPlaceId(state.places);
     const requestedContainerId = getRequestedContainerId();
-    await selectPlace(requestedPlace.placeId, {
-      updateUrl: requestedPlace.shouldUseCleanUrl,
-      selectedContainerId: requestedContainerId,
-      collapseIntroForSelectedContainer: Boolean(requestedContainerId)
+    const selectedPlaceId = options.selectedPlaceId || requestedPlace.placeId;
+    await selectPlace(selectedPlaceId, {
+      updateUrl: requestedPlace.shouldUseCleanUrl || Boolean(options.selectedPlaceId),
+      selectedHouseId: options.selectedHouseId,
+      selectedContainerId: options.selectedPlaceId ? null : requestedContainerId,
+      collapseIntroForSelectedContainer: Boolean(requestedContainerId) && !options.selectedPlaceId
     });
   }
 

@@ -70,7 +70,7 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
 });
 
-test('defers map data and later story media until the map is requested', async ({ page }) => {
+test('starts map data immediately while deferring later story media', async ({ page }) => {
   const requestedUrls = [];
   page.on('request', (request) => {
     requestedUrls.push(request.url());
@@ -82,15 +82,47 @@ test('defers map data and later story media until the map is requested', async (
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(250);
 
-  expect(requestedUrls.some((url) => url.includes('/house-map.json'))).toBe(false);
-  expect(requestedUrls.some((url) => url.startsWith('https://tile.openstreetmap.org/'))).toBe(false);
-  expect(requestedUrls.some((url) => /brengsysteem|werkelijke-looproute|loopafstand-ervaring|praktische-gevolgen/.test(url))).toBe(false);
+  expect(requestedUrls.some((url) => url.includes('/house-map.json'))).toBe(true);
+  expect(requestedUrls.some((url) => url.startsWith('https://tile.openstreetmap.org/'))).toBe(true);
+  expect(requestedUrls.some((url) => /brengsysteem/.test(url))).toBe(true);
+  expect(requestedUrls.some((url) => /werkelijke-looproute|loopafstand-ervaring|praktische-gevolgen/.test(url))).toBe(false);
 
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(page.locator('#coverage-summary')).toBeVisible();
-  await expect.poll(() => requestedUrls.some((url) => url.includes('/house-map.json'))).toBe(true);
-  await expect.poll(() => requestedUrls.some((url) => url.startsWith('https://tile.openstreetmap.org/'))).toBe(true);
+});
+
+test('focuses search while initial map data finishes and selects an address', async ({ page }) => {
+  let releaseHouseMap;
+  const houseMapDelay = new Promise((resolve) => {
+    releaseHouseMap = resolve;
+  });
+  let houseMapRequested = false;
+
+  await page.route('**/house-map.json', async (route) => {
+    houseMapRequested = true;
+    await houseMapDelay;
+    await route.continue();
+  });
+
+  await page.goto('/warmenhuizen/');
+  await expect(page.locator('#visuele-uitleg')).toBeVisible();
+  await expect.poll(() => houseMapRequested).toBe(true);
+
+  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+
+  const search = page.getByRole('combobox', { name: 'Zoek je adres' });
+  await expect(search).toBeFocused();
+  await expect(page.locator('#coverage-summary')).toBeHidden();
+
+  await search.fill('Appelvinkstraat 12');
+  const option = page.getByRole('option', { name: /Appelvinkstraat 12/ });
+  await expect(option).toBeVisible();
+  await option.click();
+
+  releaseHouseMap();
+  await expect(page.locator('#coverage-summary')).toBeVisible();
+  await expect(page.locator('.house-map-info')).toContainText('Appelvinkstraat 12');
 });
 
 test('serves the root as the Warmenhuizen app without a client-side redirect', async ({ page }) => {
@@ -235,7 +267,7 @@ test('serves place-specific SEO metadata from clean place URLs', async ({ page }
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Tuitjenhorn/);
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `${SITE_URL}tuitjenhorn/`);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
-  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', '../favicon.svg');
+  await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
   await expect(page.locator('#story-title')).toContainText('Tuitjenhorn');
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
   await expect(page.locator('#app-title')).toContainText('Tuitjenhorn');

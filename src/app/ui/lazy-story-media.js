@@ -30,6 +30,7 @@ function hydrateStoryMedia(media) {
   });
 
   media.querySelectorAll(LAZY_IMAGE_SELECTOR).forEach((image) => {
+    image.loading = 'eager';
     image.src = getStoryAssetUrl(image.dataset.src || '');
     image.removeAttribute('data-src');
   });
@@ -62,7 +63,7 @@ export function initLazyStoryMedia() {
     });
   }, {
     root: story || null,
-    rootMargin: '0px 0px -1px 0px'
+    rootMargin: '0px 0px 50% 0px'
   });
 
   lazyMedia.forEach((media) => {

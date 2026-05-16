@@ -108,7 +108,7 @@ export function bindStoryIntroEvents(api = {}) {
     });
   }
 
-  function completeStoryIntro({ focusSearch = false, updateHash = true } = {}) {
+  function completeStoryIntro({ focusSearch = false, mapRequestOptions = {}, updateHash = true } = {}) {
     setStoryState(false);
 
     if (scrollFrame !== null) {
@@ -126,13 +126,14 @@ export function bindStoryIntroEvents(api = {}) {
       behavior: 'auto'
     });
 
-    const mapRequest = api.onMapRequested?.({ focusSearch });
-
-    if (focusSearch && !mapRequest) {
+    if (focusSearch) {
       window.requestAnimationFrame(() => {
         searchInput?.focus({ preventScroll: true });
       });
     }
+
+    const mapRequest = api.onMapRequested?.({ focusSearch, ...mapRequestOptions });
+    return mapRequest;
   }
 
   function openStoryIntro({

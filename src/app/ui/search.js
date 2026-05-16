@@ -3,6 +3,11 @@ import {
   SEARCH_MIN_QUERY_LENGTH,
   SEARCH_RESULT_LIMIT
 } from '../config.js';
+import { loadJson } from '../data/load-json.js';
+import {
+  getRequestedPlaceId,
+  loadPlacesManifest
+} from '../domain/place-metadata.js';
 import { escapeHtml } from '../../shared/html.js';
 
 const MOBILE_SEARCH_ACTIVE_CLASS = 'mobile-search-active';
@@ -11,11 +16,83 @@ function formatCssPixel(value) {
   return `${Number.isFinite(value) ? value.toFixed(2) : '0'}px`;
 }
 
-export function createSearch(context, api) {
-  const { state } = context;
+export function createSearch({ onResultSelected = null } = {}) {
+  let placesPromise = null;
+  let places = [];
+  let placesById = new Map();
+  const addressIndexPromisesByPlaceId = new Map();
+  const fusePromisesByPlaceId = new Map();
+  const fuseByPlaceId = new Map();
 
-  async function initSearch() {
-    setupSearch();
+  function getFuseConstructor() {
+    return import('fuse.js').then((module) => module.default || module);
+  }
+
+  async function ensurePlaces() {
+    if (!placesPromise) {
+      placesPromise = loadPlacesManifest().then((loadedPlaces) => {
+        places = loadedPlaces;
+        placesById = new Map(places.map((place) => [place.id, place]));
+        return places;
+      });
+    }
+
+    return placesPromise;
+  }
+
+  async function getActivePlace() {
+    const loadedPlaces = await ensurePlaces();
+    const requestedPlace = getRequestedPlaceId(loadedPlaces);
+    return placesById.get(requestedPlace.placeId) || loadedPlaces[0] || null;
+  }
+
+  async function loadAddressIndexForPlace(place) {
+    if (!place?.id || !place.paths?.addressIndex) {
+      return [];
+    }
+
+    if (!addressIndexPromisesByPlaceId.has(place.id)) {
+      addressIndexPromisesByPlaceId.set(
+        place.id,
+        loadJson(place.paths.addressIndex, `Adresindex ${place.name} laden`).then((addressIndex) => (
+          Array.isArray(addressIndex) ? addressIndex : []
+        ))
+      );
+    }
+
+    return addressIndexPromisesByPlaceId.get(place.id);
+  }
+
+  async function ensureFuseForPlace(place) {
+    if (!place?.id) {
+      return null;
+    }
+
+    if (fuseByPlaceId.has(place.id)) {
+      return fuseByPlaceId.get(place.id);
+    }
+
+    if (!fusePromisesByPlaceId.has(place.id)) {
+      fusePromisesByPlaceId.set(place.id, Promise.all([
+        getFuseConstructor(),
+        loadAddressIndexForPlace(place)
+      ]).then(([FuseConstructor, addressIndex]) => {
+        const fuse = new FuseConstructor(addressIndex, {
+          keys: ['address', 'postcode'],
+          includeScore: true,
+          threshold: 0.3
+        });
+        fuseByPlaceId.set(place.id, fuse);
+        return fuse;
+      }));
+    }
+
+    return fusePromisesByPlaceId.get(place.id);
+  }
+
+  async function preloadActiveAddressIndex() {
+    const activePlace = await getActivePlace();
+    await ensureFuseForPlace(activePlace);
   }
 
   function setupSearch() {
@@ -31,9 +108,6 @@ export function createSearch(context, api) {
     let mobileQuery = null;
     let matches = [];
     let activeIndex = -1;
-    let fuse = null;
-    let fusePlaceId = null;
-    let fuseConstructorPromise = null;
     let searchRequestId = 0;
     let isMobileSearchActive = false;
     let searchViewportFrame = null;
@@ -126,41 +200,6 @@ export function createSearch(context, api) {
       });
     }
 
-    async function getFuseConstructor() {
-      if (!fuseConstructorPromise) {
-        fuseConstructorPromise = import('fuse.js').then((module) => module.default || module);
-      }
-      return fuseConstructorPromise;
-    }
-
-    async function ensureActiveFuse() {
-      const placeId = state.activePlace?.id;
-      if (!placeId) {
-        return false;
-      }
-
-      if (fuse && fusePlaceId === placeId) {
-        return true;
-      }
-
-      const [FuseConstructor, addressIndex] = await Promise.all([
-        getFuseConstructor(),
-        api.loadActiveAddressIndex()
-      ]);
-
-      if (state.activePlace?.id !== placeId) {
-        return false;
-      }
-
-      fuse = new FuseConstructor(addressIndex, {
-        keys: ['address', 'postcode'],
-        includeScore: true,
-        threshold: 0.3
-      });
-      fusePlaceId = placeId;
-      return true;
-    }
-
     function getQuery() {
       return input.value.trim();
     }
@@ -221,11 +260,10 @@ export function createSearch(context, api) {
       input.value = house.address;
       closeResults();
       deactivateMobileSearchMode({ blurInput: true });
-      api.closeMobileSidebarIfMobile?.();
-      api.scrollMapIntoView?.();
-      await api.selectPlace(house.placeId, {
-        selectedHouseId: house.id,
-        focusMap: true
+      await onResultSelected?.({
+        address: house.address,
+        houseId: house.id,
+        placeId: house.placeId
       });
     }
 
@@ -235,10 +273,10 @@ export function createSearch(context, api) {
       setExpanded(true);
     }
 
-    function createResultButton(result, index) {
+    function createResultButton(result, index, activePlace) {
       const house = result.item;
       const postcode = house.postcode ? `${house.postcode} ` : '';
-      const city = house.city || api.getPlaceById(house.placeId)?.name || api.getActivePlaceCity();
+      const city = house.city || placesById.get(house.placeId)?.name || activePlace?.name || '';
 
       const button = document.createElement('button');
       button.type = 'button';
@@ -277,9 +315,13 @@ export function createSearch(context, api) {
 
       renderStatusResult('Adresindex wordt geladen...');
 
+      let activePlace = null;
+      let fuse = null;
       try {
-        const isReady = await ensureActiveFuse();
-        if (!isReady || requestId !== searchRequestId || query !== getQuery()) {
+        activePlace = await getActivePlace();
+        fuse = await ensureFuseForPlace(activePlace);
+        const currentPlace = await getActivePlace();
+        if (!fuse || currentPlace?.id !== activePlace?.id || requestId !== searchRequestId || query !== getQuery()) {
           return;
         }
       } catch (error) {
@@ -300,7 +342,7 @@ export function createSearch(context, api) {
       const fragment = document.createDocumentFragment();
 
       matches.forEach((result, index) => {
-        fragment.appendChild(createResultButton(result, index));
+        fragment.appendChild(createResultButton(result, index, activePlace));
       });
 
       resultsDiv.appendChild(fragment);
@@ -381,8 +423,12 @@ export function createSearch(context, api) {
     }
   }
 
+  function initSearch() {
+    setupSearch();
+  }
+
   return {
     initSearch,
-    setupSearch
+    preloadActiveAddressIndex
   };
 }

@@ -14,7 +14,6 @@ import { createContainersUi } from './ui/containers.js';
 import { createCoverageSummary } from './ui/coverage-summary.js';
 import { createHouseSelection } from './ui/house-selection.js';
 import { createMobileSidebar } from './ui/mobile-sidebar.js';
-import { createSearch } from './ui/search.js';
 import { createStatusUi } from './ui/status.js';
 
 window.L = L;
@@ -42,7 +41,6 @@ function createApp() {
   Object.assign(api, createContainersUi(context, api));
   Object.assign(api, createHouseSelection(context, api));
   Object.assign(api, createPlaceLoader(context, api));
-  Object.assign(api, createSearch(context, api));
 
   return { api, context };
 }
@@ -60,13 +58,15 @@ function registerCoreListeners(context, api) {
   api.bindMobileSidebarEvents();
 }
 
-async function init(context, api) {
+async function init(context, api, options = {}) {
   const { elements, state } = context;
 
   try {
     registerCoreListeners(context, api);
-    await api.initPlaces();
-    await api.initSearch();
+    await api.initPlaces({
+      selectedHouseId: options.selectedHouseId,
+      selectedPlaceId: options.selectedPlaceId
+    });
   } catch (error) {
     state.placeLoadStatus = 'error';
     elements.coverageSummary.hidden = true;
@@ -84,15 +84,32 @@ function focusSearchInput() {
   });
 }
 
-export async function startMapApp({ focusSearchAfterStart = false } = {}) {
+async function applySelection(api, options = {}) {
+  if (!options.selectedPlaceId) {
+    return;
+  }
+
+  await api.selectPlace(options.selectedPlaceId, {
+    selectedHouseId: options.selectedHouseId,
+    focusMap: true
+  });
+}
+
+export async function startMapApp(options = {}) {
+  const { focusSearchAfterStart = false } = options;
+  const shouldApplySelectionAfterStart = Boolean(appPromise);
+
   if (!appPromise) {
     appPromise = (async () => {
       const { api, context } = createApp();
-      return init(context, api);
+      return init(context, api, options);
     })();
   }
 
   const app = await appPromise;
+  if (shouldApplySelectionAfterStart) {
+    await applySelection(app.api, options);
+  }
 
   if (focusSearchAfterStart) {
     focusSearchInput();

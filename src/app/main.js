@@ -1,6 +1,7 @@
 import '../styles.css';
 import { bindStoryIntroEvents } from './ui/story-intro.js';
 import { initLazyStoryMedia } from './ui/lazy-story-media.js';
+import { createSearch } from './ui/search.js';
 
 let mapAppModulePromise = null;
 
@@ -21,17 +22,38 @@ function handleMapStartError(error) {
 }
 
 function start() {
-  initLazyStoryMedia();
-  bindStoryIntroEvents({
-    onMapRequested({ focusSearch = false } = {}) {
-      return loadMapApp({ focusSearchAfterStart: focusSearch }).catch(handleMapStartError);
+  let storyControls = null;
+  const search = createSearch({
+    onResultSelected({ placeId, houseId }) {
+      const mapRequest = storyControls?.completeStoryIntro({
+        mapRequestOptions: {
+          selectedHouseId: houseId,
+          selectedPlaceId: placeId
+        }
+      });
+
+      return mapRequest || loadMapApp({
+        selectedHouseId: houseId,
+        selectedPlaceId: placeId
+      }).catch(handleMapStartError);
     }
   });
 
-  const params = new URLSearchParams(window.location.search);
-  if (window.location.hash === '#kaart' || params.has('container') || params.has('plaats')) {
-    loadMapApp().catch(handleMapStartError);
-  }
+  search.initSearch();
+  initLazyStoryMedia();
+  storyControls = bindStoryIntroEvents({
+    onMapRequested({ focusSearch = false, ...mapOptions } = {}) {
+      return loadMapApp({ focusSearchAfterStart: focusSearch, ...mapOptions }).catch(handleMapStartError);
+    }
+  });
+
+  loadMapApp().catch(handleMapStartError);
+
+  window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      void search.preloadActiveAddressIndex().catch(() => {});
+    }, 0);
+  });
 }
 
 start();
