@@ -7,13 +7,21 @@ import sharp from 'sharp';
 const projectRoot = resolve(import.meta.dirname, '..');
 const sourceDir = resolve(projectRoot, 'src/assets/story');
 const outputDir = resolve(sourceDir, 'generated');
-const widths = [960, 1400, 1672];
-const images = [
+const landscapeWidths = [960, 1400, 1672];
+const portraitWidths = [720, 960];
+const landscapeImages = [
   'ophalen-aan-huis.png',
   'brengsysteem.png',
   'werkelijke-looproute.png',
   'loopafstand-ervaring.png',
   'praktische-gevolgen.png'
+];
+const portraitImages = [
+  'ophalen-aan-huis-portrait.png',
+  'brengsysteem-portrait.png',
+  'werkelijke-looproute-portrait.png',
+  'loopafstand-ervaring-portrait.png',
+  'praktische-gevolgen-portrait.png'
 ];
 
 function getOutputPath(fileName, width, extension) {
@@ -21,7 +29,7 @@ function getOutputPath(fileName, width, extension) {
   return resolve(outputDir, `${name}-${width}.${extension}`);
 }
 
-async function generateImageVariants(fileName) {
+async function generateImageVariants(fileName, widths, { includePng = true } = {}) {
   const inputPath = resolve(sourceDir, fileName);
 
   for (const width of widths) {
@@ -41,19 +49,30 @@ async function generateImageVariants(fileName) {
       .toFile(getOutputPath(fileName, width, 'webp'));
   }
 
-  await sharp(inputPath)
-    .resize({
-      width: 1672,
-      withoutEnlargement: true
-    })
-    .png({ palette: true, quality: 82, compressionLevel: 9 })
-    .toFile(getOutputPath(fileName, 1672, 'png'));
+  if (includePng) {
+    const fallbackWidth = Math.max(...widths);
+
+    await sharp(inputPath)
+      .resize({
+        width: fallbackWidth,
+        withoutEnlargement: true
+      })
+      .png({ palette: true, quality: 82, compressionLevel: 9 })
+      .toFile(getOutputPath(fileName, fallbackWidth, 'png'));
+  }
 }
 
 await mkdir(outputDir, { recursive: true });
 
-for (const image of images) {
-  await generateImageVariants(image);
+for (const image of landscapeImages) {
+  await generateImageVariants(image, landscapeWidths);
 }
 
-console.log(`Generated ${images.length * ((widths.length * 2) + 1)} story image variants in ${outputDir}`);
+for (const image of portraitImages) {
+  await generateImageVariants(image, portraitWidths, { includePng: false });
+}
+
+const generatedCount = (landscapeImages.length * ((landscapeWidths.length * 2) + 1))
+  + (portraitImages.length * (portraitWidths.length * 2));
+
+console.log(`Generated ${generatedCount} story image variants in ${outputDir}`);
