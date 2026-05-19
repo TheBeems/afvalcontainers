@@ -59,7 +59,7 @@ export function buildTallySurveyButtonMarkup(house, ranking, activePlaceCity) {
         data-tally-walking-duration="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.walkingDuration])}"
         data-tally-container-id="${escapeHtml(hiddenFields[TALLY_HIDDEN_FIELDS.containerId])}"
       >
-        Geef je mening
+        Vul de enquête in
       </button>
     </aside>
   `;
