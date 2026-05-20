@@ -3,6 +3,7 @@ export const SEARCH_FOCUS_ZOOM = HOUSE_MARKER_MIN_ZOOM;
 export const SEARCH_RESULT_LIMIT = 10;
 export const SEARCH_MIN_QUERY_LENGTH = 1;
 export const HOUSE_CIRCLE_RADIUS = 4.5;
+export const HOUSE_CIRCLE_RADIUS_MAX = 9;
 export const HOUSE_MARKER_FILL_OPACITY = 0.75;
 export const HOUSE_MARKER_MUTED_FILL_OPACITY = 1.0;
 export const MAP_CENTER = [52.7235, 4.7385];
