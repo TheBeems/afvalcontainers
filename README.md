@@ -121,6 +121,10 @@ De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
 - Zoom in tot niveau 16 om individuele huizen te tonen.
 - De kleuren geven in één oogopslag de toegankelijkheid en potentiële probleemzones aan.
 
+## Licentie
+
+De broncode is beschikbaar onder de MIT-licentie. De gepubliceerde datasets en analyses zijn beschikbaar onder [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
 ## Development
 
 ```sh

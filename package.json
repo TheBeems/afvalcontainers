@@ -2,7 +2,7 @@
   "name": "warmenhuizen-afvalcontainers",
   "version": "1.0.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "description": "Static GitHub Pages map for Warmenhuizen waste-container walking-distance coverage.",
   "engines": {
