@@ -13,6 +13,7 @@ import { escapeHtml } from '../../src/shared/html.js';
 import { formatDuration, formatMeters, formatPercent } from '../../src/shared/format.js';
 import {
   getAnalysesUrl,
+  getFeedbackUrl,
   getMethodologyUrl,
   getPlaceDescription,
   getPlaceOgDescription,
@@ -106,7 +107,8 @@ function buildFooterLinks(places, prefix = './') {
   return [
     ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
     `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
-    `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`
+    `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`,
+    `<a href="${escapeHtml(prefix)}terugkoppeling/">Terugkoppeling</a>`
   ].join('\n        ');
 }
 
@@ -299,6 +301,55 @@ function buildAnalysesStructuredData() {
       description
     })
   };
+}
+
+function buildFeedbackStructuredData() {
+  const url = getFeedbackUrl();
+  const description = 'Korte terugkoppeling over wat de Dorpsraad Warmenhuizen met reacties op de enquête over restafvalcontainers doet.';
+  const title = 'Dank voor je reactie';
+  return {
+    '@context': 'https://schema.org',
+    '@graph': buildWebPageStructuredData({
+      url,
+      name: title,
+      description
+    })
+  };
+}
+
+function buildFeedbackReturnScript(places) {
+  const placeSlugsJson = escapeScriptJson(JSON.stringify(places.map((place) => getPlaceSlug(place)).filter(Boolean)));
+
+  return `<script>
+    (() => {
+      const returnLink = document.querySelector('[data-feedback-return-link]');
+      if (!returnLink) {
+        return;
+      }
+
+      const placeSlugs = new Set(${placeSlugsJson});
+      const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+      if (!returnTo) {
+        return;
+      }
+
+      let returnUrl;
+      try {
+        returnUrl = new URL(returnTo, window.location.origin);
+      } catch {
+        return;
+      }
+
+      const pathSegments = returnUrl.pathname.split('/').filter(Boolean);
+      if (returnUrl.origin !== window.location.origin || pathSegments.length !== 1 || !placeSlugs.has(pathSegments[0])) {
+        return;
+      }
+
+      returnUrl.search = '';
+      returnUrl.hash = '#kaart';
+      returnLink.href = returnUrl.pathname + returnUrl.hash;
+    })();
+  </script>`;
 }
 
 function getIntroMetrics(coverageSummary) {
@@ -700,6 +751,7 @@ ${seoBlock}
     <nav aria-label="Hoofdnavigatie">
       ${buildPlaceMapLinks(places, '../')}
       <a href="../analyses/">Analyses</a>
+      <a href="../terugkoppeling/">Terugkoppeling</a>
     </nav>
 
     <h1>Methodiek en onderzoeksbasis</h1>
@@ -1381,6 +1433,7 @@ ${seoBlock}
     <nav aria-label="Hoofdnavigatie">
       ${buildPlaceMapLinks(places, '../')}
       <a href="../methodiek/">Methodiek</a>
+      <a href="../terugkoppeling/">Terugkoppeling</a>
     </nav>
 
     <h1>Analyses loopafstanden restafvalcontainers</h1>
@@ -1455,6 +1508,165 @@ ${seoBlock}
 `;
 }
 
+function buildFeedbackPage(places) {
+  const title = 'Dank voor je reactie';
+  const description = 'Korte terugkoppeling over wat de Dorpsraad Warmenhuizen met reacties op de enquête over restafvalcontainers doet.';
+  const seoBlock = buildSeoBlock({
+    title,
+    description,
+    ogDescription: description,
+    canonicalUrl: getFeedbackUrl(),
+    runtimeBasePath: '../',
+    assetPrefix: '../',
+    structuredData: buildFeedbackStructuredData()
+  });
+
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+${seoBlock}
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --accent: #0f766e;
+      --bg: #f8fafc;
+      --panel: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(820px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    a {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0 0 16px;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.05;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 0 0 28px;
+      color: var(--text);
+      font-size: 21px;
+    }
+
+    section {
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    ul {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 28px;
+      padding-left: 22px;
+    }
+
+    .next-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 8px;
+      background: var(--accent);
+      padding: 10px 16px;
+      color: #ffffff;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .next-link:hover {
+      background: #115e59;
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: min(100% - 24px, 820px);
+        padding-top: 32px;
+      }
+
+      .lead {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Hoofdnavigatie">
+      ${buildPlaceMapLinks(places, '../')}
+      <a href="../analyses/">Analyses</a>
+      <a href="../methodiek/">Methodiek</a>
+    </nav>
+
+    <h1>Dank voor je reactie</h1>
+    <p class="lead">Je reactie is ontvangen. Daarmee help je de Dorpsraad Warmenhuizen om duidelijker te laten zien wat de geplande restafvalcontainers in de praktijk betekenen.</p>
+
+    <section aria-labelledby="feedback-next-title">
+      <h2 id="feedback-next-title">Wat doen we met jouw input?</h2>
+      <ul>
+        <li>We bundelen reacties per straat en containerlocatie.</li>
+        <li>We gebruiken de uitkomsten om aandachtspunten en mogelijke knelpunten concreet terug te koppelen aan de gemeente Schagen.</li>
+        <li>Wanneer de gemeente Schagen geen oplossingen aandraagt voor de knelpunten, zijn we voornemens het plan volledig te herzien. Wellicht via de Raad van State.</li>
+      </ul>
+      <p><a class="next-link" href="../warmenhuizen/#kaart" data-feedback-return-link>Terug naar de kaart</a></p>
+    </section>
+  </main>
+  ${buildFeedbackReturnScript(places)}
+</body>
+</html>
+`;
+}
+
 async function copySeoAssets() {
   await copyFile(resolve(projectRoot, 'src/assets/seo/favicon.svg'), resolve(distDir, 'favicon.svg'));
   await copyFile(resolve(projectRoot, 'src/assets/seo/favicon.png'), resolve(distDir, 'favicon.png'));
@@ -1489,6 +1701,9 @@ async function writeSeoPages(places, sourcePlaces = places) {
 
   await mkdir(resolve(distDir, 'analyses'), { recursive: true });
   await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
+
+  await mkdir(resolve(distDir, 'terugkoppeling'), { recursive: true });
+  await writeFile(resolve(distDir, 'terugkoppeling/index.html'), buildFeedbackPage(places), 'utf8');
 }
 
 async function writeRobotsTxt() {
@@ -1520,7 +1735,8 @@ async function writeSitemap(places) {
   const urls = [
     ...placeEntries,
     { url: getAnalysesUrl(), lastmod: latestPlaceLastmod },
-    { url: getMethodologyUrl(), lastmod: null }
+    { url: getMethodologyUrl(), lastmod: null },
+    { url: getFeedbackUrl(), lastmod: null }
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

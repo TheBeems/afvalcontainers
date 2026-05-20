@@ -670,5 +670,13 @@ test('opens address feedback entry point with privacy-safe Tally hidden fields',
       })
     }));
   });
-  await expect(page.locator('.tally-survey-dialog')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/terugkoppeling\/\?returnTo=%2Fwarmenhuizen%2F%23kaart$/);
+  await expect(page.getByRole('link', { name: 'Terug naar de kaart' })).toHaveAttribute('href', '/warmenhuizen/#kaart');
+});
+
+test('returns to the submitted village from the feedback page', async ({ page }) => {
+  await page.goto('/terugkoppeling/?returnTo=%2Ftuitjenhorn%2F%23kaart');
+
+  await expect(page.getByRole('heading', { name: 'Dank voor je reactie' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Terug naar de kaart' })).toHaveAttribute('href', '/tuitjenhorn/#kaart');
 });

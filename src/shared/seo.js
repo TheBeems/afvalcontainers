@@ -38,3 +38,7 @@ export function getMethodologyUrl() {
 export function getAnalysesUrl() {
   return `${SITE_URL}analyses/`;
 }
+
+export function getFeedbackUrl() {
+  return `${SITE_URL}terugkoppeling/`;
+}

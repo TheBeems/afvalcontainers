@@ -11,6 +11,8 @@ let tallySurveyDialog = null;
 let tallySurveyTriggerButton = null;
 let tallySurveySubmitHandler = null;
 
+const TALLY_FEEDBACK_PAGE_PATH = 'terugkoppeling/';
+
 function isTallyFormConfigured() {
   return TALLY_FORM_ID
     && TALLY_FORM_ID !== 'REPLACE_WITH_TALLY_FORM_ID';
@@ -155,6 +157,17 @@ function isTallyFormSubmittedMessage(event) {
   }
 }
 
+function getRuntimeBasePath() {
+  return document.querySelector('meta[name="app-base-path"]')?.content || './';
+}
+
+function goToTallyFeedbackPage() {
+  const feedbackUrl = new URL(`${getRuntimeBasePath()}${TALLY_FEEDBACK_PAGE_PATH}`, window.location.href);
+  const returnHash = window.location.hash || '#kaart';
+  feedbackUrl.searchParams.set('returnTo', `${window.location.pathname}${window.location.search}${returnHash}`);
+  window.location.assign(feedbackUrl);
+}
+
 function createTallySurveyFrame(embedUrl) {
   const frame = document.createElement('iframe');
   frame.className = 'tally-survey-frame';
@@ -206,7 +219,8 @@ function showTallySurveyDialog(triggerButton, hiddenFields) {
 
   tallySurveySubmitHandler = (event) => {
     if (isTallyFormSubmittedMessage(event)) {
-      closeTallySurvey();
+      removeTallySurveyDialog();
+      goToTallyFeedbackPage();
     }
   };
   window.addEventListener('message', tallySurveySubmitHandler);

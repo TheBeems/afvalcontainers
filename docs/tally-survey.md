@@ -7,7 +7,8 @@ Deze specificatie is bedoeld om via de Tally API een kort feedbackformulier aan 
 - Titel: `Jouw mening over aangekondige restafvalcontainers`
 - Intro: `We horen graag hoe je de wijziging van restafval ophalen naar zelf wegbrengen ervaart. Je reactie helpt ons om de praktische gevolgen per straat en containerlocatie beter zichtbaar te maken en dit terug te koppelen aan de gemeente Schagen.`
 - Privacytekst: `Je reactie wordt beveiligd opgeslagen. We slaan geen specifiek adres, huisnummer of postcode op. Vanuit de kaart sturen we alleen woonplaats, straat, loopafstand, looptijd en dichtstbijzijnde container-ID mee. Je e-mailadres is optioneel en is alleen bekend bij de dorpsraad van Warmenhuizen.`
-- Bedankpagina: `Dank voor je reactie. Je feedback helpt ons om de gevolgen per locatie beter zichtbaar te maken.`
+- Bedankpagina in Tally: `Dank voor je reactie. Je feedback helpt ons om de gevolgen per locatie beter zichtbaar te maken.`
+- Terugkoppelingspagina op de website: `/terugkoppeling/`
 
 ## Hidden fields
 
@@ -61,4 +62,5 @@ Maak deze hidden fields aan in Tally. De kaart vult ze automatisch, zonder volle
 - Vanuit de kaart:
   - Controleer dat hidden fields gevuld worden met woonplaats, straat, loopafstand, looptijd en container-ID.
   - Controleer dat geen volledig adres, huisnummer of postcode naar Tally wordt meegestuurd.
+  - Controleer dat de respondent na verzenden op `/terugkoppeling/` uitkomt.
 - Run daarna `npm run check`.
