@@ -4,3 +4,4 @@ node_modules/
 .codex
 playwright-report/
 test-results/
+.env
