@@ -1,6 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { devices, expect, test } from '@playwright/test';
 
 const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
+const IPHONE_15_SHORT_PORTRAIT = {
+  userAgent: devices['iPhone 15'].userAgent,
+  deviceScaleFactor: devices['iPhone 15'].deviceScaleFactor,
+  isMobile: devices['iPhone 15'].isMobile,
+  hasTouch: devices['iPhone 15'].hasTouch,
+  viewport: { width: 393, height: 480 }
+};
 
 async function captureContainerDownloads(page) {
   await page.addInitScript(() => {
@@ -164,6 +171,54 @@ test('focuses search while initial map data finishes and selects an address', as
   releaseHouseMap();
   await expect(page.locator('#coverage-summary')).toBeVisible();
   await expect(page.locator('.house-map-info')).toContainText('Appelvinkstraat 12');
+});
+
+test.describe('mobile selected address panel', () => {
+  test.use(IPHONE_15_SHORT_PORTRAIT);
+
+  test('keeps the survey button visible in a short portrait viewport', async ({ page }) => {
+    await page.goto('/#kaart');
+
+    const search = page.getByRole('combobox', { name: 'Zoek je adres' });
+    await expect(search).toBeVisible();
+    await search.fill('Appelvinkstraat 12');
+    await page.getByRole('option', { name: /Appelvinkstraat 12/ }).click();
+
+    const surveyButton = page.getByRole('button', { name: 'Vul de enquête in' });
+    await expect(surveyButton).toBeVisible();
+
+    const getSurveyButtonMetrics = () => page.evaluate(() => {
+      const buttonRect = document.querySelector('.survey-button').getBoundingClientRect();
+      const panel = document.querySelector('.house-map-info');
+      const panelStyle = getComputedStyle(panel);
+
+      return {
+        buttonBottom: Math.round(buttonRect.bottom),
+        panelClientHeight: panel.clientHeight,
+        panelOverflowY: panelStyle.overflowY,
+        panelScrollHeight: panel.scrollHeight,
+        viewportHeight: window.innerHeight
+      };
+    });
+
+    await expect.poll(async () => {
+      const { buttonBottom, viewportHeight } = await getSurveyButtonMetrics();
+      return buttonBottom <= viewportHeight;
+    }).toBe(true);
+
+    const collapsedMetrics = await getSurveyButtonMetrics();
+    expect(collapsedMetrics.panelOverflowY).toBe('auto');
+
+    await page.locator('.alternative-containers-section > summary').click();
+
+    await expect.poll(async () => {
+      const { buttonBottom, viewportHeight } = await getSurveyButtonMetrics();
+      return buttonBottom <= viewportHeight;
+    }).toBe(true);
+
+    const expandedMetrics = await getSurveyButtonMetrics();
+    expect(expandedMetrics.panelScrollHeight).toBeGreaterThan(expandedMetrics.panelClientHeight);
+  });
 });
 
 test('serves the root as the Warmenhuizen app without a client-side redirect', async ({ page }) => {

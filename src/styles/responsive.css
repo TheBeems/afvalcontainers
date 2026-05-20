@@ -284,7 +284,7 @@
   }
 
   .map-info-stack.leaflet-control {
-    margin: 0 0 18px 10px;
+    margin: 0 0 calc(18px + env(safe-area-inset-bottom)) 10px;
   }
 
   .container-map-info,
@@ -296,6 +296,20 @@
   .house-map-info {
     width: min(280px, calc(100vw - 40px));
     max-height: none;
+  }
+
+  .house-map-info[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (orientation: portrait) {
+    .house-map-info[open] {
+      max-height: calc(100svh - 128px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   .container-map-info .map-collapsible-body {

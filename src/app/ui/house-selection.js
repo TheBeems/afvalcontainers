@@ -155,8 +155,8 @@ export function createHouseSelection(context, api) {
 
       <div class="${bodyClass} selected-house-body">
         ${buildMainResultCard(house, ranking)}
-        ${buildAlternativeContainersMarkup(ranking)}
         ${buildTallySurveyButtonMarkup(house, ranking, api.getActivePlaceCity())}
+        ${buildAlternativeContainersMarkup(ranking)}
       </div>
     `;
   }
