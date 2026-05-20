@@ -48,7 +48,10 @@ function createApp() {
 function registerCoreListeners(context, api) {
   const { elements, mapContext } = context;
 
-  mapContext.map.on('zoomend', api.syncHouseLayerVisibility);
+  mapContext.map.on('zoomend', () => {
+    api.syncHouseLayerVisibility();
+    api.syncHouseMarkerRadii();
+  });
   mapContext.map.on('click', api.handleMapClick);
 
   elements.addContainerButton?.addEventListener('click', api.beginAddContainerMode);

@@ -1,5 +1,6 @@
 import {
   HOUSE_CIRCLE_RADIUS,
+  HOUSE_CIRCLE_RADIUS_MAX,
   HOUSE_MARKER_FILL_OPACITY,
   HOUSE_MARKER_MIN_ZOOM,
   HOUSE_MARKER_MUTED_FILL_OPACITY,
@@ -35,6 +36,14 @@ export function createHouseSelection(context, api) {
     selectionLayer,
     selectionRenderer
   } = mapContext;
+  let isHouseLayerMuted = false;
+
+  function getHouseCircleRadius({ isMuted = false } = {}) {
+    const zoomGrowth = Math.max(0, map.getZoom() - HOUSE_MARKER_MIN_ZOOM);
+    const radius = Math.min(HOUSE_CIRCLE_RADIUS_MAX, HOUSE_CIRCLE_RADIUS + zoomGrowth * 1.5);
+
+    return isMuted ? Math.max(3, radius - 1) : radius;
+  }
 
   function renderHouseMarkers() {
     houseLayer.clearLayers();
@@ -42,7 +51,7 @@ export function createHouseSelection(context, api) {
     for (const house of state.houses) {
       const marker = L.circleMarker([house.lat, house.lon], {
         renderer: houseRenderer,
-        radius: HOUSE_CIRCLE_RADIUS,
+        radius: getHouseCircleRadius(),
         weight: 1,
         color: '#ffffff',
         fillColor: getCoverageStatus(house.coverageStatus).color,
@@ -57,6 +66,8 @@ export function createHouseSelection(context, api) {
   }
 
   function setHouseLayerMuted(isMuted) {
+    isHouseLayerMuted = isMuted;
+
     houseLayer.eachLayer((marker) => {
       if (typeof marker.setStyle === 'function') {
         marker.setStyle({
@@ -66,7 +77,15 @@ export function createHouseSelection(context, api) {
       }
 
       if (typeof marker.setRadius === 'function') {
-        marker.setRadius(isMuted ? Math.max(3, HOUSE_CIRCLE_RADIUS - 1) : HOUSE_CIRCLE_RADIUS);
+        marker.setRadius(getHouseCircleRadius({ isMuted }));
+      }
+    });
+  }
+
+  function syncHouseMarkerRadii() {
+    houseLayer.eachLayer((marker) => {
+      if (typeof marker.setRadius === 'function') {
+        marker.setRadius(getHouseCircleRadius({ isMuted: isHouseLayerMuted }));
       }
     });
   }
@@ -624,6 +643,7 @@ export function createHouseSelection(context, api) {
   return {
     renderHouseMarkers,
     setHouseLayerMuted,
+    syncHouseMarkerRadii,
     syncHouseLayerVisibility,
     resetHouseSelectionVisuals,
     clearHouseSelection,
