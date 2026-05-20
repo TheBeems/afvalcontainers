@@ -37,6 +37,8 @@ export const distDir = resolve(projectRoot, 'dist');
 
 const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END -->/;
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
+const DATASET_LICENSE_NAME = 'CC BY 4.0';
+const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -108,7 +110,8 @@ function buildFooterLinks(places, prefix = './') {
     ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
     `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
     `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`,
-    `<a href="${escapeHtml(prefix)}terugkoppeling/">Terugkoppeling</a>`
+    `<a href="${escapeHtml(prefix)}terugkoppeling/">Terugkoppeling</a>`,
+    `<a href="${DATASET_LICENSE_URL}" rel="license">Data: ${DATASET_LICENSE_NAME}</a>`
   ].join('\n        ');
 }
 
@@ -239,6 +242,8 @@ function buildPlaceStructuredData(place, coverageSummary) {
       'gemeente Schagen'
     ],
     measurementTechnique: 'Kortste looproute via straten en paden op basis van openbare adres- en kaartgegevens.',
+    license: DATASET_LICENSE_URL,
+    isAccessibleForFree: true,
     creator: { '@id': ORGANIZATION_ID },
     publisher: { '@id': ORGANIZATION_ID },
     distribution: [
