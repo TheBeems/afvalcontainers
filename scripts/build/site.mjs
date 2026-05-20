@@ -1656,7 +1656,6 @@ ${seoBlock}
       <ul>
         <li>We bundelen reacties per straat en containerlocatie.</li>
         <li>We gebruiken de uitkomsten om aandachtspunten en mogelijke knelpunten concreet terug te koppelen aan de gemeente Schagen.</li>
-        <li>Wanneer de gemeente Schagen geen oplossingen aandraagt voor de knelpunten, zijn we voornemens het plan volledig te herzien. Wellicht via de Raad van State.</li>
       </ul>
       <p><a class="next-link" href="../warmenhuizen/#kaart" data-feedback-return-link>Terug naar de kaart</a></p>
     </section>
