@@ -615,13 +615,16 @@ test('opens address feedback entry point with privacy-safe Tally hidden fields',
     };
   });
 
-  await page.goto('/#kaart');
+  await page.goto('/warmenhuizen/#kaart');
+  await page.locator('meta[name="app-base-path"]').evaluate((meta) => {
+    meta.setAttribute('content', './');
+  });
 
   const search = page.getByRole('combobox', { name: 'Zoek je adres' });
   await search.fill('Appelvinkstraat 12');
   await page.getByRole('option', { name: /Appelvinkstraat 12/ }).click();
 
-  const surveyButton = page.getByRole('button', { name: 'Geef je mening' });
+  const surveyButton = page.getByRole('button', { name: 'Vul de enquête in' });
   await expect(surveyButton).toBeVisible();
   await expect(surveyButton).not.toHaveAttribute('data-tally-open', 'WODW1v');
   await expect(surveyButton).toHaveAttribute('data-tally-street', 'Appelvinkstraat');

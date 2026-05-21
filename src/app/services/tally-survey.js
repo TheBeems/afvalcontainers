@@ -11,7 +11,7 @@ let tallySurveyDialog = null;
 let tallySurveyTriggerButton = null;
 let tallySurveySubmitHandler = null;
 
-const TALLY_FEEDBACK_PAGE_PATH = 'terugkoppeling/';
+const TALLY_FEEDBACK_PAGE_PATH = '/terugkoppeling/';
 
 function isTallyFormConfigured() {
   return TALLY_FORM_ID
@@ -157,12 +157,8 @@ function isTallyFormSubmittedMessage(event) {
   }
 }
 
-function getRuntimeBasePath() {
-  return document.querySelector('meta[name="app-base-path"]')?.content || './';
-}
-
 function goToTallyFeedbackPage() {
-  const feedbackUrl = new URL(`${getRuntimeBasePath()}${TALLY_FEEDBACK_PAGE_PATH}`, window.location.href);
+  const feedbackUrl = new URL(TALLY_FEEDBACK_PAGE_PATH, window.location.origin);
   const returnHash = window.location.hash || '#kaart';
   feedbackUrl.searchParams.set('returnTo', `${window.location.pathname}${window.location.search}${returnHash}`);
   window.location.assign(feedbackUrl);
