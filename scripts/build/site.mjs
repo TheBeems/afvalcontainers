@@ -20,6 +20,7 @@ import {
   getPlaceSlug,
   getPlaceTitle,
   getPlaceUrl,
+  getSurveyUrl,
   ORGANIZATION_ID,
   ORGANIZATION_NAME,
   SITE_BASE_PATH,
@@ -39,6 +40,7 @@ const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END --
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 const DATASET_LICENSE_NAME = 'CC BY 4.0';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
+const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-05-28.json');
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -109,6 +111,7 @@ function buildFooterLinks(places, prefix = './') {
   return [
     ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
     `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
+    `<a href="${escapeHtml(prefix)}enquete/">Enquête</a>`,
     `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`,
     `<a href="${escapeHtml(prefix)}terugkoppeling/">Terugkoppeling</a>`,
     `<a href="${DATASET_LICENSE_URL}" rel="license">Data: ${DATASET_LICENSE_NAME}</a>`
@@ -298,6 +301,20 @@ function buildAnalysesStructuredData() {
   const url = getAnalysesUrl();
   const description = 'Uitgebreide analyses van loopafstanden naar restafvalcontainers per dorp, straat en containerlocatie.';
   const title = 'Analyses loopafstanden restafvalcontainers';
+  return {
+    '@context': 'https://schema.org',
+    '@graph': buildWebPageStructuredData({
+      url,
+      name: title,
+      description
+    })
+  };
+}
+
+function buildSurveyStructuredData() {
+  const url = getSurveyUrl();
+  const description = 'Voorlopige analyse van de online enquête over restafvalcontainers in Warmenhuizen, met samengevoegde uitkomsten en privacyveilige straatgroepen.';
+  const title = 'Voorlopige enquêteanalyse Warmenhuizen';
   return {
     '@context': 'https://schema.org',
     '@graph': buildWebPageStructuredData({
@@ -756,6 +773,7 @@ ${seoBlock}
     <nav aria-label="Hoofdnavigatie">
       ${buildPlaceMapLinks(places, '../')}
       <a href="../analyses/">Analyses</a>
+      <a href="../enquete/">Enquête</a>
       <a href="../terugkoppeling/">Terugkoppeling</a>
     </nav>
 
@@ -1066,6 +1084,456 @@ function renderPlaceAnalysisSection(analysis, { hidden = false } = {}) {
       ${renderAnalysisTable(streetHeaders, analysis.streetStats, (row) => renderStreetRow(place, row))}
     </details>
   </section>`;
+}
+
+async function readSurveyAnalysisData() {
+  return JSON.parse(await readFile(SURVEY_ANALYSIS_PATH, 'utf8'));
+}
+
+function formatRatioPercent(value) {
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }).format(Number.isFinite(value) ? value : 0);
+}
+
+function formatSurveyCount(value) {
+  return formatInteger(value || 0);
+}
+
+function renderSurveyTable(headers, rows, { className = '', minWidth = 720 } = {}) {
+  const wrapperClass = ['table-scroll', className].filter(Boolean).join(' ');
+  return `<div class="${escapeHtml(wrapperClass)}">
+      <table style="min-width: ${minWidth}px">
+        <thead>
+          <tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('\n          ')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderSurveyMetrics(data) {
+  const summary = data.summary;
+  return `<div class="metric-grid" aria-label="Kerncijfers online enquête">
+      <div class="metric"><strong>${formatSurveyCount(summary.total)}</strong><span>geldige online reacties</span></div>
+      <div class="metric"><strong>${formatSurveyCount(summary.no)}</strong><span>Nee (${formatRatioPercent(summary.noRatio)})</span></div>
+      <div class="metric"><strong>${formatSurveyCount(summary.yes)}</strong><span>Ja (${formatRatioPercent(summary.yesRatio)})</span></div>
+      <div class="metric"><strong>${formatSurveyCount(data.quality.rawRecords)}</strong><span>ruwe online records voor opschoning</span></div>
+    </div>`;
+}
+
+function renderDistanceBandTable(data) {
+  return renderSurveyTable(
+    ['Afstandsband', 'Reacties', 'Ja', 'Nee', '% Nee'],
+    data.distanceBands.map((row) => [
+      escapeHtml(row.label),
+      formatSurveyCount(row.total),
+      formatSurveyCount(row.yes),
+      formatSurveyCount(row.no),
+      formatRatioPercent(row.noRatio)
+    ])
+  );
+}
+
+function renderReasonFlagTable(data) {
+  return renderSurveyTable(
+    ['Zorg', 'Aantal', '% van Nee'],
+    data.reasonFlags.map((row) => [
+      escapeHtml(row.label),
+      formatSurveyCount(row.count),
+      formatRatioPercent(row.ratioOfNo)
+    ])
+  );
+}
+
+function renderThemeTable(data) {
+  const rows = [...data.themes]
+    .sort((a, b) => b.no - a.no || b.total - a.total || a.label.localeCompare(b.label, 'nl'))
+    .slice(0, 12);
+
+  return renderSurveyTable(
+    ['Thema uit geschreven antwoorden', 'Totaal', 'Bij Nee', '% van Nee'],
+    rows.map((row) => [
+      escapeHtml(row.label),
+      formatSurveyCount(row.total),
+      formatSurveyCount(row.no),
+      formatRatioPercent(row.noRatio)
+    ]),
+    { minWidth: 780 }
+  );
+}
+
+function renderPositiveThemeTable(data) {
+  const rows = [...data.themes]
+    .filter((row) => row.yes > 0)
+    .sort((a, b) => b.yes - a.yes || b.total - a.total || a.label.localeCompare(b.label, 'nl'))
+    .slice(0, 8);
+
+  return renderSurveyTable(
+    ['Thema uit Ja-toelichtingen', 'Aantal', '% van Ja'],
+    rows.map((row) => [
+      escapeHtml(row.label),
+      formatSurveyCount(row.yes),
+      formatRatioPercent(row.yesRatio)
+    ]),
+    { minWidth: 680 }
+  );
+}
+
+function renderBottleneckTable(data) {
+  return renderSurveyTable(
+    ['Straat', 'Online reacties', 'Nee', 'Gem. loopafstand', '>=150 m', '>275 m', 'Dichtstbij'],
+    data.distanceAndConcernBottlenecks.map((row) => [
+      escapeHtml(row.label),
+      formatSurveyCount(row.total),
+      `${formatSurveyCount(row.no)} (${formatRatioPercent(row.noRatio)})`,
+      escapeHtml(formatMeters(row.coverage.averageDistanceM)),
+      `${formatSurveyCount(row.coverage.over150Count)} (${formatRatioPercent(row.coverage.over150Ratio)})`,
+      `${formatSurveyCount(row.coverage.over275Count)} (${formatRatioPercent(row.coverage.over275Ratio)})`,
+      renderContainerLink({ seo: { slug: 'warmenhuizen' } }, row.coverage.mainContainerId)
+    ]),
+    { minWidth: 920 }
+  );
+}
+
+function renderStreetSurveyTable(data) {
+  const rows = data.streetGroups.map((row) => [
+    escapeHtml(row.label),
+    formatSurveyCount(row.total),
+    `${formatSurveyCount(row.no)} (${formatRatioPercent(row.noRatio)})`,
+    row.coverage ? escapeHtml(formatMeters(row.coverage.averageDistanceM)) : '',
+    row.coverage ? `${formatSurveyCount(row.coverage.over150Count)} (${formatRatioPercent(row.coverage.over150Ratio)})` : '',
+    row.coverage ? `${formatSurveyCount(row.coverage.over275Count)} (${formatRatioPercent(row.coverage.over275Ratio)})` : '',
+  ]);
+  const other = data.otherStreetGroup;
+  rows.push([
+    'Overige straten',
+    formatSurveyCount(other.total),
+    `${formatSurveyCount(other.no)} (${formatRatioPercent(other.noRatio)})`,
+    '',
+    '',
+    ''
+  ]);
+
+  return renderSurveyTable(
+    ['Straatgroep', 'Reacties', 'Nee', 'Gem. loopafstand', '>=150 m', '>275 m'],
+    rows,
+    { minWidth: 840 }
+  );
+}
+
+function renderSmallStreetList(data) {
+  return data.otherStreetGroup.streetNames
+    .map((street) => `<li>${escapeHtml(street)}</li>`)
+    .join('\n        ');
+}
+
+async function buildSurveyPage(places) {
+  const data = await readSurveyAnalysisData();
+  const title = 'Voorlopige enquêteanalyse Warmenhuizen';
+  const description = 'Voorlopige analyse van de online enquête over restafvalcontainers in Warmenhuizen, met zorgen van bewoners en privacyveilige straatgroepen.';
+  const seoBlock = buildSeoBlock({
+    title,
+    description,
+    ogDescription: description,
+    canonicalUrl: getSurveyUrl(),
+    runtimeBasePath: '../',
+    assetPrefix: '../',
+    structuredData: buildSurveyStructuredData()
+  });
+  const firstBand = data.distanceBands.find((row) => row.status === 'within_100');
+  const lastBand = data.distanceBands.find((row) => row.status === 'over_275');
+
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+${seoBlock}
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --accent: #0f766e;
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --soft: #e2e8f0;
+      --warning: #92400e;
+      --warning-bg: #fffbeb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    a {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin: 0 0 16px;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.05;
+    }
+
+    .lead {
+      max-width: 860px;
+      color: var(--text);
+      font-size: 21px;
+    }
+
+    .status-note {
+      max-width: 900px;
+      border: 1px solid #f59e0b;
+      border-radius: 8px;
+      background: var(--warning-bg);
+      padding: 14px 16px;
+      color: var(--warning);
+      font-size: 17px;
+    }
+
+    h2 {
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+      padding-top: 30px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .metric,
+    .finding {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--text);
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .finding-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .finding strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .finding p {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 15px;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .small-street-list {
+      columns: 3 220px;
+      margin-top: 12px;
+      padding-left: 22px;
+    }
+
+    .note {
+      max-width: 900px;
+    }
+
+    @media (max-width: 780px) {
+      .metric-grid,
+      .finding-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      main {
+        width: min(100% - 24px, 1120px);
+        padding-top: 32px;
+      }
+
+      .metric-grid,
+      .finding-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lead {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="Hoofdnavigatie">
+      ${buildPlaceMapLinks(places, '../')}
+      <a href="../analyses/">Analyses</a>
+      <a href="../methodiek/">Methodiek</a>
+      <a href="../terugkoppeling/">Terugkoppeling</a>
+    </nav>
+
+    <h1>Voorlopige enquêteanalyse Warmenhuizen</h1>
+    <p class="lead">Deze pagina vat de online inzendingen over de geplande restafvalcontainers samen. Waar afstand een rol speelt, gebruiken we ook de bestaande <a href="../analyses/">straatanalyse</a> met loopafstanden.</p>
+    <p class="status-note">Voorlopige analyse: dit zijn alleen online inzendingen tot en met ${escapeHtml(data.surveyDate)}. Papieren inzendingen worden later verwerkt. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
+
+    ${renderSurveyMetrics(data)}
+
+    <section aria-labelledby="survey-main-findings">
+      <h2 id="survey-main-findings">Belangrijkste bevindingen</h2>
+      <div class="finding-grid">
+        <div class="finding"><strong>Afstand bepaalt veel van de weerstand</strong><p>Het aandeel Nee loopt op van ${formatRatioPercent(firstBand?.noRatio)} bij 0-100 meter naar ${formatRatioPercent(lastBand?.noRatio)} boven 275 meter.</p></div>
+        <div class="finding"><strong>De zorg is breder dan afstand alleen</strong><p>Ouderen en mindervaliden, bijplaatsingen, stank, ongedierte en straatbeeld komen het vaakst terug in de gesloten redenen.</p></div>
+        <div class="finding"><strong>Geschreven toelichtingen voegen extra zorgen toe</strong><p>Bewoners noemen vooral kosten of diftar, minder service, VIOS en oud papier, afval bewaren bij huis, verkeer en gezinnen met luiers of zwaar afval.</p></div>
+        <div class="finding"><strong>Zorgen en afstand vallen vaak samen</strong><p>Bij onder meer Bregweid, Krankhoorn, Dorpsstraat, Fabrieksstraat, Beuninge, De Fuik, Oudevaart, 't Eiland en Burg. Burgerstraat vallen veel Nee-reacties samen met grote loopafstanden in de <a href="../analyses/">straatanalyse</a>.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="survey-distance">
+      <h2 id="survey-distance">Afstand versus acceptatie</h2>
+      <p class="note">De online enquête laat een duidelijk patroon zien. Binnen 100 meter is nog steeds een meerderheid tegen, maar boven 150 meter neemt de afwijzing sterk toe en boven 275 meter is vrijwel iedereen tegen.</p>
+      ${renderDistanceBandTable(data)}
+    </section>
+
+    <section aria-labelledby="survey-bottlenecks">
+      <h2 id="survey-bottlenecks">Waar komen zorgen en afstand samen?</h2>
+      <p class="note">Deze tabel legt straten met minimaal ${data.privacy.minimumGroupSize} online reacties naast de bestaande <a href="../analyses/">straatanalyse</a>. Zo wordt zichtbaar waar veel bewoners tegen zijn én waar de berekende loopafstand voor veel adressen boven 150 of 275 meter komt.</p>
+      ${renderBottleneckTable(data)}
+    </section>
+
+    <section aria-labelledby="survey-yes-reasons">
+      <h2 id="survey-yes-reasons">Waarom zeggen bewoners Ja?</h2>
+      <p class="note">Van de ${formatSurveyCount(data.summary.total)} geldige online reacties zeggen ${formatSurveyCount(data.summary.yes)} bewoners Ja (${formatRatioPercent(data.summary.yesRatio)}). Alle ${formatSurveyCount(data.summary.writtenYesResponses)} Ja-reacties hadden een toelichting. De Ja-groep lijkt vooral praktisch positief wanneer de container dichtbij genoeg is, wanneer flexibiliteit of minder bakken aan huis als voordeel telt, of wanneer een huishouden weinig restafval heeft. Een deel is ook berustend positief: acceptabel of geen groot bezwaar, niet per se enthousiast.</p>
+      ${renderPositiveThemeTable(data)}
+    </section>
+
+    <section aria-labelledby="survey-concerns">
+      <h2 id="survey-concerns">Waarom zeggen bewoners Nee?</h2>
+      <p class="note">De aangekruiste redenen laten zien welke zorgen breed worden gedeeld onder de Nee-stemmers. De geschreven antwoorden zijn niet gepubliceerd, maar wel per onderwerp ingedeeld.</p>
+      ${renderReasonFlagTable(data)}
+
+      <h3>Thema's uit geschreven antwoorden</h3>
+      <p class="note">Er zijn ${formatSurveyCount(data.summary.writtenYesResponses + data.summary.writtenNoOtherResponses)} geschreven toelichtingen per onderwerp ingedeeld: ${formatSurveyCount(data.summary.writtenYesResponses)} bij Ja en ${formatSurveyCount(data.summary.writtenNoOtherResponses)} bij Nee of een andere reden.</p>
+      ${renderThemeTable(data)}
+    </section>
+
+    <section aria-labelledby="survey-streets">
+      <h2 id="survey-streets">Straatgroepen</h2>
+      <p class="note">Alleen straten met minimaal ${data.privacy.minimumGroupSize} online reacties worden afzonderlijk getoond. Kleinere straatgroepen zijn samengenomen onder Overige straten; de straatnamen staan hieronder, maar de inzendingen zijn alleen samen geteld.</p>
+      ${renderStreetSurveyTable(data)}
+
+      <h3>Straten onder Overige straten</h3>
+      <ul class="small-street-list">
+        ${renderSmallStreetList(data)}
+      </ul>
+    </section>
+
+    <section aria-labelledby="survey-privacy">
+      <h2 id="survey-privacy">Privacy en beperkingen</h2>
+      <p class="note">Deze publicatie bevat geen e-mailadressen, persoonlijke codes, tijdstippen, bronregels of letterlijke antwoorden. Straten en containers met minder dan ${data.privacy.minimumGroupSize} online reacties zijn samengevoegd. De uitkomsten zijn voorlopig, omdat papieren inzendingen nog ontbreken en online reacties niet automatisch het beeld van heel Warmenhuizen laten zien.</p>
+    </section>
+  </main>
+</body>
+</html>
+`;
 }
 
 async function buildAnalysesPage(places) {
@@ -1437,6 +1905,7 @@ ${seoBlock}
   <main>
     <nav aria-label="Hoofdnavigatie">
       ${buildPlaceMapLinks(places, '../')}
+      <a href="../enquete/">Enquête</a>
       <a href="../methodiek/">Methodiek</a>
       <a href="../terugkoppeling/">Terugkoppeling</a>
     </nav>
@@ -1650,6 +2119,7 @@ ${seoBlock}
     <nav aria-label="Hoofdnavigatie">
       ${buildPlaceMapLinks(places, '../')}
       <a href="../analyses/">Analyses</a>
+      <a href="../enquete/">Enquête</a>
       <a href="../methodiek/">Methodiek</a>
     </nav>
 
@@ -1706,6 +2176,9 @@ async function writeSeoPages(places, sourcePlaces = places) {
   await mkdir(resolve(distDir, 'analyses'), { recursive: true });
   await writeFile(resolve(distDir, 'analyses/index.html'), await buildAnalysesPage(places), 'utf8');
 
+  await mkdir(resolve(distDir, 'enquete'), { recursive: true });
+  await writeFile(resolve(distDir, 'enquete/index.html'), await buildSurveyPage(places), 'utf8');
+
   await mkdir(resolve(distDir, 'terugkoppeling'), { recursive: true });
   await writeFile(resolve(distDir, 'terugkoppeling/index.html'), buildFeedbackPage(places), 'utf8');
 }
@@ -1739,6 +2212,7 @@ async function writeSitemap(places) {
   const urls = [
     ...placeEntries,
     { url: getAnalysesUrl(), lastmod: latestPlaceLastmod },
+    { url: getSurveyUrl(), lastmod: null },
     { url: getMethodologyUrl(), lastmod: null },
     { url: getFeedbackUrl(), lastmod: null }
   ];

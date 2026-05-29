@@ -39,6 +39,10 @@ export function getAnalysesUrl() {
   return `${SITE_URL}analyses/`;
 }
 
+export function getSurveyUrl() {
+  return `${SITE_URL}enquete/`;
+}
+
 export function getFeedbackUrl() {
   return `${SITE_URL}terugkoppeling/`;
 }
