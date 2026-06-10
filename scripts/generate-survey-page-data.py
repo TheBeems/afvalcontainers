@@ -10,14 +10,14 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.cleaned.csv"
-DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.thematic-coding.csv"
-DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.quality-report.md"
+DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.cleaned.csv"
+DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.thematic-coding.csv"
+DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.quality-report.md"
 DEFAULT_HOUSE_DETAILS_DIR = PROJECT_ROOT / "data/places/warmenhuizen/house-details"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-05-28.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-06-10.json"
 
 MIN_GROUP_SIZE = 5
-SURVEY_DATE = "2026-05-28"
+SURVEY_DATE = "2026-06-10"
 PLACE_ID = "warmenhuizen"
 PLACE_NAME = "Warmenhuizen"
 

@@ -40,7 +40,7 @@ const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END --
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 const DATASET_LICENSE_NAME = 'CC BY 4.0';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
-const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-05-28.json');
+const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-06-10.json');
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -1501,7 +1501,7 @@ ${seoBlock}
 
     <section aria-labelledby="survey-yes-reasons">
       <h2 id="survey-yes-reasons">Waarom zeggen bewoners Ja?</h2>
-      <p class="note">Van de ${formatSurveyCount(data.summary.total)} geldige online reacties zeggen ${formatSurveyCount(data.summary.yes)} bewoners Ja (${formatRatioPercent(data.summary.yesRatio)}). Alle ${formatSurveyCount(data.summary.writtenYesResponses)} Ja-reacties hadden een toelichting. De Ja-groep lijkt vooral praktisch positief wanneer de container dichtbij genoeg is, wanneer flexibiliteit of minder bakken aan huis als voordeel telt, of wanneer een huishouden weinig restafval heeft. Een deel is ook berustend positief: acceptabel of geen groot bezwaar, niet per se enthousiast.</p>
+      <p class="note">Van de ${formatSurveyCount(data.summary.total)} geldige online reacties zeggen ${formatSurveyCount(data.summary.yes)} bewoners Ja (${formatRatioPercent(data.summary.yesRatio)}). Alle ${formatSurveyCount(data.summary.writtenYesResponses)} Ja-reacties hadden een toelichting. De Ja-groep lijkt vooral praktisch positief wanneer de container dichtbij genoeg is, wanneer flexibiliteit of minder bakken aan huis als voordeel telt, of wanneer een huishouden weinig restafval heeft. Een deel is ook berustend positief: acceptabel of geen groot bezwaar, niet per se enthousiast. Wel maakt +/- 15% mensen zich zorgen over inkomsten voor VIOS.</p>
       ${renderPositiveThemeTable(data)}
     </section>
 
