@@ -1475,7 +1475,7 @@ ${seoBlock}
 
     <h1>Voorlopige enquêteanalyse Warmenhuizen</h1>
     <p class="lead">Deze pagina vat de online en papieren inzendingen over de geplande restafvalcontainers samen. Waar afstand een rol speelt, gebruiken we ook de bestaande <a href="../analyses/">straatanalyse</a> met loopafstanden.</p>
-    <p class="status-note">Voorlopige analyse: dit zijn online en papieren inzendingen tot en met ${escapeHtml(data.surveyDate)}. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
+    <p class="status-note">Dit zijn online en papieren inzendingen tot en met ${escapeHtml(data.surveyDate)}. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
 
     ${renderSurveyMetrics(data)}
 
