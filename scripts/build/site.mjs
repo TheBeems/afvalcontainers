@@ -40,7 +40,7 @@ const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END --
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 const DATASET_LICENSE_NAME = 'CC BY 4.0';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
-const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-06-10.json');
+const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-06-14.json');
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -313,7 +313,7 @@ function buildAnalysesStructuredData() {
 
 function buildSurveyStructuredData() {
   const url = getSurveyUrl();
-  const description = 'Voorlopige analyse van de online enquête over restafvalcontainers in Warmenhuizen, met samengevoegde uitkomsten en privacyveilige straatgroepen.';
+  const description = 'Voorlopige analyse van de enquête over restafvalcontainers in Warmenhuizen, met samengevoegde online en papieren uitkomsten en privacyveilige straatgroepen.';
   const title = 'Voorlopige enquêteanalyse Warmenhuizen';
   return {
     '@context': 'https://schema.org',
@@ -1118,11 +1118,11 @@ function renderSurveyTable(headers, rows, { className = '', minWidth = 720 } = {
 
 function renderSurveyMetrics(data) {
   const summary = data.summary;
-  return `<div class="metric-grid" aria-label="Kerncijfers online enquête">
-      <div class="metric"><strong>${formatSurveyCount(summary.total)}</strong><span>geldige online reacties</span></div>
+  return `<div class="metric-grid" aria-label="Kerncijfers enquête">
+      <div class="metric"><strong>${formatSurveyCount(summary.total)}</strong><span>geldige reacties</span></div>
       <div class="metric"><strong>${formatSurveyCount(summary.no)}</strong><span>Nee (${formatRatioPercent(summary.noRatio)})</span></div>
       <div class="metric"><strong>${formatSurveyCount(summary.yes)}</strong><span>Ja (${formatRatioPercent(summary.yesRatio)})</span></div>
-      <div class="metric"><strong>${formatSurveyCount(data.quality.rawRecords)}</strong><span>ruwe online records voor opschoning</span></div>
+      <div class="metric"><strong>${formatSurveyCount(data.quality.rawRecords)}</strong><span>ruwe records voor opschoning</span></div>
     </div>`;
 }
 
@@ -1156,14 +1156,16 @@ function renderThemeTable(data) {
     .slice(0, 12);
 
   return renderSurveyTable(
-    ['Thema uit geschreven antwoorden', 'Totaal', 'Bij Nee', '% van Nee'],
+    ['Thema uit geschreven antwoorden', 'Totaal', 'Bij Ja', '% van Ja', 'Bij Nee', '% van Nee'],
     rows.map((row) => [
       escapeHtml(row.label),
       formatSurveyCount(row.total),
+      formatSurveyCount(row.yes),
+      formatRatioPercent(row.yesRatio),
       formatSurveyCount(row.no),
       formatRatioPercent(row.noRatio)
     ]),
-    { minWidth: 780 }
+    { minWidth: 920 }
   );
 }
 
@@ -1186,7 +1188,7 @@ function renderPositiveThemeTable(data) {
 
 function renderBottleneckTable(data) {
   return renderSurveyTable(
-    ['Straat', 'Online reacties', 'Nee', 'Gem. loopafstand', '>=150 m', '>275 m', 'Dichtstbij'],
+    ['Straat', 'Reacties', 'Nee', 'Gem. loopafstand', '>=150 m', '>275 m', 'Dichtstbij'],
     data.distanceAndConcernBottlenecks.map((row) => [
       escapeHtml(row.label),
       formatSurveyCount(row.total),
@@ -1235,7 +1237,7 @@ function renderSmallStreetList(data) {
 async function buildSurveyPage(places) {
   const data = await readSurveyAnalysisData();
   const title = 'Voorlopige enquêteanalyse Warmenhuizen';
-  const description = 'Voorlopige analyse van de online enquête over restafvalcontainers in Warmenhuizen, met zorgen van bewoners en privacyveilige straatgroepen.';
+  const description = 'Voorlopige analyse van de enquête over restafvalcontainers in Warmenhuizen, met online en papieren reacties, zorgen van bewoners en privacyveilige straatgroepen.';
   const seoBlock = buildSeoBlock({
     title,
     description,
@@ -1472,8 +1474,8 @@ ${seoBlock}
     </nav>
 
     <h1>Voorlopige enquêteanalyse Warmenhuizen</h1>
-    <p class="lead">Deze pagina vat de online inzendingen over de geplande restafvalcontainers samen. Waar afstand een rol speelt, gebruiken we ook de bestaande <a href="../analyses/">straatanalyse</a> met loopafstanden.</p>
-    <p class="status-note">Voorlopige analyse: dit zijn alleen online inzendingen tot en met ${escapeHtml(data.surveyDate)}. Papieren inzendingen worden later verwerkt. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
+    <p class="lead">Deze pagina vat de online en papieren inzendingen over de geplande restafvalcontainers samen. Waar afstand een rol speelt, gebruiken we ook de bestaande <a href="../analyses/">straatanalyse</a> met loopafstanden.</p>
+    <p class="status-note">Voorlopige analyse: dit zijn online en papieren inzendingen tot en met ${escapeHtml(data.surveyDate)}. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
 
     ${renderSurveyMetrics(data)}
 
@@ -1482,26 +1484,26 @@ ${seoBlock}
       <div class="finding-grid">
         <div class="finding"><strong>Afstand bepaalt veel van de weerstand</strong><p>Het aandeel Nee loopt op van ${formatRatioPercent(firstBand?.noRatio)} bij 0-100 meter naar ${formatRatioPercent(lastBand?.noRatio)} boven 275 meter.</p></div>
         <div class="finding"><strong>De zorg is breder dan afstand alleen</strong><p>Ouderen en mindervaliden, bijplaatsingen, stank, ongedierte en straatbeeld komen het vaakst terug in de gesloten redenen.</p></div>
-        <div class="finding"><strong>Geschreven toelichtingen voegen extra zorgen toe</strong><p>Bewoners noemen vooral kosten of diftar, minder service, VIOS en oud papier, afval bewaren bij huis, verkeer en gezinnen met luiers of zwaar afval.</p></div>
+        <div class="finding"><strong>Ook Ja-antwoorden zijn vaak niet zorgeloos</strong><p>Een Ja betekent meestal dat de wijziging acceptabel lijkt, maar toelichtingen noemen alsnog zorgen zoals afstand, VIOS en oud papier, straatbeeld, stank, bijplaatsingen of kosten.</p></div>
         <div class="finding"><strong>Zorgen en afstand vallen vaak samen</strong><p>Bij onder meer Bregweid, Krankhoorn, Dorpsstraat, Fabrieksstraat, Beuninge, De Fuik, Oudevaart, 't Eiland en Burg. Burgerstraat vallen veel Nee-reacties samen met grote loopafstanden in de <a href="../analyses/">straatanalyse</a>.</p></div>
       </div>
     </section>
 
     <section aria-labelledby="survey-distance">
       <h2 id="survey-distance">Afstand versus acceptatie</h2>
-      <p class="note">De online enquête laat een duidelijk patroon zien. Binnen 100 meter is nog steeds een meerderheid tegen, maar boven 150 meter neemt de afwijzing sterk toe en boven 275 meter is vrijwel iedereen tegen.</p>
+      <p class="note">De enquête laat een duidelijk patroon zien. Binnen 100 meter is nog steeds een meerderheid tegen, maar boven 150 meter neemt de afwijzing sterk toe en boven 275 meter is vrijwel iedereen tegen.</p>
       ${renderDistanceBandTable(data)}
     </section>
 
     <section aria-labelledby="survey-bottlenecks">
       <h2 id="survey-bottlenecks">Waar komen zorgen en afstand samen?</h2>
-      <p class="note">Deze tabel legt straten met minimaal ${data.privacy.minimumGroupSize} online reacties naast de bestaande <a href="../analyses/">straatanalyse</a>. Zo wordt zichtbaar waar veel bewoners tegen zijn én waar de berekende loopafstand voor veel adressen boven 150 of 275 meter komt.</p>
+      <p class="note">Deze tabel legt straten met minimaal ${data.privacy.minimumGroupSize} reacties naast de bestaande <a href="../analyses/">straatanalyse</a>. Zo wordt zichtbaar waar veel bewoners tegen zijn én waar de berekende loopafstand voor veel adressen boven 150 of 275 meter komt.</p>
       ${renderBottleneckTable(data)}
     </section>
 
     <section aria-labelledby="survey-yes-reasons">
       <h2 id="survey-yes-reasons">Waarom zeggen bewoners Ja?</h2>
-      <p class="note">Van de ${formatSurveyCount(data.summary.total)} geldige online reacties zeggen ${formatSurveyCount(data.summary.yes)} bewoners Ja (${formatRatioPercent(data.summary.yesRatio)}). Alle ${formatSurveyCount(data.summary.writtenYesResponses)} Ja-reacties hadden een toelichting. De Ja-groep lijkt vooral praktisch positief wanneer de container dichtbij genoeg is, wanneer flexibiliteit of minder bakken aan huis als voordeel telt, of wanneer een huishouden weinig restafval heeft. Een deel is ook berustend positief: acceptabel of geen groot bezwaar, niet per se enthousiast. Wel maakt +/- 15% mensen zich zorgen over inkomsten voor VIOS.</p>
+      <p class="note">Van de ${formatSurveyCount(data.summary.total)} geldige reacties zeggen ${formatSurveyCount(data.summary.yes)} bewoners Ja (${formatRatioPercent(data.summary.yesRatio)}). Alle ${formatSurveyCount(data.summary.writtenYesResponses)} Ja-reacties hadden een toelichting. Die Ja-antwoorden zijn dus geen zorgeloos akkoord: veel bewoners vinden de wijziging alleen acceptabel als de container dichtbij genoeg is, of noemen alsnog zorgen over onder meer afstand, VIOS en oud papier, straatbeeld, hygiene, bijplaatsingen of kosten. Een deel is vooral berustend positief: acceptabel of geen groot bezwaar, niet per se enthousiast.</p>
       ${renderPositiveThemeTable(data)}
     </section>
 
@@ -1517,7 +1519,7 @@ ${seoBlock}
 
     <section aria-labelledby="survey-streets">
       <h2 id="survey-streets">Straatgroepen</h2>
-      <p class="note">Alleen straten met minimaal ${data.privacy.minimumGroupSize} online reacties worden afzonderlijk getoond. Kleinere straatgroepen zijn samengenomen onder Overige straten; de straatnamen staan hieronder, maar de inzendingen zijn alleen samen geteld.</p>
+      <p class="note">Alleen straten met minimaal ${data.privacy.minimumGroupSize} reacties worden afzonderlijk getoond. Kleinere straatgroepen zijn samengenomen onder Overige straten; de straatnamen staan hieronder, maar de inzendingen zijn alleen samen geteld.</p>
       ${renderStreetSurveyTable(data)}
 
       <h3>Straten onder Overige straten</h3>
@@ -1528,7 +1530,7 @@ ${seoBlock}
 
     <section aria-labelledby="survey-privacy">
       <h2 id="survey-privacy">Privacy en beperkingen</h2>
-      <p class="note">Deze publicatie bevat geen e-mailadressen, persoonlijke codes, tijdstippen, bronregels of letterlijke antwoorden. Straten en containers met minder dan ${data.privacy.minimumGroupSize} online reacties zijn samengevoegd. De uitkomsten zijn voorlopig, omdat papieren inzendingen nog ontbreken en online reacties niet automatisch het beeld van heel Warmenhuizen laten zien.</p>
+      <p class="note">Deze publicatie bevat geen e-mailadressen, persoonlijke codes, tijdstippen, bronregels of letterlijke antwoorden. Straten en containers met minder dan ${data.privacy.minimumGroupSize} reacties zijn samengevoegd. De uitkomsten blijven een enquêtebeeld: online en papieren reacties samen, maar niet automatisch een volledige afspiegeling van heel Warmenhuizen.</p>
     </section>
   </main>
 </body>

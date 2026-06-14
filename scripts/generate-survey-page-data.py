@@ -10,14 +10,14 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.cleaned.csv"
-DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.thematic-coding.csv"
-DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-10.quality-report.md"
+DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.cleaned.csv"
+DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.thematic-coding.csv"
+DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.quality-report.md"
 DEFAULT_HOUSE_DETAILS_DIR = PROJECT_ROOT / "data/places/warmenhuizen/house-details"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-06-10.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-06-14.json"
 
 MIN_GROUP_SIZE = 5
-SURVEY_DATE = "2026-06-10"
+SURVEY_DATE = "2026-06-14"
 PLACE_ID = "warmenhuizen"
 PLACE_NAME = "Warmenhuizen"
 
@@ -427,7 +427,7 @@ def blind_spots(coverage_by_street, survey_street_rows):
 
         candidates.append({
             "label": street,
-            "responseGroup": f"<{MIN_GROUP_SIZE} online reacties",
+            "responseGroup": f"<{MIN_GROUP_SIZE} reacties",
             "coverage": stats,
         })
 
@@ -471,17 +471,16 @@ def build_payload(args):
         "placeId": PLACE_ID,
         "placeName": PLACE_NAME,
         "surveyDate": SURVEY_DATE,
-        "statusLabel": "Voorlopige analyse online inzendingen",
+        "statusLabel": "Voorlopige analyse online en papieren inzendingen",
         "notes": [
-            "Deze analyse gebruikt alleen online inzendingen.",
-            "Papieren inzendingen worden later verwerkt.",
+            "Deze analyse gebruikt online en papieren inzendingen.",
             "Ruwe antwoorden en contactgegevens zijn niet opgenomen.",
-            f"Straten en containers met minder dan {MIN_GROUP_SIZE} online reacties zijn samengevoegd.",
+            f"Straten en containers met minder dan {MIN_GROUP_SIZE} reacties zijn samengevoegd.",
         ],
         "privacy": {
             "minimumGroupSize": MIN_GROUP_SIZE,
-            "streetGrouping": "Straten met minder dan 5 online reacties worden samengevoegd onder Overige straten.",
-            "containerGrouping": "Containers met minder dan 5 online reacties worden samengevoegd onder Overige containers.",
+            "streetGrouping": "Straten met minder dan 5 reacties worden samengevoegd onder Overige straten.",
+            "containerGrouping": "Containers met minder dan 5 reacties worden samengevoegd onder Overige containers.",
             "publishedData": "Alleen geaggregeerde tellingen, percentages, thema's en dekkingstatistieken.",
         },
         "quality": parse_quality_counts(args.quality_report),
