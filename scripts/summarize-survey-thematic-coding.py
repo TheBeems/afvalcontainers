@@ -201,18 +201,18 @@ def codebook_rows():
 
 
 def validate_rows(rows):
-    expected_ids = [
-        *(f"J{index:03d}" for index in range(1, 100)),
-        *(f"N{index:03d}" for index in range(1, 110)),
-    ]
     actual_ids = [row["answer_id"] for row in rows]
-    missing_ids = [answer_id for answer_id in expected_ids if answer_id not in actual_ids]
+    duplicate_ids = [
+        answer_id
+        for answer_id, count in Counter(actual_ids).items()
+        if count > 1
+    ]
 
-    if len(rows) != 208:
-        raise SystemExit(f"Expected 208 coded rows, found {len(rows)}.")
+    if not rows:
+        raise SystemExit("Thematic coding CSV has no coded rows.")
 
-    if missing_ids:
-        raise SystemExit(f"Missing answer IDs: {', '.join(missing_ids)}")
+    if duplicate_ids:
+        raise SystemExit(f"Duplicate answer IDs: {', '.join(duplicate_ids)}")
 
     invalid_rows = [
         row["answer_id"]

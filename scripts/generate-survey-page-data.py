@@ -10,14 +10,14 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.cleaned.csv"
-DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.thematic-coding.csv"
-DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-06-14.quality-report.md"
+DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.cleaned.csv"
+DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.thematic-coding.csv"
+DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.quality-report.md"
 DEFAULT_HOUSE_DETAILS_DIR = PROJECT_ROOT / "data/places/warmenhuizen/house-details"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-06-14.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-07-02.json"
 
 MIN_GROUP_SIZE = 5
-SURVEY_DATE = "2026-06-14"
+DEFAULT_SURVEY_DATE = "2026-07-02"
 PLACE_ID = "warmenhuizen"
 PLACE_NAME = "Warmenhuizen"
 
@@ -83,6 +83,7 @@ def parse_args():
     parser.add_argument("--quality-report", type=Path, default=DEFAULT_QUALITY_REPORT)
     parser.add_argument("--house-details-dir", type=Path, default=DEFAULT_HOUSE_DETAILS_DIR)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--survey-date", default=DEFAULT_SURVEY_DATE)
     return parser.parse_args()
 
 
@@ -470,7 +471,7 @@ def build_payload(args):
         "schemaVersion": 1,
         "placeId": PLACE_ID,
         "placeName": PLACE_NAME,
-        "surveyDate": SURVEY_DATE,
+        "surveyDate": args.survey_date,
         "statusLabel": "Voorlopige analyse online en papieren inzendingen",
         "notes": [
             "Deze analyse gebruikt online en papieren inzendingen.",

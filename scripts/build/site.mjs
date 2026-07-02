@@ -40,7 +40,7 @@ const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END --
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 const DATASET_LICENSE_NAME = 'CC BY 4.0';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
-const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-06-14.json');
+const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-07-02.json');
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',

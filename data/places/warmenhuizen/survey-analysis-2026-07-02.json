@@ -1,0 +1,2190 @@
+{
+  "schemaVersion": 1,
+  "placeId": "warmenhuizen",
+  "placeName": "Warmenhuizen",
+  "surveyDate": "2026-07-02",
+  "statusLabel": "Voorlopige analyse online en papieren inzendingen",
+  "notes": [
+    "Deze analyse gebruikt online en papieren inzendingen.",
+    "Ruwe antwoorden en contactgegevens zijn niet opgenomen.",
+    "Straten en containers met minder dan 5 reacties zijn samengevoegd."
+  ],
+  "privacy": {
+    "minimumGroupSize": 5,
+    "streetGrouping": "Straten met minder dan 5 reacties worden samengevoegd onder Overige straten.",
+    "containerGrouping": "Containers met minder dan 5 reacties worden samengevoegd onder Overige containers.",
+    "publishedData": "Alleen geaggregeerde tellingen, percentages, thema's en dekkingstatistieken."
+  },
+  "quality": {
+    "rawRecords": 829,
+    "quarantined": 3,
+    "duplicateGroups": 14,
+    "duplicateRecordsRemoved": 17
+  },
+  "summary": {
+    "total": 809,
+    "yes": 146,
+    "no": 663,
+    "yesRatio": 0.1805,
+    "noRatio": 0.8195,
+    "writtenYesResponses": 146,
+    "writtenNoOtherResponses": 230
+  },
+  "distanceBands": [
+    {
+      "label": "0-100 m",
+      "total": 202,
+      "yes": 63,
+      "no": 139,
+      "yesRatio": 0.3119,
+      "noRatio": 0.6881,
+      "status": "within_100"
+    },
+    {
+      "label": "100-125 m",
+      "total": 94,
+      "yes": 26,
+      "no": 68,
+      "yesRatio": 0.2766,
+      "noRatio": 0.7234,
+      "status": "between_100_125"
+    },
+    {
+      "label": "125-150 m",
+      "total": 97,
+      "yes": 16,
+      "no": 81,
+      "yesRatio": 0.1649,
+      "noRatio": 0.8351,
+      "status": "between_125_150"
+    },
+    {
+      "label": "150-275 m",
+      "total": 300,
+      "yes": 36,
+      "no": 264,
+      "yesRatio": 0.12,
+      "noRatio": 0.88,
+      "status": "between_150_275"
+    },
+    {
+      "label": ">275 m",
+      "total": 116,
+      "yes": 5,
+      "no": 111,
+      "yesRatio": 0.0431,
+      "noRatio": 0.9569,
+      "status": "over_275"
+    }
+  ],
+  "reasonFlags": [
+    {
+      "label": "Onpraktisch voor ouderen en mindervaliden",
+      "count": 541,
+      "ratioOfNo": 0.816
+    },
+    {
+      "label": "Afval naast de containers / zwerfafval",
+      "count": 531,
+      "ratioOfNo": 0.8009
+    },
+    {
+      "label": "De loopafstand is te ver",
+      "count": 413,
+      "ratioOfNo": 0.6229
+    },
+    {
+      "label": "Overlast van stank en ongedierte",
+      "count": 390,
+      "ratioOfNo": 0.5882
+    },
+    {
+      "label": "Andere reden",
+      "count": 230,
+      "ratioOfNo": 0.3469
+    },
+    {
+      "label": "Aantasting van uitzicht, straatbeeld en woongenot",
+      "count": 228,
+      "ratioOfNo": 0.3439
+    },
+    {
+      "label": "Waardedaling woning",
+      "count": 82,
+      "ratioOfNo": 0.1237
+    }
+  ],
+  "reasonPairs": [
+    {
+      "label": "Afval naast de containers / zwerfafval + Onpraktisch voor ouderen en mindervaliden",
+      "count": 460
+    },
+    {
+      "label": "Afval naast de containers / zwerfafval + Overlast van stank en ongedierte",
+      "count": 375
+    },
+    {
+      "label": "De loopafstand is te ver + Onpraktisch voor ouderen en mindervaliden",
+      "count": 343
+    },
+    {
+      "label": "Onpraktisch voor ouderen en mindervaliden + Overlast van stank en ongedierte",
+      "count": 343
+    },
+    {
+      "label": "De loopafstand is te ver + Afval naast de containers / zwerfafval",
+      "count": 317
+    },
+    {
+      "label": "De loopafstand is te ver + Overlast van stank en ongedierte",
+      "count": 220
+    },
+    {
+      "label": "Afval naast de containers / zwerfafval + Aantasting van uitzicht, straatbeeld en woongenot",
+      "count": 216
+    },
+    {
+      "label": "Aantasting van uitzicht, straatbeeld en woongenot + Onpraktisch voor ouderen en mindervaliden",
+      "count": 203
+    },
+    {
+      "label": "Aantasting van uitzicht, straatbeeld en woongenot + Overlast van stank en ongedierte",
+      "count": 192
+    },
+    {
+      "label": "Afval naast de containers / zwerfafval + Andere reden",
+      "count": 186
+    },
+    {
+      "label": "Onpraktisch voor ouderen en mindervaliden + Andere reden",
+      "count": 185
+    },
+    {
+      "label": "Overlast van stank en ongedierte + Andere reden",
+      "count": 131
+    },
+    {
+      "label": "De loopafstand is te ver + Aantasting van uitzicht, straatbeeld en woongenot",
+      "count": 129
+    },
+    {
+      "label": "De loopafstand is te ver + Andere reden",
+      "count": 127
+    },
+    {
+      "label": "Aantasting van uitzicht, straatbeeld en woongenot + Andere reden",
+      "count": 90
+    }
+  ],
+  "themes": [
+    {
+      "code": "distance_or_accessibility",
+      "label": "Afstand en toegankelijkheid",
+      "total": 121,
+      "totalRatio": 0.3218,
+      "yes": 69,
+      "yesRatio": 0.4726,
+      "no": 52,
+      "noRatio": 0.2261
+    },
+    {
+      "code": "paper_container_vios_associations",
+      "label": "Papiercontainer, VIOS en verenigingen",
+      "total": 65,
+      "totalRatio": 0.1729,
+      "yes": 24,
+      "yesRatio": 0.1644,
+      "no": 41,
+      "noRatio": 0.1783
+    },
+    {
+      "code": "costs_fees_pay_per_bag",
+      "label": "Kosten, heffingen en betalen per zak/lediging",
+      "total": 63,
+      "totalRatio": 0.1676,
+      "yes": 7,
+      "yesRatio": 0.0479,
+      "no": 56,
+      "noRatio": 0.2435
+    },
+    {
+      "code": "habit_acceptance_no_problem",
+      "label": "Gewenning, acceptatie en geen probleem",
+      "total": 59,
+      "totalRatio": 0.1569,
+      "yes": 47,
+      "yesRatio": 0.3219,
+      "no": 12,
+      "noRatio": 0.0522
+    },
+    {
+      "code": "waste_separation_environment",
+      "label": "Afvalscheiding, milieu en restafvalvermindering",
+      "total": 57,
+      "totalRatio": 0.1516,
+      "yes": 21,
+      "yesRatio": 0.1438,
+      "no": 36,
+      "noRatio": 0.1565
+    },
+    {
+      "code": "convenience_flexibility",
+      "label": "Gemak en flexibiliteit",
+      "total": 53,
+      "totalRatio": 0.141,
+      "yes": 42,
+      "yesRatio": 0.2877,
+      "no": 11,
+      "noRatio": 0.0478
+    },
+    {
+      "code": "other_unclear",
+      "label": "Overig of onduidelijk",
+      "total": 46,
+      "totalRatio": 0.1223,
+      "yes": 14,
+      "yesRatio": 0.0959,
+      "no": 32,
+      "noRatio": 0.1391
+    },
+    {
+      "code": "location_street_scene_nature",
+      "label": "Locatie, straatbeeld, natuur en openbare ruimte",
+      "total": 44,
+      "totalRatio": 0.117,
+      "yes": 15,
+      "yesRatio": 0.1027,
+      "no": 29,
+      "noRatio": 0.1261
+    },
+    {
+      "code": "hygiene_stench_pests_storage",
+      "label": "Hygiene, stank, ongedierte en opslag thuis",
+      "total": 43,
+      "totalRatio": 0.1144,
+      "yes": 15,
+      "yesRatio": 0.1027,
+      "no": 28,
+      "noRatio": 0.1217
+    },
+    {
+      "code": "service_loss_unnecessary_investment",
+      "label": "Serviceverlies, nut/noodzaak en investering",
+      "total": 39,
+      "totalRatio": 0.1037,
+      "yes": 3,
+      "yesRatio": 0.0205,
+      "no": 36,
+      "noRatio": 0.1565
+    },
+    {
+      "code": "families_luiers_pets_heavy_waste",
+      "label": "Gezinnen, luiers, huisdieren en zwaar afval",
+      "total": 30,
+      "totalRatio": 0.0798,
+      "yes": 6,
+      "yesRatio": 0.0411,
+      "no": 24,
+      "noRatio": 0.1043
+    },
+    {
+      "code": "litter_overflow_defects_maintenance",
+      "label": "Bijplaatsingen, volle/defecte containers en onderhoud",
+      "total": 29,
+      "totalRatio": 0.0771,
+      "yes": 11,
+      "yesRatio": 0.0753,
+      "no": 18,
+      "noRatio": 0.0783
+    },
+    {
+      "code": "elderly_disabled_health",
+      "label": "Ouderen, beperking en gezondheid",
+      "total": 28,
+      "totalRatio": 0.0745,
+      "yes": 11,
+      "yesRatio": 0.0753,
+      "no": 17,
+      "noRatio": 0.0739
+    },
+    {
+      "code": "traffic_safety_car_use_parking",
+      "label": "Verkeer, veiligheid, autogebruik en parkeren",
+      "total": 28,
+      "totalRatio": 0.0745,
+      "yes": 5,
+      "yesRatio": 0.0342,
+      "no": 23,
+      "noRatio": 0.1
+    },
+    {
+      "code": "few_residual_waste_good_separation",
+      "label": "Laag restafvalvolume en goede scheiding",
+      "total": 15,
+      "totalRatio": 0.0399,
+      "yes": 14,
+      "yesRatio": 0.0959,
+      "no": 1,
+      "noRatio": 0.0043
+    },
+    {
+      "code": "governance_participation_legal",
+      "label": "Bestuur, participatie en juridische argumenten",
+      "total": 4,
+      "totalRatio": 0.0106,
+      "yes": 2,
+      "yesRatio": 0.0137,
+      "no": 2,
+      "noRatio": 0.0087
+    }
+  ],
+  "primaryThemes": [
+    {
+      "code": "distance_or_accessibility",
+      "label": "Afstand en toegankelijkheid",
+      "total": 101,
+      "totalRatio": 0.2686,
+      "yes": 49,
+      "yesRatio": 0.3356,
+      "no": 52,
+      "noRatio": 0.2261
+    },
+    {
+      "code": "costs_fees_pay_per_bag",
+      "label": "Kosten, heffingen en betalen per zak/lediging",
+      "total": 47,
+      "totalRatio": 0.125,
+      "yes": 3,
+      "yesRatio": 0.0205,
+      "no": 44,
+      "noRatio": 0.1913
+    },
+    {
+      "code": "other_unclear",
+      "label": "Overig of onduidelijk",
+      "total": 46,
+      "totalRatio": 0.1223,
+      "yes": 14,
+      "yesRatio": 0.0959,
+      "no": 32,
+      "noRatio": 0.1391
+    },
+    {
+      "code": "convenience_flexibility",
+      "label": "Gemak en flexibiliteit",
+      "total": 43,
+      "totalRatio": 0.1144,
+      "yes": 42,
+      "yesRatio": 0.2877,
+      "no": 1,
+      "noRatio": 0.0043
+    },
+    {
+      "code": "paper_container_vios_associations",
+      "label": "Papiercontainer, VIOS en verenigingen",
+      "total": 31,
+      "totalRatio": 0.0824,
+      "yes": 8,
+      "yesRatio": 0.0548,
+      "no": 23,
+      "noRatio": 0.1
+    },
+    {
+      "code": "service_loss_unnecessary_investment",
+      "label": "Serviceverlies, nut/noodzaak en investering",
+      "total": 28,
+      "totalRatio": 0.0745,
+      "yes": 2,
+      "yesRatio": 0.0137,
+      "no": 26,
+      "noRatio": 0.113
+    },
+    {
+      "code": "waste_separation_environment",
+      "label": "Afvalscheiding, milieu en restafvalvermindering",
+      "total": 17,
+      "totalRatio": 0.0452,
+      "yes": 8,
+      "yesRatio": 0.0548,
+      "no": 9,
+      "noRatio": 0.0391
+    },
+    {
+      "code": "litter_overflow_defects_maintenance",
+      "label": "Bijplaatsingen, volle/defecte containers en onderhoud",
+      "total": 16,
+      "totalRatio": 0.0426,
+      "yes": 2,
+      "yesRatio": 0.0137,
+      "no": 14,
+      "noRatio": 0.0609
+    },
+    {
+      "code": "hygiene_stench_pests_storage",
+      "label": "Hygiene, stank, ongedierte en opslag thuis",
+      "total": 12,
+      "totalRatio": 0.0319,
+      "yes": 2,
+      "yesRatio": 0.0137,
+      "no": 10,
+      "noRatio": 0.0435
+    },
+    {
+      "code": "location_street_scene_nature",
+      "label": "Locatie, straatbeeld, natuur en openbare ruimte",
+      "total": 7,
+      "totalRatio": 0.0186,
+      "yes": 2,
+      "yesRatio": 0.0137,
+      "no": 5,
+      "noRatio": 0.0217
+    },
+    {
+      "code": "traffic_safety_car_use_parking",
+      "label": "Verkeer, veiligheid, autogebruik en parkeren",
+      "total": 7,
+      "totalRatio": 0.0186,
+      "yes": 0,
+      "yesRatio": 0.0,
+      "no": 7,
+      "noRatio": 0.0304
+    },
+    {
+      "code": "families_luiers_pets_heavy_waste",
+      "label": "Gezinnen, luiers, huisdieren en zwaar afval",
+      "total": 6,
+      "totalRatio": 0.016,
+      "yes": 0,
+      "yesRatio": 0.0,
+      "no": 6,
+      "noRatio": 0.0261
+    },
+    {
+      "code": "few_residual_waste_good_separation",
+      "label": "Laag restafvalvolume en goede scheiding",
+      "total": 6,
+      "totalRatio": 0.016,
+      "yes": 6,
+      "yesRatio": 0.0411,
+      "no": 0,
+      "noRatio": 0.0
+    },
+    {
+      "code": "habit_acceptance_no_problem",
+      "label": "Gewenning, acceptatie en geen probleem",
+      "total": 5,
+      "totalRatio": 0.0133,
+      "yes": 5,
+      "yesRatio": 0.0342,
+      "no": 0,
+      "noRatio": 0.0
+    },
+    {
+      "code": "elderly_disabled_health",
+      "label": "Ouderen, beperking en gezondheid",
+      "total": 4,
+      "totalRatio": 0.0106,
+      "yes": 3,
+      "yesRatio": 0.0205,
+      "no": 1,
+      "noRatio": 0.0043
+    }
+  ],
+  "reviewReasons": [
+    {
+      "label": "ambiguous_or_short",
+      "count": 57
+    },
+    {
+      "label": "long_answer",
+      "count": 4
+    },
+    {
+      "label": "possible_identifying_detail",
+      "count": 2
+    }
+  ],
+  "streetGroups": [
+    {
+      "label": "Dorpsstraat",
+      "total": 68,
+      "yes": 8,
+      "no": 60,
+      "yesRatio": 0.1176,
+      "noRatio": 0.8824,
+      "coverage": {
+        "addressCount": 210,
+        "averageDistanceM": 200.0,
+        "medianDistanceM": 224.2,
+        "maxDistanceM": 361.9,
+        "over150Count": 155,
+        "over150Ratio": 0.7381,
+        "over275Count": 45,
+        "over275Ratio": 0.2143,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Oostwal",
+      "total": 35,
+      "yes": 3,
+      "no": 32,
+      "yesRatio": 0.0857,
+      "noRatio": 0.9143,
+      "coverage": {
+        "addressCount": 73,
+        "averageDistanceM": 178.7,
+        "medianDistanceM": 182.9,
+        "maxDistanceM": 395.0,
+        "over150Count": 46,
+        "over150Ratio": 0.6301,
+        "over275Count": 9,
+        "over275Ratio": 0.1233,
+        "mainContainerId": "WH01"
+      }
+    },
+    {
+      "label": "Krankhoorn",
+      "total": 26,
+      "yes": 1,
+      "no": 25,
+      "yesRatio": 0.0385,
+      "noRatio": 0.9615,
+      "coverage": {
+        "addressCount": 25,
+        "averageDistanceM": 328.8,
+        "medianDistanceM": 332.3,
+        "maxDistanceM": 429.6,
+        "over150Count": 24,
+        "over150Ratio": 0.96,
+        "over275Count": 22,
+        "over275Ratio": 0.88,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Fabrieksstraat",
+      "total": 27,
+      "yes": 3,
+      "no": 24,
+      "yesRatio": 0.1111,
+      "noRatio": 0.8889,
+      "coverage": {
+        "addressCount": 61,
+        "averageDistanceM": 222.2,
+        "medianDistanceM": 237.2,
+        "maxDistanceM": 350.7,
+        "over150Count": 48,
+        "over150Ratio": 0.7869,
+        "over275Count": 18,
+        "over275Ratio": 0.2951,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Stationsstraat",
+      "total": 23,
+      "yes": 1,
+      "no": 22,
+      "yesRatio": 0.0435,
+      "noRatio": 0.9565,
+      "coverage": {
+        "addressCount": 56,
+        "averageDistanceM": 145.9,
+        "medianDistanceM": 138.6,
+        "maxDistanceM": 429.6,
+        "over150Count": 27,
+        "over150Ratio": 0.4821,
+        "over275Count": 2,
+        "over275Ratio": 0.0357,
+        "mainContainerId": "WH13"
+      }
+    },
+    {
+      "label": "Oudewal",
+      "total": 26,
+      "yes": 5,
+      "no": 21,
+      "yesRatio": 0.1923,
+      "noRatio": 0.8077,
+      "coverage": {
+        "addressCount": 67,
+        "averageDistanceM": 109.9,
+        "medianDistanceM": 117.1,
+        "maxDistanceM": 176.1,
+        "over150Count": 13,
+        "over150Ratio": 0.194,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH20"
+      }
+    },
+    {
+      "label": "Beuninge",
+      "total": 23,
+      "yes": 4,
+      "no": 19,
+      "yesRatio": 0.1739,
+      "noRatio": 0.8261,
+      "coverage": {
+        "addressCount": 82,
+        "averageDistanceM": 218.5,
+        "medianDistanceM": 226.6,
+        "maxDistanceM": 299.7,
+        "over150Count": 70,
+        "over150Ratio": 0.8537,
+        "over275Count": 16,
+        "over275Ratio": 0.1951,
+        "mainContainerId": "WH16"
+      }
+    },
+    {
+      "label": "Schelphoek Zuid",
+      "total": 25,
+      "yes": 7,
+      "no": 18,
+      "yesRatio": 0.28,
+      "noRatio": 0.72,
+      "coverage": {
+        "addressCount": 72,
+        "averageDistanceM": 107.5,
+        "medianDistanceM": 106.7,
+        "maxDistanceM": 149.5,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH20"
+      }
+    },
+    {
+      "label": "Wonge",
+      "total": 20,
+      "yes": 6,
+      "no": 14,
+      "yesRatio": 0.3,
+      "noRatio": 0.7,
+      "coverage": {
+        "addressCount": 60,
+        "averageDistanceM": 88.4,
+        "medianDistanceM": 85.8,
+        "maxDistanceM": 151.3,
+        "over150Count": 1,
+        "over150Ratio": 0.0167,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH17"
+      }
+    },
+    {
+      "label": "Zigt",
+      "total": 20,
+      "yes": 6,
+      "no": 14,
+      "yesRatio": 0.3,
+      "noRatio": 0.7,
+      "coverage": {
+        "addressCount": 80,
+        "averageDistanceM": 104.0,
+        "medianDistanceM": 101.8,
+        "maxDistanceM": 191.8,
+        "over150Count": 10,
+        "over150Ratio": 0.125,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH27"
+      }
+    },
+    {
+      "label": "De Fuik",
+      "total": 17,
+      "yes": 3,
+      "no": 14,
+      "yesRatio": 0.1765,
+      "noRatio": 0.8235,
+      "coverage": {
+        "addressCount": 32,
+        "averageDistanceM": 243.9,
+        "medianDistanceM": 250.1,
+        "maxDistanceM": 447.5,
+        "over150Count": 23,
+        "over150Ratio": 0.7188,
+        "over275Count": 15,
+        "over275Ratio": 0.4688,
+        "mainContainerId": "WH02"
+      }
+    },
+    {
+      "label": "Schoffel",
+      "total": 17,
+      "yes": 3,
+      "no": 14,
+      "yesRatio": 0.1765,
+      "noRatio": 0.8235,
+      "coverage": {
+        "addressCount": 41,
+        "averageDistanceM": 119.3,
+        "medianDistanceM": 118.8,
+        "maxDistanceM": 193.1,
+        "over150Count": 13,
+        "over150Ratio": 0.3171,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH29"
+      }
+    },
+    {
+      "label": "Burg. Burgerstraat",
+      "total": 16,
+      "yes": 2,
+      "no": 14,
+      "yesRatio": 0.125,
+      "noRatio": 0.875,
+      "coverage": {
+        "addressCount": 27,
+        "averageDistanceM": 214.8,
+        "medianDistanceM": 210.6,
+        "maxDistanceM": 298.4,
+        "over150Count": 27,
+        "over150Ratio": 1.0,
+        "over275Count": 2,
+        "over275Ratio": 0.0741,
+        "mainContainerId": "WH08"
+      }
+    },
+    {
+      "label": "Kiebos",
+      "total": 16,
+      "yes": 2,
+      "no": 14,
+      "yesRatio": 0.125,
+      "noRatio": 0.875,
+      "coverage": {
+        "addressCount": 23,
+        "averageDistanceM": 167.4,
+        "medianDistanceM": 171.0,
+        "maxDistanceM": 245.3,
+        "over150Count": 15,
+        "over150Ratio": 0.6522,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH14"
+      }
+    },
+    {
+      "label": "Bregweid",
+      "total": 13,
+      "yes": 0,
+      "no": 13,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 44,
+        "averageDistanceM": 522.9,
+        "medianDistanceM": 526.4,
+        "maxDistanceM": 787.7,
+        "over150Count": 44,
+        "over150Ratio": 1.0,
+        "over275Count": 44,
+        "over275Ratio": 1.0,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "Veilingweg",
+      "total": 13,
+      "yes": 0,
+      "no": 13,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 26,
+        "averageDistanceM": 191.5,
+        "medianDistanceM": 211.3,
+        "maxDistanceM": 363.3,
+        "over150Count": 18,
+        "over150Ratio": 0.6923,
+        "over275Count": 2,
+        "over275Ratio": 0.0769,
+        "mainContainerId": "WH13"
+      }
+    },
+    {
+      "label": "Leeuwerikstraat",
+      "total": 15,
+      "yes": 3,
+      "no": 12,
+      "yesRatio": 0.2,
+      "noRatio": 0.8,
+      "coverage": {
+        "addressCount": 24,
+        "averageDistanceM": 154.3,
+        "medianDistanceM": 156.6,
+        "maxDistanceM": 199.8,
+        "over150Count": 13,
+        "over150Ratio": 0.5417,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH03"
+      }
+    },
+    {
+      "label": "'t Eiland",
+      "total": 12,
+      "yes": 0,
+      "no": 12,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 11,
+        "averageDistanceM": 310.2,
+        "medianDistanceM": 320.1,
+        "maxDistanceM": 365.0,
+        "over150Count": 11,
+        "over150Ratio": 1.0,
+        "over275Count": 7,
+        "over275Ratio": 0.6364,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Merelstraat",
+      "total": 13,
+      "yes": 2,
+      "no": 11,
+      "yesRatio": 0.1538,
+      "noRatio": 0.8462,
+      "coverage": {
+        "addressCount": 37,
+        "averageDistanceM": 121.8,
+        "medianDistanceM": 135.5,
+        "maxDistanceM": 181.4,
+        "over150Count": 12,
+        "over150Ratio": 0.3243,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH10"
+      }
+    },
+    {
+      "label": "Langedijker",
+      "total": 12,
+      "yes": 1,
+      "no": 11,
+      "yesRatio": 0.0833,
+      "noRatio": 0.9167,
+      "coverage": {
+        "addressCount": 28,
+        "averageDistanceM": 121.9,
+        "medianDistanceM": 126.1,
+        "maxDistanceM": 185.3,
+        "over150Count": 10,
+        "over150Ratio": 0.3571,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH11"
+      }
+    },
+    {
+      "label": "Remmerdel",
+      "total": 14,
+      "yes": 4,
+      "no": 10,
+      "yesRatio": 0.2857,
+      "noRatio": 0.7143,
+      "coverage": {
+        "addressCount": 36,
+        "averageDistanceM": 134.5,
+        "medianDistanceM": 124.2,
+        "maxDistanceM": 273.0,
+        "over150Count": 16,
+        "over150Ratio": 0.4444,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "Rietzangerstraat",
+      "total": 13,
+      "yes": 3,
+      "no": 10,
+      "yesRatio": 0.2308,
+      "noRatio": 0.7692,
+      "coverage": {
+        "addressCount": 44,
+        "averageDistanceM": 65.9,
+        "medianDistanceM": 63.5,
+        "maxDistanceM": 224.1,
+        "over150Count": 1,
+        "over150Ratio": 0.0227,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH03"
+      }
+    },
+    {
+      "label": "Sportlaan",
+      "total": 13,
+      "yes": 3,
+      "no": 10,
+      "yesRatio": 0.2308,
+      "noRatio": 0.7692,
+      "coverage": {
+        "addressCount": 22,
+        "averageDistanceM": 100.0,
+        "medianDistanceM": 102.8,
+        "maxDistanceM": 180.1,
+        "over150Count": 3,
+        "over150Ratio": 0.1364,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH04"
+      }
+    },
+    {
+      "label": "Tuinfluiterstraat",
+      "total": 11,
+      "yes": 1,
+      "no": 10,
+      "yesRatio": 0.0909,
+      "noRatio": 0.9091,
+      "coverage": {
+        "addressCount": 36,
+        "averageDistanceM": 158.8,
+        "medianDistanceM": 164.0,
+        "maxDistanceM": 222.5,
+        "over150Count": 22,
+        "over150Ratio": 0.6111,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH09"
+      }
+    },
+    {
+      "label": "Plantersgraaf",
+      "total": 10,
+      "yes": 0,
+      "no": 10,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 26,
+        "averageDistanceM": 172.9,
+        "medianDistanceM": 174.3,
+        "maxDistanceM": 220.9,
+        "over150Count": 20,
+        "over150Ratio": 0.7692,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH26"
+      }
+    },
+    {
+      "label": "Oud Wulpendorp",
+      "total": 11,
+      "yes": 2,
+      "no": 9,
+      "yesRatio": 0.1818,
+      "noRatio": 0.8182,
+      "coverage": {
+        "addressCount": 27,
+        "averageDistanceM": 116.1,
+        "medianDistanceM": 116.7,
+        "maxDistanceM": 205.9,
+        "over150Count": 9,
+        "over150Ratio": 0.3333,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH07"
+      }
+    },
+    {
+      "label": "Hartendorp",
+      "total": 10,
+      "yes": 1,
+      "no": 9,
+      "yesRatio": 0.1,
+      "noRatio": 0.9,
+      "coverage": {
+        "addressCount": 28,
+        "averageDistanceM": 104.0,
+        "medianDistanceM": 104.7,
+        "maxDistanceM": 170.3,
+        "over150Count": 4,
+        "over150Ratio": 0.1429,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH02"
+      }
+    },
+    {
+      "label": "Oudevaart",
+      "total": 9,
+      "yes": 0,
+      "no": 9,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 32,
+        "averageDistanceM": 213.7,
+        "medianDistanceM": 189.2,
+        "maxDistanceM": 459.3,
+        "over150Count": 22,
+        "over150Ratio": 0.6875,
+        "over275Count": 9,
+        "over275Ratio": 0.2812,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "Strekel",
+      "total": 9,
+      "yes": 0,
+      "no": 9,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 22,
+        "averageDistanceM": 116.4,
+        "medianDistanceM": 96.3,
+        "maxDistanceM": 198.4,
+        "over150Count": 8,
+        "over150Ratio": 0.3636,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH30"
+      }
+    },
+    {
+      "label": "Schelphoek Noord",
+      "total": 9,
+      "yes": 1,
+      "no": 8,
+      "yesRatio": 0.1111,
+      "noRatio": 0.8889,
+      "coverage": {
+        "addressCount": 49,
+        "averageDistanceM": 78.0,
+        "medianDistanceM": 77.2,
+        "maxDistanceM": 133.2,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH18"
+      }
+    },
+    {
+      "label": "Fatimahof",
+      "total": 8,
+      "yes": 0,
+      "no": 8,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 20,
+        "averageDistanceM": 196.1,
+        "medianDistanceM": 195.8,
+        "maxDistanceM": 254.3,
+        "over150Count": 16,
+        "over150Ratio": 0.8,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH13"
+      }
+    },
+    {
+      "label": "Pastoorsgroet",
+      "total": 8,
+      "yes": 0,
+      "no": 8,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 16,
+        "averageDistanceM": 138.8,
+        "medianDistanceM": 140.9,
+        "maxDistanceM": 174.6,
+        "over150Count": 7,
+        "over150Ratio": 0.4375,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH11"
+      }
+    },
+    {
+      "label": "Verzetslaan",
+      "total": 15,
+      "yes": 8,
+      "no": 7,
+      "yesRatio": 0.5333,
+      "noRatio": 0.4667,
+      "coverage": {
+        "addressCount": 44,
+        "averageDistanceM": 73.9,
+        "medianDistanceM": 76.0,
+        "maxDistanceM": 151.1,
+        "over150Count": 1,
+        "over150Ratio": 0.0227,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH27"
+      }
+    },
+    {
+      "label": "De Spanakker",
+      "total": 10,
+      "yes": 3,
+      "no": 7,
+      "yesRatio": 0.3,
+      "noRatio": 0.7,
+      "coverage": {
+        "addressCount": 16,
+        "averageDistanceM": 125.7,
+        "medianDistanceM": 130.8,
+        "maxDistanceM": 159.7,
+        "over150Count": 3,
+        "over150Ratio": 0.1875,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "Wieder",
+      "total": 10,
+      "yes": 3,
+      "no": 7,
+      "yesRatio": 0.3,
+      "noRatio": 0.7,
+      "coverage": {
+        "addressCount": 39,
+        "averageDistanceM": 111.3,
+        "medianDistanceM": 117.4,
+        "maxDistanceM": 155.3,
+        "over150Count": 4,
+        "over150Ratio": 0.1026,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH26"
+      }
+    },
+    {
+      "label": "Regelhaalder",
+      "total": 9,
+      "yes": 2,
+      "no": 7,
+      "yesRatio": 0.2222,
+      "noRatio": 0.7778,
+      "coverage": {
+        "addressCount": 93,
+        "averageDistanceM": 61.5,
+        "medianDistanceM": 67.7,
+        "maxDistanceM": 143.2,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH26"
+      }
+    },
+    {
+      "label": "Dorusakker",
+      "total": 8,
+      "yes": 1,
+      "no": 7,
+      "yesRatio": 0.125,
+      "noRatio": 0.875,
+      "coverage": {
+        "addressCount": 29,
+        "averageDistanceM": 109.2,
+        "medianDistanceM": 106.6,
+        "maxDistanceM": 144.7,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH16"
+      }
+    },
+    {
+      "label": "Kuipersven",
+      "total": 8,
+      "yes": 1,
+      "no": 7,
+      "yesRatio": 0.125,
+      "noRatio": 0.875,
+      "coverage": {
+        "addressCount": 33,
+        "averageDistanceM": 93.7,
+        "medianDistanceM": 101.9,
+        "maxDistanceM": 139.6,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "De Waelke",
+      "total": 7,
+      "yes": 0,
+      "no": 7,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 12,
+        "averageDistanceM": 177.6,
+        "medianDistanceM": 177.9,
+        "maxDistanceM": 198.8,
+        "over150Count": 12,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH02"
+      }
+    },
+    {
+      "label": "Baljuw",
+      "total": 7,
+      "yes": 1,
+      "no": 6,
+      "yesRatio": 0.1429,
+      "noRatio": 0.8571,
+      "coverage": {
+        "addressCount": 31,
+        "averageDistanceM": 259.9,
+        "medianDistanceM": 259.3,
+        "maxDistanceM": 306.4,
+        "over150Count": 31,
+        "over150Ratio": 1.0,
+        "over275Count": 10,
+        "over275Ratio": 0.3226,
+        "mainContainerId": "WH06"
+      }
+    },
+    {
+      "label": "De Kroonakker",
+      "total": 7,
+      "yes": 1,
+      "no": 6,
+      "yesRatio": 0.1429,
+      "noRatio": 0.8571,
+      "coverage": {
+        "addressCount": 13,
+        "averageDistanceM": 172.2,
+        "medianDistanceM": 171.1,
+        "maxDistanceM": 251.2,
+        "over150Count": 9,
+        "over150Ratio": 0.6923,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "Doorbraak",
+      "total": 7,
+      "yes": 1,
+      "no": 6,
+      "yesRatio": 0.1429,
+      "noRatio": 0.8571,
+      "coverage": {
+        "addressCount": 35,
+        "averageDistanceM": 98.6,
+        "medianDistanceM": 81.3,
+        "maxDistanceM": 253.2,
+        "over150Count": 9,
+        "over150Ratio": 0.2571,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH14"
+      }
+    },
+    {
+      "label": "Ebbegaal",
+      "total": 7,
+      "yes": 1,
+      "no": 6,
+      "yesRatio": 0.1429,
+      "noRatio": 0.8571,
+      "coverage": {
+        "addressCount": 14,
+        "averageDistanceM": 199.7,
+        "medianDistanceM": 197.3,
+        "maxDistanceM": 218.4,
+        "over150Count": 14,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "Jan Arentsweg",
+      "total": 5,
+      "yes": 0,
+      "no": 5,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 12,
+        "averageDistanceM": 231.4,
+        "medianDistanceM": 230.4,
+        "maxDistanceM": 248.4,
+        "over150Count": 12,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH14"
+      }
+    },
+    {
+      "label": "Pimpelmeesstraat",
+      "total": 5,
+      "yes": 0,
+      "no": 5,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 22,
+        "averageDistanceM": 175.8,
+        "medianDistanceM": 178.0,
+        "maxDistanceM": 198.6,
+        "over150Count": 20,
+        "over150Ratio": 0.9091,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH10"
+      }
+    },
+    {
+      "label": "Dorsvlegel",
+      "total": 7,
+      "yes": 3,
+      "no": 4,
+      "yesRatio": 0.4286,
+      "noRatio": 0.5714,
+      "coverage": {
+        "addressCount": 36,
+        "averageDistanceM": 151.2,
+        "medianDistanceM": 153.0,
+        "maxDistanceM": 194.0,
+        "over150Count": 20,
+        "over150Ratio": 0.5556,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH29"
+      }
+    },
+    {
+      "label": "Goudsboer",
+      "total": 7,
+      "yes": 3,
+      "no": 4,
+      "yesRatio": 0.4286,
+      "noRatio": 0.5714,
+      "coverage": {
+        "addressCount": 12,
+        "averageDistanceM": 122.5,
+        "medianDistanceM": 137.6,
+        "maxDistanceM": 157.7,
+        "over150Count": 2,
+        "over150Ratio": 0.1667,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH18"
+      }
+    },
+    {
+      "label": "De Baan",
+      "total": 6,
+      "yes": 3,
+      "no": 3,
+      "yesRatio": 0.5,
+      "noRatio": 0.5,
+      "coverage": {
+        "addressCount": 19,
+        "averageDistanceM": 48.4,
+        "medianDistanceM": 43.6,
+        "maxDistanceM": 101.4,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH09"
+      }
+    },
+    {
+      "label": "Nachtegaalstraat",
+      "total": 6,
+      "yes": 3,
+      "no": 3,
+      "yesRatio": 0.5,
+      "noRatio": 0.5,
+      "coverage": {
+        "addressCount": 20,
+        "averageDistanceM": 105.8,
+        "medianDistanceM": 107.2,
+        "maxDistanceM": 158.9,
+        "over150Count": 5,
+        "over150Ratio": 0.25,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH04"
+      }
+    },
+    {
+      "label": "Schierige Ven",
+      "total": 5,
+      "yes": 2,
+      "no": 3,
+      "yesRatio": 0.4,
+      "noRatio": 0.6,
+      "coverage": {
+        "addressCount": 15,
+        "averageDistanceM": 89.4,
+        "medianDistanceM": 110.4,
+        "maxDistanceM": 121.4,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH18"
+      }
+    },
+    {
+      "label": "Vijfven",
+      "total": 8,
+      "yes": 6,
+      "no": 2,
+      "yesRatio": 0.75,
+      "noRatio": 0.25,
+      "coverage": {
+        "addressCount": 13,
+        "averageDistanceM": 42.9,
+        "medianDistanceM": 42.5,
+        "maxDistanceM": 109.3,
+        "over150Count": 0,
+        "over150Ratio": 0.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH16"
+      }
+    }
+  ],
+  "otherStreetGroup": {
+    "label": "Overige straten",
+    "total": 103,
+    "yes": 29,
+    "no": 74,
+    "yesRatio": 0.2816,
+    "noRatio": 0.7184,
+    "streetNames": [
+      "'t Jaerlinger",
+      "'t Lange Weidje",
+      "Alingterp",
+      "Appelvinkstraat",
+      "Beemsterpad",
+      "Burg. Noletstraat",
+      "Cumulus",
+      "De Camper",
+      "De Cres",
+      "De Delff",
+      "De Helling",
+      "De Hoge Werf",
+      "De Loortjen",
+      "De Negen Geerzen",
+      "De Zeelt",
+      "De Zegersloot",
+      "Dergmeerweg",
+      "Engelakker",
+      "Garremeer",
+      "Gaspad",
+      "Heerlijkheid",
+      "Helshoek",
+      "Kuileweid",
+      "Leenman",
+      "Leuneweg",
+      "Maasweid",
+      "Manusveert",
+      "Marlequi",
+      "Molenaarweg",
+      "Nade Heij",
+      "Pastoor Willemsestraat",
+      "Posthoorn",
+      "Puttersakker",
+      "Reijneweg",
+      "Rode Valk",
+      "Smeelven",
+      "Soeverein",
+      "Spoorlijntje",
+      "Theresiaplein",
+      "Torenvenplein",
+      "Trogven",
+      "Verlei",
+      "Vierhuizen",
+      "Vincentiusstraat",
+      "Vishouwer",
+      "Zuiderkruis",
+      "Zwartepad"
+    ],
+    "streetCount": 47
+  },
+  "containerGroups": [
+    {
+      "label": "WH25",
+      "total": 88,
+      "yes": 8,
+      "no": 80,
+      "yesRatio": 0.0909,
+      "noRatio": 0.9091
+    },
+    {
+      "label": "WH02",
+      "total": 50,
+      "yes": 7,
+      "no": 43,
+      "yesRatio": 0.14,
+      "noRatio": 0.86
+    },
+    {
+      "label": "WH14",
+      "total": 49,
+      "yes": 8,
+      "no": 41,
+      "yesRatio": 0.1633,
+      "noRatio": 0.8367
+    },
+    {
+      "label": "WH03",
+      "total": 44,
+      "yes": 7,
+      "no": 37,
+      "yesRatio": 0.1591,
+      "noRatio": 0.8409
+    },
+    {
+      "label": "WH19",
+      "total": 41,
+      "yes": 5,
+      "no": 36,
+      "yesRatio": 0.122,
+      "noRatio": 0.878
+    },
+    {
+      "label": "WH05",
+      "total": 42,
+      "yes": 9,
+      "no": 33,
+      "yesRatio": 0.2143,
+      "noRatio": 0.7857
+    },
+    {
+      "label": "WH20",
+      "total": 45,
+      "yes": 13,
+      "no": 32,
+      "yesRatio": 0.2889,
+      "noRatio": 0.7111
+    },
+    {
+      "label": "WH04",
+      "total": 40,
+      "yes": 12,
+      "no": 28,
+      "yesRatio": 0.3,
+      "noRatio": 0.7
+    },
+    {
+      "label": "WH13",
+      "total": 31,
+      "yes": 3,
+      "no": 28,
+      "yesRatio": 0.0968,
+      "noRatio": 0.9032
+    },
+    {
+      "label": "WH22",
+      "total": 26,
+      "yes": 0,
+      "no": 26,
+      "yesRatio": 0.0,
+      "noRatio": 1.0
+    },
+    {
+      "label": "WH29",
+      "total": 28,
+      "yes": 7,
+      "no": 21,
+      "yesRatio": 0.25,
+      "noRatio": 0.75
+    },
+    {
+      "label": "WH11",
+      "total": 23,
+      "yes": 2,
+      "no": 21,
+      "yesRatio": 0.087,
+      "noRatio": 0.913
+    },
+    {
+      "label": "WH16",
+      "total": 34,
+      "yes": 14,
+      "no": 20,
+      "yesRatio": 0.4118,
+      "noRatio": 0.5882
+    },
+    {
+      "label": "WH08",
+      "total": 25,
+      "yes": 5,
+      "no": 20,
+      "yesRatio": 0.2,
+      "noRatio": 0.8
+    },
+    {
+      "label": "WH07",
+      "total": 23,
+      "yes": 3,
+      "no": 20,
+      "yesRatio": 0.1304,
+      "noRatio": 0.8696
+    },
+    {
+      "label": "WH27",
+      "total": 25,
+      "yes": 6,
+      "no": 19,
+      "yesRatio": 0.24,
+      "noRatio": 0.76
+    },
+    {
+      "label": "WH10",
+      "total": 24,
+      "yes": 6,
+      "no": 18,
+      "yesRatio": 0.25,
+      "noRatio": 0.75
+    },
+    {
+      "label": "WH18",
+      "total": 23,
+      "yes": 5,
+      "no": 18,
+      "yesRatio": 0.2174,
+      "noRatio": 0.7826
+    },
+    {
+      "label": "WH01",
+      "total": 19,
+      "yes": 1,
+      "no": 18,
+      "yesRatio": 0.0526,
+      "noRatio": 0.9474
+    },
+    {
+      "label": "WH17",
+      "total": 18,
+      "yes": 0,
+      "no": 18,
+      "yesRatio": 0.0,
+      "noRatio": 1.0
+    },
+    {
+      "label": "WH26",
+      "total": 21,
+      "yes": 4,
+      "no": 17,
+      "yesRatio": 0.1905,
+      "noRatio": 0.8095
+    },
+    {
+      "label": "WH21",
+      "total": 17,
+      "yes": 6,
+      "no": 11,
+      "yesRatio": 0.3529,
+      "noRatio": 0.6471
+    },
+    {
+      "label": "WH12",
+      "total": 11,
+      "yes": 0,
+      "no": 11,
+      "yesRatio": 0.0,
+      "noRatio": 1.0
+    },
+    {
+      "label": "WH09",
+      "total": 12,
+      "yes": 2,
+      "no": 10,
+      "yesRatio": 0.1667,
+      "noRatio": 0.8333
+    },
+    {
+      "label": "WH28",
+      "total": 16,
+      "yes": 8,
+      "no": 8,
+      "yesRatio": 0.5,
+      "noRatio": 0.5
+    },
+    {
+      "label": "WH06",
+      "total": 13,
+      "yes": 5,
+      "no": 8,
+      "yesRatio": 0.3846,
+      "noRatio": 0.6154
+    },
+    {
+      "label": "WH15",
+      "total": 7,
+      "yes": 0,
+      "no": 7,
+      "yesRatio": 0.0,
+      "noRatio": 1.0
+    },
+    {
+      "label": "WH30",
+      "total": 7,
+      "yes": 0,
+      "no": 7,
+      "yesRatio": 0.0,
+      "noRatio": 1.0
+    }
+  ],
+  "otherContainerGroup": {
+    "label": "Overige containers",
+    "total": 7,
+    "yes": 0,
+    "no": 7,
+    "yesRatio": 0.0,
+    "noRatio": 1.0,
+    "containerIds": [
+      "TH09",
+      "TH10",
+      "TH12",
+      "TH17",
+      "WH33"
+    ],
+    "containerCount": 5
+  },
+  "distanceAndConcernBottlenecks": [
+    {
+      "label": "Dorpsstraat",
+      "total": 68,
+      "yes": 8,
+      "no": 60,
+      "yesRatio": 0.1176,
+      "noRatio": 0.8824,
+      "coverage": {
+        "addressCount": 210,
+        "averageDistanceM": 200.0,
+        "medianDistanceM": 224.2,
+        "maxDistanceM": 361.9,
+        "over150Count": 155,
+        "over150Ratio": 0.7381,
+        "over275Count": 45,
+        "over275Ratio": 0.2143,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Bregweid",
+      "total": 13,
+      "yes": 0,
+      "no": 13,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 44,
+        "averageDistanceM": 522.9,
+        "medianDistanceM": 526.4,
+        "maxDistanceM": 787.7,
+        "over150Count": 44,
+        "over150Ratio": 1.0,
+        "over275Count": 44,
+        "over275Ratio": 1.0,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "Krankhoorn",
+      "total": 26,
+      "yes": 1,
+      "no": 25,
+      "yesRatio": 0.0385,
+      "noRatio": 0.9615,
+      "coverage": {
+        "addressCount": 25,
+        "averageDistanceM": 328.8,
+        "medianDistanceM": 332.3,
+        "maxDistanceM": 429.6,
+        "over150Count": 24,
+        "over150Ratio": 0.96,
+        "over275Count": 22,
+        "over275Ratio": 0.88,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Fabrieksstraat",
+      "total": 27,
+      "yes": 3,
+      "no": 24,
+      "yesRatio": 0.1111,
+      "noRatio": 0.8889,
+      "coverage": {
+        "addressCount": 61,
+        "averageDistanceM": 222.2,
+        "medianDistanceM": 237.2,
+        "maxDistanceM": 350.7,
+        "over150Count": 48,
+        "over150Ratio": 0.7869,
+        "over275Count": 18,
+        "over275Ratio": 0.2951,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Beuninge",
+      "total": 23,
+      "yes": 4,
+      "no": 19,
+      "yesRatio": 0.1739,
+      "noRatio": 0.8261,
+      "coverage": {
+        "addressCount": 82,
+        "averageDistanceM": 218.5,
+        "medianDistanceM": 226.6,
+        "maxDistanceM": 299.7,
+        "over150Count": 70,
+        "over150Ratio": 0.8537,
+        "over275Count": 16,
+        "over275Ratio": 0.1951,
+        "mainContainerId": "WH16"
+      }
+    },
+    {
+      "label": "De Fuik",
+      "total": 17,
+      "yes": 3,
+      "no": 14,
+      "yesRatio": 0.1765,
+      "noRatio": 0.8235,
+      "coverage": {
+        "addressCount": 32,
+        "averageDistanceM": 243.9,
+        "medianDistanceM": 250.1,
+        "maxDistanceM": 447.5,
+        "over150Count": 23,
+        "over150Ratio": 0.7188,
+        "over275Count": 15,
+        "over275Ratio": 0.4688,
+        "mainContainerId": "WH02"
+      }
+    },
+    {
+      "label": "Baljuw",
+      "total": 7,
+      "yes": 1,
+      "no": 6,
+      "yesRatio": 0.1429,
+      "noRatio": 0.8571,
+      "coverage": {
+        "addressCount": 31,
+        "averageDistanceM": 259.9,
+        "medianDistanceM": 259.3,
+        "maxDistanceM": 306.4,
+        "over150Count": 31,
+        "over150Ratio": 1.0,
+        "over275Count": 10,
+        "over275Ratio": 0.3226,
+        "mainContainerId": "WH06"
+      }
+    },
+    {
+      "label": "Oostwal",
+      "total": 35,
+      "yes": 3,
+      "no": 32,
+      "yesRatio": 0.0857,
+      "noRatio": 0.9143,
+      "coverage": {
+        "addressCount": 73,
+        "averageDistanceM": 178.7,
+        "medianDistanceM": 182.9,
+        "maxDistanceM": 395.0,
+        "over150Count": 46,
+        "over150Ratio": 0.6301,
+        "over275Count": 9,
+        "over275Ratio": 0.1233,
+        "mainContainerId": "WH01"
+      }
+    },
+    {
+      "label": "Oudevaart",
+      "total": 9,
+      "yes": 0,
+      "no": 9,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 32,
+        "averageDistanceM": 213.7,
+        "medianDistanceM": 189.2,
+        "maxDistanceM": 459.3,
+        "over150Count": 22,
+        "over150Ratio": 0.6875,
+        "over275Count": 9,
+        "over275Ratio": 0.2812,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "'t Eiland",
+      "total": 12,
+      "yes": 0,
+      "no": 12,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 11,
+        "averageDistanceM": 310.2,
+        "medianDistanceM": 320.1,
+        "maxDistanceM": 365.0,
+        "over150Count": 11,
+        "over150Ratio": 1.0,
+        "over275Count": 7,
+        "over275Ratio": 0.6364,
+        "mainContainerId": "WH25"
+      }
+    },
+    {
+      "label": "Burg. Burgerstraat",
+      "total": 16,
+      "yes": 2,
+      "no": 14,
+      "yesRatio": 0.125,
+      "noRatio": 0.875,
+      "coverage": {
+        "addressCount": 27,
+        "averageDistanceM": 214.8,
+        "medianDistanceM": 210.6,
+        "maxDistanceM": 298.4,
+        "over150Count": 27,
+        "over150Ratio": 1.0,
+        "over275Count": 2,
+        "over275Ratio": 0.0741,
+        "mainContainerId": "WH08"
+      }
+    },
+    {
+      "label": "Veilingweg",
+      "total": 13,
+      "yes": 0,
+      "no": 13,
+      "yesRatio": 0.0,
+      "noRatio": 1.0,
+      "coverage": {
+        "addressCount": 26,
+        "averageDistanceM": 191.5,
+        "medianDistanceM": 211.3,
+        "maxDistanceM": 363.3,
+        "over150Count": 18,
+        "over150Ratio": 0.6923,
+        "over275Count": 2,
+        "over275Ratio": 0.0769,
+        "mainContainerId": "WH13"
+      }
+    }
+  ],
+  "coverageBlindSpots": [
+    {
+      "label": "Machinestraat",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 5,
+        "averageDistanceM": 453.7,
+        "medianDistanceM": 480.3,
+        "maxDistanceM": 611.9,
+        "over150Count": 5,
+        "over150Ratio": 1.0,
+        "over275Count": 5,
+        "over275Ratio": 1.0,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "Kabelstraat",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 6,
+        "averageDistanceM": 402.5,
+        "medianDistanceM": 403.6,
+        "maxDistanceM": 447.2,
+        "over150Count": 6,
+        "over150Ratio": 1.0,
+        "over275Count": 6,
+        "over275Ratio": 1.0,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "De Cres",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 24,
+        "averageDistanceM": 367.3,
+        "medianDistanceM": 359.0,
+        "maxDistanceM": 432.3,
+        "over150Count": 24,
+        "over150Ratio": 1.0,
+        "over275Count": 24,
+        "over275Ratio": 1.0,
+        "mainContainerId": "WH22"
+      }
+    },
+    {
+      "label": "Debbemeerweg",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 9,
+        "averageDistanceM": 309.3,
+        "medianDistanceM": 278.5,
+        "maxDistanceM": 611.9,
+        "over150Count": 8,
+        "over150Ratio": 0.8889,
+        "over275Count": 6,
+        "over275Ratio": 0.6667,
+        "mainContainerId": "WH30"
+      }
+    },
+    {
+      "label": "Dergmeerweg",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 13,
+        "averageDistanceM": 244.5,
+        "medianDistanceM": 245.4,
+        "maxDistanceM": 275.9,
+        "over150Count": 13,
+        "over150Ratio": 1.0,
+        "over275Count": 1,
+        "over275Ratio": 0.0769,
+        "mainContainerId": "WH03"
+      }
+    },
+    {
+      "label": "Vierhuizen",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 11,
+        "averageDistanceM": 235.1,
+        "medianDistanceM": 234.0,
+        "maxDistanceM": 272.0,
+        "over150Count": 11,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH08"
+      }
+    },
+    {
+      "label": "Heergewaade",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 5,
+        "averageDistanceM": 218.9,
+        "medianDistanceM": 220.5,
+        "maxDistanceM": 244.0,
+        "over150Count": 5,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH05"
+      }
+    },
+    {
+      "label": "Smeelven",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 6,
+        "averageDistanceM": 217.1,
+        "medianDistanceM": 211.9,
+        "maxDistanceM": 249.5,
+        "over150Count": 6,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH12"
+      }
+    },
+    {
+      "label": "De Camper",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 13,
+        "averageDistanceM": 199.7,
+        "medianDistanceM": 212.9,
+        "maxDistanceM": 300.0,
+        "over150Count": 10,
+        "over150Ratio": 0.7692,
+        "over275Count": 2,
+        "over275Ratio": 0.1538,
+        "mainContainerId": "WH20"
+      }
+    },
+    {
+      "label": "Nade Heij",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 6,
+        "averageDistanceM": 189.6,
+        "medianDistanceM": 182.2,
+        "maxDistanceM": 229.2,
+        "over150Count": 6,
+        "over150Ratio": 1.0,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH10"
+      }
+    },
+    {
+      "label": "De Huisweid",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 20,
+        "averageDistanceM": 188.8,
+        "medianDistanceM": 184.9,
+        "maxDistanceM": 299.2,
+        "over150Count": 14,
+        "over150Ratio": 0.7,
+        "over275Count": 2,
+        "over275Ratio": 0.1,
+        "mainContainerId": "WH13"
+      }
+    },
+    {
+      "label": "Reijneweg",
+      "responseGroup": "<5 reacties",
+      "coverage": {
+        "addressCount": 7,
+        "averageDistanceM": 186.8,
+        "medianDistanceM": 181.0,
+        "maxDistanceM": 234.8,
+        "over150Count": 6,
+        "over150Ratio": 0.8571,
+        "over275Count": 0,
+        "over275Ratio": 0.0,
+        "mainContainerId": "WH14"
+      }
+    }
+  ]
+}
