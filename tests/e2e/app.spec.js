@@ -412,6 +412,7 @@ test('shows the mobile map behind search when jumping from the story', async ({ 
   };
 
   await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(page.locator('#mobile-sidebar-toggle')).toBeVisible();
   await expect(search).toBeFocused();
   await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(body).toHaveClass(/mobile-search-active/);
