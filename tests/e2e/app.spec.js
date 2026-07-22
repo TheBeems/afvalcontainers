@@ -99,13 +99,23 @@ test('keeps footer links rooted when switching places from the site root', async
 
   for (const [label, path] of [
     ['Analyses', 'analyses'],
-    ['Enquête', 'enquete'],
+    ['Enquête-uitslag', 'enquete'],
     ['Methodiek', 'methodiek'],
-    ['Terugkoppeling', 'terugkoppeling']
   ]) {
     await expect(page.locator('.sidebar-footer-nav').getByRole('link', { name: label, exact: true }))
       .toHaveAttribute('href', `/${path}/`);
   }
+
+  for (const [label, path] of [
+    ['Methodiek', 'methodiek'],
+    ['Analyses', 'analyses'],
+    ['Enquête-uitslag', 'enquete']
+  ]) {
+    await expect(page.locator('.sidebar-section-nav').getByRole('link', { name: label, exact: true }))
+      .toHaveAttribute('href', `/${path}/`);
+  }
+
+  await expect(page.locator('.sidebar-footer-nav').getByRole('link', { name: 'Terugkoppeling', exact: true })).toHaveCount(0);
 });
 
 test('shows the visual introduction and focuses search from the CTA', async ({ page }) => {
@@ -115,7 +125,7 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   const mapShell = page.locator('.map-shell');
 
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
-  await expect(page.locator('#story-title')).toContainText('Warmenhuizen');
+  await expect(page.locator('#story-title')).toHaveText('Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen');
   await expect(page.getByRole('heading', { name: 'Afstand bepaalt de ervaring' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Meer dan 40% loopt 150 meter of meer' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ga naar stap 2: Van bak aan huis naar zelf wegbrengen' })).toBeVisible();
@@ -130,11 +140,25 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await page.getByRole('link', { name: 'Bekijk de visuele uitleg opnieuw' }).click();
   await expect(page).toHaveURL(/#visuele-uitleg$/);
   await expect(story).toBeVisible();
-  await expect(page.locator('#story-title')).toContainText('Warmenhuizen');
+  await expect(page.locator('#story-title')).toHaveText('Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen');
 
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(story).toBeHidden();
   await expect(page.getByRole('combobox', { name: 'Zoek je adres' })).toBeFocused();
+});
+
+test('opens the selected village map from the first story step', async ({ page }) => {
+  await page.goto('/');
+
+  const placeSelect = page.getByRole('combobox', { name: 'Direct naar kaart' });
+  await expect(placeSelect).toBeVisible();
+  await expect(placeSelect.locator('option')).toHaveText(['Kies een dorp', 'Warmenhuizen', 'Tuitjenhorn', 'Waarland']);
+
+  await placeSelect.selectOption('waarland');
+
+  await expect(page).toHaveURL(/\/waarland\/#kaart$/);
+  await expect(page.locator('#visuele-uitleg')).toBeHidden();
+  await expect(page.locator('#app-title')).toContainText('Waarland');
 });
 
 test('starts map data immediately while deferring later story media', async ({ page }) => {
@@ -145,7 +169,7 @@ test('starts map data immediately while deferring later story media', async ({ p
 
   await page.goto('/warmenhuizen/');
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Direct naar kaart' })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Direct naar kaart' })).toBeVisible();
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(250);
 
@@ -154,7 +178,7 @@ test('starts map data immediately while deferring later story media', async ({ p
   expect(requestedUrls.some((url) => /brengsysteem/.test(url))).toBe(true);
   expect(requestedUrls.some((url) => /werkelijke-looproute|loopafstand-ervaring|praktische-gevolgen/.test(url))).toBe(false);
 
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(page.locator('#visuele-uitleg')).toBeHidden();
   await expect(page.locator('#coverage-summary')).toBeVisible();
 });
@@ -176,7 +200,7 @@ test('focuses search while initial map data finishes and selects an address', as
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
   await expect.poll(() => houseMapRequested).toBe(true);
 
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
 
   const search = page.getByRole('combobox', { name: 'Zoek je adres' });
   await expect(search).toBeFocused();
@@ -411,7 +435,7 @@ test('shows the mobile map behind search when jumping from the story', async ({ 
     await expect.poll(async () => Math.round((await mapShell.boundingBox()).y)).toBe(0);
   };
 
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(page.locator('#mobile-sidebar-toggle')).toBeVisible();
   await expect(search).toBeFocused();
   await expect(page.locator('#visuele-uitleg')).toBeHidden();
@@ -522,8 +546,8 @@ test('serves place-specific SEO metadata from clean place URLs', async ({ page }
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `${SITE_URL}tuitjenhorn/`);
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
-  await expect(page.locator('#story-title')).toContainText('Tuitjenhorn');
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(page.locator('#story-title')).toHaveText('Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen');
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(page.locator('#app-title')).toContainText('Tuitjenhorn');
   await expect(page.locator('#coverage-summary')).toContainText('adressen binnen bebouwde kom');
   await expect(page.getByRole('link', { name: 'Bekijk uitgebreide analyses' })).toHaveAttribute('href', 'http://127.0.0.1:8000/analyses/');
@@ -535,8 +559,8 @@ test('replaces query place URLs with clean place URLs', async ({ page }) => {
 
   await expect(page).toHaveURL(/\/tuitjenhorn\/$/);
   await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute('href', 'http://127.0.0.1:8000/favicon.svg');
-  await expect(page.locator('#story-title')).toContainText('Tuitjenhorn');
-  await page.getByRole('link', { name: 'Direct naar kaart' }).click();
+  await expect(page.locator('#story-title')).toHaveText('Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen');
+  await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
   await expect(page.locator('#app-title')).toContainText('Tuitjenhorn');
   await page.getByRole('link', { name: 'Bekijk methodiek en onderzoeksbasis' }).click();
   await expect(page).toHaveURL('http://127.0.0.1:8000/methodiek/');

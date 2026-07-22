@@ -3,6 +3,7 @@ const STORY_HASH = '#visuele-uitleg';
 const FIRST_STORY_PANEL_ID = 'story-ophalen';
 const STORY_PANEL_HASH_PREFIX = '#story-';
 const STORY_REVEAL_SELECTOR = '.visual-story-reveal';
+const APP_BASE_PATH_SELECTOR = 'meta[name="app-base-path"]';
 
 function prefersReducedMotion() {
   return typeof window.matchMedia === 'function'
@@ -33,10 +34,19 @@ function hasContainerDeepLink() {
   return new URLSearchParams(window.location.search).has('container');
 }
 
+function navigateToPlace(placeSlug) {
+  const basePath = document.querySelector(APP_BASE_PATH_SELECTOR)?.getAttribute('content') || './';
+  const baseUrl = new URL(basePath, document.baseURI);
+  const targetUrl = new URL(`${encodeURIComponent(placeSlug)}/#kaart`, baseUrl);
+
+  window.location.assign(targetUrl.toString());
+}
+
 export function bindStoryIntroEvents(api = {}) {
   const story = document.getElementById('visuele-uitleg');
   const mapTarget = document.getElementById('kaart');
   const searchInput = document.getElementById('house-search');
+  const placeSelect = document.getElementById('story-place-select');
   const revealTarget = story?.querySelector(STORY_REVEAL_SELECTOR);
 
   if (!story || !mapTarget) {
@@ -205,6 +215,14 @@ export function bindStoryIntroEvents(api = {}) {
       });
       window.history.pushState({}, '', hash);
     });
+  });
+
+  placeSelect?.addEventListener('change', () => {
+    const placeSlug = placeSelect.value;
+
+    if (placeSlug) {
+      navigateToPlace(placeSlug);
+    }
   });
 
   document.querySelectorAll(`a[href="${STORY_HASH}"]`).forEach((link) => {

@@ -113,9 +113,8 @@ function buildFooterLinks(places) {
   return [
     ...places.map((place) => `<a href="${escapeHtml(rootPath(`${getPlaceSlug(place)}/`))}">${escapeHtml(place.name)}</a>`),
     `<a href="${escapeHtml(rootPath('analyses/'))}">Analyses</a>`,
-    `<a href="${escapeHtml(rootPath('enquete/'))}">Enquête</a>`,
+    `<a href="${escapeHtml(rootPath('enquete/'))}">Enquête-uitslag</a>`,
     `<a href="${escapeHtml(rootPath('methodiek/'))}">Methodiek</a>`,
-    `<a href="${escapeHtml(rootPath('terugkoppeling/'))}">Terugkoppeling</a>`,
     `<a href="${DATASET_LICENSE_URL}" rel="license">Data: ${DATASET_LICENSE_NAME}</a>`
   ].join('\n        ');
 }
@@ -131,6 +130,13 @@ function buildPlaceSourceReference(place) {
   return place.sourceUrl
     ? `<a id="place-source-link" href="${escapeHtml(place.sourceUrl)}">aangekondigd</a>`
     : '<span id="place-source-link">aangekondigd</span>';
+}
+
+function buildStoryPlaceOptions(places) {
+  return [
+    '<option value="">Kies een dorp</option>',
+    ...places.map((place) => `<option value="${escapeHtml(getPlaceSlug(place))}">${escapeHtml(place.name)}</option>`)
+  ].join('');
 }
 
 function replaceSeoBlock(html, seoBlock) {
@@ -401,6 +407,7 @@ function applyInitialPlaceContent(html, place, coverageSummary, places) {
   let pageHtml = replaceSidebarFooterNav(html, places);
 
   pageHtml = pageHtml.replace(/(<span data-place-name>)([\s\S]*?)(<\/span>)/g, `$1${escapeHtml(place.name)}$3`);
+  pageHtml = replaceElementHtml(pageHtml, 'story-place-select', buildStoryPlaceOptions(places));
   pageHtml = replaceElementHtml(pageHtml, 'app-title', escapeHtml(getPlaceTitle(place)));
   pageHtml = replaceElementHtml(pageHtml, 'story-gevolgen-title', `Meer dan ${metrics.roundedLongDistancePercent}% loopt 150 meter of meer`);
   pageHtml = pageHtml.replace(

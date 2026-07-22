@@ -132,6 +132,47 @@
   background: #115e59;
 }
 
+.visual-story-place-picker {
+  display: grid;
+  gap: 8px;
+  width: min(320px, 100%);
+  margin-top: 24px;
+}
+
+.visual-story-select-label {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-shadow: none;
+}
+
+.visual-story-select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.38);
+  padding: 10px 12px;
+  color: #ffffff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-shadow: none;
+}
+
+.visual-story-select option {
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 850;
+}
+
+.visual-story-select:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
 .visual-story-next {
   position: absolute;
   z-index: 1;

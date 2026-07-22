@@ -63,10 +63,15 @@
       <div class="visual-story-scrim" aria-hidden="true"></div>
       <div class="visual-story-copy">
         <p class="visual-story-step">Stap 1 van 5</p>
-        <h1 id="story-title">Werkelijke loopafstand naar restafvalcontainers in <span data-place-name>Warmenhuizen</span></h1>
+        <h1 id="story-title">Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen</h1>
         <p>Deze website is verbonden aan de Dorpsraad Warmenhuizen en laat per adres zien wat de geplande restafvalcontainers betekenen qua loopafstand.</p>
         <a class="visual-story-link" href="#story-brengsysteem">Lees verder</a>
-        <a class="visual-story-link" href="#kaart" data-focus-search>Direct naar kaart</a>
+        <div class="visual-story-place-picker">
+          <label class="visual-story-select-label" for="story-place-select">Direct naar kaart</label>
+          <select id="story-place-select" class="visual-story-select">
+            <option value="">Kies een dorp</option>
+          </select>
+        </div>
       </div>
       <a class="visual-story-next" href="#story-brengsysteem" aria-label="Ga naar stap 2: Van bak aan huis naar zelf wegbrengen">
         <span>Volgende</span>
@@ -274,6 +279,12 @@
         <h2 id="place-selector-title">Dorp</h2>
         <select id="place-select" class="place-select" aria-label="Selecteer dorp"></select>
       </section>
+
+      <nav class="sidebar-section-nav" aria-label="Informatienavigatie">
+        <a href="/methodiek/">Methodiek</a>
+        <a href="/analyses/">Analyses</a>
+        <a href="/enquete/">Enquête-uitslag</a>
+      </nav>
 
       <header class="sidebar-header">
         <details id="sidebar-header-panel" open>
