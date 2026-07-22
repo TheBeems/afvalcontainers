@@ -1,0 +1,210 @@
+[
+  {
+    "id": "warmenhuizen",
+    "name": "Warmenhuizen",
+    "containerIdPrefix": "WH",
+    "map": {
+      "center": [
+        52.7235,
+        4.7385
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen",
+    "seo": {
+      "slug": "warmenhuizen",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen",
+      "description": "Bekijk per adres in Warmenhuizen de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Warmenhuizen met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/warmenhuizen/container-locations.json",
+      "coverageSummary": "./data/places/warmenhuizen/coverage-summary.json",
+      "houseMap": "./data/places/warmenhuizen/house-map.json",
+      "addressIndex": "./data/places/warmenhuizen/address-index.compact.json",
+      "houseDetailsBase": "./data/places/warmenhuizen/house-details"
+    }
+  },
+  {
+    "id": "tuitjenhorn",
+    "name": "Tuitjenhorn",
+    "containerIdPrefix": "TH",
+    "map": {
+      "center": [
+        52.7378,
+        4.7525
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
+    "seo": {
+      "slug": "tuitjenhorn",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn",
+      "description": "Bekijk per adres in Tuitjenhorn de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Tuitjenhorn met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/tuitjenhorn/container-locations.json",
+      "coverageSummary": "./data/places/tuitjenhorn/coverage-summary.json",
+      "houseMap": "./data/places/tuitjenhorn/house-map.json",
+      "addressIndex": "./data/places/tuitjenhorn/address-index.compact.json",
+      "houseDetailsBase": "./data/places/tuitjenhorn/house-details"
+    }
+  },
+  {
+    "id": "dirkshorn",
+    "name": "Dirkshorn",
+    "containerIdPrefix": "DH",
+    "map": {
+      "center": [
+        52.748,
+        4.777
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-dirkshorn",
+    "seo": {
+      "slug": "dirkshorn",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Dirkshorn",
+      "description": "Bekijk per adres in Dirkshorn de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Dirkshorn met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/dirkshorn/container-locations.json",
+      "coverageSummary": "./data/places/dirkshorn/coverage-summary.json",
+      "houseMap": "./data/places/dirkshorn/house-map.json",
+      "addressIndex": "./data/places/dirkshorn/address-index.compact.json",
+      "houseDetailsBase": "./data/places/dirkshorn/house-details"
+    }
+  },
+  {
+    "id": "sint-maarten",
+    "name": "Sint Maarten",
+    "containerIdPrefix": "SM",
+    "map": {
+      "center": [
+        52.7723,
+        4.7481
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-sint-maarten",
+    "seo": {
+      "slug": "sint-maarten",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Sint Maarten",
+      "description": "Bekijk per adres in Sint Maarten de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Sint Maarten met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/sint-maarten/container-locations.json",
+      "coverageSummary": "./data/places/sint-maarten/coverage-summary.json",
+      "houseMap": "./data/places/sint-maarten/house-map.json",
+      "addressIndex": "./data/places/sint-maarten/address-index.compact.json",
+      "houseDetailsBase": "./data/places/sint-maarten/house-details"
+    }
+  },
+  {
+    "id": "waarland",
+    "name": "Waarland",
+    "containerIdPrefix": "WL",
+    "map": {
+      "center": [
+        52.7266,
+        4.8315
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-waarland",
+    "seo": {
+      "slug": "waarland",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Waarland",
+      "description": "Bekijk per adres in Waarland de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Waarland met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/waarland/container-locations.json",
+      "coverageSummary": "./data/places/waarland/coverage-summary.json",
+      "houseMap": "./data/places/waarland/house-map.json",
+      "addressIndex": "./data/places/waarland/address-index.compact.json",
+      "houseDetailsBase": "./data/places/waarland/house-details"
+    }
+  },
+  {
+    "id": "burgerbrug",
+    "name": "Burgerbrug",
+    "containerIdPrefix": "BB",
+    "map": {
+      "center": [
+        52.7472,
+        4.7012
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-burgerbrug",
+    "seo": {
+      "slug": "burgerbrug",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Burgerbrug",
+      "description": "Bekijk per adres in Burgerbrug de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Burgerbrug met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/burgerbrug/container-locations.json",
+      "coverageSummary": "./data/places/burgerbrug/coverage-summary.json",
+      "houseMap": "./data/places/burgerbrug/house-map.json",
+      "addressIndex": "./data/places/burgerbrug/address-index.compact.json",
+      "houseDetailsBase": "./data/places/burgerbrug/house-details"
+    }
+  },
+  {
+    "id": "oudesluis",
+    "name": "Oudesluis",
+    "containerIdPrefix": "OS",
+    "map": {
+      "center": [
+        52.8357,
+        4.8063
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-oudesluis",
+    "seo": {
+      "slug": "oudesluis",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Oudesluis",
+      "description": "Bekijk per adres in Oudesluis de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Oudesluis met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/oudesluis/container-locations.json",
+      "coverageSummary": "./data/places/oudesluis/coverage-summary.json",
+      "houseMap": "./data/places/oudesluis/house-map.json",
+      "addressIndex": "./data/places/oudesluis/address-index.compact.json",
+      "houseDetailsBase": "./data/places/oudesluis/house-details"
+    }
+  },
+  {
+    "id": "schagerbrug",
+    "name": "Schagerbrug",
+    "containerIdPrefix": "SB",
+    "map": {
+      "center": [
+        52.8029,
+        4.7597
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-schagerbrug",
+    "seo": {
+      "slug": "schagerbrug",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Schagerbrug",
+      "description": "Bekijk per adres in Schagerbrug de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Schagerbrug met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/schagerbrug/container-locations.json",
+      "coverageSummary": "./data/places/schagerbrug/coverage-summary.json",
+      "houseMap": "./data/places/schagerbrug/house-map.json",
+      "addressIndex": "./data/places/schagerbrug/address-index.compact.json",
+      "houseDetailsBase": "./data/places/schagerbrug/house-details"
+    }
+  }
+]

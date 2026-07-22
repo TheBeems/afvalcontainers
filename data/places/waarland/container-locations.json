@@ -1,0 +1,261 @@
+[
+  {
+    "id": "WL01",
+    "address": "Smeetsweg 6",
+    "lat": 52.728879,
+    "lon": 4.827198,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "semi-rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL02",
+    "address": "Mr. Willem Schoutenstraat 5",
+    "lat": 52.727516,
+    "lon": 4.825281,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      },
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ],
+    "hvcContainerId": "80367"
+  },
+  {
+    "id": "WL03",
+    "address": "Sabinahof 2",
+    "lat": 52.727653,
+    "lon": 4.826231,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      },
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ],
+    "hvcContainerId": "80466"
+  },
+  {
+    "id": "WL04",
+    "address": "Kerkstraat 80",
+    "lat": 52.726485,
+    "lon": 4.824763,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL05",
+    "address": "Molenzicht 11",
+    "lat": 52.725414,
+    "lon": 4.826857,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      }
+    ],
+    "hvcContainerId": "80986"
+  },
+  {
+    "id": "WL06",
+    "address": "Volleringweg 5A",
+    "lat": 52.726223,
+    "lon": 4.82921,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL07",
+    "address": "Bloemstraat 1",
+    "lat": 52.724046,
+    "lon": 4.832134,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL08",
+    "address": "Padakker 53",
+    "lat": 52.723258,
+    "lon": 4.834408,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL09",
+    "address": "’t Modderweidje 29",
+    "lat": 52.726582,
+    "lon": 4.833772,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL10",
+    "address": "’t Krofje 3",
+    "lat": 52.726311,
+    "lon": 4.836114,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL11",
+    "address": "Geers 6",
+    "lat": 52.725177,
+    "lon": 4.838342,
+    "accuracy": "hvc import (exacte locatie)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "existing"
+      }
+    ],
+    "hvcContainerId": "81593"
+  },
+  {
+    "id": "WL12",
+    "address": "Beemsterboerweg 35",
+    "lat": 52.725949,
+    "lon": 4.839488,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL13",
+    "address": "Houtwerf 2",
+    "lat": 52.727872,
+    "lon": 4.836321,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL14",
+    "address": "Veluweweg 13",
+    "lat": 52.728565,
+    "lon": 4.834738,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL15",
+    "address": "Beemsterboerweg 25",
+    "lat": 52.727578,
+    "lon": 4.839577,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL16",
+    "address": "Weelweg 18",
+    "lat": 52.73013,
+    "lon": 4.837233,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "semi-rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL17",
+    "address": "Leiakker 25",
+    "lat": 52.724907,
+    "lon": 4.835932,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "gfe",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL18",
+    "address": "Tulpstraat 12",
+    "lat": 52.725682,
+    "lon": 4.83156,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  },
+  {
+    "id": "WL19",
+    "address": "Hogebrugweg 9",
+    "lat": 52.720607,
+    "lon": 4.840486,
+    "accuracy": "handmatig bepaald (zeer hoog, onzekerheid -1 m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
+  }
+]

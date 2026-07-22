@@ -4,10 +4,19 @@
     "name": "Warmenhuizen",
     "containerIdPrefix": "WH",
     "map": {
-      "center": [52.7235, 4.7385],
+      "center": [
+        52.7235,
+        4.7385
+      ],
       "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen",
+    "seo": {
+      "slug": "warmenhuizen",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen",
+      "description": "Bekijk per adres in Warmenhuizen de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Warmenhuizen met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
     "paths": {
       "containers": "./data/places/warmenhuizen/container-locations.json",
       "coverageSummary": "./data/places/warmenhuizen/coverage-summary.json",
@@ -21,16 +30,51 @@
     "name": "Tuitjenhorn",
     "containerIdPrefix": "TH",
     "map": {
-      "center": [52.7378, 4.7525],
+      "center": [
+        52.7378,
+        4.7525
+      ],
       "zoom": 16
     },
     "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn",
+    "seo": {
+      "slug": "tuitjenhorn",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Tuitjenhorn",
+      "description": "Bekijk per adres in Tuitjenhorn de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Tuitjenhorn met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
     "paths": {
       "containers": "./data/places/tuitjenhorn/container-locations.json",
       "coverageSummary": "./data/places/tuitjenhorn/coverage-summary.json",
       "houseMap": "./data/places/tuitjenhorn/house-map.json",
       "addressIndex": "./data/places/tuitjenhorn/address-index.compact.json",
       "houseDetailsBase": "./data/places/tuitjenhorn/house-details"
+    }
+  },
+  {
+    "id": "waarland",
+    "name": "Waarland",
+    "containerIdPrefix": "WL",
+    "map": {
+      "center": [
+        52.7266,
+        4.8315
+      ],
+      "zoom": 16
+    },
+    "sourceUrl": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-waarland",
+    "seo": {
+      "slug": "waarland",
+      "title": "Werkelijke loopafstand naar restafvalcontainers in Waarland",
+      "description": "Bekijk per adres in Waarland de werkelijke loopafstand via straten en paden naar de geplande ondergrondse restafvalcontainers.",
+      "ogDescription": "Interactieve kaart van Waarland met werkelijke loopafstanden naar de geplande ondergrondse restafvalcontainers."
+    },
+    "paths": {
+      "containers": "./data/places/waarland/container-locations.json",
+      "coverageSummary": "./data/places/waarland/coverage-summary.json",
+      "houseMap": "./data/places/waarland/house-map.json",
+      "addressIndex": "./data/places/waarland/address-index.compact.json",
+      "houseDetailsBase": "./data/places/waarland/house-details"
     }
   }
 ]
