@@ -89,6 +89,25 @@ test('loads the app shell and precomputed coverage data', async ({ page }) => {
   expect(pageErrors).toEqual([]);
 });
 
+test('keeps footer links rooted when switching places from the site root', async ({ page }) => {
+  await page.goto('/#kaart');
+
+  const placeSelect = page.getByLabel('Selecteer dorp');
+  await expect.poll(() => placeSelect.locator('option').count()).toBeGreaterThan(0);
+  await placeSelect.selectOption('tuitjenhorn');
+  await expect(page).toHaveURL(/\/tuitjenhorn\/#kaart$/);
+
+  for (const [label, path] of [
+    ['Analyses', 'analyses'],
+    ['Enquête', 'enquete'],
+    ['Methodiek', 'methodiek'],
+    ['Terugkoppeling', 'terugkoppeling']
+  ]) {
+    await expect(page.locator('.sidebar-footer-nav').getByRole('link', { name: label, exact: true }))
+      .toHaveAttribute('href', `/${path}/`);
+  }
+});
+
 test('shows the visual introduction and focuses search from the CTA', async ({ page }) => {
   await page.goto('/');
 

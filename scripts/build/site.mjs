@@ -107,20 +107,22 @@ function buildPlaceMapLinks(places, prefix = './') {
     .join('\n      ');
 }
 
-function buildFooterLinks(places, prefix = './') {
+function buildFooterLinks(places) {
+  const rootPath = (path) => `${SITE_BASE_PATH}${path}`;
+
   return [
-    ...places.map((place) => `<a href="${escapeHtml(prefix)}${escapeHtml(getPlaceSlug(place))}/">${escapeHtml(place.name)}</a>`),
-    `<a href="${escapeHtml(prefix)}analyses/">Analyses</a>`,
-    `<a href="${escapeHtml(prefix)}enquete/">Enquête</a>`,
-    `<a href="${escapeHtml(prefix)}methodiek/">Methodiek</a>`,
-    `<a href="${escapeHtml(prefix)}terugkoppeling/">Terugkoppeling</a>`,
+    ...places.map((place) => `<a href="${escapeHtml(rootPath(`${getPlaceSlug(place)}/`))}">${escapeHtml(place.name)}</a>`),
+    `<a href="${escapeHtml(rootPath('analyses/'))}">Analyses</a>`,
+    `<a href="${escapeHtml(rootPath('enquete/'))}">Enquête</a>`,
+    `<a href="${escapeHtml(rootPath('methodiek/'))}">Methodiek</a>`,
+    `<a href="${escapeHtml(rootPath('terugkoppeling/'))}">Terugkoppeling</a>`,
     `<a href="${DATASET_LICENSE_URL}" rel="license">Data: ${DATASET_LICENSE_NAME}</a>`
   ].join('\n        ');
 }
 
-function replaceSidebarFooterNav(html, places, prefix) {
+function replaceSidebarFooterNav(html, places) {
   const footerNav = `<nav class="sidebar-footer-nav" aria-label="Secundaire navigatie">
-        ${buildFooterLinks(places, prefix)}
+        ${buildFooterLinks(places)}
       </nav>`;
   return html.replace(/<nav class="sidebar-footer-nav"[\s\S]*?<\/nav>/, footerNav);
 }
@@ -394,9 +396,9 @@ function getIntroMetrics(coverageSummary) {
   };
 }
 
-function applyInitialPlaceContent(html, place, coverageSummary, places, { navigationPrefix = './' } = {}) {
+function applyInitialPlaceContent(html, place, coverageSummary, places) {
   const metrics = getIntroMetrics(coverageSummary);
-  let pageHtml = replaceSidebarFooterNav(html, places, navigationPrefix);
+  let pageHtml = replaceSidebarFooterNav(html, places);
 
   pageHtml = pageHtml.replace(/(<span data-place-name>)([\s\S]*?)(<\/span>)/g, `$1${escapeHtml(place.name)}$3`);
   pageHtml = replaceElementHtml(pageHtml, 'app-title', escapeHtml(getPlaceTitle(place)));
@@ -637,9 +639,7 @@ async function createAppPage(templateHtml, place, places, { runtimeBasePath, ass
   const coverageSummary = await readCoverageSummary(place);
   const title = getPlaceTitle(place);
   const pageHtml = replaceSeoBlock(
-    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary, places, {
-      navigationPrefix: assetPrefix
-    }),
+    applyInitialPlaceContent(rewriteAppRelativePaths(templateHtml, assetPrefix), place, coverageSummary, places),
     buildSeoBlock({
       title,
       description: getPlaceDescription(place),
