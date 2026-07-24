@@ -228,7 +228,8 @@
     font-size: 11px;
   }
 
-  .map-collapsible:not([open]) > summary {
+  .map-legend:not([open]) > summary,
+  .container-marker-legend:not([open]) > summary {
     position: relative;
     justify-content: center;
     width: 40px;
@@ -236,11 +237,13 @@
     padding: 0;
   }
 
-  .map-collapsible:not([open]) > summary::after {
+  .map-legend:not([open]) > summary::after,
+  .container-marker-legend:not([open]) > summary::after {
     display: none;
   }
 
-  .map-collapsible:not([open]) > summary .map-collapsible-summary-label {
+  .map-legend:not([open]) > summary .map-collapsible-summary-label,
+  .container-marker-legend:not([open]) > summary .map-collapsible-summary-label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -253,7 +256,8 @@
     border: 0;
   }
 
-  .map-collapsible:not([open]) > summary .map-collapsible-summary-icon {
+  .map-legend:not([open]) > summary .map-collapsible-summary-icon,
+  .container-marker-legend:not([open]) > summary .map-collapsible-summary-icon {
     display: inline-flex;
   }
 
