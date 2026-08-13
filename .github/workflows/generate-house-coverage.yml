@@ -22,9 +22,21 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   generate-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -87,16 +99,24 @@ jobs:
           git add "data/places/${PLACE_ID}/address-index.compact.json"
           git add "data/places/${PLACE_ID}/house-details"
           git commit -m "Auto-generated ${PLACE_ID} house coverage on ${{ github.sha }}"
-          # Push met PAT uit secrets
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/TheBeems/afvalcontainers.git HEAD:main
+          git push https://x-access-token:${{ github.token }}@github.com/TheBeems/afvalcontainers.git HEAD:main
 
       - name: Build site
         if: steps.git-check.outputs.no_changes == 'false'
         run: npm run build
 
+      - name: Setup Pages
+        if: steps.git-check.outputs.no_changes == 'false'
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        if: steps.git-check.outputs.no_changes == 'false'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+          include-hidden-files: true
+
       - name: Deploy to GitHub Pages
         if: steps.git-check.outputs.no_changes == 'false'
-        uses: peaceiris/actions-gh-pages@v4.0.0
-        with:
-          github_token: ${{ secrets.GH_PAT }}
-          publish_dir: ./dist
+        id: deployment
+        uses: actions/deploy-pages@v5
