@@ -1,262 +1,98 @@
-# Loopafstanden naar aangekondigde ondergrondse restafvalcontainers in de gemeente Schagen
+# Loopafstanden naar restafvalcontainers in de gemeente Schagen
 
-Website te bezoeken op: https://afvalcontainers-warmenhuizen.nl/
+[Bekijk de website](https://afvalcontainers-warmenhuizen.nl/)
 
-## Inleiding
-Deze website is ontwikkeld om per dorpskern van de gemeente Schagen inzicht te geven in de daadwerkelijke loopafstanden die inwoners moeten afleggen naar de aangekondigde ondergrondse restafvalcontainers. Het doel is om de toegankelijkheid van de containers controleerbaar te maken en containerplannen op basis van werkelijke loopafstand te kunnen vergelijken.
+Deze statische webapp laat per adres binnen de bebouwde kom zien wat de berekende loopafstand is naar restafvalcontainers. De kaart vergelijkt de route via straten en paden met de door de gemeente Schagen genoemde richtafstand van ongeveer 275 meter.
 
-Deze repository bevat Warmenhuizen en Tuitjenhorn als voorbeeldkernen, maar kan makkelijk worden uitgebreid naar de dorpskernen Dirkshorn, Sint Maarten, Waarland, Burgerbrug, Oudesluis en Schagerbrug. De code is zo opgezet dat andere dorpskernen kunnen worden toegevoegd via het plaatsmanifest en eigen JSON-datasets.
+De website publiceert momenteel analyses voor **Warmenhuizen, Tuitjenhorn en Waarland**. In `data/places.json` staan daarnaast alvast Dirkshorn, Sint Maarten, Burgerbrug, Oudesluis en Schagerbrug. Een geconfigureerd dorp verschijnt pas op de publieke website zodra alle benodigde runtime-data aanwezig is.
 
-## Context
-De gemeente Schagen kondigt voor Warmenhuizen, Tuitjenhorn en andere dorpskernen ondergrondse restafvalcontainers aan. Binnen de bebouwde kom verdwijnt de grijze restafvalbak bij grondgebonden woningen en moeten bewoners hun restafval naar een ondergrondse container brengen. De gemeente stelt daarbij: “U loopt maximaal ongeveer 275 meter naar een container. In uitzonderlijke gevallen kan de afstand iets groter zijn.” Bewoners krijgen met hun afvalpas toegang tot de drie dichtstbijzijnde containers.
+Actuele aantallen en verdelingen staan op de pagina [Analyses](https://afvalcontainers-warmenhuizen.nl/analyses/). Ze worden tijdens de build uit de gegenereerde datasets gelezen en daarom niet handmatig in deze README bijgehouden.
 
-Deze website toetst niet alleen de afstand hemelsbreed, maar vooral de daadwerkelijke loopafstand via wegen en paden. Dat is belangrijk, omdat officiële evaluaties uit andere gemeenten laten zien dat de tevredenheid van bewoners sterk samenhangt met de afstand en moeite die het kost om restafval weg te brengen.
+## Datastroom
 
-Uit de gevonden onderzoeken komt geen enkel landelijk exact correlatiecijfer naar voren. Gemeenten meten tevredenheid, afstand en bezwaren namelijk op verschillende manieren. De richting is echter opvallend consistent: hoe groter de feitelijke of ervaren loopafstand, hoe lager de tevredenheid en hoe groter de kans op klachten over het systeem.
+```mermaid
+flowchart LR
+  M["Plaatsmanifest<br/>data/places.json"]
+  C["Containerlocaties<br/>handmatig beheerde JSON"]
+  BAG["PDOK BAG<br/>woonplaats en adressen"]
+  BRT["PDOK BRT TOP10NL<br/>bebouwde kom"]
 
-## Waarom loopafstand ertoe doet
-De afstand naar een restafvalcontainer is niet alleen een technische plaatsingsnorm. Voor bewoners is het een dagelijkse gebruiksvoorwaarde. Vooral in dorpen en laagbouwwijken is de verandering groot, omdat bewoners van restafval aan huis naar restafval wegbrengen gaan. De onderzoeken laten steeds dezelfde praktische bezwaren zien:
+  M --> A["Adresselectie<br/>binnen de bebouwde kom"]
+  BAG --> A
+  BRT --> A
+  C --> K["Toegankelijke rest- en<br/>semi-restcontainers"]
+  A --> P["6 hemelsbreed<br/>dichtste kandidaten"]
+  K --> P
+  P --> O["OSRM foot<br/>loopafstanden"]
+  O --> R["Top 3 op loopafstand<br/>nummer 1 bepaalt kleur"]
+  R --> H["house-coverage.json<br/>generatorcache"]
+  H --> S["Gesplitste browserdata"]
+  S --> W["Statische website"]
+  W -. "ontbrekende routegeometrie" .-> F["Live OSRM<br/>alleen visuele fallback"]
+```
 
-- **Afstand en fysieke belasting:** bewoners vinden het vervelend of lastig om met restafvalzakken te lopen, vooral ouderen, minder mobiele bewoners en gezinnen met zwaar afval zoals luiers of kattenbakvulling.
-- **Verlies van service:** de overgang van een grijze bak aan huis naar een verzamelcontainer voelt voor veel bewoners als een duidelijke achteruitgang in gemak.
-- **Volle of vieze containers:** volle containers, storingen, bijplaatsingen en zwerfafval verlagen de tevredenheid sterk.
-- **Locatiekeuze en inspraak:** bewoners accepteren containers minder goed wanneer locaties als onlogisch, onveilig of slecht bereikbaar worden ervaren.
-- **Kwetsbare groepen:** meerdere evaluaties noemen zorgen over bewoners die slecht ter been zijn of afhankelijk worden van hulp van anderen.
+Belangrijke nuances:
 
-Daarom gebruikt deze website afstandscategorieën die niet alleen aansluiten bij de gemeentelijke norm van ongeveer 275 meter, maar ook bij de zones waarin andere gemeenten duidelijke verschillen in tevredenheid zagen.
+- BAG levert verblijfsobjectadressen; de generator controleert niet afzonderlijk op woonfunctie.
+- Per adres worden eerst de zes hemelsbreed dichtste toegankelijke rest-/semi-restcontainers gekozen. Alleen deze kandidaten worden op OSRM-loopafstand gerangschikt.
+- De beste drie routes worden opgeslagen. De beste daarvan bepaalt de afstandscategorie van het adres.
+- Ontbrekende routegeometrie kan in de browser live via OSRM worden opgehaald. Dit wijzigt de vooraf berekende afstand, rangschikking en kleurcategorie niet.
+- Een adres waarvoor geen looproute wordt gevonden krijgt de grijze status `unreachable`; hemelsbrede afstand vervangt de loopafstand niet.
+
+Zie [Databronnen en berekening](docs/data-pipeline.md) voor de volledige methode, uitvoerbestanden en beperkingen.
 
 ## Afstandscategorieën
-De kaart gebruikt vijf afstandscategorieën op basis van werkelijke loopafstand:
 
-| Afstand | Betekenis in deze analyse | Kleur op kaart |
-|----------|---------------------------|----------------|
-| 0–100 m | Laag risico op afstandsklachten. In meerdere onderzoeken blijft tevredenheid relatief hoog wanneer containers dichtbij staan. | Groen |
-| 100–125 m | Overgangszone. De afstand is nog beperkt, maar de route en bereikbaarheid worden belangrijker. | Geel |
-| 125–150 m | Waarschuwingszone. Rond deze grens hanteerden sommige gemeenten juist een maximale norm om draagvlak te behouden. | Oranje |
-| 150–275 m | Verhoogde kans op ontevredenheid. Dit valt binnen de Schagense norm, maar in evaluaties nemen klachten over afstand en gemak hier duidelijk toe. | Rood |
-| >275 m | Boven de door Schagen genoemde richtafstand. Deze adressen vragen extra aandacht, zeker wanneer het om werkelijke loopafstand gaat. | Donkerrood |
+| Berekende loopafstand | Interne status | Kleur |
+|---|---|---|
+| 0–100 m | `within_100` | Groen |
+| >100–125 m | `between_100_125` | Geel |
+| >125–150 m | `between_125_150` | Oranje |
+| >150–275 m | `between_150_275` | Rood |
+| >275 m | `over_275` | Donkerrood |
+| Geen route | `unreachable` | Grijs |
 
-## Onderzoeksbasis: tevredenheid en loopafstand
-Onderstaande onderzoeken vormen de inhoudelijke basis voor de afstandscategorieën en de interpretatie van de kaart. De onderzoeken zijn niet één-op-één vergelijkbaar, maar samen laten ze een duidelijk patroon zien: korte, logische loopafstanden helpen het draagvlak; langere of als lastig ervaren afstanden verlagen de tevredenheid.
+De grenzen zijn kaartcategorieën voor vergelijking en communicatie. Alleen 275 meter komt rechtstreeks uit de gemeentelijke richtafstand; de overige grenzen zijn mede geïnformeerd door evaluaties uit andere gemeenten. Zie [Onderzoeksbasis](docs/research-basis.md).
 
-| Gemeente / gebied | Type gebied | Bevindingen over tevredenheid en loopafstand | Gehanteerde of besproken afstand | Bron |
-|---|---|---|---|---|
-| Woerden / Kamerik | Dorps- en wijkpilot | In Kamerik kreeg de proef een laag rapportcijfer. De afstand tot de container was de sterkste voorspeller van algemene tevredenheid. Bewoners die fiets of auto nodig hadden, waren duidelijk minder tevreden dan bewoners die lopend hun afval konden wegbrengen. | In de pilot gemiddeld ongeveer 250 m en maximaal 500 m; later beleid ging richting circa 150 m en maximaal 250 m. | [Omgekeerd inzamelen in Woerden](https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf) |
-| Wageningen | Kleinstedelijk / laagbouw en hoogbouw | Bij laagbouw daalde de waardering voor restafval sterk na de proef. Het wegbrengen van restafval en de afstand naar de verzamelcontainer vielen bij een duidelijke groep bewoners tegen. Hoogbouwbewoners waren minder negatief, omdat zij al meer gewend waren aan verzamelvoorzieningen. | Maximaal 250 m; veel huishoudens zaten binnen 100 m. | [Resultaten het nieuwe inzamelen Wageningen](https://vang-hha.nl/kennisbibliotheek/resultaten-nieuwe/) |
-| Nijmegen binnenstad | Stedelijk, maar met concrete afstandscategorieën | Over de loopafstand was een ruime meerderheid tevreden, maar boven 100 m daalde de tevredenheid scherp: bij bewoners die meer dan 100 m moesten lopen was nog maar ongeveer 42% tevreden over de loopafstand. | Feitelijke afstandscategorieën; vooral de grens rond 100 m is relevant. | [Onderzoek ondergrondse restafvalcontainers Nijmegen](https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645) |
-| Zeist | Gemeentelijke pilot / omgekeerd inzamelen | Een groot deel van de bewoners vond de afstand acceptabel, maar bewoners die langer onderweg waren of de afstand als te groot ervoeren, rapporteerden vaker moeite met het wegbrengen van restafval. | Maximaal 250 m. | [Adviesnota RMN omgekeerd inzamelen Zeist](https://zeist.raadsinformatie.nl/document/7330194/1/01-19RV006_Omgekeerd_inzamelen_afval_-_Bijlage_1_Adviesnota_RMN_omgekeerd_inzamelen_Zeist) |
-| Amersfoort / Nieuwland | Wijkpilot laagbouw | Bij een kortere norm was de acceptatie hoger: ongeveer 70% was tevreden over de gekozen afstand naar de ondergrondse containers. Kritiek ging vooral over praktische uitvoeringspunten zoals ledigingsfrequentie en communicatie. | Maximaal 150 m. | [Resultaten pilot omgekeerd inzamelen Amersfoort](https://vang-hha.nl/kennisbibliotheek/resultaten-pilot-1/) |
-| Lisse | Kleinstedelijke gemeente | De afvalinzameling kreeg gemiddeld een voldoende, maar restafval scoorde lager dan andere onderdelen. Bewoners noemden onder meer volle containers, bijplaatsingen en de wens om minder ver te hoeven lopen. | Geen duidelijke vaste norm in het burgeronderzoek; het buitengebied hield restafval aan huis omdat de afstand naar containers te groot was. | [Burgeronderzoek evaluatie afvalbeleid Lisse](https://vang-hha.nl/publish/pages/195170/gemeente-lisse-evaluatie-afvalbeleid_2017-2018-bijlage-2-burgeronderzoek.pdf) |
-| Vijfheerenlanden / voormalig Vianen | Kleinstedelijk / meerjarig beleid | In de voormalige gemeente Vianen was veel ontevredenheid over nieuwe restafvalcontainers. Loopafstand, hulpbehoefte en het pas- of tariefsysteem speelden mee in de waardering. | Ongeveer 200 m. | [Tussentijdse evaluatie Waardlanden](https://www.waardlanden.nl/images/Tussentijdse_evaluatie_Strategienota_2021-2025_Waardlanden_def2_copy.pdf) |
-| Papendrecht | Kleinstedelijke pilot | Ongeveer de helft van de bewoners was tevreden met omgekeerd inzamelen. In vervolgstukken blijven afstand, draagvlak, communicatie en uitzonderingen voor lastig bereikbare delen belangrijke discussiepunten. | Maximaal 300 m; voor dijkgebied werd maatwerk besproken. | [Evaluatie en voorstel na pilot Papendrecht](https://raad.papendrecht.nl/Documenten/Bijlage-1-Evaluatie-en-voorstel-na-pilot-omgekeerd-inzamelen-Gft-campagne-en-onderzoek-nascheiding.pdf) |
-| Hoonhorst / Dalfsen | Dorpse pilot | In de dorpspilot was een ruime meerderheid tevreden over de nieuwe manier van inzamelen. De pilot laat zien dat draagvlak mogelijk is, maar vooral wanneer de uitvoering praktisch werkbaar blijft en bewoners goed worden meegenomen. | In de openbare pilotpassages is geen duidelijke meter-norm gevonden. | [Resultaten afvalbeleid Hoonhorst](https://ris.dalfsen.nl/Vergaderingen/Gemeenteraad/2012/26-november/19%3A30/Afvalbeleid/20121126---6---Afvalbeleid--resultaten-Hoonhorst.pdf) |
-| Roosendaal | Stedelijk / restafval op afstand | De evaluatie benoemt dat restafval op afstand draagvlak kan hebben, mits de loopafstand naar de ondergrondse container beperkt blijft. | Geen eenduidige norm in deze samenvatting; de kernbevinding is de voorwaarde van beperkte loopafstand. | [Evaluatie restafval op afstand Roosendaal](https://raad.roosendaal.nl/Vergaderingen/Inspraakbijeenkomst/2019/28-februari/19%3A30/Bijlage-1-Roosendaal-evaluatie-restafval-op-afstand.pdf) |
+## Lokaal ontwikkelen
 
-## Betekenis voor Warmenhuizen en Tuitjenhorn
-Voor Warmenhuizen en Tuitjenhorn is vooral de vergelijking met dorpen, laagbouwwijken en kleinstedelijke gemeenten relevant. Daar is de verandering voor bewoners het grootst: de grijze restafvalbak verdwijnt en restafval moet voortaan worden weggebracht.
-
-De belangrijkste les uit de onderzoeken is dat een norm van 275 meter op papier niet automatisch betekent dat de voorziening voor bewoners als bereikbaar of acceptabel wordt ervaren. De werkelijke looproute, het aantal oversteken, de logica van de route, de sociale veiligheid, de kans op volle containers en de fysieke belasting bepalen samen of de afstand redelijk voelt.
-
-Deze website maakt daarom zichtbaar welke adressen binnen de bebouwde kom:
-
-- binnen 100 meter van een container liggen;
-- tussen 100 en 150 meter moeten lopen;
-- tussen 150 en 275 meter moeten lopen;
-- verder dan de door Schagen genoemde richtafstand van ongeveer 275 meter moeten lopen.
-
-Daarmee kan de discussie over de plaatsing van containers concreter worden gevoerd: niet alleen op basis van een kaart met hemelsbrede cirkels, maar op basis van de werkelijke route die bewoners moeten lopen.
-
-## Bronnen
-
-### Gemeente Schagen
-- [Plaatsing ondergrondse restafvalcontainers Warmenhuizen](https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen)
-- [Plaatsing ondergrondse restafvalcontainers Tuitjenhorn](https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-tuitjenhorn)
-
-### Tevredenheidsonderzoeken en evaluaties
-- [Omgekeerd inzamelen in Woerden](https://vang-hha.nl/publish/pages/106165/omgekeerd_inzamelen_woerden_2014.pdf)
-- [Resultaten het nieuwe inzamelen Wageningen](https://vang-hha.nl/kennisbibliotheek/resultaten-nieuwe/)
-- [Onderzoek ondergrondse restafvalcontainers Nijmegen](https://nijmegen.bestuurlijkeinformatie.nl/Document/View/e23597f6-57b4-4904-8ebd-75554a6d0645)
-- [Adviesnota RMN omgekeerd inzamelen Zeist](https://zeist.raadsinformatie.nl/document/7330194/1/01-19RV006_Omgekeerd_inzamelen_afval_-_Bijlage_1_Adviesnota_RMN_omgekeerd_inzamelen_Zeist)
-- [Resultaten pilot omgekeerd inzamelen Amersfoort](https://vang-hha.nl/kennisbibliotheek/resultaten-pilot-1/)
-- [Burgeronderzoek evaluatie afvalbeleid Lisse](https://vang-hha.nl/publish/pages/195170/gemeente-lisse-evaluatie-afvalbeleid_2017-2018-bijlage-2-burgeronderzoek.pdf)
-- [Tussentijdse evaluatie Waardlanden](https://www.waardlanden.nl/images/Tussentijdse_evaluatie_Strategienota_2021-2025_Waardlanden_def2_copy.pdf)
-- [Evaluatie en voorstel na pilot Papendrecht](https://raad.papendrecht.nl/Documenten/Bijlage-1-Evaluatie-en-voorstel-na-pilot-omgekeerd-inzamelen-Gft-campagne-en-onderzoek-nascheiding.pdf)
-- [Resultaten afvalbeleid Hoonhorst](https://ris.dalfsen.nl/Vergaderingen/Gemeenteraad/2012/26-november/19%3A30/Afvalbeleid/20121126---6---Afvalbeleid--resultaten-Hoonhorst.pdf)
-- [Evaluatie restafval op afstand Roosendaal](https://raad.roosendaal.nl/Vergaderingen/Inspraakbijeenkomst/2019/28-februari/19%3A30/Bijlage-1-Roosendaal-evaluatie-restafval-op-afstand.pdf)
-
-### Data en routebronnen
-- [PDOK BAG](https://www.pdok.nl/introductie/-/article/basisregistratie-adressen-en-gebouwen-ba-1)
-- [PDOK BRT TOP10NL plaats_multivlak](https://api.pdok.nl/brt/top10nl/ogc/v1/collections/plaats_multivlak?f=html)
-- [OpenStreetMap](https://www.openstreetmap.org/)
-- [OSRM](https://project-osrm.org/)
-
-## Methode
-De loopafstanden worden per dorpskern berekend met behulp van OpenStreetMap (OSM) data:
-
-- **Routes:** kortste looproute van elk woonadres binnen de bebouwde kom naar de dichtstbijzijnde container.
-- **Visualisatie:** kleuren geven de afstandscategorieën aan.
-  - Groen: 0–100 meter
-  - Geel: 100–125 meter
-  - Oranje: 125–150 meter
-  - Rood: 150–275 meter
-  - Donkerrood: >275 meter
-- **Fallback:** hemelsbrede afstand wordt weergegeven als een route niet beschikbaar is.
-- **Data:** adressen komen uit PDOK BAG, de bebouwde-komgrens uit PDOK BRT TOP10NL en routes uit OSRM op basis van OSM.
-
-## Voorbeeldanalyse Warmenhuizen
-De batchanalyse van Warmenhuizen laat de volgende verdeling zien:
-
-| Afstand | Aantal adressen | Percentage | Kleur op kaart |
-|----------|----------------|-----------|----------------|
-| 0–100 m | 986 | 34,4% | Groen |
-| 100–125 m | 374 | 13,0% | Geel |
-| 125–150 m | 353 | 12,3% | Oranje |
-| 150–275 m | 901 | 31,4% | Rood |
-| >275 m | 254 | 8,9% | Donkerrood |
-
-**Conclusie:** 1.155 adressen (40,3%) binnen de bebouwde kom liggen verder dan 150 meter van een container. 254 adressen (8,9%) liggen zelfs boven de door Schagen genoemde richtafstand van ongeveer 275 meter. Juist deze adressen verdienen extra aandacht, omdat evaluaties in andere gemeenten laten zien dat tevredenheid afneemt wanneer de werkelijke of ervaren loopafstand groter wordt.
-
-## Gebruik van de website
-- Klik op een container om de hemelsbrede straal te bekijken en klik op een huispunt of zoek je adres om de looproutes te bekijken.
-- Zoom in tot niveau 16 om individuele huizen te tonen.
-- De kleuren geven in één oogopslag de toegankelijkheid en potentiële probleemzones aan.
-
-## Licentie
-
-De broncode is beschikbaar onder de MIT-licentie. De gepubliceerde datasets en analyses zijn beschikbaar onder [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
-
-## Development
+Vereisten: Node.js 24 of hoger en npm.
 
 ```sh
+npm ci
 npm run check
-npm run build
 npm run serve
 ```
 
-Open `http://127.0.0.1:8000/` after `npm run serve`.
+Open daarna <http://127.0.0.1:8000/>. `npm run check` voert syntax- en unittests uit, maakt de gesplitste runtime-data opnieuw aan, valideert de data en bouwt `dist/`.
 
-### Playwright
+Meer commando's, Playwright-instructies en de repositorystructuur staan in [Ontwikkelen en testen](docs/development.md).
 
-Chromium e2e tests run against the built static site:
+## Documentatie
 
-```sh
-npx playwright install --with-deps chromium
-npm run test:e2e
-```
+- [Documentatie-index](docs/README.md)
+- [Databronnen en berekening](docs/data-pipeline.md)
+- [Onderzoeksbasis](docs/research-basis.md)
+- [Ontwikkelen en testen](docs/development.md)
+- [Dorpskern toevoegen](docs/adding-a-place.md)
+- [Genereren en deployen](docs/deployment.md)
+- [Data- en bronlicenties](DATA-LICENSE.md)
 
-Use `npm run test:e2e:headed` for a headed browser, `npm run test:e2e:ui` for the Playwright UI, and `npm run test:e2e:report` to reopen the HTML report. On WSL2 ARM64, install only Chromium first unless you intentionally need broader browser coverage.
+## Repositorystructuur
 
-## Repository structure
+- `src/`: HTML-template, modulaire CSS en browsercode voor Leaflet.
+- `src/shared/`: gedeelde domeinlogica voor browsercode en Node-scripts.
+- `data/places.json`: catalogus met alle geconfigureerde dorpen.
+- `data/places/<plaats-id>/`: handmatige containerdata en gegenereerde analysedata per dorp.
+- `scripts/`: generator-, validatie-, build- en hulpscripts.
+- `tests/`: Node-unittests en Playwright-browsertests.
+- `docs/`: onderhouds- en onderzoeksdocumentatie.
+- `.github/workflows/`: controles, datageneratie en GitHub Pages-deployment.
 
-- `src/index.html` contains the fixed page structure.
-- `src/styles.css` is the CSS entrypoint and imports focused CSS modules from `src/styles/`.
-- `src/app/main.js` is the Vite browser entrypoint. Feature code lives in `src/app/domain/`, `src/app/map/`, `src/app/services/`, and `src/app/ui/`.
-- `src/shared/` contains pure helpers and constants reused by the browser app and Node scripts.
-- `scripts/build-site.mjs`, `scripts/validate-data.mjs`, and `scripts/generate-house-coverage.mjs` remain the public CLI entrypoints; their implementation modules live under `scripts/build/`, `scripts/validation/`, and `scripts/generator/`.
+`dist/` is gegenereerde buildoutput en wordt niet gecommit.
 
-## Data
+## Licenties en attributie
 
-- `data/places.json` is the catalog for configured villages, their map defaults, optional source URL, and container ID prefix. Standard data paths are derived from `data/places/<plaats-id>/`.
-- `data/places/warmenhuizen/container-locations.json` is the editable Warmenhuizen container source.
-- `data/places/warmenhuizen/house-coverage.json` is the legacy generated Warmenhuizen coverage cache used by scripts and route reuse; it is not copied to `dist/`.
-- `data/places/warmenhuizen/coverage-summary.json`, `house-map.json`, `address-index.compact.json`, and `house-details/*.json` are generated browser runtime data split from the coverage cache.
-- `data/places/tuitjenhorn/` contains the same dataset types for Tuitjenhorn.
-- Browser code initially reads only active-place container data, coverage summary, and house marker data. Address indexes and house route details are lazy-loaded.
-- When stored route geometry is missing or invalid for a selected house/container pair, the map may fetch live OSRM route geometry as a visual fallback only.
-- Distance bands are based on walking distance: green `0-100 m`, yellow `100-125 m`, orange `125-150 m`, red `150-275 m`, dark red `>275 m`, and gray when no route is available.
+De broncode valt onder de [MIT-licentie](LICENSE). De eigen datasamenstelling en analyses worden, voor zover daarop rechten van de projectauteur rusten, beschikbaar gesteld onder [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Afgeleide brongegevens behouden hun eigen voorwaarden, waaronder OpenStreetMap onder ODbL.
 
-## Dorpskern toevoegen
-
-Nieuwe dorpskernen staan vooraf in `data/places.json`. Gebruik daar een stabiele `id` in kebab-case, een duidelijke `name`, een unieke `containerIdPrefix` en kaartinstellingen. De standaardpaden worden automatisch afgeleid uit `data/places/<plaats-id>/`:
-
-- `container-locations.json`: handmatig beheerde containerlocaties.
-- `coverage-summary.json`: samenvatting en metadata voor de analyse.
-- `house-map.json`: compacte huizenlaag voor kaartmarkers.
-- `address-index.compact.json`: compacte lazy zoekindex voor adressen.
-- `house-details/`: lazy straatgebundelde detailbestanden met maximaal 75 adressen per bestand.
-
-Maak daarna de map `data/places/<plaats-id>/` aan en voeg daar minimaal `container-locations.json` toe. Container-ID's moeten de opgegeven prefix gebruiken, bijvoorbeeld `WH01` voor Warmenhuizen of `TH01` voor Tuitjenhorn. Een dorp met alleen `container-locations.json` kan al door generator- en auditscripts worden gebruikt, maar wordt nog niet gepubliceerd op de website.
-
-Een dorp wordt pas zichtbaar in de kaart, navigatie, analyses en sitemap wanneer de runtime-data compleet is: `container-locations.json`, `coverage-summary.json`, `house-map.json`, `address-index.compact.json`, en `house-details/*.json`.
-
-Minimale stappen voor een dorp dat al in `data/places.json` staat, bijvoorbeeld Waarland:
-
-1. Maak `data/places/waarland/`.
-2. Voeg `data/places/waarland/container-locations.json` toe.
-3. Gebruik container-ID's met de prefix uit `data/places.json`, bijvoorbeeld `WL01`, `WL02`, enzovoort.
-4. Genereer de analyse:
-
-```sh
-node scripts/generate-house-coverage.mjs --place=waarland
-```
-
-5. Controleer alles:
-
-```sh
-npm run check
-```
-
-6. Commit de brondata en gegenereerde runtime-data:
-   - `data/places/waarland/container-locations.json`
-   - `data/places/waarland/house-coverage.json`
-   - `data/places/waarland/coverage-summary.json`
-   - `data/places/waarland/house-map.json`
-   - `data/places/waarland/address-index.compact.json`
-   - `data/places/waarland/house-details/`
-
-7. Als het dorp ook via de handmatige GitHub Action gegenereerd moet kunnen worden, zet de bijbehorende optie aan in `.github/workflows/generate-house-coverage.yml`.
-
-Na merge en deploy verschijnt het dorp automatisch op de site zodra de runtime-data compleet is. Commit geen `dist/` output.
-
-De generator gebruikt de plaats uit `data/places.json`, haalt adressen en de bebouwde-komgrens op via PDOK, berekent loopafstanden via OSRM, schrijft de legacy coverage-cache en splitst die naar de browserdata.
-
-### Containerlocaties via de website maken of bewerken
-
-Je kunt `container-locations.json` ook via de kaart voorbereiden of bijwerken. De gewone dorpskeuze toont alleen dorpen die al publiceerbaar zijn, maar de containereditor heeft een eigen dorpskeuze met alle dorpen uit `data/places.json`.
-
-1. Open de kaart.
-2. Klik rechtsboven op de edit-knop met het potlood.
-3. Kies bij `Containerdataset voor dorp` het dorp waarvoor je containerlocaties wilt maken of aanpassen.
-4. Klik op `Nieuwe container` en klik daarna op de kaart waar de container moet komen.
-5. Vul het container-ID, adres of omschrijving, containertype en status in. De editor gebruikt automatisch de prefix van het gekozen dorp, bijvoorbeeld `WHNN`, `THNN` of `WLNN`.
-6. Houd een bestaande marker ingedrukt om die te ontgrendelen en te verslepen.
-7. Klik op `Download JSON` wanneer alle wijzigingen klaar zijn.
-8. Sla de gedownloade inhoud op als `data/places/<plaats-id>/container-locations.json`. De downloadnaam bevat het dorp, bijvoorbeeld `waarland-container-locations.json`; hernoem die in de repo naar `container-locations.json`.
-
-Voor een dorp zonder bestaande containerdata start de editor met een lege containerlijst. Na generatie van de runtime-data verschijnt het dorp automatisch in de gewone dorpskeuze, navigatie, analyses en sitemap.
-
-Smoke-test the generator without touching committed coverage data:
-
-```sh
-npm run generate:smoke
-```
-
-Regenerate the full coverage dataset only when intended:
-
-```sh
-node scripts/generate-house-coverage.mjs --place=warmenhuizen
-```
-
-The full generator calls PDOK BAG, PDOK BRT TOP10NL, and OSRM routing services.
-It batches OSRM distance-table requests and stores the 3 nearest containers per address.
-Route geometry is skipped by default; the map fetches missing route lines through live OSRM fallback when an address is selected.
-Use `--include-route-geometries` only when you intentionally want to prefetch and store simplified route geometry for the 3 nearest containers per address.
-After a route-geometry run with route cache keys, unchanged route geometries are reused automatically; use `--refresh-routes` to force a full route refresh.
-
-## Deployment
-
-Pushes to `main` run `.github/workflows/pages.yml`, build `dist/`, and deploy that artifact to GitHub Pages.
-
-## SEO post-deploy checklist
-
-After deploying SEO or content changes, use Google Search Console for the property `https://afvalcontainers-warmenhuizen.nl/`:
-
-- Submit or resubmit `https://afvalcontainers-warmenhuizen.nl/sitemap.xml`.
-- Run URL inspection and request indexing for:
-  - `https://afvalcontainers-warmenhuizen.nl/warmenhuizen/`
-  - `https://afvalcontainers-warmenhuizen.nl/tuitjenhorn/`
-  - `https://afvalcontainers-warmenhuizen.nl/analyses/`
-  - `https://afvalcontainers-warmenhuizen.nl/methodiek/`
-- Confirm that `https://afvalcontainers-warmenhuizen.nl/` renders Warmenhuizen directly while the canonical URL remains `https://afvalcontainers-warmenhuizen.nl/warmenhuizen/`.
-- Ask relevant local sites to link to the most useful canonical page, for example Dorpsraad Warmenhuizen, local news pages, village associations, and public discussion pages about the container plans.
-- When sharing on social media or messaging apps, use the canonical village URLs rather than query-string URLs.
+Zie [DATA-LICENSE.md](DATA-LICENSE.md) voor de precieze afbakening en vereiste bronvermeldingen.

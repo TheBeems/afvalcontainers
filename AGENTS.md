@@ -2,7 +2,7 @@
 
 ## Goal
 
-Maintain this small static GitHub Pages web app for Warmenhuizen waste-container walking-distance coverage with simple, readable, accessible code. Prefer minimal changes that preserve existing behavior.
+Maintain this small static GitHub Pages web app for waste-container walking-distance coverage in configured villages in the municipality of Schagen, with simple, readable, accessible code. Prefer minimal changes that preserve existing behavior.
 
 ## Core Principles
 
@@ -16,7 +16,7 @@ Maintain this small static GitHub Pages web app for Warmenhuizen waste-container
 
 ## Project Structure
 
-Source files live in `src/`: `index.html` is the page template, `styles.css` contains all page styles, and `app.js` contains the Leaflet browser app. Editable and generated datasets live in `data/`: `container-locations.json` is the editable container source, and `house-coverage.json` is generated coverage output with stored route geometry. Build and validation scripts live in `scripts/`. GitHub Pages deploys the generated `dist/` artifact through `.github/workflows/pages.yml`.
+Source files live in `src/`: `index.html` is the page template, `styles.css` imports the focused styles under `src/styles/`, and `app/main.js` is the Leaflet browser entrypoint. Shared browser/script logic lives in `src/shared/`. Place data lives under `data/places/<place-id>/`: `container-locations.json` is the editable container source, `house-coverage.json` is the generated full cache, and split runtime files are loaded by the browser. Build and validation scripts live in `scripts/`. GitHub Pages deploys the generated `dist/` artifact through `.github/workflows/pages.yml`.
 
 ## Build, Test, and Development Commands
 
@@ -49,25 +49,25 @@ Source files live in `src/`: `index.html` is the page template, `styles.css` con
 - Use `kebab-case` for web assets and data files.
 - Use `camelCase` for functions and variables.
 - Use `UPPER_SNAKE_CASE` for constants.
-- Container IDs must follow the `WHNN` pattern, such as `WH01` and `WH26`.
+- Container IDs must use the place-specific prefix from `data/places.json` followed by two digits, such as `WH01`, `TH01`, or `WL01`.
 
 ## Data Rules
 
 - JSON is the authoritative browser data source for container data, coverage, rankings, distance bands, and summary statistics.
 - Do not add JS data wrappers or `window.WARMENHUIZEN_*` globals.
-- `data/container-locations.json` may be edited manually.
-- `data/house-coverage.json` is generated and should not be hand-edited except for deliberate mechanical migrations.
+- `data/places/<place-id>/container-locations.json` may be edited manually.
+- `data/places/<place-id>/house-coverage.json` is generated and should not be hand-edited except for deliberate mechanical migrations.
 - Keep generated coverage data synchronized with the generator schema when intentionally changing data shape.
 - Avoid full coverage regeneration during routine work unless the changed dataset is intended, because it uses external PDOK and OSRM services.
 - Browser code must not call PDOK or use live routing/data APIs to compute coverage, rankings, distance bands, or summary statistics.
 - Exception: when a selected house/container route has missing or invalid `routeGeometry`, browser code may call OSRM live to fetch route geometry for visual fallback only.
-- Live fallback routes must be labeled as fallback/live display, must not be written to `data/house-coverage.json`, and must not overwrite stored batch values.
+- Live fallback routes must be labeled as fallback/live display, must not be written to a place's `house-coverage.json`, and must not overwrite stored batch values.
 - Distance bands are based on walking distance: `within_100`, `between_100_125`, `between_125_150`, `between_150_275`, `over_275`, and `unreachable`.
 - UI colors for distance bands are green, yellow, orange, red, dark red, and gray respectively.
 
 ## JavaScript Guidelines
 
-- Keep constants near the top of `app.js`.
+- Keep constants near the top of their owning module or in `src/app/config.js` when shared across browser modules.
 - Reuse existing helpers such as escaping, formatting, status lookup, and route handling.
 - Escape all JSON-derived values before inserting them with `innerHTML`.
 - Prefer small helper functions over large conditional blocks.
@@ -104,4 +104,4 @@ Source files live in `src/`: `index.html` is the page template, `styles.css` con
 - For data or script changes, run `npm run check`.
 - For generator changes, also run `npm run generate:smoke` and inspect the summary output.
 - For map changes, run `npm run build`.
-- There is no browser automation suite.
+- Playwright browser tests live in `tests/e2e/` and run with `npm run test:e2e`.

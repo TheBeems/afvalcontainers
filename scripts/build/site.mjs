@@ -389,7 +389,7 @@ function getIntroMetrics(coverageSummary) {
   const longDistanceCount = (counts.between_150_275 || 0) + (counts.over_275 || 0);
   const overReferenceCount = counts.over_275 || 0;
   const roundedLongDistancePercent = totalAddresses > 0
-    ? Math.floor((longDistanceCount / totalAddresses) * 100)
+    ? Math.round((longDistanceCount / totalAddresses) * 100)
     : 0;
 
   return {
@@ -409,10 +409,10 @@ function applyInitialPlaceContent(html, place, coverageSummary, places) {
   pageHtml = pageHtml.replace(/(<span data-place-name>)([\s\S]*?)(<\/span>)/g, `$1${escapeHtml(place.name)}$3`);
   pageHtml = replaceElementHtml(pageHtml, 'story-place-select', buildStoryPlaceOptions(places));
   pageHtml = replaceElementHtml(pageHtml, 'app-title', escapeHtml(getPlaceTitle(place)));
-  pageHtml = replaceElementHtml(pageHtml, 'story-gevolgen-title', `Meer dan ${metrics.roundedLongDistancePercent}% loopt 150 meter of meer`);
+  pageHtml = replaceElementHtml(pageHtml, 'story-gevolgen-title', `Ongeveer ${metrics.roundedLongDistancePercent}% loopt meer dan 150 meter`);
   pageHtml = pageHtml.replace(
-    /aria-label="Ga naar stap 5: Meer dan \d+% loopt 150 meter of meer"/,
-    `aria-label="Ga naar stap 5: Meer dan ${metrics.roundedLongDistancePercent}% loopt 150 meter of meer"`
+    /aria-label="Ga naar stap 5: (?:Meer dan|Ongeveer) \d+% loopt (?:150 meter of meer|meer dan 150 meter)"/,
+    `aria-label="Ga naar stap 5: Ongeveer ${metrics.roundedLongDistancePercent}% loopt meer dan 150 meter"`
   );
   pageHtml = replaceElementHtml(pageHtml, 'story-long-distance-count', metrics.longDistanceCount.toLocaleString('nl-NL'));
   pageHtml = replaceElementHtml(pageHtml, 'story-total-address-count', metrics.totalAddresses.toLocaleString('nl-NL'));
@@ -788,8 +788,12 @@ ${seoBlock}
     <p class="lead">Deze pagina legt kort uit hoe de kaarten voor de dorpen in de gemeente Schagen zijn gemaakt en waarom de kleuren op de kaart juist deze afstanden gebruiken.</p>
 
     <h2>Wat laat de kaart zien?</h2>
-    <p>De kaart kijkt per dorp (momenteel alleen Warmenhuizen en Tuitjenhorn) naar woonadressen binnen de bebouwde kom en laat zien hoe ver bewoners echt moeten lopen naar de dichtstbijzijnde geplande restafvalcontainer.</p>
+    <p>De kaart kijkt per gepubliceerd dorp naar BAG-verblijfsobjectadressen binnen de bebouwde kom en laat zien hoe ver de berekende route is naar de dichtstbijzijnde container die voor dat adres in de analyse meetelt.</p>
     <p>Daarbij telt niet de rechte lijn op de kaart, maar de route via straten en paden. Dat verschil is belangrijk: een container kan hemelsbreed dichtbij lijken, terwijl de werkelijke looproute langer is.</p>
+
+    <h2>Hoe wordt de afstand berekend?</h2>
+    <p>Adressen komen uit PDOK BAG en de grens van de bebouwde kom uit PDOK BRT TOP10NL. Containerlocaties worden per dorp handmatig beheerd. Per adres selecteert de generator eerst de zes hemelsbreed dichtste toegankelijke rest- en semi-restcontainers. OSRM vergelijkt vervolgens de loopafstanden van deze kandidaten; de beste drie worden opgeslagen en de beste route bepaalt de kleur van het adres.</p>
+    <p>De selectie bestaat uit BAG-verblijfsobjectadressen en is niet afzonderlijk gefilterd op woonfunctie. De berekende looptijd is een schatting bij 4 km per uur. Wanneer alleen de getekende routegeometrie ontbreekt, kan de browser die live via OSRM ophalen zonder de opgeslagen afstand of categorie te wijzigen.</p>
 
     <h2>Waarom deze methode?</h2>
     <p>De gemeente Schagen noemt een afstand van maximaal ongeveer 275 meter. Deze website maakt zichtbaar wat dat in de praktijk betekent per straat en per adres.</p>
@@ -810,11 +814,12 @@ ${seoBlock}
         <tr><td>125-150 m</td><td>Aandachtsgebied. Sommige gemeenten kiezen juist rond 150 meter als strengere grens.</td><td>Oranje</td></tr>
         <tr><td>150-275 m</td><td>Binnen de Schagense richtafstand, maar met meer kans op klachten over afstand en gemak.</td><td>Rood</td></tr>
         <tr><td>&gt;275 m</td><td>Verder dan de afstand die Schagen ongeveer noemt. Deze adressen vragen extra aandacht.</td><td>Donkerrood</td></tr>
+        <tr><td>Geen route</td><td>Voor dit adres is binnen de onderzochte kandidaten geen looproute gevonden.</td><td>Grijs</td></tr>
       </tbody>
     </table>
 
     <h2>Onderzoeksbasis</h2>
-    <p>Er is geen landelijke vaste grens waarbij iedereen tevreden of ontevreden wordt. Gemeenten meten dat verschillend. De lijn in de evaluaties is wel duidelijk: hoe verder of lastiger de route voelt, hoe lager de tevredenheid meestal wordt.</p>
+    <p>Er is geen landelijke vaste grens waarbij iedereen tevreden of ontevreden wordt. Gemeenten meten dat verschillend. Evaluaties laten wel samenhang zien tussen afstand, ervaren moeite en tevredenheid. De kaartcategorieën zijn daarom een hulpmiddel voor vergelijking en geen voorspelling van individuele tevredenheid.</p>
     <table>
       <thead>
         <tr>

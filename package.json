@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Static GitHub Pages map for Warmenhuizen waste-container walking-distance coverage.",
+  "description": "Static GitHub Pages map for waste-container walking-distance coverage in villages in the municipality of Schagen.",
   "engines": {
     "node": ">=24"
   },

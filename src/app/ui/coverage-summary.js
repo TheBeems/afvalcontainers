@@ -44,13 +44,13 @@ export function createCoverageSummary(context) {
       + (counts.over_275 || 0);
     const overReferenceCount = counts.over_275 || 0;
     const roundedLongDistancePercent = totalAddresses > 0
-      ? Math.floor((longDistanceCount / totalAddresses) * 100)
+      ? Math.round((longDistanceCount / totalAddresses) * 100)
       : 0;
     const longDistancePercent = formatPercent(longDistanceCount, totalAddresses);
     const overReferencePercent = formatPercent(overReferenceCount, totalAddresses);
 
     if (elements.storyLongDistanceTitle) {
-      elements.storyLongDistanceTitle.textContent = `Meer dan ${roundedLongDistancePercent}% loopt 150 meter of meer`;
+      elements.storyLongDistanceTitle.textContent = `Ongeveer ${roundedLongDistancePercent}% loopt meer dan 150 meter`;
     }
     if (elements.storyLongDistanceCount) {
       elements.storyLongDistanceCount.textContent = longDistanceCount.toLocaleString('nl-NL');

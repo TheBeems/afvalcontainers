@@ -127,7 +127,7 @@ test('shows the visual introduction and focuses search from the CTA', async ({ p
   await expect(page.locator('#visuele-uitleg')).toBeVisible();
   await expect(page.locator('#story-title')).toHaveText('Werkelijke loopafstand naar restafvalcontainers in dorpskernen gemeente Schagen');
   await expect(page.getByRole('heading', { name: 'Afstand bepaalt de ervaring' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Meer dan 40% loopt 150 meter of meer' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Ongeveer 40% loopt meer dan 150 meter' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ga naar stap 2: Van bak aan huis naar zelf wegbrengen' })).toBeVisible();
 
   await page.getByRole('link', { name: 'Bekijk mijn loopafstand' }).click();
@@ -279,7 +279,6 @@ test('hides configured villages without complete runtime data from public pages'
   const hiddenVillageNames = [
     'Dirkshorn',
     'Sint Maarten',
-    'Waarland',
     'Burgerbrug',
     'Oudesluis',
     'Schagerbrug'
@@ -289,9 +288,9 @@ test('hides configured villages without complete runtime data from public pages'
 
   const placeSelect = page.getByLabel('Selecteer dorp');
   await expect(placeSelect).toBeVisible();
-  await expect.poll(() => placeSelect.locator('option').count()).toBe(2);
+  await expect.poll(() => placeSelect.locator('option').count()).toBe(3);
   const optionText = await placeSelect.locator('option').allTextContents();
-  expect(optionText).toEqual(['Warmenhuizen', 'Tuitjenhorn']);
+  expect(optionText).toEqual(['Warmenhuizen', 'Tuitjenhorn', 'Waarland']);
 
   const footerText = await page.locator('.sidebar-footer-nav').innerText();
   for (const villageName of hiddenVillageNames) {
@@ -305,7 +304,8 @@ test('hides configured villages without complete runtime data from public pages'
   }
 
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
-  for (const villageSlug of ['dirkshorn', 'sint-maarten', 'waarland', 'burgerbrug', 'oudesluis', 'schagerbrug']) {
+  expect(sitemap).toContain('/waarland/');
+  for (const villageSlug of ['dirkshorn', 'sint-maarten', 'burgerbrug', 'oudesluis', 'schagerbrug']) {
     expect(sitemap).not.toContain(`/${villageSlug}/`);
   }
 });
@@ -316,15 +316,15 @@ test('creates a container JSON draft for an unpublished catalog village from the
   await page.goto('/#kaart');
 
   const publicPlaceSelect = page.getByLabel('Selecteer dorp');
-  await expect.poll(() => publicPlaceSelect.locator('option').count()).toBe(2);
+  await expect.poll(() => publicPlaceSelect.locator('option').count()).toBe(3);
 
   await page.getByRole('button', { name: 'Containereditor openen' }).click();
   const editorPlaceSelect = page.getByLabel('Containerdataset voor dorp');
   await expect(editorPlaceSelect).toBeVisible();
-  await expect(editorPlaceSelect).toContainText('Waarland');
-  await editorPlaceSelect.selectOption('waarland');
+  await expect(editorPlaceSelect).toContainText('Dirkshorn');
+  await editorPlaceSelect.selectOption('dirkshorn');
 
-  await expect(page.locator('#container-editor-status')).toContainText('Nieuwe containerdataset voor Waarland');
+  await expect(page.locator('#container-editor-status')).toContainText('Nieuwe containerdataset voor Dirkshorn');
 
   await page.getByRole('button', { name: 'Nieuwe container' }).click();
   await page.locator('.leaflet-container').click({ position: { x: 420, y: 320 } });
@@ -334,7 +334,7 @@ test('creates a container JSON draft for an unpublished catalog village from the
   await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
 
   const idInput = page.locator('#container-edit-form input[name="id"]');
-  await expect(idInput).toHaveValue('WL01');
+  await expect(idInput).toHaveValue('DH01');
   await expect(page.getByRole('button', { name: 'Download JSON' })).toBeDisabled();
 
   await page.locator('#cancel-container-edit-button').click();
@@ -346,17 +346,17 @@ test('creates a container JSON draft for an unpublished catalog village from the
 
   await expect(containerMarkers).toHaveCount(1);
   await expect(page.locator('.container-marker-icon.container-marker-active')).toHaveCount(1);
-  await expect(idInput).toHaveValue('WL01');
-  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Waarland');
+  await expect(idInput).toHaveValue('DH01');
+  await page.locator('#container-edit-form input[name="address"]').fill('Testlocatie Dirkshorn');
   await page.getByRole('button', { name: 'Opslaan' }).click();
 
   const { filename, payload } = await downloadContainerDataset(page);
 
-  expect(filename).toBe('waarland-container-locations.json');
+  expect(filename).toBe('dirkshorn-container-locations.json');
   expect(payload).toHaveLength(1);
   expect(payload[0]).toMatchObject({
-    id: 'WL01',
-    address: 'Testlocatie Waarland',
+    id: 'DH01',
+    address: 'Testlocatie Dirkshorn',
     accuracy: 'handmatig bepaald (zeer hoog, onzekerheid -1 m)'
   });
 });
