@@ -2,6 +2,10 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isAddressAllowedByRules, normalizeWhitespace } from '../../src/shared/address.js';
+import {
+  hasResidentialUsePurpose,
+  RESIDENTIAL_USE_PURPOSE
+} from '../../src/shared/bag.js';
 import { classifyCoverageStatus } from '../../src/shared/coverage.js';
 import {
   countRestafvalContainers,
@@ -40,6 +44,7 @@ const ADDRESS_BBOX_TILE_COLUMNS = 2;
 const BBOX_TILE_OVERLAP_DEGREES = 0.000001;
 const PDOK_WOONPLAATS_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/woonplaats/items';
 const PDOK_ADRES_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/adres/items';
+const PDOK_VERBLIJFSOBJECT_URL = 'https://api.pdok.nl/kadaster/bag/ogc/v2/collections/verblijfsobject/items';
 const PDOK_BRT_TOP10NL_COLLECTIONS_URL = 'https://api.pdok.nl/brt/top10nl/ogc/v1/collections';
 const BRT_BUILT_UP_AREA_COLLECTIONS = ['plaats_multivlak', 'plaats_vlak'];
 const ANALYSIS_SCOPE_TYPE = 'built_up_area';
@@ -633,39 +638,83 @@ function sortHouses(houses) {
 async function loadAddresses(boundaryGeometry, analysisBoundaryGeometry, place) {
   const bbox = computeBboxFromPolygonalGeometry(boundaryGeometry);
   const addressBboxes = splitBbox(bbox, ADDRESS_BBOX_TILE_ROWS, ADDRESS_BBOX_TILE_COLUMNS);
-  const features = [];
-  let pageCount = 0;
+  const addressFeatures = [];
+  const fetchedObjectIds = new Set();
+  const residentialObjectIds = new Set();
+  let addressPageCount = 0;
+  let residentialObjectPageCount = 0;
 
   for (const [index, addressBbox] of addressBboxes.entries()) {
     const bboxParam = buildBboxParam(addressBbox);
-    const initialUrl = `${PDOK_ADRES_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
-    const tileResult = await fetchPaginatedFeatures(initialUrl, `Adressen laden tegel ${index + 1}/${addressBboxes.length}`, { pageLimit: 20 });
-    features.push(...tileResult.features);
-    pageCount += tileResult.pageCount;
-  }
+    const addressUrl = `${PDOK_ADRES_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
+    const residentialObjectUrl = `${PDOK_VERBLIJFSOBJECT_URL}?f=json&limit=${DEFAULT_PAGE_SIZE}&bbox=${bboxParam}`;
+    const addressResult = await fetchPaginatedFeatures(addressUrl, `Adressen laden tegel ${index + 1}/${addressBboxes.length}`, { pageLimit: 20 });
+    const residentialObjectResult = await fetchPaginatedFeatures(residentialObjectUrl, `Verblijfsobjecten laden tegel ${index + 1}/${addressBboxes.length}`, { pageLimit: 20 });
 
-  console.log(`BAG-adressen opgehaald binnen woonplaatsbbox: ${features.length} features verdeeld over ${pageCount} tegelpagina(s).`);
+    addressFeatures.push(...addressResult.features);
+    addressPageCount += addressResult.pageCount;
+    residentialObjectPageCount += residentialObjectResult.pageCount;
 
-  const uniqueBagHouses = new Map();
-  for (const feature of features) {
-    const house = normalizeAddressFeature(feature, boundaryGeometry, place);
-    if (house && !uniqueBagHouses.has(house.id)) {
-      uniqueBagHouses.set(house.id, house);
+    for (const feature of residentialObjectResult.features) {
+      const properties = feature.properties || {};
+      if (!properties.identificatie) {
+        continue;
+      }
+
+      const objectId = String(properties.identificatie);
+      fetchedObjectIds.add(objectId);
+      if (hasResidentialUsePurpose(properties.gebruiksdoel)) {
+        residentialObjectIds.add(objectId);
+      }
     }
   }
 
-  const bagHouses = sortHouses(Array.from(uniqueBagHouses.values()));
-  const houses = bagHouses.filter((house) => isPointInPolygonalGeometry([house.lon, house.lat], analysisBoundaryGeometry));
+  console.log(`BAG-adressen opgehaald binnen woonplaatsbbox: ${addressFeatures.length} features verdeeld over ${addressPageCount} tegelpagina(s).`);
+  console.log(`BAG-verblijfsobjecten voor woonfunctiekoppeling opgehaald in ${residentialObjectPageCount} tegelpagina(s); ${residentialObjectIds.size} unieke objecten bevatten woonfunctie.`);
 
-  console.log(`BAG-verblijfsobjecten binnen woonplaats ${place.name}: ${bagHouses.length}.`);
-  console.log(`Adressen binnen ${getAnalysisScopeLabel(place)}: ${houses.length}; uitgesloten buiten analysegebied: ${bagHouses.length - houses.length}.`);
+  const uniqueBagHouses = new Map();
+  for (const feature of addressFeatures) {
+    const house = normalizeAddressFeature(feature, boundaryGeometry, place);
+    if (house && !uniqueBagHouses.has(house.id)) {
+      uniqueBagHouses.set(house.id, {
+        house,
+        objectId: String(feature.properties?.adresseerbaar_object_identificatie || '')
+      });
+    }
+  }
+
+  const bagAddressEntries = Array.from(uniqueBagHouses.values());
+  const missingObjectLinks = bagAddressEntries.filter(({ objectId }) => !objectId);
+  if (missingObjectLinks.length > 0) {
+    throw new Error(`${missingObjectLinks.length} BAG-adres(sen) missen een adresseerbaar-objectidentificatie; woonfunctiefilter kan niet betrouwbaar worden toegepast.`);
+  }
+
+  const missingObjectRelations = bagAddressEntries.filter(({ objectId }) => !fetchedObjectIds.has(objectId));
+  if (missingObjectRelations.length > 0) {
+    throw new Error(`${missingObjectRelations.length} BAG-adres(sen) konden niet aan een opgehaald verblijfsobject worden gekoppeld; woonfunctiefilter kan niet betrouwbaar worden toegepast.`);
+  }
+
+  const residentialBagHouses = sortHouses(
+    bagAddressEntries
+      .filter(({ objectId }) => residentialObjectIds.has(objectId))
+      .map(({ house }) => house)
+  );
+  const excludedNonResidentialAddresses = bagAddressEntries.length - residentialBagHouses.length;
+  const houses = residentialBagHouses.filter((house) => isPointInPolygonalGeometry([house.lon, house.lat], analysisBoundaryGeometry));
+
+  console.log(`BAG-verblijfsobjectadressen binnen woonplaats ${place.name}: ${bagAddressEntries.length}.`);
+  console.log(`Uitgesloten zonder ${RESIDENTIAL_USE_PURPOSE}: ${excludedNonResidentialAddresses}.`);
+  console.log(`Woonfunctie-adressen binnen ${getAnalysisScopeLabel(place)}: ${houses.length}; uitgesloten buiten analysegebied: ${residentialBagHouses.length - houses.length}.`);
 
   return {
     houses,
     stats: {
-      totalBagAddresses: bagHouses.length,
+      totalBagAddresses: residentialBagHouses.length,
       includedAddresses: houses.length,
-      excludedAddresses: bagHouses.length - houses.length
+      excludedAddresses: residentialBagHouses.length - houses.length,
+      fetchedBagAddresses: bagAddressEntries.length,
+      excludedNonResidentialAddresses,
+      usePurpose: RESIDENTIAL_USE_PURPOSE
     }
   };
 }
@@ -1028,7 +1077,10 @@ function buildAnalysisScope(builtUpAreaFeature, addressStats, place, collectionI
     addresses: {
       totalBagAddresses: addressStats.totalBagAddresses,
       includedAddresses: addressStats.includedAddresses,
-      excludedAddresses: addressStats.excludedAddresses
+      excludedAddresses: addressStats.excludedAddresses,
+      fetchedBagAddresses: addressStats.fetchedBagAddresses,
+      excludedNonResidentialAddresses: addressStats.excludedNonResidentialAddresses,
+      usePurpose: addressStats.usePurpose
     }
   };
 }
@@ -1106,6 +1158,8 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
     source: {
       pdokWoonplaatsCollection: 'woonplaats',
       pdokAdresCollection: 'adres',
+      pdokVerblijfsobjectCollection: 'verblijfsobject',
+      bagUsePurpose: RESIDENTIAL_USE_PURPOSE,
       pdokBuiltUpAreaCollection: analysisBoundary.collectionId,
       osrmBaseUrl: OSRM_BASE_URL,
       osrmProfile: OSRM_PROFILE,

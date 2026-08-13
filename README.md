@@ -14,10 +14,10 @@ Actuele aantallen en verdelingen staan op de pagina [Analyses](https://afvalcont
 flowchart LR
   M["Plaatsmanifest<br/>data/places.json"]
   C["Containerlocaties<br/>handmatig beheerde JSON"]
-  BAG["PDOK BAG<br/>woonplaats en adressen"]
+  BAG["PDOK BAG<br/>woonplaats, adressen<br/>en verblijfsobjecten"]
   BRT["PDOK BRT TOP10NL<br/>bebouwde kom"]
 
-  M --> A["Adresselectie<br/>binnen de bebouwde kom"]
+  M --> A["Adresselectie met woonfunctie<br/>binnen de bebouwde kom"]
   BAG --> A
   BRT --> A
   C --> K["Toegankelijke rest- en<br/>semi-restcontainers"]
@@ -33,7 +33,7 @@ flowchart LR
 
 Belangrijke nuances:
 
-- BAG levert verblijfsobjectadressen; de generator controleert niet afzonderlijk op woonfunctie.
+- BAG-adressen worden gekoppeld aan BAG-verblijfsobjecten. Nieuwe coverage-runs behouden alleen objecten waarvan `gebruiksdoel` de waarde `woonfunctie` bevat; gemengde functies tellen mee.
 - Per adres worden eerst de zes hemelsbreed dichtste toegankelijke rest-/semi-restcontainers gekozen. Alleen deze kandidaten worden op OSRM-loopafstand gerangschikt.
 - De beste drie routes worden opgeslagen. De beste daarvan bepaalt de afstandscategorie van het adres.
 - Ontbrekende routegeometrie kan in de browser live via OSRM worden opgehaald. Dit wijzigt de vooraf berekende afstand, rangschikking en kleurcategorie niet.

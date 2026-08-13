@@ -362,6 +362,23 @@ function validateAnalysisScope(coverage, houses, place) {
   if (addresses.totalBagAddresses !== addresses.includedAddresses + addresses.excludedAddresses) {
     fail('analysisScope.addresses.totalBagAddresses must equal includedAddresses + excludedAddresses.');
   }
+
+  if (Object.prototype.hasOwnProperty.call(addresses, 'usePurpose')) {
+    if (addresses.usePurpose !== 'woonfunctie') {
+      fail(`analysisScope.addresses.usePurpose must be "woonfunctie". Received: ${addresses.usePurpose}`);
+    }
+    if (coverage.source?.pdokVerblijfsobjectCollection !== 'verblijfsobject') {
+      fail('coverage.source.pdokVerblijfsobjectCollection must be "verblijfsobject" for woonfunctie-filtered data.');
+    }
+    if (coverage.source?.bagUsePurpose !== addresses.usePurpose) {
+      fail('coverage.source.bagUsePurpose must match analysisScope.addresses.usePurpose.');
+    }
+    assertNonNegativeInteger(addresses.fetchedBagAddresses, 'analysisScope.addresses.fetchedBagAddresses');
+    assertNonNegativeInteger(addresses.excludedNonResidentialAddresses, 'analysisScope.addresses.excludedNonResidentialAddresses');
+    if (addresses.fetchedBagAddresses !== addresses.totalBagAddresses + addresses.excludedNonResidentialAddresses) {
+      fail('analysisScope.addresses.fetchedBagAddresses must equal totalBagAddresses + excludedNonResidentialAddresses.');
+    }
+  }
   if (addresses.includedAddresses < houses.length) {
     fail('analysisScope.addresses.includedAddresses must be at least houses.length.');
   }

@@ -20,7 +20,7 @@ Deze licentieverlening verandert de voorwaarden van onderliggende brondata niet 
 
 ### PDOK BAG
 
-Adressen en de woonplaatsgeometrie komen uit de Basisregistratie Adressen en Gebouwen via PDOK. De gebruikte BAG OGC API vermeldt `Public Domain Mark 1.0`.
+Adressen, verblijfsobjecten met hun gebruiksdoel en de woonplaatsgeometrie komen uit de Basisregistratie Adressen en Gebouwen via PDOK. De gebruikte BAG OGC API vermeldt `Public Domain Mark 1.0`.
 
 - [PDOK BAG OGC API](https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&lang=nl)
 

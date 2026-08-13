@@ -793,7 +793,7 @@ ${seoBlock}
 
     <h2>Hoe wordt de afstand berekend?</h2>
     <p>Adressen komen uit PDOK BAG en de grens van de bebouwde kom uit PDOK BRT TOP10NL. Containerlocaties worden per dorp handmatig beheerd. Per adres selecteert de generator eerst de zes hemelsbreed dichtste toegankelijke rest- en semi-restcontainers. OSRM vergelijkt vervolgens de loopafstanden van deze kandidaten; de beste drie worden opgeslagen en de beste route bepaalt de kleur van het adres.</p>
-    <p>De selectie bestaat uit BAG-verblijfsobjectadressen en is niet afzonderlijk gefilterd op woonfunctie. De berekende looptijd is een schatting bij 4 km per uur. Wanneer alleen de getekende routegeometrie ontbreekt, kan de browser die live via OSRM ophalen zonder de opgeslagen afstand of categorie te wijzigen.</p>
+    <p>Bij nieuw gegenereerde datasets wordt ieder BAG-adres aan een verblijfsobject gekoppeld en alleen behouden wanneer het gebruiksdoel <code>woonfunctie</code> bevat. Gemengde functies tellen mee; woonfunctie bewijst niet dat een adres momenteel bewoond is. De berekende looptijd is een schatting bij 4 km per uur. Wanneer alleen de getekende routegeometrie ontbreekt, kan de browser die live via OSRM ophalen zonder de opgeslagen afstand of categorie te wijzigen.</p>
 
     <h2>Waarom deze methode?</h2>
     <p>De gemeente Schagen noemt een afstand van maximaal ongeveer 275 meter. Deze website maakt zichtbaar wat dat in de praktijk betekent per straat en per adres.</p>

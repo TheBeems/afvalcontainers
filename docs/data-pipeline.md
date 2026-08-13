@@ -14,6 +14,7 @@ flowchart TB
   subgraph Openbare_brondatasets[Openbare brondatasets]
     BW["PDOK BAG woonplaats<br/>woonplaatsgeometrie"]
     BA["PDOK BAG adres<br/>adrespunten"]
+    BV["PDOK BAG verblijfsobject<br/>gebruiksdoel"]
     BK["PDOK BRT TOP10NL<br/>plaats_multivlak of plaats_vlak"]
     OSM["OpenStreetMap-wegennet<br/>via OSRM foot"]
   end
@@ -21,7 +22,8 @@ flowchart TB
   PM --> SCOPE["Kies dorp en analysegebied"]
   BW --> SCOPE
   BK --> SCOPE
-  BA --> FILTER["Filter BAG-verblijfsobjectadressen"]
+  BA --> FILTER["Koppel adres aan verblijfsobject<br/>behoud gebruiksdoel woonfunctie"]
+  BV --> FILTER
   SCOPE --> FILTER
 
   CL --> CONTAINERS["Behoud rest en semi-rest<br/>pas privétoegang per adres toe"]
@@ -63,17 +65,22 @@ De generator haalt voor het gekozen dorp op:
 
 1. de aangewezen woonplaatsgeometrie uit de BAG-collectie `woonplaats`;
 2. het vlak voor de bebouwde kom uit BRT TOP10NL, eerst uit `plaats_multivlak` en anders uit `plaats_vlak`;
-3. BAG-adrespunten binnen de bounding box van de woonplaats.
+3. BAG-adrespunten binnen de bounding box van de woonplaats;
+4. BAG-verblijfsobjecten binnen dezelfde bounding-boxtegels voor de koppeling met `gebruiksdoel`.
 
 Een adrespunt wordt alleen opgenomen wanneer het:
 
 - status `Naamgeving uitgegeven` heeft;
 - bij een `Verblijfsobject` hoort;
+- gekoppeld kan worden via `adresseerbaar_object_identificatie`;
+- een verblijfsobject heeft waarvan `gebruiksdoel` de waarde `woonfunctie` bevat;
 - dezelfde woonplaatsnaam heeft als het gekozen dorp;
 - binnen de BAG-woonplaatsgeometrie ligt;
 - binnen het geselecteerde BRT-bebouwde-komvlak ligt.
 
-De generator filtert niet op het BAG-gebruiksdoel `woonfunctie`. De term “adres” of “BAG-verblijfsobjectadres” is daarom nauwkeuriger dan “huishouden” of “woning”.
+Een gemengd gebruiksdoel, bijvoorbeeld `woonfunctie,winkelfunctie`, blijft opgenomen. `Woonfunctie` is een geregistreerde bestemming en bewijst niet dat een object op het generatiemoment bewoond is of precies één huishouden vertegenwoordigt.
+
+De woonfunctiefilter geldt voor datasets die met de aangepaste generator opnieuw zijn gemaakt. Oudere datasets zonder `source.bagUsePurpose` behouden hun eerdere selectie totdat ze opnieuw worden gegenereerd.
 
 ## 3. Kandidaten en loopafstanden
 
@@ -147,7 +154,7 @@ De build en validatie bepalen dit uit de bestanden, niet uit een aparte publicat
 - Een route is een modeluitkomst. Tijdelijke afsluitingen, informele paden, oversteekbaarheid, verlichting, hellingen en sociale veiligheid zijn niet volledig vertegenwoordigd.
 - De analyse bewijst niet welke container een afvalpas daadwerkelijk opent; zij gebruikt de container- en toegangsregels in de repository.
 - De top-zesvoorselectie is een performancekeuze en geen volledige netwerkoptimalisatie over alle containers.
-- Adrestotalen zijn BAG-verblijfsobjectadressen binnen het gekozen BRT-vlak, niet automatisch aantallen inwoners of huishoudens.
+- Na hergeneratie zijn adrestotalen BAG-verblijfsobjectadressen met `woonfunctie` binnen het gekozen BRT-vlak, niet automatisch aantallen inwoners of huishoudens.
 - De afstandscategorieën ondersteunen vergelijking en communicatie; zie [Onderzoeksbasis](research-basis.md) voor hun interpretatie.
 
 ## Bronnen

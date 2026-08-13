@@ -54,6 +54,7 @@ Source files live in `src/`: `index.html` is the page template, `styles.css` imp
 ## Data Rules
 
 - JSON is the authoritative browser data source for container data, coverage, rankings, distance bands, and summary statistics.
+- Coverage generation must join BAG addresses to BAG verblijfsobjecten and include only objects whose `gebruiksdoel` contains `woonfunctie`; mixed-use objects with a residential purpose remain included.
 - Do not add JS data wrappers or `window.WARMENHUIZEN_*` globals.
 - `data/places/<place-id>/container-locations.json` may be edited manually.
 - `data/places/<place-id>/house-coverage.json` is generated and should not be hand-edited except for deliberate mechanical migrations.
