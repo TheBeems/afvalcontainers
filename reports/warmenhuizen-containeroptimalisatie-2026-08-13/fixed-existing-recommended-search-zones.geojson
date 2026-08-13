@@ -1,0 +1,2026 @@
+{
+  "type": "FeatureCollection",
+  "name": "Warmenhuizen fixed-existing scenario: HVC-locaties en aanvullende onderzoekszones",
+  "generatedAt": "2026-08-13T20:19:02.125Z",
+  "coordinateReferenceSystem": "WGS84 (EPSG:4326)",
+  "scenario": {
+    "maximumWalkingDistanceTargetM": 225,
+    "maximumModeledWalkingDistanceM": 224.5,
+    "totalPhysicalLocationCount": 49,
+    "fixedExistingLocationCount": 11,
+    "fixedPublicLocationCount": 9,
+    "fixedPrivateLocationCount": 2,
+    "additionalSiteCount": 38,
+    "aerialRatingCountsForAdditionalSites": {
+      "groen": 5,
+      "oranje": 14,
+      "rood": 19
+    },
+    "totalContainersAt100AddressCapacity": 49,
+    "totalContainersAt75AddressCapacity": 51,
+    "note": "Additional features are analytical search-zone anchors, not build-ready pins."
+  },
+  "sourceFiles": [
+    "fixed-existing-household-coverage-225.json",
+    "recommended-locations.json",
+    "aerial-assessment-sites-01-22.json",
+    "aerial-assessment-sites-23-43.json"
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "id": "WH03",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741939,
+          52.72721
+        ]
+      },
+      "properties": {
+        "id": "WH03",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Rietzangerstraat 17",
+        "graphNode": 695,
+        "nearestHouseholdsUncapacitated": 42,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH05",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.748476,
+          52.726883
+        ]
+      },
+      "properties": {
+        "id": "WH05",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Kuipersven 36",
+        "graphNode": 75,
+        "nearestHouseholdsUncapacitated": 94,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH06",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750383,
+          52.727578
+        ]
+      },
+      "properties": {
+        "id": "WH06",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Soeverein 2",
+        "graphNode": 81,
+        "nearestHouseholdsUncapacitated": 24,
+        "assignedHouseholdsAt100AddressCapacity": 91,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH08",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739056,
+          52.725435
+        ]
+      },
+      "properties": {
+        "id": "WH08",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Dorpsstraat 89",
+        "graphNode": 140,
+        "nearestHouseholdsUncapacitated": 54,
+        "assignedHouseholdsAt100AddressCapacity": 91,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH14",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.740981,
+          52.722411
+        ]
+      },
+      "properties": {
+        "id": "WH14",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Doorbraak 23",
+        "graphNode": 50,
+        "nearestHouseholdsUncapacitated": 106,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH23",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738551,
+          52.720329
+        ]
+      },
+      "properties": {
+        "id": "WH23",
+        "kind": "existing",
+        "accessScope": "private",
+        "status": "fixed-existing-hvc-location",
+        "address": "Molenaarsweg 7",
+        "graphNode": 2432,
+        "nearestHouseholdsUncapacitated": 0,
+        "assignedHouseholdsAt100AddressCapacity": 3,
+        "assignedHouseholdsAt75AddressCapacity": 3,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH24",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74024,
+          52.720753
+        ]
+      },
+      "properties": {
+        "id": "WH24",
+        "kind": "existing",
+        "accessScope": "private",
+        "status": "fixed-existing-hvc-location",
+        "address": "Pastoor Willemsestraat 80",
+        "graphNode": 2435,
+        "nearestHouseholdsUncapacitated": 4,
+        "assignedHouseholdsAt100AddressCapacity": 4,
+        "assignedHouseholdsAt75AddressCapacity": 4,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH26",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741484,
+          52.718557
+        ]
+      },
+      "properties": {
+        "id": "WH26",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Regelhaalder 42",
+        "graphNode": 951,
+        "nearestHouseholdsUncapacitated": 118,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 150,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 2,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH27",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743409,
+          52.718151
+        ]
+      },
+      "properties": {
+        "id": "WH27",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Zigt 97",
+        "graphNode": 959,
+        "nearestHouseholdsUncapacitated": 74,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH33",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74845,
+          52.729898
+        ]
+      },
+      "properties": {
+        "id": "WH33",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Zuiderkruis 36",
+        "graphNode": 2546,
+        "nearestHouseholdsUncapacitated": 84,
+        "assignedHouseholdsAt100AddressCapacity": 93,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH34",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750576,
+          52.730485
+        ]
+      },
+      "properties": {
+        "id": "WH34",
+        "kind": "existing",
+        "accessScope": "public",
+        "status": "fixed-existing-hvc-location",
+        "address": "Poolster 25",
+        "graphNode": 1741,
+        "nearestHouseholdsUncapacitated": 36,
+        "assignedHouseholdsAt100AddressCapacity": 26,
+        "assignedHouseholdsAt75AddressCapacity": 44,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": null,
+        "oldReferenceAddress": null,
+        "ownershipScreen": null,
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": null,
+        "aerialRating": null,
+        "aerialAssessment": null,
+        "aerialHvcRouteAssessment": null,
+        "localShiftInstruction": null,
+        "visibleConstraints": [],
+        "screeningWarnings": [],
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-01",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743017,
+          52.730007
+        ]
+      },
+      "properties": {
+        "id": "model-225-01",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oostwal 63",
+        "graphNode": 2201,
+        "nearestHouseholdsUncapacitated": 17,
+        "assignedHouseholdsAt100AddressCapacity": 51,
+        "assignedHouseholdsAt75AddressCapacity": 52,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 33,
+        "oldReferenceAddress": "Oostwal 63",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1667",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Smalle lintweg met bebouwing, erven en geparkeerde auto's direct aan weerszijden; geen zichtbare ruime openbare strook.",
+        "aerialHvcRouteAssessment": "Doorgaand rijden is denkbaar, maar een veilige 12 x 3,10 meter opstelstrook zonder blokkeren of hijsen nabij gevels is op deze pin niet zichtbaar.",
+        "localShiftInstruction": "Zoek 60-100 meter noord of zuid naar een aantoonbaar bredere gemeentelijke berm of zijwegmond, met voldoende afstand tot woningen en eventuele sloten.",
+        "visibleConstraints": [
+          "pand circa 7 meter",
+          "erven circa 4 meter",
+          "parkeren",
+          "smalle rijbaan",
+          "landelijke bermen verderop mogelijk met sloten"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-02",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738858,
+          52.729632
+        ]
+      },
+      "properties": {
+        "id": "model-225-02",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Fuik 10",
+        "graphNode": 679,
+        "nearestHouseholdsUncapacitated": 20,
+        "assignedHouseholdsAt100AddressCapacity": 28,
+        "assignedHouseholdsAt75AddressCapacity": 28,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 18,
+        "oldReferenceAddress": "De Fuik 10",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2659",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het kruis ligt in een zeer smalle, kronkelende woon- en erftoegang tussen vrijstaande woningen. Open groen ligt verder weg, maar niet direct aan een geschikte openbare opstelroute.",
+        "aerialHvcRouteAssessment": "Een voertuig van circa 12 meter kan hier niet overtuigend keren of passeren zonder particuliere ruimte te gebruiken; achteruitrijden is waarschijnlijk.",
+        "localShiftInstruction": "Verplaats noord- of westwaarts naar een openbare rand aan een doorgaande route, of combineer deze vraagzone met site 6 of 22; voer daarna de afstandsoptimalisatie opnieuw uit.",
+        "visibleConstraints": [
+          "gevel op 5,9 meter",
+          "route door erfachtige ruimte",
+          "geen zichtbaar bouwvlak",
+          "geen veilige keermogelijkheid"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-03",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.742866,
+          52.729332
+        ]
+      },
+      "properties": {
+        "id": "model-225-03",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oostwal 79",
+        "graphNode": 2272,
+        "nearestHouseholdsUncapacitated": 49,
+        "assignedHouseholdsAt100AddressCapacity": 9,
+        "assignedHouseholdsAt75AddressCapacity": 9,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 15,
+        "oldReferenceAddress": "Oostwal 79",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1667",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het kruis ligt op een smalle asfaltweg in lintbebouwing. De bermen zijn grotendeels oprit of erf en er is geen duidelijk openbaar bouwvlak zichtbaar.",
+        "aerialHvcRouteAssessment": "Doorgaand rijden is mogelijk, maar stilstaan met een circa 3,1 meter breed voertuig blokkeert waarschijnlijk de Oostwal en de kraan zou dicht bij particuliere erven werken.",
+        "localShiftInstruction": "Zoek zuidelijk bij de zichtbaar bredere kruising of een aantoonbaar gemeentelijk bermvak; houd de bak uit de sloot- en erfzone en herbereken de dekking.",
+        "visibleConstraints": [
+          "geen openbaar zijvlak",
+          "smalle lintweg",
+          "particuliere opritten en gevels",
+          "sloten en zachte bermen"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-04",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738286,
+          52.729323
+        ]
+      },
+      "properties": {
+        "id": "model-225-04",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Fuik 14",
+        "graphNode": 704,
+        "nearestHouseholdsUncapacitated": 2,
+        "assignedHouseholdsAt100AddressCapacity": 2,
+        "assignedHouseholdsAt75AddressCapacity": 2,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 36,
+        "oldReferenceAddress": "De Fuik 14",
+        "ownershipScreen": "no-municipal-parcel-within-25m",
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": false,
+        "aerialRating": "rood",
+        "aerialAssessment": "Exacte pin ligt op een private inrit of erf, direct naast een pand en in een landelijk woonlint.",
+        "aerialHvcRouteAssessment": "De exacte route lijkt op een doodlopende of private toegang waar een lang voertuig moet keren of achteruitrijden; niet plausibel als openbare HVC-opstelplaats.",
+        "localShiftInstruction": "Verlaat de exacte pin en zoek 40-70 meter oost bij de openbare Oostwal/De Fuik-aansluiting op gemeentelijke grond; voorkom een doodlopende bediening.",
+        "visibleConstraints": [
+          "pand circa 4,7 meter",
+          "private inrit of erf",
+          "smalle toegangsweg",
+          "geen publiek opstelvak"
+        ],
+        "screeningWarnings": [
+          "geen gemeentelijk perceel binnen 25 m in openbare screen"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-05",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739324,
+          52.727714
+        ]
+      },
+      "properties": {
+        "id": "model-225-05",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Dorpsstraat 15",
+        "graphNode": 683,
+        "nearestHouseholdsUncapacitated": 67,
+        "assignedHouseholdsAt100AddressCapacity": 79,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 22,
+        "oldReferenceAddress": "Dorpsstraat 15",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1673",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "De zoekzone ligt op een relatief ruim meerarmig kruispunt met een groen vak en enkele parkeer- of opstelvakken. De gemeentelijke WH02-conceptpin ligt slechts 4,1 meter van het kruis.",
+        "aerialHvcRouteAssessment": "Een groot voertuig kan de zone waarschijnlijk bereiken en verlaten, maar de opstelstrook mag niet midden op de kruising liggen en de kraan mag niet over geparkeerde auto's hijsen.",
+        "localShiftInstruction": "Neem WH02 als voorkeurszoekpin en schuif zo nodig 4 tot 10 meter westelijk of noordwestelijk naar een vrij randvak buiten de rijlijnen; verifieer met een voertuigmal en parkeerregime.",
+        "visibleConstraints": [
+          "kruispuntblokkade",
+          "gevel op 9,2 meter",
+          "parkeren in de hijszone",
+          "lichtmast, boom en kast"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH02 ligt 4.1 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-06",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.748183,
+          52.727455
+        ]
+      },
+      "properties": {
+        "id": "model-225-06",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Spanakker 1",
+        "graphNode": 760,
+        "nearestHouseholdsUncapacitated": 38,
+        "assignedHouseholdsAt100AddressCapacity": 63,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 32,
+        "oldReferenceAddress": "De Spanakker 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I535",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Woonstraatkruising met een relatief brede, nog kale groenstrook aan de oostzijde; de pin ligt op klinkerrijbaan.",
+        "aerialHvcRouteAssessment": "Aanrijden via de gebogen hoofdstraat lijkt plausibel, maar opstellen op het kruispunt is ongeschikt en de woonstraten zijn niet royaal.",
+        "localShiftInstruction": "Verschuif 10-20 meter noordoost in de brede groenstrook, met bediening vanaf het rechte stuk en buiten kruispunt, afsluitpaal en toekomstige boomkronen.",
+        "visibleConstraints": [
+          "afsluitpaal circa 4,1 meter",
+          "heesters circa 3,5 meter",
+          "boom circa 8,5 meter",
+          "woonstraat en kruising"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-07",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.740098,
+          52.727288
+        ]
+      },
+      "properties": {
+        "id": "model-225-07",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Rietzangerstraat 3",
+        "graphNode": 2796,
+        "nearestHouseholdsUncapacitated": 33,
+        "assignedHouseholdsAt100AddressCapacity": 27,
+        "assignedHouseholdsAt75AddressCapacity": 56,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 6,
+        "oldReferenceAddress": "Rietzangerstraat 3",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2037",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Het modelpunt ligt in de rijbaan bij een bocht en een T-aansluiting. Ten zuiden en oosten zijn groenstroken zichtbaar, maar de directe rand is met heesters ingericht.",
+        "aerialHvcRouteAssessment": "Aanrijden is mogelijk, maar de bocht en het eiland maken een recht en vrij 12-meter-opstelvak onzeker. De kraanopstelling mag de T-splitsing niet afsluiten.",
+        "localShiftInstruction": "Schuif 10 tot 20 meter oostelijk langs het rechtere straatdeel en onderzoek de groenrand buiten de bocht; toets de route met een voertuigmal.",
+        "visibleConstraints": [
+          "bocht en kruispuntconflict",
+          "kast en groeninrichting",
+          "boomkroon",
+          "geen aantoonbaar rechte opstelstrook"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-08",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7501,
+          52.726951
+        ]
+      },
+      "properties": {
+        "id": "model-225-08",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Heerlijkheid 16",
+        "graphNode": 80,
+        "nearestHouseholdsUncapacitated": 63,
+        "assignedHouseholdsAt100AddressCapacity": 14,
+        "assignedHouseholdsAt75AddressCapacity": 42,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 25,
+        "oldReferenceAddress": "Heerlijkheid 16",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I1012",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "De 2026-luchtfoto toont een bouwrijpe of nog in aanleg zijnde buurt; de pin ligt op een verhard of halfverhard kruispunt naast water en bebouwing in aanbouw.",
+        "aerialHvcRouteAssessment": "Een voertuigroute lijkt geometrisch mogelijk, maar de definitieve rijbaanbreedte, keerlus en parkeerindeling zijn uit de momentopname niet betrouwbaar af te leiden.",
+        "localShiftInstruction": "Reserveer een vak aan de westzijde van de noord-zuidstraat, circa 10-20 meter noordwest van de pin en weg van de waterkant; toets aan de definitieve inrichtingstekening van de nieuwbouw.",
+        "visibleConstraints": [
+          "waterloop circa 12 meter",
+          "bebouwing circa 12 meter",
+          "onzekere definitieve inrichting",
+          "mogelijk doodlopende of krappe bouwstraat"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-09",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7434,
+          52.726883
+        ]
+      },
+      "properties": {
+        "id": "model-225-09",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Nachtegaalstraat 12",
+        "graphNode": 2175,
+        "nearestHouseholdsUncapacitated": 99,
+        "assignedHouseholdsAt100AddressCapacity": 74,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 8,
+        "oldReferenceAddress": "Nachtegaalstraat 12",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2037",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het punt ligt midden in een dicht bebouwde woonstraatkruising. De luchtfoto toont parkeerplaatsen, voortuinen en kleine plantvakken, maar geen vrij containerbouwvlak.",
+        "aerialHvcRouteAssessment": "Een voertuig kan de straat bereiken, maar de combinatie van kruising, parkeren en groenobjecten laat geen vrij 12-meter-opstelvak of veilige hijszone zien.",
+        "localShiftInstruction": "Verplaats naar een grotere groen- of parkeerzoom buiten de woonstraatkruising; vergelijk daarbij expliciet de bestaande WH03-zone op circa 105 meter.",
+        "visibleConstraints": [
+          "kruispunt blokkeren",
+          "parkeren direct rond de pin",
+          "boom en lichtmast",
+          "geen vrije ondergrondse footprint"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-10",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738293,
+          52.726561
+        ]
+      },
+      "properties": {
+        "id": "model-225-10",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oud Wulpendorp 11",
+        "graphNode": 831,
+        "nearestHouseholdsUncapacitated": 77,
+        "assignedHouseholdsAt100AddressCapacity": 38,
+        "assignedHouseholdsAt75AddressCapacity": 42,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 12,
+        "oldReferenceAddress": "Oud Wulpendorp 11",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1671",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het kruis ligt in een smalle T-aansluiting, direct tussen woningen, opritten en een klein plant- of speelvak. Er is geen vrije bouwstrook zichtbaar.",
+        "aerialHvcRouteAssessment": "Een 12-meter-voertuig moet bij de T-aansluiting manoeuvreren en zou de straat grotendeels blokkeren; de vrije hijszone is onvoldoende.",
+        "localShiftInstruction": "Onderzoek de gemeentelijke WH07-zone op circa 82 meter of een ruimere groenrand langs de doorgaande Dorpsstraat en herbereken vanaf die locatie.",
+        "visibleConstraints": [
+          "gevel op 6,9 meter",
+          "kast en speelvoorziening",
+          "krappe T-aansluiting",
+          "geen afzonderlijk opstelvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-11",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.75024,
+          52.725928
+        ]
+      },
+      "properties": {
+        "id": "model-225-11",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Baljuw 1",
+        "graphNode": 233,
+        "nearestHouseholdsUncapacitated": 48,
+        "assignedHouseholdsAt100AddressCapacity": 16,
+        "assignedHouseholdsAt75AddressCapacity": 16,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 41,
+        "oldReferenceAddress": "Baljuw 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I1012",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Nieuwe woonbuurt; pin ligt op smalle klinkerrijbaan direct naast groen, boom, overkapping, woning en water.",
+        "aerialHvcRouteAssessment": "De zijstraten en waterstructuur maken een 12 meter route en keerbeweging onzeker; opstellen blokkeert de woonstraat en vrije hijsruimte ontbreekt.",
+        "localShiftInstruction": "Zoek 60-100 meter west of noordwest bij een bredere buurtentree of nog onbebouwde openbare rand, buiten water- en boomzone.",
+        "visibleConstraints": [
+          "boom circa 3,9 meter",
+          "overkapping circa 5,4 meter",
+          "pand circa 7,2 meter",
+          "waterloop circa 8,9 meter",
+          "smalle wijkstraat"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-12",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743329,
+          52.725414
+        ]
+      },
+      "properties": {
+        "id": "model-225-12",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Baan 27",
+        "graphNode": 89,
+        "nearestHouseholdsUncapacitated": 49,
+        "assignedHouseholdsAt100AddressCapacity": 33,
+        "assignedHouseholdsAt75AddressCapacity": 41,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 16,
+        "oldReferenceAddress": "De Baan 27",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2037",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "groen",
+        "aerialAssessment": "Aan de zuidzijde van de rechte woonstraat ligt een brede parkachtige grasrand. De gemeentelijke conceptlocatie WH10 ligt slechts 6,4 meter van het kruis.",
+        "aerialHvcRouteAssessment": "Een rechte opstelstrook langs De Baan en een bouwvlak in de grasrand zijn visueel plausibel. De boomwortelzone en exacte kraanzijde moeten nog worden ingemeten.",
+        "localShiftInstruction": "Gebruik de WH10-conceptpin als voorkeurspositie en leg het ondergrondse deel 3 tot 7 meter zuidelijk van de rijbaan, in een aantoonbare open ruimte tussen wortelzones.",
+        "visibleConstraints": [
+          "wortelzones van parkbomen",
+          "parkpad en voetgangers",
+          "lichtmast",
+          "nog onbekende kabels en leidingen"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH10 ligt 6.4 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-13",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.734133,
+          52.725182
+        ]
+      },
+      "properties": {
+        "id": "model-225-13",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Veilingweg 70D",
+        "graphNode": 3280,
+        "nearestHouseholdsUncapacitated": 1,
+        "assignedHouseholdsAt100AddressCapacity": 1,
+        "assignedHouseholdsAt75AddressCapacity": 1,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 43,
+        "oldReferenceAddress": "Veilingweg 70D",
+        "ownershipScreen": "no-municipal-parcel-within-25m",
+        "exactMunicipalParcel": null,
+        "municipalParcelWithin25M": false,
+        "aerialRating": "rood",
+        "aerialAssessment": "Exacte pin ligt op een druk bezet parkeerterrein of erf bij een groot bedrijfsgebouw, met rijen auto's en bouwland direct zuidelijk.",
+        "aerialHvcRouteAssessment": "Een zwaar voertuig kan het terrein wellicht bereiken, maar de exacte pin is operationeel ongeschikt door parkeerbezetting, private erffunctie en gebrek aan gegarandeerde vrije hijszone.",
+        "localShiftInstruction": "Zoek 20-40 meter noord/oost aan de openbare Veilingweg-rand of een aantoonbaar gemeentelijk hoekvak; vermijd het parkeerterrein en het agrarische perceel.",
+        "visibleConstraints": [
+          "parkeren rondom de pin",
+          "erf in plaats van openbare weg",
+          "niet-gemeentelijke exacte pin",
+          "hijsen over auto's",
+          "onduidelijke openbare toegang"
+        ],
+        "screeningWarnings": [
+          "geen gemeentelijk perceel binnen 25 m in openbare screen",
+          "grote BAG-netwerksnap van 92.9 m"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-14",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.737802,
+          52.724953
+        ]
+      },
+      "properties": {
+        "id": "model-225-14",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Burg. Burgerstraat 20",
+        "graphNode": 159,
+        "nearestHouseholdsUncapacitated": 53,
+        "assignedHouseholdsAt100AddressCapacity": 41,
+        "assignedHouseholdsAt75AddressCapacity": 44,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 11,
+        "oldReferenceAddress": "Burg. Burgerstraat 20",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2687",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het modelpunt ligt aan het einde van een smalle parkeerstraat tegen een parkpad. Open gras ligt noordelijk, maar tussen veel volwassen bomen en zonder doorgaande voertuigroute.",
+        "aerialHvcRouteAssessment": "De luchtfoto toont een doodlopend einde zonder overtuigende keermogelijkheid voor een voertuig van circa 12 meter; achteruitrijden lijkt nodig.",
+        "localShiftInstruction": "Zoek zuidelijk richting een doorgaande kruising of aan de westelijke parkzoom met in- en uitrit; de nieuwe pin moet opnieuw in de loopoptimalisatie worden opgenomen.",
+        "visibleConstraints": [
+          "doodlopende aanrijroute",
+          "langsparkeren",
+          "volwassen bomen en wortelzones",
+          "parkpad in plaats van uitrijroute"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-15",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.746141,
+          52.724896
+        ]
+      },
+      "properties": {
+        "id": "model-225-15",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Remmerdel 46",
+        "graphNode": 1458,
+        "nearestHouseholdsUncapacitated": 35,
+        "assignedHouseholdsAt100AddressCapacity": 29,
+        "assignedHouseholdsAt75AddressCapacity": 29,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 19,
+        "oldReferenceAddress": "Remmerdel 46",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I381",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het modelpunt ligt midden op een voetpad in een door water omsloten grasgebied. De dichtstbijzijnde woonstraat ligt aan de noordzijde, via een smalle voetgangersbrug.",
+        "aerialHvcRouteAssessment": "De openbare voertuigroute ligt circa 54,8 meter van het modelpunt. Een HVC-voertuig kan de pin niet bereiken; de voetgangersbrug en het pad zijn geen opstelroute.",
+        "localShiftInstruction": "Verplaats 55 tot 75 meter noordelijk naar de Remmerdel-zijde van de brug en zoek daar een wegberm- of parkeerrand; herbereken de loopafstand vanaf de nieuwe pin.",
+        "visibleConstraints": [
+          "geen voertuigtoegang",
+          "water aan drie zijden",
+          "voetpad en smalle brug",
+          "boom en lichtmast op het zoekvlak"
+        ],
+        "screeningWarnings": [
+          "dichtstbijzijnde openbare voertuigroute ligt circa 54.8 m van het modelpunt",
+          "grote BAG-netwerksnap van 68.4 m"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-16",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.742236,
+          52.723875
+        ]
+      },
+      "properties": {
+        "id": "model-225-16",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Langedijker 13",
+        "graphNode": 647,
+        "nearestHouseholdsUncapacitated": 97,
+        "assignedHouseholdsAt100AddressCapacity": 95,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 28,
+        "oldReferenceAddress": "Langedijker 13",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2658",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Dichte woonstraat; de pin ligt op klinkerrijbaan met huizen, erven en geparkeerde auto's direct rondom.",
+        "aerialHvcRouteAssessment": "Doorrijden is mogelijk voor regulier verkeer, maar een lang inzamelvoertuig heeft hier geen overtuigende vrije opstel- en hijszone zonder de straat te blokkeren.",
+        "localShiftInstruction": "Zoek circa 60-90 meter west/noordwest bij het ruimere speel- of parkeervak aan de rand van de buurt; toets daar bereik en bomen opnieuw.",
+        "visibleConstraints": [
+          "pand circa 7,5 meter",
+          "boom circa 7,9 meter",
+          "lichtmast circa 7 meter",
+          "parkeren",
+          "geen zichtbaar ruim plantvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-17",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.73373,
+          52.72325
+        ]
+      },
+      "properties": {
+        "id": "model-225-17",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Veilingweg 74A",
+        "graphNode": 788,
+        "nearestHouseholdsUncapacitated": 8,
+        "assignedHouseholdsAt100AddressCapacity": 35,
+        "assignedHouseholdsAt75AddressCapacity": 35,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 26,
+        "oldReferenceAddress": "Veilingweg 74A",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00F636",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Pin ligt midden op een smalle bedrijfsstraat; aan beide zijden staan bedrijfsgebouwen, geparkeerde voertuigen en erfopgangen.",
+        "aerialHvcRouteAssessment": "Een 12 meter voertuig kan mogelijk doorrijden, maar opstellen zou de straat blokkeren en de hijsruimte wordt door gevels, parkeren en bedrijfsverkeer beperkt.",
+        "localShiftInstruction": "Verlaat deze pin; zoek westelijk of noordwestelijk langs een bredere Veilingweg-rand of een publiek parkeerterrein met vrije opstelstrook, niet in deze bedrijfsstraat.",
+        "visibleConstraints": [
+          "panden op circa 10 meter",
+          "lichtmast circa 10 meter",
+          "lage trafo circa 15 meter",
+          "parkeren en laadbewegingen",
+          "nauwe straatdoorsnede"
+        ],
+        "screeningWarnings": [
+          "grote BAG-netwerksnap van 70.7 m"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-18",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.736527,
+          52.723232
+        ]
+      },
+      "properties": {
+        "id": "model-225-18",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Posthoorn 10",
+        "graphNode": 2606,
+        "nearestHouseholdsUncapacitated": 75,
+        "assignedHouseholdsAt100AddressCapacity": 61,
+        "assignedHouseholdsAt75AddressCapacity": 67,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 34,
+        "oldReferenceAddress": "Posthoorn 10",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Smalle woonstraat met parkeerstroken en aaneengesloten voorgevels; de pin ligt op de klinkerrijbaan.",
+        "aerialHvcRouteAssessment": "Tijdelijk opstellen zou de straat vrijwel geheel blokkeren en er is geen overtuigende vrije hijszone naast de rijbaan.",
+        "localShiftInstruction": "Zoek richting west/noordwest bij de bredere Dorpsstraat- of parkeeromgeving, niet tussen de woningen van Posthoorn; herbereken vanaf de alternatieve locatie.",
+        "visibleConstraints": [
+          "pand circa 7,3 meter",
+          "parkeren aan beide zijden",
+          "lichtmast circa 10 meter",
+          "boom circa 10,5 meter",
+          "geen zichtbaar groot plantvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-19",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.745902,
+          52.722612
+        ]
+      },
+      "properties": {
+        "id": "model-225-19",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Puttersakker 19",
+        "graphNode": 839,
+        "nearestHouseholdsUncapacitated": 102,
+        "assignedHouseholdsAt100AddressCapacity": 91,
+        "assignedHouseholdsAt75AddressCapacity": 103,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 2,
+        "oldSite": 10,
+        "oldReferenceAddress": "Puttersakker 19",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I695",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het kruis ligt op een woonerfkruising tussen rijwoningen en geparkeerde auto's. Kleine plantvakken bieden geen zichtbaar volwaardig bouwvlak.",
+        "aerialHvcRouteAssessment": "De straat is bereikbaar, maar parkeren, een haakse aansluiting en groenobjecten maken een vrij en recht opstelvak onaannemelijk.",
+        "localShiftInstruction": "Gebruik de ruimere gemeentelijke WH12-zone op circa 63 meter oostelijk als eerste alternatief en herbereken de dekking vanaf die bouwpin.",
+        "visibleConstraints": [
+          "hijsen boven auto's",
+          "lichtmast en boom",
+          "kruispuntblokkade",
+          "smalle woonerfgeometrie"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-20",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.734768,
+          52.722359
+        ]
+      },
+      "properties": {
+        "id": "model-225-20",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Stationsstraat 22A",
+        "graphNode": 143,
+        "nearestHouseholdsUncapacitated": 26,
+        "assignedHouseholdsAt100AddressCapacity": 55,
+        "assignedHouseholdsAt75AddressCapacity": 55,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 14,
+        "oldReferenceAddress": "Stationsstraat 22A",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2696",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "De Stationsstraat is een duidelijke doorgaande route. Ten zuidwesten ligt een groot openbaar ogend grasveld en noordwestelijk een ruim verhard erf; het kruis zelf ligt in de rijbaan bij een kruising.",
+        "aerialHvcRouteAssessment": "Een rechte 12-meter-opstelroute is op de Stationsstraat plausibel, maar niet precies op het kruispunt. Een bouwvak in de grasrand moet buiten boomkronen en verblijfsmeubilair liggen.",
+        "localShiftInstruction": "Schuif westelijk of zuidwestelijk naar een open segment langs het grasveld, met voldoende afstand tot bomen, bank en kruising; leg de stopplek langs het rechte straatdeel.",
+        "visibleConstraints": [
+          "kruispunt en oversteek",
+          "volwassen bomen en wortelzones",
+          "bank, bordpaal en kast",
+          "mogelijk sport- of verblijfsgebruik van het grasveld"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-21",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.729308,
+          52.722228
+        ]
+      },
+      "properties": {
+        "id": "model-225-21",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Wonge 1",
+        "graphNode": 307,
+        "nearestHouseholdsUncapacitated": 66,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 20,
+        "oldReferenceAddress": "Wonge 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2696",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Het kruis ligt bij de aansluiting van Wonge op de Stationsstraat, vrijwel gelijk aan de gemeentelijke conceptlocatie WH17. Een kleine groenrand ligt naast de lokale straat, maar de exacte pin valt in de rijbaan en onder boomkronen.",
+        "aerialHvcRouteAssessment": "Aanrijden via de lokale straat is plausibel, maar lediging mag niet op de doorgaande Stationsstraat plaatsvinden. De route door Wonge moet aantonen dat zonder achteruitrijden kan worden doorgereden.",
+        "localShiftInstruction": "Gebruik WH17 als referentie en schuif 5 tot 15 meter zuidelijk de Wonge in, naar een open gemeentelijke groen- of trottoirrand; toets een doorgaande HVC-route zonder stop op de Stationsstraat.",
+        "visibleConstraints": [
+          "conflict met doorgaand verkeer op Stationsstraat",
+          "boom, heesters en lichtmast",
+          "krappe aansluiting",
+          "onbewezen uitrijroute door de woonbuurt"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH17 ligt 2.6 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-22",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.737998,
+          52.721751
+        ]
+      },
+      "properties": {
+        "id": "model-225-22",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Dorpsstraat 140",
+        "graphNode": 1185,
+        "nearestHouseholdsUncapacitated": 94,
+        "assignedHouseholdsAt100AddressCapacity": 86,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 31,
+        "oldReferenceAddress": "Dorpsstraat 140",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2401",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Historische, dichte kern met smalle klinkerstraat, bomen, geparkeerde voertuigen en gevels zeer dichtbij.",
+        "aerialHvcRouteAssessment": "Een circa 12 meter voertuig kan hier niet overtuigend veilig opstellen zonder blokkade; kroonvrije hijsruimte en afstand tot gevels zijn zeer twijfelachtig.",
+        "localShiftInstruction": "Verplaats de zoekzone 80-120 meter zuid naar een ruimere openbare rand bij Theresiaplein of een parkeerterrein, en herbereken de loopafstanden vanaf die alternatieve pin.",
+        "visibleConstraints": [
+          "pand circa 8,4 meter",
+          "boom circa 5,5 meter",
+          "verkeersbordpaal circa 4,6 meter",
+          "parkeren",
+          "smalle en gebogen straat"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-23",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.730812,
+          52.721107
+        ]
+      },
+      "properties": {
+        "id": "model-225-23",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Goudsboer 2",
+        "graphNode": 319,
+        "nearestHouseholdsUncapacitated": 105,
+        "assignedHouseholdsAt100AddressCapacity": 100,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 3,
+        "oldReferenceAddress": "Goudsboer 2",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2696",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Het kruis ligt in een smalle klinkerstraat nabij een woonerf. Ten oosten en zuidoosten is een iets ruimere groen- en parkeerzone zichtbaar, maar geen ononderbroken bouwvlak bij het kruis.",
+        "aerialHvcRouteAssessment": "Aanrijden is via een woonerf mogelijk, maar een vrije opstelstrook van 12,0 bij 3,1 meter zonder blokkering of krappe bocht is niet overtuigend zichtbaar.",
+        "localShiftInstruction": "Onderzoek 20 tot 35 meter oostelijk of zuidoostelijk de rand van de ruimere groen- en parkeerzone en herbereken de loopafstanden op die pin.",
+        "visibleConstraints": [
+          "krappe woonerfroute",
+          "heesters en boomwortels",
+          "water en erfgrenzen dichtbij",
+          "geen duidelijk parkeervrij hijsvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-24",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74049,
+          52.721046
+        ]
+      },
+      "properties": {
+        "id": "model-225-24",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Pastoor Willemsestraat 98A",
+        "graphNode": 41,
+        "nearestHouseholdsUncapacitated": 9,
+        "assignedHouseholdsAt100AddressCapacity": 91,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 23,
+        "oldReferenceAddress": "Pastoor Willemsestraat 98A",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1919",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Pin ligt op een betegeld voetpad langs de westelijke oever; direct westelijk liggen gras, heg, parkeerplaatsen en begraafplaats, met slechts een smalle strook.",
+        "aerialHvcRouteAssessment": "Niet op de exacte pin: het voertuig kan niet over het voetpad langs het water opstellen. De Pastoor Willemsestraat zuidelijk van het water is wel bereikbaar, maar de kraan zou niet veilig over water, bomen of auto's mogen hijsen.",
+        "localShiftInstruction": "Onderzoek een verschuiving circa 25-40 meter zuidwest naar een verbrede, verharde rand aan de Pastoor Willemsestraat; behoud afstand tot de waterkant en begraafplaats en voorkom hijsen over parkeerplaatsen.",
+        "visibleConstraints": [
+          "waterloop op circa 6 meter",
+          "bomenrij en heg",
+          "geparkeerde auto's vlak westelijk",
+          "voetpad in plaats van rijbaan"
+        ],
+        "screeningWarnings": [
+          "dichtstbijzijnde openbare voertuigroute ligt circa 13.1 m van het modelpunt"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-25",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.733879,
+          52.720964
+        ]
+      },
+      "properties": {
+        "id": "model-225-25",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Schelphoek Zuid 32",
+        "graphNode": 17,
+        "nearestHouseholdsUncapacitated": 71,
+        "assignedHouseholdsAt100AddressCapacity": 71,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 29,
+        "oldReferenceAddress": "Schelphoek Zuid 32",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G491",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Asfaltbocht met aan de oostzijde een open agrarische rand en aan de westzijde woningen; de feitelijke berm is smal.",
+        "aerialHvcRouteAssessment": "De doorgaande lus maakt voorwaarts rijden plausibel, maar opstellen in de bocht is verkeerskundig ongunstig en vrije hijsruimte ontbreekt op de exacte pin.",
+        "localShiftInstruction": "Schuif 20-35 meter zuid langs het rechte deel van Schelphoek Zuid of naar een verbreding westelijk, buiten boom-, kast- en waterzone.",
+        "visibleConstraints": [
+          "boom en lichtmast beide circa 5,4 meter",
+          "waterloop circa 7,7 meter",
+          "kast circa 7,9 meter",
+          "bocht en kruispunt",
+          "gevel circa 14 meter"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH19 ligt 4 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-26",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.727223,
+          52.720613
+        ]
+      },
+      "properties": {
+        "id": "model-225-26",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Beuninge 80",
+        "graphNode": 335,
+        "nearestHouseholdsUncapacitated": 111,
+        "assignedHouseholdsAt100AddressCapacity": 97,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 7,
+        "oldReferenceAddress": "Beuninge 80",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2696",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het kruis ligt in een bocht direct bij woningen en een erf. Een groter grasvak ligt verder zuidelijk langs de lus, maar niet op de gemarkeerde plek.",
+        "aerialHvcRouteAssessment": "De bocht, geparkeerde voertuigen en korte gevelafstand laten geen veilige rechte opstel- en hijszone zien.",
+        "localShiftInstruction": "Verplaats 35 tot 55 meter zuidwestelijk naar de rechte rand van het grotere grasvak langs de lus en voer een nieuwe eigendoms- en afstandstoets uit.",
+        "visibleConstraints": [
+          "gevel op 5,5 meter",
+          "bochtige woonerfroute",
+          "boom en bosplantsoen",
+          "omringende watergangen"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-27",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.734113,
+          52.719871
+        ]
+      },
+      "properties": {
+        "id": "model-225-27",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oudewal 1",
+        "graphNode": 15,
+        "nearestHouseholdsUncapacitated": 51,
+        "assignedHouseholdsAt100AddressCapacity": 28,
+        "assignedHouseholdsAt75AddressCapacity": 50,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 39,
+        "oldReferenceAddress": "Oudewal 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G702",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Zeer krappe kruising in woon- en bedrijfsweefsel, met afsluitpaal, erven, hagen en gebouwen rondom; de pin ligt op klinkerrijbaan.",
+        "aerialHvcRouteAssessment": "De afsluitpaal en straatgeometrie suggereren beperkte of niet-doorgaande toegang. Een 12 meter voertuig zou waarschijnlijk moeten steken of achteruitrijden.",
+        "localShiftInstruction": "Zoek 70-120 meter west of zuidwest aan de bredere Stationsstraat/Oudewal-rand of een bedrijfsterrein met openbare opstelzone.",
+        "visibleConstraints": [
+          "afsluitpaal circa 3 meter",
+          "erf circa 4,7 meter",
+          "pand circa 13,7 meter",
+          "krappe bochten",
+          "geen groot vrij plantvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-28",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.726936,
+          52.719263
+        ]
+      },
+      "properties": {
+        "id": "model-225-28",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oudewal 51",
+        "graphNode": 384,
+        "nearestHouseholdsUncapacitated": 39,
+        "assignedHouseholdsAt100AddressCapacity": 22,
+        "assignedHouseholdsAt75AddressCapacity": 65,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 35,
+        "oldReferenceAddress": "Oudewal 51",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G766",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Relatief brede asfaltweg nabij een kruising en provinciale weg; aan de noordzijde ligt een berm, aan de zuidzijde staan geparkeerde auto's.",
+        "aerialHvcRouteAssessment": "De doorgaande route is geschikt ogend voor zwaar verkeer, maar opstellen nabij de kruising en provinciale aansluiting vraagt verkeerskundige afscherming; exacte pin is rijbaan.",
+        "localShiftInstruction": "Onderzoek een verschuiving 15-30 meter oost naar een recht wegvak met bruikbare berm, buiten boom en greppel, en verbied parkeren tijdens lediging.",
+        "visibleConstraints": [
+          "boom circa 6,3 meter",
+          "greppel of droge sloot circa 7,6 meter",
+          "heesters en berm",
+          "parkeren",
+          "kruispunt nabij"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH21 ligt 45.2 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-29",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.744779,
+          52.719149
+        ]
+      },
+      "properties": {
+        "id": "model-225-29",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Verzetslaan 13",
+        "graphNode": 3315,
+        "nearestHouseholdsUncapacitated": 78,
+        "assignedHouseholdsAt100AddressCapacity": 86,
+        "assignedHouseholdsAt75AddressCapacity": 72,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 13,
+        "oldReferenceAddress": "Verzetslaan 13",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2723",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "De pin ligt in een vrijwel volledig verharde woonstraat zonder zichtbare openbare zijberm. Woningen, opritten en parkeerplaatsen begrenzen de rijbaan.",
+        "aerialHvcRouteAssessment": "De straat is bereikbaar en heeft oostelijk een kleine keerlus, maar op het modelpunt ontbreekt ruimte voor de bak en een parkeervrije hijszone.",
+        "localShiftInstruction": "Verplaats richting de ruimere groenrand of de gemeentelijke WH28-zone op circa 94 meter oostelijk en toets de resulterende loopafstand opnieuw.",
+        "visibleConstraints": [
+          "geen groen- of trottoirbouwvlak",
+          "parkeren en opritten",
+          "lichtmast",
+          "woonstraat grotendeels blokkeren"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-30",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.73755,
+          52.71901
+        ]
+      },
+      "properties": {
+        "id": "model-225-30",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "'t Eiland 2",
+        "graphNode": 3,
+        "nearestHouseholdsUncapacitated": 77,
+        "assignedHouseholdsAt100AddressCapacity": 84,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 21,
+        "oldReferenceAddress": "'t Eiland 2",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2574",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "rood",
+        "aerialAssessment": "Het punt ligt in een smalle kruising van historische woonstraten. De randen bestaan uit erven, hagen, bomen en opritten; een zelfstandig openbaar bouwvlak is niet zichtbaar.",
+        "aerialHvcRouteAssessment": "De kronkelende, smalle straten en de kruising bieden geen overtuigend recht 12-meter-opstelvak; stilstaan zou de lokale ontsluiting blokkeren.",
+        "localShiftInstruction": "Verplaats richting de gemeentelijke WH25-zone bij Molenaarweg 42 op circa 91 meter zuidoostelijk en herbereken de dekking; onderzoek of site 5 en 21 kunnen worden samengevoegd.",
+        "visibleConstraints": [
+          "smalle historische straatgeometrie",
+          "boom, haag en lichtmast",
+          "particuliere erfgrenzen",
+          "geen parkeervrij hijsvak"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-31",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738631,
+          52.719005
+        ]
+      },
+      "properties": {
+        "id": "model-225-31",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Molenaarweg 3",
+        "graphNode": 6,
+        "nearestHouseholdsUncapacitated": 115,
+        "assignedHouseholdsAt100AddressCapacity": 12,
+        "assignedHouseholdsAt75AddressCapacity": 68,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 5,
+        "oldReferenceAddress": "Molenaarweg 3",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G1784",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Het kruis ligt in een smalle noord-zuidlopende woonstraat. Een grasstrook ligt direct oostelijk, maar die wordt begrensd door een watergang en oogt te smal voor vanzelfsprekende plaatsing.",
+        "aerialHvcRouteAssessment": "Doorgaand aanrijden is visueel plausibel, maar stilstaan blokkeert waarschijnlijk de smalle straat en de ondergrondse bak komt dicht bij de watergang.",
+        "localShiftInstruction": "Zoek zuidelijk richting de ruimere kruising en vergelijk dit met de gemeentelijke WH25-zone op circa 67 meter; vermijd de oeverstrook.",
+        "visibleConstraints": [
+          "smalle opstelstrook",
+          "waterkering of slappe oeverzone",
+          "beperkte passeerruimte",
+          "lichtmast"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-32",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.731121,
+          52.718727
+        ]
+      },
+      "properties": {
+        "id": "model-225-32",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Camper 1",
+        "graphNode": 461,
+        "nearestHouseholdsUncapacitated": 11,
+        "assignedHouseholdsAt100AddressCapacity": 15,
+        "assignedHouseholdsAt75AddressCapacity": 18,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 30,
+        "oldReferenceAddress": "De Camper 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2664",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "groen",
+        "aerialAssessment": "Brede, rechte asfaltstraat in bedrijfsgebied met verharde erven; ten noordwesten ligt een zichtbare open parkeerstrook of pleinhoek.",
+        "aerialHvcRouteAssessment": "Voorwaartse aan- en afrijroute en een rechte opstelpositie zijn overtuigend plausibel. Er lijkt ruimte voor het voertuig zonder scherpe keerbeweging.",
+        "localShiftInstruction": "Onderzoek een vak circa 8-15 meter noordwest van de pin aan de rand van de verharde pleinhoek, zodat de doorgaande rijbaan vrij blijft en niet over auto's wordt gehesen.",
+        "visibleConstraints": [
+          "bedrijfspand circa 11,5 meter",
+          "lichtmast circa 11 meter",
+          "erfverkeer",
+          "mogelijk particulier gebruik van aangrenzende verharding"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-33",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.731269,
+          52.717586
+        ]
+      },
+      "properties": {
+        "id": "model-225-33",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "De Cres 14",
+        "graphNode": 457,
+        "nearestHouseholdsUncapacitated": 20,
+        "assignedHouseholdsAt100AddressCapacity": 28,
+        "assignedHouseholdsAt75AddressCapacity": 28,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 17,
+        "oldReferenceAddress": "De Cres 14",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00H1276",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Het punt ligt op een brede asfaltkruising in een bedrijfsgebied. Verharde erven en brede rijbanen bieden manoeuvreerruimte, maar geen duidelijk afzonderlijk openbaar containerbouwvlak.",
+        "aerialHvcRouteAssessment": "Aanrijden en doorgaand verlaten met een groot voertuig zijn geloofwaardig. De opstelling moet uit de kruising en uit bedrijfsinritten worden geschoven.",
+        "localShiftInstruction": "Onderzoek 10 tot 20 meter oostelijk of noordoostelijk een gemeentelijk verhard zijvak langs het rechte wegdeel en borg vrije bedrijfsinritten.",
+        "visibleConstraints": [
+          "bedrijfsinritten en vrachtbewegingen",
+          "gevel op 8,3 meter",
+          "mogelijk particulier verhard erf",
+          "kruispuntblokkade"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-34",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.733817,
+          52.716958
+        ]
+      },
+      "properties": {
+        "id": "model-225-34",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Bregweid 1",
+        "graphNode": 451,
+        "nearestHouseholdsUncapacitated": 15,
+        "assignedHouseholdsAt100AddressCapacity": 7,
+        "assignedHouseholdsAt75AddressCapacity": 7,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 27,
+        "oldReferenceAddress": "Bregweid 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00H1094",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Smalle asfaltstraat met een duidelijke grasstrook aan de oostzijde direct ten noordoosten van de pin; woningen en inritten liggen dichtbij.",
+        "aerialHvcRouteAssessment": "Voorwaarts doorrijden lijkt mogelijk, maar opstellen blokkeert waarschijnlijk tijdelijk de woonstraat; de noordelijke aansluiting oogt bruikbaarder dan het zuidelijke voet- of groengebied.",
+        "localShiftInstruction": "Verschuif circa 8-15 meter noordoost naar de rand van de grote grasstrook en laat de rijloper vrij; benut een kraanopstelling vanaf de rechte straatsectie.",
+        "visibleConstraints": [
+          "woonstraat met beperkte breedte",
+          "inritten",
+          "lichtmast circa 10 meter",
+          "gevel circa 17 meter"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH35 ligt 44.4 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-35",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.742833,
+          52.716676
+        ]
+      },
+      "properties": {
+        "id": "model-225-35",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Schoffel 1",
+        "graphNode": 954,
+        "nearestHouseholdsUncapacitated": 83,
+        "assignedHouseholdsAt100AddressCapacity": 76,
+        "assignedHouseholdsAt75AddressCapacity": 75,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 37,
+        "oldReferenceAddress": "Schoffel 1",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00G2723",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "oranje",
+        "aerialAssessment": "Pin ligt op de toegang van een woonbuurt, met open gras aan noordwestzijde maar water aan meerdere kanten; bij de aansluiting op Debbemeerweg staan bomen.",
+        "aerialHvcRouteAssessment": "De wijktoegang is bereikbaar, maar een voertuigopstelling op of nabij de dam kan doorgang blokkeren en de manoeuvreerruimte is beperkt.",
+        "localShiftInstruction": "Onderzoek 15-25 meter noord op de graszoom vóór de woonstraten of een opstelplek aan de zuidelijke Debbemeerwegzijde; houd kraan en fundering ruim van water en bomen.",
+        "visibleConstraints": [
+          "waterloop circa 12,7 meter",
+          "boom circa 10,5 meter",
+          "lichtmast circa 7,4 meter",
+          "kunstobject circa 7,8 meter",
+          "smalle brug- of damtoegang"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH29 ligt 7 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-36",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7397,
+          52.716574
+        ]
+      },
+      "properties": {
+        "id": "model-225-36",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Debbemeerweg 33",
+        "graphNode": 960,
+        "nearestHouseholdsUncapacitated": 28,
+        "assignedHouseholdsAt100AddressCapacity": 15,
+        "assignedHouseholdsAt75AddressCapacity": 12,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 38,
+        "oldReferenceAddress": "Debbemeerweg 33",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00I525",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "groen",
+        "aerialAssessment": "Brede doorgaande asfaltweg met vrijliggende paden en een open driehoekige grasstrook noordelijk van de pin; water en bomen liggen op enige afstand.",
+        "aerialHvcRouteAssessment": "De weg oogt geschikt voor een voorwaartse route en rechte voertuigopstelling. Verkeersveiligheid is het hoofdthema door de bocht en fietspaden.",
+        "localShiftInstruction": "Onderzoek de grasdriehoek circa 8-15 meter noord/noordwest van de pin, met bediening vanaf het rechte oost-west wegvak en behoud van zicht en fietsroute.",
+        "visibleConstraints": [
+          "verkeersbordpaal circa 4,5 meter",
+          "boom circa 6,4 meter",
+          "waterloop circa 9,7 meter",
+          "bocht en fietspaden"
+        ],
+        "screeningWarnings": [],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-37",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7281,
+          52.716019
+        ]
+      },
+      "properties": {
+        "id": "model-225-37",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oudevaart 87",
+        "graphNode": 454,
+        "nearestHouseholdsUncapacitated": 10,
+        "assignedHouseholdsAt100AddressCapacity": 10,
+        "assignedHouseholdsAt75AddressCapacity": 10,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 24,
+        "oldReferenceAddress": "Oudevaart 87",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00H1719",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "groen",
+        "aerialAssessment": "Asfaltweg met relatief open berm- en grasruimte aan de noord- en oostzijde; de pin zelf ligt midden op de rijbaan.",
+        "aerialHvcRouteAssessment": "Doorgaande brede lokale weg en zijweg maken een voorwaartse aan- en afrijroute plausibel. Opstellen langs de rijbaan lijkt mogelijk als doorgang en kruising vrij blijven.",
+        "localShiftInstruction": "Projecteer de container niet op het asfalt maar circa 6-10 meter noord/noordoost in de gemeentelijke grasstrook, buiten de greppel en boomprojectie, met kraanbereik vanaf Oudevaart.",
+        "visibleConstraints": [
+          "greppel of droge sloot op circa 11 meter",
+          "lichtmast op circa 11 meter",
+          "boom op circa 16 meter",
+          "gevel op circa 14 meter"
+        ],
+        "screeningWarnings": [
+          "gepubliceerde gemeentelijke restlocatie WH22 ligt 17.3 m verderop en verdient voorkeur als bouwpin"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-225-38",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.72668,
+          52.715879
+        ]
+      },
+      "properties": {
+        "id": "model-225-38",
+        "kind": "additional-model-site",
+        "accessScope": "public",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": "Oudevaart 89",
+        "graphNode": 1471,
+        "nearestHouseholdsUncapacitated": 1,
+        "assignedHouseholdsAt100AddressCapacity": 1,
+        "assignedHouseholdsAt75AddressCapacity": 1,
+        "containersAt100AddressCapacity": 1,
+        "containersAt75AddressCapacity": 1,
+        "oldSite": 42,
+        "oldReferenceAddress": "Oudevaart 89",
+        "ownershipScreen": "municipal-parcel-at-anchor",
+        "exactMunicipalParcel": "WMH00H1719",
+        "municipalParcelWithin25M": true,
+        "aerialRating": "groen",
+        "aerialAssessment": "Brede doorgaande asfaltweg met grasberm en zijweg; ten oosten ligt een parkeerterrein, ten westen open land. De pin ligt op de rijbaan.",
+        "aerialHvcRouteAssessment": "Een voorwaartse route voor zwaar verkeer en een rechte opstelpositie zijn duidelijk plausibel. Opstellen mag de provinciale of doorgaande verkeersfunctie niet onveilig hinderen.",
+        "localShiftInstruction": "Onderzoek circa 10-20 meter oost/zuidoost, aan de parkeerterreinzijde van de zijweg, zodat de container vanaf de zijweg kan worden bediend en niet vanaf de doorgaande rijbaan.",
+        "visibleConstraints": [
+          "verkeersbordpaal circa 7,8 meter",
+          "boom circa 8,2 meter",
+          "greppel of droge sloot circa 14 meter",
+          "kruising en fietsstrook"
+        ],
+        "screeningWarnings": [
+          "grote BAG-netwerksnap van 61.4 m"
+        ],
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    }
+  ]
+}
