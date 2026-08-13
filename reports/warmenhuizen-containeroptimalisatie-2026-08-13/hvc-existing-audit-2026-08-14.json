@@ -1,0 +1,362 @@
+{
+  "generatedAt": "2026-08-13T23:07:55.208Z",
+  "mode": "dry-run",
+  "auditedCount": 11,
+  "appliedCount": 0,
+  "results": [
+    {
+      "id": "WH03",
+      "address": "Rietzangerstraat 17",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749VE",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Rietzangerstraat",
+          "houseNumber": 17,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749VE",
+        "method": "exact-address",
+        "matchedAddress": "Rietzangerstraat 17",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.72721,
+      "oldLon": 4.741939,
+      "newLat": 52.72721,
+      "newLon": 4.741939,
+      "deltaMeters": 0,
+      "hvcContainerId": 80799,
+      "hvcAddress": "Rietzangerstraat 17",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Rietzangerstraat 17, 1749VE Warmenhuizen",
+      "hvcLocationCount": 11,
+      "hvcRestContainerCount": 1
+    },
+    {
+      "id": "WH05",
+      "address": "Kuipersven 36",
+      "status": "manualReview",
+      "reason": "no HVC rest container candidates returned",
+      "postcode": "1749JP",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Kuipersven",
+          "houseNumber": 36,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749JP",
+        "method": "exact-address",
+        "matchedAddress": "Kuipersven 36",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.726883,
+      "oldLon": 4.748476,
+      "newLat": null,
+      "newLon": null,
+      "deltaMeters": null,
+      "hvcContainerId": null,
+      "hvcAddress": null,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Kuipersven 36, 1749JP Warmenhuizen",
+      "hvcLocationCount": 10,
+      "hvcRestContainerCount": 0
+    },
+    {
+      "id": "WH06",
+      "address": "Soeverein 2",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749LD",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Soeverein",
+          "houseNumber": 2,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749LD",
+        "method": "exact-address",
+        "matchedAddress": "Soeverein 2",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.727578,
+      "oldLon": 4.750383,
+      "newLat": 52.727578,
+      "newLon": 4.750383,
+      "deltaMeters": 0,
+      "hvcContainerId": 81653,
+      "hvcAddress": "Soeverein 2",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Soeverein 2, 1749LD Warmenhuizen",
+      "hvcLocationCount": 10,
+      "hvcRestContainerCount": 2
+    },
+    {
+      "id": "WH08",
+      "address": "Dorpsstraat 89",
+      "status": "manualReview",
+      "reason": "no HVC rest container candidates returned",
+      "postcode": "1749AA",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Dorpsstraat",
+          "houseNumber": 89,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749AA",
+        "method": "exact-address",
+        "matchedAddress": "Dorpsstraat 89",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.725435,
+      "oldLon": 4.739056,
+      "newLat": null,
+      "newLon": null,
+      "deltaMeters": null,
+      "hvcContainerId": null,
+      "hvcAddress": null,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Dorpsstraat 89, 1749AA Warmenhuizen",
+      "hvcLocationCount": 17,
+      "hvcRestContainerCount": 0
+    },
+    {
+      "id": "WH14",
+      "address": "Doorbraak 23",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749AM",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Doorbraak",
+          "houseNumber": 23,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749AM",
+        "method": "exact-address",
+        "matchedAddress": "Doorbraak 23",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.722411,
+      "oldLon": 4.740981,
+      "newLat": 52.722411,
+      "newLon": 4.740981,
+      "deltaMeters": 0,
+      "hvcContainerId": 81206,
+      "hvcAddress": "Doorbraak 23",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Doorbraak 23, 1749AM Warmenhuizen",
+      "hvcLocationCount": 19,
+      "hvcRestContainerCount": 3
+    },
+    {
+      "id": "WH23",
+      "address": "Molenaarsweg 7",
+      "status": "manualReview",
+      "reason": "no HVC rest container candidates returned",
+      "postcode": "1749AS",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Molenaarsweg",
+          "houseNumber": 7,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749AS",
+        "method": "fuzzy-street-address",
+        "matchedAddress": "Molenaarweg 7",
+        "reason": "postcode resolved by unique fuzzy local coverage address"
+      },
+      "oldLat": 52.720329,
+      "oldLon": 4.738551,
+      "newLat": null,
+      "newLon": null,
+      "deltaMeters": null,
+      "hvcContainerId": null,
+      "hvcAddress": null,
+      "hvcAddressLookupReason": "postcode and house number HVC address match",
+      "hvcAddressDescription": "Molenaarweg 7, 1749AS Warmenhuizen",
+      "hvcLocationCount": 16,
+      "hvcRestContainerCount": 0
+    },
+    {
+      "id": "WH24",
+      "address": "Pastoor Willemsestraat 80",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749AR",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Pastoor Willemsestraat",
+          "houseNumber": 80,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749AR",
+        "method": "exact-address",
+        "matchedAddress": "Pastoor Willemsestraat 80",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.720753,
+      "oldLon": 4.74024,
+      "newLat": 52.720753,
+      "newLon": 4.74024,
+      "deltaMeters": 0,
+      "hvcContainerId": 80428,
+      "hvcAddress": "Pastoor Willemsestraat 80",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Pastoor Willemsestraat 80, 1749AR Warmenhuizen",
+      "hvcLocationCount": 16,
+      "hvcRestContainerCount": 2
+    },
+    {
+      "id": "WH26",
+      "address": "Regelhaalder 42",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749KK",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Regelhaalder",
+          "houseNumber": 42,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749KK",
+        "method": "exact-address",
+        "matchedAddress": "Regelhaalder 42",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.718557,
+      "oldLon": 4.741484,
+      "newLat": 52.718557,
+      "newLon": 4.741484,
+      "deltaMeters": 0,
+      "hvcContainerId": 80299,
+      "hvcAddress": "Regelhaalder 42",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Regelhaalder 42, 1749KK Warmenhuizen",
+      "hvcLocationCount": 15,
+      "hvcRestContainerCount": 3
+    },
+    {
+      "id": "WH27",
+      "address": "Zigt 97",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749KH",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Zigt",
+          "houseNumber": 97,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749KH",
+        "method": "exact-address",
+        "matchedAddress": "Zigt 97",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.718151,
+      "oldLon": 4.743409,
+      "newLat": 52.718151,
+      "newLon": 4.743409,
+      "deltaMeters": 0,
+      "hvcContainerId": 80552,
+      "hvcAddress": "Zigt 97",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Zigt 97, 1749KH Warmenhuizen",
+      "hvcLocationCount": 15,
+      "hvcRestContainerCount": 2
+    },
+    {
+      "id": "WH33",
+      "address": "Zuiderkruis 36",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749ME",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Zuiderkruis",
+          "houseNumber": 36,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749ME",
+        "method": "exact-address",
+        "matchedAddress": "Zuiderkruis 36",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.729898,
+      "oldLon": 4.74845,
+      "newLat": 52.729898,
+      "newLon": 4.74845,
+      "deltaMeters": 0,
+      "hvcContainerId": 81782,
+      "hvcAddress": "Zuiderkruis 36",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Zuiderkruis 36, 1749ME Warmenhuizen",
+      "hvcLocationCount": 11,
+      "hvcRestContainerCount": 2
+    },
+    {
+      "id": "WH34",
+      "address": "Poolster 25",
+      "status": "unchanged",
+      "reason": "address-match",
+      "postcode": "1749MD",
+      "postcodeResolution": {
+        "parsedAddress": {
+          "street": "Poolster",
+          "houseNumber": 25,
+          "houseLetter": "",
+          "houseNumberExtension": ""
+        },
+        "postcode": "1749MD",
+        "method": "exact-address",
+        "matchedAddress": "Poolster 25",
+        "reason": "postcode resolved by exact local coverage address"
+      },
+      "oldLat": 52.730485,
+      "oldLon": 4.750576,
+      "newLat": 52.730485,
+      "newLon": 4.750576,
+      "deltaMeters": 0,
+      "hvcContainerId": 81783,
+      "hvcAddress": "Poolster 25",
+      "hvcType": "rest",
+      "hvcInsertionOpening": "60 liter",
+      "hvcIsAccessibleForUser": true,
+      "hvcAddressLookupReason": "exact HVC address match",
+      "hvcAddressDescription": "Poolster 25, 1749MD Warmenhuizen",
+      "hvcLocationCount": 9,
+      "hvcRestContainerCount": 2
+    }
+  ]
+}

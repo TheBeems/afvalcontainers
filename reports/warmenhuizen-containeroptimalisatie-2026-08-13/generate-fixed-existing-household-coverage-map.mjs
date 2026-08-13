@@ -260,9 +260,11 @@ function extractSites(scenario, walkingMatrix, sourceContainers, screenedLocatio
   const sites = [...grouped.values()];
   const existing = sites.filter((site) => site.role.startsWith('existing-'));
   const additional = sites.filter((site) => site.role === 'additional');
+  const showSourceIds = scenario.presentation?.showSourceIds === true;
   existing.forEach((site) => { site.displayId = site.id; });
   additional.forEach((site, index) => {
-    site.displayId = site.site ? `A${site.site}` : `A${index + 1}`;
+    const shortId = site.site ? `A${site.site}` : `A${index + 1}`;
+    site.displayId = showSourceIds ? site.id : shortId;
   });
   return sites;
 }
@@ -549,6 +551,10 @@ function buildStatistics(households, sites, scenario) {
   const existing = [...existingPublic, ...existingPrivate];
   const additional = sites.filter((site) => site.role === 'additional');
   const maximum = finiteDistances.length ? Math.max(...finiteDistances) : null;
+  const sortedDistances = [...finiteDistances].sort((left, right) => left - right);
+  const percentile95 = sortedDistances.length
+    ? sortedDistances[Math.min(sortedDistances.length - 1, Math.ceil(sortedDistances.length * 0.95) - 1)]
+    : null;
   const unitsModeled = sites.every((site) => Number.isFinite(site.units));
   const modelMaximum = finiteNumber(
     scenario.maximumWalkingDistanceM,
@@ -558,6 +564,15 @@ function buildStatistics(households, sites, scenario) {
     scenario.summary?.maximumWalkingDistanceM,
     scenario.solution?.maximumWalkingDistanceM,
     maximum
+  );
+  const target = finiteNumber(
+    scenario.maximumWalkingDistanceTargetM,
+    scenario.walkingDistanceReferenceM,
+    scenario.designMaximumWalkingDistanceM,
+    scenario.scenario?.maximumWalkingDistanceTargetM,
+    scenario.scenario?.walkingDistanceReferenceM,
+    scenario.scenario?.designMaximumWalkingDistanceM,
+    275
   );
   return {
     counts,
@@ -571,8 +586,11 @@ function buildStatistics(households, sites, scenario) {
     additionalUnits: unitsModeled ? additional.reduce((sum, site) => sum + site.units, 0) : null,
     maximum,
     modelMaximum,
+    percentile95,
+    target,
     within150: counts.within_100 + counts.between_100_125 + counts.between_125_150,
-    within225: finiteDistances.filter((distance) => distance <= 225).length
+    within225: finiteDistances.filter((distance) => distance <= 225).length,
+    withinTarget: finiteDistances.filter((distance) => distance <= target).length
   };
 }
 
@@ -584,6 +602,12 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
   const streetLabels = buildStreetLabels(roads, projection);
   const houseLayer = buildHouseLayer(households, projection);
   const containerLayer = buildContainerLayer(sites, projection);
+  const presentation = scenario.presentation ?? {};
+  const title = presentation.title ?? 'Containerscenario Warmenhuizen';
+  const subtitle = presentation.subtitle
+    ?? `${statistics.existingSites} bestaande HVC-locaties · ${statistics.additionalSites} aanvullende onderzoekszones`;
+  const note = presentation.note
+    ?? 'Dit is een analytisch scenario; onderzoekszones zijn geen uitvoeringsgerede bouwpinnen.';
   const legendItems = DISTANCE_BANDS.map((band, index) => {
     const column = index < 3 ? 0 : 1;
     const row = index % 3;
@@ -594,7 +618,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}" role="img" aria-labelledby="map-title map-description">
-  <title id="map-title">Gecorrigeerd containerscenario Warmenhuizen met bestaande HVC-locaties verplicht</title>
+  <title id="map-title">${escapeXml(title)}</title>
   <desc id="map-description">Kaart van ${statistics.total} huishoudens, gekleurd naar berekende loopafstand, met ${statistics.existingPublicSites} openbare en ${statistics.existingPrivateSites} private bestaande HVC-locaties en ${statistics.additionalSites} aanvullende onderzoekszones.</desc>
   <defs>
     <clipPath id="map-clip"><rect x="${MAP.x}" y="${MAP.y}" width="${MAP.width}" height="${MAP.height}" rx="18"/></clipPath>
@@ -614,8 +638,8 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
     </style>
   </defs>
   <rect width="${WIDTH}" height="${HEIGHT}" fill="#f8fafc"/>
-  <text x="48" y="58" class="title">Gecorrigeerd scenario Warmenhuizen</text>
-  <text x="48" y="91" class="subtitle">Alle ${statistics.existingSites} bestaande HVC-locaties blijven · aanvullingen zijn modelankers, geen bouwpinnen</text>
+  <text x="48" y="58" class="title">${escapeXml(title)}</text>
+  <text x="48" y="91" class="subtitle">${escapeXml(subtitle)}</text>
 
   <g transform="translate(48 122)">
     <rect width="196" height="90" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
@@ -629,13 +653,13 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
   </g>
   <g transform="translate(468 122)">
     <rect width="196" height="90" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
-    <text x="18" y="39" class="metric-value">${formatPercentage(statistics.within150, statistics.total)}</text>
-    <text x="18" y="66" class="metric-label">huishoudens ≤ 150 m</text>
+    <text x="18" y="39" class="metric-value">${statistics.percentile95?.toFixed(1).replace('.0', '') ?? '–'} m</text>
+    <text x="18" y="66" class="metric-label">95e percentiel</text>
   </g>
   <g transform="translate(678 122)">
     <rect width="196" height="90" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
-    <text x="18" y="39" class="metric-value">${formatPercentage(statistics.within225, statistics.total)}</text>
-    <text x="18" y="66" class="metric-label">huishoudens ≤ 225 m</text>
+    <text x="18" y="39" class="metric-value">${formatPercentage(statistics.withinTarget, statistics.total)}</text>
+    <text x="18" y="66" class="metric-label">huishoudens ≤ ${statistics.target.toFixed(0)} m</text>
   </g>
   <text x="930" y="66" class="legend-title">Loopafstand per huishouden</text>
   ${legendItems}
@@ -654,7 +678,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
     <rect x="20" y="20" width="20" height="20" rx="4" fill="#0f172a"/><text x="50" y="36" class="legend-text">Openbare HVC: ${statistics.existingPublicSites}</text>
     <path d="M339 17L352 30L339 43L326 30Z" fill="#2563eb"/><text x="362" y="36" class="legend-text">Private HVC: ${statistics.existingPrivateSites} (alleen allowlist)</text>
     <circle cx="677" cy="30" r="11" fill="#c026d3"/><path d="M672 30H682M677 25V35" stroke="#fff" stroke-width="2.5"/><text x="698" y="36" class="legend-text">Aanvullende modelankers: ${statistics.additionalSites}</text>
-    <text x="20" y="72" class="note">Bakscenario&apos;s in de tabel gebruiken 100 of 75 adresequivalenten per bak; dit is gevoeligheidsanalyse, geen gemeten vulgraad. Rood betekent 150–275 m.</text>
+    <text x="20" y="72" class="note">${escapeXml(note)}</text>
   </g>
   <text x="48" y="1654" class="source">Modelinput: ${escapeXml(inputName)} · BAG-woonfunctieadressen: ${statistics.total} · Wegennet: OpenStreetMap, ODbL</text>
   <text x="48" y="1675" class="source">Gegenereerd ${escapeXml(generatedAt)}</text>
@@ -675,13 +699,23 @@ function buildLocationRows(sites) {
     </tr>`).join('\n');
 }
 
-function buildHtml(svg, sites, inputName) {
+function buildHtml(svg, sites, scenario, inputName) {
+  const presentation = scenario.presentation ?? {};
+  const title = presentation.title ?? 'Containerscenario Warmenhuizen';
+  const locationIntro = presentation.locationIntro
+    ?? 'De aanvullende punten zijn analytische onderzoekszones en moeten nog door gemeente en HVC als bouwpin worden ingemeten en goedgekeurd.';
+  const hasCapacitySensitivity = sites.some((site) => (
+    Number.isFinite(site.capacityUnitsAt100) && Number.isFinite(site.capacityUnitsAt75)
+  ));
+  const capacityParagraph = hasCapacitySensitivity
+    ? '<strong>Bakken (modelgevoeligheid)</strong> toont het benodigde aantal bij maximaal 100 of 75 BAG-adresequivalenten per bak. Dit is geen bestand van actieve afvalpassen en geen meting van afvalvolume, aanbiedfrequentie of vulgraad; het is uitsluitend een rekengevoeligheid en geen operationele capaciteitstoets.'
+    : '<strong>Capaciteit is in dit scenario niet getoetst.</strong> De tabel toont daarom “Niet beschikbaar”. Zonder bakvolume, aanbiedfrequentie, vulgraad en ledigingsregime kan deze kaart geen uitspraak doen over het benodigde aantal fysieke bakken per locatie.';
   return `<!doctype html>
 <html lang="nl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gecorrigeerd containerscenario Warmenhuizen</title>
+  <title>${escapeHtml(title)}</title>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #eef2f6; }
     * { box-sizing: border-box; }
@@ -737,8 +771,8 @@ function buildHtml(svg, sites, inputName) {
     </div>
     <section class="panel">
       <h2>Locaties in dit scenario</h2>
-      <p>Alle elf bestaande HVC-locaties zijn vaste randvoorwaarden. WH23 en WH24 zijn privé en tellen alleen mee voor hun expliciete adres-allowlist. De aanvullende punten zijn analytische onderzoekszones en moeten nog door gemeente en HVC als bouwpin worden ingemeten en goedgekeurd.</p>
-      <p><strong>Bakken (modelgevoeligheid)</strong> toont het benodigde aantal bij maximaal 100 of 75 BAG-adresequivalenten per bak. Dit is geen bestand van actieve afvalpassen en geen meting van afvalvolume, aanbiedfrequentie of vulgraad; de capaciteitsverdeling bewijst haalbaarheid binnen het model en minimaliseert niet opnieuw de loopafstand.</p>
+      <p>${escapeHtml(locationIntro)}</p>
+      <p>${capacityParagraph}</p>
       <div class="table-scroll">
         <table>
           <thead><tr><th>Kaart-ID</th><th>Rol</th><th>Adresreferentie</th><th>Oude screen</th><th>Bakken (modelgevoeligheid)</th><th>Coördinaten</th></tr></thead>
@@ -800,7 +834,7 @@ async function main() {
   if (sites.length === 0) throw new Error('Optimizer result contains no selected locations.');
   const households = normalizeHouseholds(scenario, coverage.houses);
   const svg = buildSvg({ households, sites, roads, scenario, inputName: basename(options.input) });
-  const html = buildHtml(svg, sites, basename(options.input));
+  const html = buildHtml(svg, sites, scenario, basename(options.input));
   await Promise.all([
     writeFile(options.svgOutput, `${svg}\n`, 'utf8'),
     writeFile(options.htmlOutput, `${html}\n`, 'utf8')

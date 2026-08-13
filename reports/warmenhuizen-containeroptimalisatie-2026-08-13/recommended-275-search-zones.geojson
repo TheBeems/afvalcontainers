@@ -1,0 +1,763 @@
+{
+  "type": "FeatureCollection",
+  "name": "Warmenhuizen: 11 bestaande locaties plus 23 zoekzones bij circa 275 meter",
+  "generatedAt": "2026-08-13T23:18:19.655Z",
+  "coordinateReferenceSystem": "WGS84 (EPSG:4326)",
+  "scenario": {
+    "maximumWalkingDistanceTargetM": 275,
+    "fixedExistingLocationCount": 11,
+    "fixedPublicLocationCount": 9,
+    "fixedPrivateLocationCount": 2,
+    "additionalSiteCount": 23,
+    "totalPhysicalLocationCount": 34,
+    "publiclyUsableLocationCount": 32,
+    "maximumModeledWalkingDistanceM": 273.1,
+    "averageModeledWalkingDistanceM": 140.2,
+    "p50ModeledWalkingDistanceM": 142.7,
+    "p90ModeledWalkingDistanceM": 221.6,
+    "p95ModeledWalkingDistanceM": 235,
+    "distanceBands": {
+      "within_100": 747,
+      "between_100_125": 311,
+      "between_125_150": 319,
+      "between_150_275": 1202,
+      "over_275": 0,
+      "unreachable": 0
+    },
+    "allHouseholdsWithinTarget": true,
+    "householdsWithinTargetUsingExistingOnly": 1288,
+    "householdsRequiringAdditionalCoverage": 1291,
+    "additionalSitePackingLowerBound": 18,
+    "additionalSiteHeuristicGap": 5,
+    "selectedHeuristic": "fixed-residual-greedy",
+    "heuristicStarts": [
+      {
+        "name": "fixed-residual-greedy",
+        "inputSiteCount": 23,
+        "fixedAwarePrunedSiteCount": 23
+      },
+      {
+        "name": "prior-unconstrained-greedy",
+        "inputSiteCount": 31,
+        "fixedAwarePrunedSiteCount": 23
+      }
+    ],
+    "note": "Additional features are analytical search-zone anchors, not build-ready pins."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "WH03",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741939,
+          52.72721
+        ]
+      },
+      "properties": {
+        "id": "WH03",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Rietzangerstraat 17",
+        "accessScope": "public",
+        "graphNode": 695,
+        "assignedHouseholdsUncapacitated": 129,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH05",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.748476,
+          52.726883
+        ]
+      },
+      "properties": {
+        "id": "WH05",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Kuipersven 36",
+        "accessScope": "public",
+        "graphNode": 75,
+        "assignedHouseholdsUncapacitated": 144,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH06",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750383,
+          52.727578
+        ]
+      },
+      "properties": {
+        "id": "WH06",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Soeverein 2",
+        "accessScope": "public",
+        "graphNode": 81,
+        "assignedHouseholdsUncapacitated": 68,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH08",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739056,
+          52.725435
+        ]
+      },
+      "properties": {
+        "id": "WH08",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Dorpsstraat 89",
+        "accessScope": "public",
+        "graphNode": 140,
+        "assignedHouseholdsUncapacitated": 123,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH14",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.740981,
+          52.722411
+        ]
+      },
+      "properties": {
+        "id": "WH14",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Doorbraak 23",
+        "accessScope": "public",
+        "graphNode": 50,
+        "assignedHouseholdsUncapacitated": 150,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH23",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738551,
+          52.720329
+        ]
+      },
+      "properties": {
+        "id": "WH23",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Molenaarsweg 7",
+        "accessScope": "private",
+        "graphNode": 2432,
+        "assignedHouseholdsUncapacitated": 3,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH24",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74024,
+          52.720753
+        ]
+      },
+      "properties": {
+        "id": "WH24",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Pastoor Willemsestraat 80",
+        "accessScope": "private",
+        "graphNode": 2435,
+        "assignedHouseholdsUncapacitated": 4,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH26",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741484,
+          52.718557
+        ]
+      },
+      "properties": {
+        "id": "WH26",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Regelhaalder 42",
+        "accessScope": "public",
+        "graphNode": 951,
+        "assignedHouseholdsUncapacitated": 144,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH27",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743409,
+          52.718151
+        ]
+      },
+      "properties": {
+        "id": "WH27",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Zigt 97",
+        "accessScope": "public",
+        "graphNode": 959,
+        "assignedHouseholdsUncapacitated": 144,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH33",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74845,
+          52.729898
+        ]
+      },
+      "properties": {
+        "id": "WH33",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Zuiderkruis 36",
+        "accessScope": "public",
+        "graphNode": 2546,
+        "assignedHouseholdsUncapacitated": 84,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "WH34",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750576,
+          52.730485
+        ]
+      },
+      "properties": {
+        "id": "WH34",
+        "kind": "existing",
+        "status": "fixed-existing-hvc-location",
+        "address": "Poolster 25",
+        "accessScope": "public",
+        "graphNode": 1741,
+        "assignedHouseholdsUncapacitated": 36,
+        "coordinateMeaning": "exact HVC coordinate from the repository audit"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-01",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738858,
+          52.729632
+        ]
+      },
+      "properties": {
+        "id": "model-275-01",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 679,
+        "assignedHouseholdsUncapacitated": 29,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-02",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.742866,
+          52.729332
+        ]
+      },
+      "properties": {
+        "id": "model-275-02",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 2272,
+        "assignedHouseholdsUncapacitated": 66,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-03",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.736561,
+          52.727869
+        ]
+      },
+      "properties": {
+        "id": "model-275-03",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 706,
+        "assignedHouseholdsUncapacitated": 80,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-04",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.745155,
+          52.72752
+        ]
+      },
+      "properties": {
+        "id": "model-275-04",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 770,
+        "assignedHouseholdsUncapacitated": 60,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-05",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750878,
+          52.726407
+        ]
+      },
+      "properties": {
+        "id": "model-275-05",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 265,
+        "assignedHouseholdsUncapacitated": 41,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-06",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.744268,
+          52.725362
+        ]
+      },
+      "properties": {
+        "id": "model-275-06",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 88,
+        "assignedHouseholdsUncapacitated": 86,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-07",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.734133,
+          52.725182
+        ]
+      },
+      "properties": {
+        "id": "model-275-07",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 3280,
+        "assignedHouseholdsUncapacitated": 1,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-08",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.732146,
+          52.724578
+        ]
+      },
+      "properties": {
+        "id": "model-275-08",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 796,
+        "assignedHouseholdsUncapacitated": 6,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-09",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74482,
+          52.723768
+        ]
+      },
+      "properties": {
+        "id": "model-275-09",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 846,
+        "assignedHouseholdsUncapacitated": 98,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-10",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.735225,
+          52.723336
+        ]
+      },
+      "properties": {
+        "id": "model-275-10",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 141,
+        "assignedHouseholdsUncapacitated": 86,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-11",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.726312,
+          52.722262
+        ]
+      },
+      "properties": {
+        "id": "model-275-11",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 1894,
+        "assignedHouseholdsUncapacitated": 38,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-12",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.746228,
+          52.722171
+        ]
+      },
+      "properties": {
+        "id": "model-275-12",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 860,
+        "assignedHouseholdsUncapacitated": 60,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-13",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.737997,
+          52.722061
+        ]
+      },
+      "properties": {
+        "id": "model-275-13",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 1169,
+        "assignedHouseholdsUncapacitated": 146,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-14",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.730818,
+          52.721476
+        ]
+      },
+      "properties": {
+        "id": "model-275-14",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 2918,
+        "assignedHouseholdsUncapacitated": 175,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-15",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.727523,
+          52.720165
+        ]
+      },
+      "properties": {
+        "id": "model-275-15",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 1664,
+        "assignedHouseholdsUncapacitated": 121,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-16",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.733948,
+          52.720109
+        ]
+      },
+      "properties": {
+        "id": "model-275-16",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 1267,
+        "assignedHouseholdsUncapacitated": 119,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-17",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.731121,
+          52.718727
+        ]
+      },
+      "properties": {
+        "id": "model-275-17",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 461,
+        "assignedHouseholdsUncapacitated": 17,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-18",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738679,
+          52.71871
+        ]
+      },
+      "properties": {
+        "id": "model-275-18",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 5,
+        "assignedHouseholdsUncapacitated": 176,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-19",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.731297,
+          52.717429
+        ]
+      },
+      "properties": {
+        "id": "model-275-19",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 458,
+        "assignedHouseholdsUncapacitated": 20,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-20",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74461,
+          52.716857
+        ]
+      },
+      "properties": {
+        "id": "model-275-20",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 3308,
+        "assignedHouseholdsUncapacitated": 87,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-21",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.73407,
+          52.716524
+        ]
+      },
+      "properties": {
+        "id": "model-275-21",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 453,
+        "assignedHouseholdsUncapacitated": 16,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-22",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.72668,
+          52.715879
+        ]
+      },
+      "properties": {
+        "id": "model-275-22",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 1471,
+        "assignedHouseholdsUncapacitated": 13,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "model-275-23",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738744,
+          52.715777
+        ]
+      },
+      "properties": {
+        "id": "model-275-23",
+        "kind": "additional-model-site",
+        "status": "search-zone-anchor-not-build-pin",
+        "address": null,
+        "accessScope": "public",
+        "graphNode": 972,
+        "assignedHouseholdsUncapacitated": 9,
+        "coordinateMeaning": "search anchor on reconstructed walking graph; not a build-ready pin"
+      }
+    }
+  ]
+}

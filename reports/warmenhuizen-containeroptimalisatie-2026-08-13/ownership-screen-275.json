@@ -1,0 +1,368 @@
+{
+  "generatedAt": "2026-08-13T23:11:27.218Z",
+  "source": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1/query",
+  "note": "Openbare BRK-grootgrondgebruiksscreening; geen juridische eigendomsverklaring, volledige kadastrale recherche, KLIC- of terreintoets. Niet-gemeentelijke eigenaarsnamen zijn bewust niet opgeslagen.",
+  "searchRadiusM": 25,
+  "counts": {
+    "sites": 23,
+    "exactMunicipal": 20,
+    "municipalWithin25M": 21
+  },
+  "sites": [
+    {
+      "id": "model-275-01",
+      "latitude": 52.729632,
+      "longitude": 4.738858,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2659"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2659",
+        "WMH00G2408"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 21
+    },
+    {
+      "id": "model-275-02",
+      "latitude": 52.729332,
+      "longitude": 4.742866,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G1667"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G1667"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 18
+    },
+    {
+      "id": "model-275-03",
+      "latitude": 52.727869,
+      "longitude": 4.736561,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00F577"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G1669",
+        "WMH00F577"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 15
+    },
+    {
+      "id": "model-275-04",
+      "latitude": 52.72752,
+      "longitude": 4.745155,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I535"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00I296",
+        "WMH00I535"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 6
+    },
+    {
+      "id": "model-275-05",
+      "latitude": 52.726407,
+      "longitude": 4.750878,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I1012"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00I1012"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 12
+    },
+    {
+      "id": "model-275-06",
+      "latitude": 52.725362,
+      "longitude": 4.744268,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I296"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2037",
+        "WMH00I296",
+        "WMH00I695"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 8
+    },
+    {
+      "id": "model-275-07",
+      "latitude": 52.725182,
+      "longitude": 4.734133,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": false,
+      "nearbyMunicipalParcels": [],
+      "exactParcelRecordCount": 4,
+      "nearbyParcelRecordCount": 4
+    },
+    {
+      "id": "model-275-08",
+      "latitude": 52.724578,
+      "longitude": 4.732146,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": false,
+      "nearbyMunicipalParcels": [],
+      "exactParcelRecordCount": 2,
+      "nearbyParcelRecordCount": 22
+    },
+    {
+      "id": "model-275-09",
+      "latitude": 52.723768,
+      "longitude": 4.74482,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 13
+    },
+    {
+      "id": "model-275-10",
+      "latitude": 52.723336,
+      "longitude": 4.735225,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2687"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2687",
+        "WMH00F577",
+        "WMH00F636"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 10
+    },
+    {
+      "id": "model-275-11",
+      "latitude": 52.722262,
+      "longitude": 4.726312,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 7
+    },
+    {
+      "id": "model-275-12",
+      "latitude": 52.722171,
+      "longitude": 4.746228,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 5
+    },
+    {
+      "id": "model-275-13",
+      "latitude": 52.722061,
+      "longitude": 4.737997,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2401"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2401"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 16
+    },
+    {
+      "id": "model-275-14",
+      "latitude": 52.721476,
+      "longitude": 4.730818,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 6
+    },
+    {
+      "id": "model-275-15",
+      "latitude": 52.720165,
+      "longitude": 4.727523,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2505",
+        "WMH00G2696",
+        "WMH00G2504",
+        "WMH00G2506"
+      ],
+      "exactParcelRecordCount": 2,
+      "nearbyParcelRecordCount": 21
+    },
+    {
+      "id": "model-275-16",
+      "latitude": 52.720109,
+      "longitude": 4.733948,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G491"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G493",
+        "WMH00G641",
+        "WMH00G766",
+        "WMH00G702",
+        "WMH00G491"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 12
+    },
+    {
+      "id": "model-275-17",
+      "latitude": 52.718727,
+      "longitude": 4.731121,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2664"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2664"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 6
+    },
+    {
+      "id": "model-275-18",
+      "latitude": 52.71871,
+      "longitude": 4.738679,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G1784"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G1618",
+        "WMH00G680",
+        "WMH00G1784"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 14
+    },
+    {
+      "id": "model-275-19",
+      "latitude": 52.717429,
+      "longitude": 4.731297,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1276"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00H1276"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 8
+    },
+    {
+      "id": "model-275-20",
+      "latitude": 52.716857,
+      "longitude": 4.74461,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2723"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00G2723"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 14
+    },
+    {
+      "id": "model-275-21",
+      "latitude": 52.716524,
+      "longitude": 4.73407,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00H1719",
+        "WMH00H1094"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 8
+    },
+    {
+      "id": "model-275-22",
+      "latitude": 52.715879,
+      "longitude": 4.72668,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00H1719",
+        "WMH00H1036",
+        "WMH00H1293"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 9
+    },
+    {
+      "id": "model-275-23",
+      "latitude": 52.715777,
+      "longitude": 4.738744,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        "WMH00H1719",
+        "WMH00I569"
+      ],
+      "exactParcelRecordCount": 1,
+      "nearbyParcelRecordCount": 7
+    }
+  ]
+}

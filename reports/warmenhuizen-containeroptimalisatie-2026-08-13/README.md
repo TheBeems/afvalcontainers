@@ -1,63 +1,70 @@
-# Warmenhuizen containeroptimalisatie
+# Warmenhuizen – verdeling van ondergrondse restcontainers
 
-Dit dossier onderzoekt een adresgewogen netwerk van ondergrondse restafvalcontainers voor Warmenhuizen. Alle 11 bestaande HVC-restlocaties blijven verplicht staan. Naast de reproduceerbare basisvariant bevat het dossier nu een afzonderlijke, door de gebruiker bijgestelde afstandssensitiviteit.
+Peildatum openbare bronnen: 14 augustus 2026. Dit dossier maakt drie interpretaties van “uitgaan van de bestaande 11” expliciet:
 
-## Hoofdproducten
+1. de huidige elf repositorylocaties behouden;
+2. precies elf assets theoretisch vrij herverdelen;
+3. de elf behouden en aanvullen tot de gemeentelijke service-intentie van maximaal ongeveer 275 meter.
 
-- `warmenhuizen-containeroptimalisatie.html`: zelfstandig interactief eindrapport met conclusies, grafieken, bronnen en een tabel van alle 49 modelpunten.
-- `adjusted-fixed-existing-household-coverage-map.html`: actuele zelfstandige offline kaart van de bijgestelde 46-puntsvariant, met alle 2.579 BAG-woonfunctie-adressen in de afstandskleuren van de repo.
-- `adjusted-fixed-existing-household-coverage-map.svg`: statische schaalbare versie van die bijgestelde huishoudkaart.
-- `adjusted-fixed-existing-household-coverage-225.json`: per adres de routegraafafstand, indicatieve BAG-toegangssensitiviteit, kleurstatus en modelroute.
-- `adjusted-fixed-existing-route-optimization.json`: scenario-aannames, expliciete graafbruggen en samenvattende uitkomsten van de bijstelling.
-- `adjusted-fixed-existing-225-sites.tsv`: de 35 actieve aanvullende ankers met stabiele A-labels.
-- `fixed-existing-household-coverage-map.html` en `.svg`: eerdere basiskaart met 49 punten, bewaard voor vergelijking.
-- `fixed-existing-recommended-search-zones.geojson`: kaartlaag met 11 vaste HVC-punten en 38 aanvullende analytische zoekankers.
-- `fixed-existing-route-optimization.json`: reproduceerbare scenario-, afstands- en capaciteitsuitkomsten.
-- `fixed-existing-household-coverage-225.json`: per adres de gekozen locatie, loopafstand, afstandsstatus en modelroute.
-- `fixed-existing-input-audit.md`: audit van de vaste bestaande invoer, inclusief privétoegang van WH23 en WH24.
-- `hvc-vehicle-requirements.md`: primaire bronnen uit Schagen en andere HVC-gemeenten, plus duidelijk gemarkeerde niet-HVC vergelijkingsmaten.
-- `data-quality-audit.md`: onafhankelijke eindaudit van de gecorrigeerde vaste-invoervariant en de resterende beslisvoorwaarden.
+## Hoofdconclusie
 
-De bestanden `fixed-existing-*` vormen de eerdere vaste-bestaande basisvariant. De nog oudere bestanden `recommended-locations.json`, `recommended-search-zones.geojson` en `search-zones-overview.svg` horen bij de oorspronkelijke vrije 43-nodevariant. Beide blijven bewaard voor reproduceerbaarheid en mogen niet als de bijgestelde kaart worden gelezen.
+Precies elf assets zijn onvoldoende voor dorpsbrede dekking rond 275 meter. De huidige elf laten in het gebruikte historische routemodel 1.291 van 2.579 BAG-woonadresproxies boven 275 meter. In een afzonderlijke lokale OSM-berekening blijven bij vrije herverdeling van precies elf punten 1.125 adressen boven 275 meter. Dat tweede getal is door de andere routebasis geen numeriek gemeten verbetering ten opzichte van de nulmeting; beide scenario’s missen de service-intentie ruimschoots.
 
-## Bijgestelde huishoudkaart
+Voor ruimtelijke reservering komt de behoudvariant uit op ongeveer 34 locaties: elf bestaand plus 23 aanvullende zoekzones. Het aantoonbare modelinterval is 29–34 totaal. Dit is geen bouwplan: van de 23 exacte rekenankers zijn er in de PDOK-luchtfoto/BGT-bureauscreen 2 groen, 7 oranje en 14 rood. De rode ankers moeten materieel worden verplaatst en daarna opnieuw worden gerouteerd.
 
-- De kaart bevat 11 bestaande HVC-locaties en 35 aanvullende onderzoeksankers: 46 modelpunten totaal. De labels blijven stabiel; A4, A8 en A24 zijn bewust vervallen en de overige A-nummers zijn niet hernummerd.
-- WH24 is uitsluitend in deze gebruikersscenario-overname als openbaar gemodelleerd. Alleen WH23 blijft privé voor de geconfigureerde adres-allowlist; de brondata in `container-locations.json` zijn niet aangepast.
-- A36 is circa 60 meter noord/noordoost verplaatst. A13 is vervangen door een onbevestigd randanker en is uitdrukkelijk geen goedgekeurde openbare bouwpin.
-- De routegraafkern blijft voor alle 2.579 adressen op maximaal 224,5 meter. De eerlijker gekleurde indicatieve afstand telt ook de hemelsbrede BAG-punt-naar-historische-routesnapbenadering mee: gemiddeld 123,9 meter, P95 208,8 meter en maximaal 263,5 meter.
-- Daardoor liggen 50 adressen boven het ontwerpdoel van 225 meter, maar geen adres boven 275 meter. De zes kaartbanden tellen 931 / 389 / 410 / 849 / 0 / 0 adressen.
-- Dit is een gevoeligheidskaart en geen nieuw bewezen optimum, capaciteitsadvies of plaatsingsbesluit. De toegevoegde korte routeverbindingen, A13, A36, gemeentelijke grond en HVC-bereikbaarheid moeten in het veld en met actuele routing worden bevestigd.
+“Locatie”, “asset” en “fysieke bak” zijn niet hetzelfde. Als de vraag letterlijk elf fysieke bakken bedoelt, ontbreekt een betrouwbare capaciteitstoets. Zelfs de uitsluitend illustratieve grenzen van 100 en 75 adresproxies per bak vragen nominaal minimaal 26 respectievelijk 35 bakken; de dichtstbijzijnde-toewijzing van het exact-11-scenario vraagt door lokale piekbelasting 33 respectievelijk 40 bakken. Zonder afvalvolume, bakvolume, vulgraad en ledigingsregime is dit geen operationeel advies.
 
-## Basisvariant ter vergelijking
+Het onderzoek van Nevrlý et al. optimaliseert volumegewogen loopafstand, aantal inzamelpunten, servicetijd van het inzamelvoertuig en aanschafkosten. Lokale afvalvolumes, HVC-servicetijden en integrale kosten ontbreken openbaar. Het dossier is daarom een scenariostudie en geen bewezen viercriteria-optimum.
 
-- Vaste invoer: 11 bestaande HVC-restlocaties, waarvan 9 openbaar en WH23/WH24 alleen voor hun zeven geconfigureerde privé-adressen.
-- Bij een modelmaximum van 225 meter zijn 38 aanvullende zoekankers gevonden: 49 locaties/modelpunten in het scenario, waarvan alleen de 11 bestaande HVC-punten al fysiek zijn.
-- De aanvullende packing-ondergrens is 28; inclusief de 11 verplichte locaties ligt het modelminimum dus tussen 39 en 49 locaties. Een exact globaal optimum is niet bewezen.
-- Gemiddelde modelafstand is 110,4 meter, P95 194,9 meter en maximum 224,5 meter.
-- Op de vaste 49 locaties zijn exact 49 bakken haalbaar bij maximaal 100 adres-equivalenten per bak en 51 bij 75. Dit is geen exploitatieadvies zonder HVC-pas-, tonnage- en vulgraaddata.
-- De luchtfoto/BGT-triage van de 38 aanvullingen is 5 groen, 14 oranje en 19 rood.
-- De aanvullende coördinaten zijn zoekankers en geen bouwpinnen. Een definitief aantal en een harde 225-metergarantie vereisen een nieuwe optimalisatie op uitsluitend technisch en juridisch goedgekeurde locaties.
-- De analyse omvat 2.579 woonfunctie-adressen binnen de gebruikte bebouwde-komgrens; 303 woonfunctie-adressen in de BAG-woonplaats vallen buiten deze scope.
+## Resultaten openen
+
+- [`warmenhuizen-containeroptimalisatie.html`](warmenhuizen-containeroptimalisatie.html) — primair, zelfvoorzienend onderzoeksrapport.
+- [`existing-11-household-coverage-map.html`](existing-11-household-coverage-map.html) — interactieve nulmeting met de huidige elf locaties.
+- [`exact-11-reallocation-map.html`](exact-11-reallocation-map.html) — theoretische herverdeling van precies elf assets.
+- [`recommended-275-household-coverage-map.html`](recommended-275-household-coverage-map.html) — ruimtelijke behoeftekaart: elf behouden plus 23 zoekzones.
+- [`recommended-275-search-zones.geojson`](recommended-275-search-zones.geojson) — GIS-uitwisseling van dezelfde 34 punten.
+
+De kaarten gebruiken de repositorykleuren: groen ≤100 m, geel 100–125 m, oranje 125–150 m, rood 150–275 m, donkerrood >275 m en grijs zonder route. Iedere huishoudregel in de scenario-JSON bevat bovendien de drie dichtstbijzijnde toegankelijke locaties; de kaart toont alleen nummer één.
+
+## Kernbestanden
+
+- `artifact.json` — canonieke rapportmanifestatie en datasets.
+- `existing-11-household-coverage.json` — huishoudtoewijzing voor de huidige elf.
+- `exact-11-reallocation.json` — reproduceerbare lokale exact-11-zoekuitkomst.
+- `walking-matrix.json` — vastgelegde OSM-loopafstandsmatrix voor 2.579 adressen en 207 kandidaatrecords op 186 unieke coördinaten.
+- `fixed-existing-household-coverage-275.json` — huishoudtoewijzing voor elf plus 23 zoekzones.
+- `fixed-existing-route-optimization.json` — afstandsdrempelgevoeligheid en onder-/bovengrenzen.
+- `hvc-existing-audit-2026-08-14.json` — live dry-run tegen de publieke adresafhankelijke HVC-respons.
+- `aerial-bgt-screen-275.json` en `aerial-275/` — 2026 PDOK-luchtfoto’s en BGT-objectafstanden.
+- `ownership-screen-275.json` — openbare provinciale BRK-grootgrondgebruiksscreen.
+- `feasibility-screen-275.json` — locatiespecifieke groene/oranje/rode bureaubeoordeling.
 
 ## Reproduceren
 
+De behoudscenario’s gebruiken een historische routegeometriesnapshot omdat de actuele compacte dekking geen routegeometrieën bevat:
+
 ```sh
 git show 9631171:data/places/warmenhuizen/house-coverage.json \
-  | node reports/warmenhuizen-containeroptimalisatie-2026-08-13/optimize-with-fixed-existing.mjs
-node reports/warmenhuizen-containeroptimalisatie-2026-08-13/generate-fixed-existing-household-coverage-map.mjs
-node reports/warmenhuizen-containeroptimalisatie-2026-08-13/generate-fixed-existing-recommended-search-zones.mjs
-git show 9631171:data/places/warmenhuizen/house-coverage.json \
-  | node reports/warmenhuizen-containeroptimalisatie-2026-08-13/build-adjusted-fixed-existing-research.mjs
-node reports/warmenhuizen-containeroptimalisatie-2026-08-13/validate-adjusted-fixed-existing-output.mjs
-node reports/warmenhuizen-containeroptimalisatie-2026-08-13/generate-adjusted-fixed-existing-household-coverage-map.mjs
-node reports/warmenhuizen-containeroptimalisatie-2026-08-13/build-artifact.mjs
-DATA_ANALYTICS_PLUGIN_ROOT=/pad/naar/data-analytics-plugin \
-  node reports/warmenhuizen-containeroptimalisatie-2026-08-13/package-report.mjs \
-  reports/warmenhuizen-containeroptimalisatie-2026-08-13/artifact.json \
-  reports/warmenhuizen-containeroptimalisatie-2026-08-13/warmenhuizen-containeroptimalisatie.html
+  | node reports/warmenhuizen-containeroptimalisatie-2026-08-13/optimize-with-fixed-existing.mjs --supplemental-only
 ```
 
-Voor de laatste stap is de `build-report`-module uit de data-analytics-plugin nodig. Het reeds gegenereerde HTML-rapport is zelfstandig te openen en heeft die plugin niet nodig.
+De exact-11-uitkomst wordt opnieuw berekend en controleert de lokale loopmatrix met SHA-256:
 
-Het optimalisatiescript reconstrueert een voetgangersgraaf uit historisch opgeslagen OSRM-routegeometrieën. Dit is reproduceerbaar, maar geen vervanging voor een actuele volledige routeberekening of een toegankelijkheidsnetwerk voor rolstoel en rollator.
+```sh
+node reports/warmenhuizen-containeroptimalisatie-2026-08-13/build-exact-11-reallocation.mjs
+```
+
+Genereer de drie kaarten met `generate-fixed-existing-household-coverage-map.mjs` en de juiste `--input`, `--svg-output` en `--html-output` opties. Bouw daarna het rapport:
+
+```sh
+node reports/warmenhuizen-containeroptimalisatie-2026-08-13/build-artifact.mjs
+node reports/warmenhuizen-containeroptimalisatie-2026-08-13/build-portable-report.mjs
+```
+
+De lokale rapportbouwer gebruikt de canonieke Data Analytics-builder, SVG-extractor en desktop-/mobielverificator. Hij past één gerichte reader-CSS-correctie toe: de sticky bovenbalk gebruikt de breedte van het inhoudsblok in plaats van scrollbar-gevoelige `100vw`. Tabellen houden hun eigen horizontale scrollgedrag.
+
+`walking-matrix.json` is vastgelegd zodat de exact-11-selectie uit een schone checkout opnieuw kan worden berekend. Het script controleert zowel die matrix als de gebruikte BAG-dekking met SHA-256. De 207 kandidaatrecords bevatten 186 unieke coördinaten; dubbele coördinaten kunnen verschillende herkomstlabels hebben. De oorspronkelijke OSM-download- en kandidaatpoolconstructie blijven momentopnamen van openbare bronnen, maar de gerapporteerde selectie en metriek zijn met de vastgelegde matrix reproduceerbaar.
+
+## Besluitgrens
+
+Geen aanvullend punt in dit dossier is uitvoeringsgereed. Een definitieve locatieset vereist minimaal veldinmeting, volledige eigendoms-/rechtencontrole, KLIC, bodem- en wateronderzoek, boom-/parkeer-/verkeersanalyse, een HVC-voertuigmal en herroutering na iedere verplaatsing. Daarna kan de viercriteria-MILP met echte volume-, tijd- en kostendata worden opgelost.

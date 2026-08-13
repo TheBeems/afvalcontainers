@@ -3,75 +3,118 @@
   "manifest": {
     "version": 1,
     "surface": "report",
-    "title": "Warmenhuizen: bestaande HVC-locaties behouden en gericht aanvullen",
-    "description": "Gecorrigeerd locatie- en capaciteitsadvies waarin alle bestaande HVC-restlocaties behouden blijven.",
-    "generatedAt": "2026-08-13T22:15:00+02:00",
+    "title": "Warmenhuizen: verdeling van elf ondergrondse restcontainer-assets",
+    "description": "Brononderbouwde scenariostudie naar de verdeling van elf bestaande ondergrondse restcontainerassets en de ruimtelijke behoefte bij circa 275 meter.",
+    "generatedAt": "2026-08-13T23:49:23.193Z",
     "charts": [
       {
-        "id": "distance_comparison",
-        "title": "Loopafstand in de 33-locatiereferentie en de gecorrigeerde 225-metervariant",
-        "subtitle": "Gemiddelde, P95 en maximum in meters; 2.579 BAG-woonfunctie-adressen.",
+        "id": "coverage_275",
+        "title": "Elf locaties halen de circa-275-meterreferentie niet",
+        "subtitle": "Aandeel van 2.579 BAG-woonadresproxies binnen 275 meter; routebasis verschilt per scenario.",
         "type": "bar",
-        "dataset": "current_vs_proposal",
+        "dataset": "scenarios",
         "source": {
-          "id": "distance_comparison_sql",
-          "label": "Referentie versus behoudscenario",
+          "id": "coverage_275_sql",
+          "label": "Scenariodekking binnen 275 meter",
           "query": {
-            "description": "Afgeleid uit de actuele repo-dekking en de vaste-bestaande routegraafvariant.",
-            "sql": "WITH source(\"metric\", \"referentie_m\", \"voorstel_m\") AS (\n  VALUES\n  ('Gemiddeld', 137.3, 110.4),\n  ('P95', 283, 194.9),\n  ('Maximum', 447.5, 224.5)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-13T22:15:00+02:00"
+            "description": "Afgeleid uit de vier scenario-outputbestanden; percentages zijn niet zonder meer causale of exacte onderlinge prestatievergelijkingen doordat de routebasis verschilt.",
+            "sql": "WITH source(\"grafiek_label\", \"binnen_275_pct\", \"binnen_275\", \"boven_275\", \"locaties\") AS (\n  VALUES\n  ('Huidige 11', 49.9, 1288, 1291, 11),\n  ('11 herverdeeld', 56.4, 1454, 1125, 11),\n  ('11 + 23 zones', 100, 2579, 0, 34),\n  ('33-puntenplan', 94.1, 2427, 152, 33)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
           }
         },
         "encodings": {
           "x": {
-            "field": "metric",
+            "field": "grafiek_label",
             "type": "nominal",
-            "label": "Maatstaf"
+            "label": "Scenario"
+          },
+          "y": {
+            "field": "binnen_275_pct",
+            "type": "quantitative",
+            "label": "Binnen 275 m (%)"
+          },
+          "tooltip": [
+            {
+              "field": "binnen_275",
+              "type": "quantitative",
+              "label": "Binnen 275 m"
+            },
+            {
+              "field": "boven_275",
+              "type": "quantitative",
+              "label": "Boven 275 m"
+            },
+            {
+              "field": "locaties",
+              "type": "quantitative",
+              "label": "Locaties"
+            }
+          ]
+        }
+      },
+      {
+        "id": "tail_distances",
+        "title": "Staartafstanden per scenario",
+        "subtitle": "P95 en maximum in meter; lees samen met de routebasis in de scenariotabel.",
+        "type": "bar",
+        "dataset": "scenarios",
+        "source": {
+          "id": "tail_distances_sql",
+          "label": "P95 en maximum per scenario",
+          "query": {
+            "description": "Afgeleid uit de scenario-output; exacte absolute waarden zijn routesnapshotafhankelijk.",
+            "sql": "WITH source(\"grafiek_label\", \"p95_m\", \"maximum_m\") AS (\n  VALUES\n  ('Huidige 11', 1056.4, 1572.1),\n  ('11 herverdeeld', 413, 499.1),\n  ('11 + 23 zones', 235, 273.1),\n  ('33-puntenplan', 283.2, 447.5)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
+          }
+        },
+        "encodings": {
+          "x": {
+            "field": "grafiek_label",
+            "type": "nominal",
+            "label": "Scenario"
           },
           "y": {
             "fields": [
-              "referentie_m",
-              "voorstel_m"
+              "p95_m",
+              "maximum_m"
             ],
             "type": "quantitative",
             "label": "Loopafstand (m)"
           },
           "tooltip": [
             {
-              "field": "referentie_m",
+              "field": "p95_m",
               "type": "quantitative",
-              "label": "33-locatiereferentie",
-              "format": "number"
+              "label": "P95 (m)"
             },
             {
-              "field": "voorstel_m",
+              "field": "maximum_m",
               "type": "quantitative",
-              "label": "Behoudscenario",
-              "format": "number"
+              "label": "Maximum (m)"
             }
           ]
         }
       },
       {
-        "id": "fixed_frontier",
-        "title": "Afstandsplafond en totaal aantal locaties bij verplicht behoud",
-        "subtitle": "Elf locaties staan vast; de grafiek toont een geldige ondergrens en een gevonden bovengrens.",
+        "id": "distance_sensitivity",
+        "title": "Afstandsdrempelgevoeligheid bij behoud van de elf locaties",
+        "subtitle": "Geldige packing-ondergrens en door de heuristiek gevonden bovengrens; geen Pareto- of optimaliteitsbewijs.",
         "type": "bar",
-        "dataset": "scenario_frontier",
+        "dataset": "frontier",
         "source": {
-          "id": "fixed_frontier_sql",
-          "label": "Modelgrenzen met elf vaste HVC-locaties",
+          "id": "distance_sensitivity_sql",
+          "label": "Onder- en bovengrens per afstandsplafond",
           "query": {
-            "description": "Scenarioresultaten van optimize-with-fixed-existing.mjs.",
-            "sql": "WITH source(\"cap_m\", \"ondergrens_totaal\", \"gevonden_totaal\", \"bestaande_locaties\", \"aanvullingen_gevonden\") AS (\n  VALUES\n  ('150 m', 70, 90, 11, 79),\n  ('175 m', 54, 73, 11, 62),\n  ('200 m', 44, 57, 11, 46),\n  ('225 m', 39, 49, 11, 38),\n  ('250 m', 33, 40, 11, 29),\n  ('275 m', 29, 34, 11, 23)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-13T22:15:00+02:00"
+            "description": "Afgeleid uit fixed-existing-route-optimization.json.",
+            "sql": "WITH source(\"afstandsplafond\", \"ondergrens_totaal\", \"gevonden_totaal\", \"aanvullingen\", \"p95_m\", \"maximum_m\") AS (\n  VALUES\n  ('150 m', 70, 90, 79, 134.8, 149.6),\n  ('175 m', 54, 73, 62, 154, 174.8),\n  ('200 m', 44, 57, 46, 180.7, 200),\n  ('225 m', 39, 49, 38, 194.9, 224.5),\n  ('250 m', 33, 40, 29, 219.2, 249.2),\n  ('275 m', 29, 34, 23, 235, 273.1)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
           }
         },
         "encodings": {
           "x": {
-            "field": "cap_m",
+            "field": "afstandsplafond",
             "type": "nominal",
-            "label": "Maximale modelafstand"
+            "label": "Modelplafond"
           },
           "y": {
             "fields": [
@@ -79,58 +122,18 @@
               "gevonden_totaal"
             ],
             "type": "quantitative",
-            "label": "Locaties/modelpunten"
+            "label": "Locaties"
           },
           "tooltip": [
             {
-              "field": "bestaande_locaties",
-              "type": "quantitative",
-              "label": "Verplicht bestaand"
-            },
-            {
-              "field": "aanvullingen_gevonden",
+              "field": "aanvullingen",
               "type": "quantitative",
               "label": "Gevonden aanvullingen"
-            }
-          ]
-        }
-      },
-      {
-        "id": "survey_agreement",
-        "title": "Instemming in de inwonersenquete naar loopafstand",
-        "subtitle": "809 zelfgeselecteerde reacties; indicatief en niet causaal.",
-        "type": "bar",
-        "dataset": "survey_distance",
-        "source": {
-          "id": "survey_agreement_sql",
-          "label": "Inwonersenquete naar afstandsband",
-          "query": {
-            "description": "Afstandsbandtotalen uit survey-analysis-2026-07-02.json.",
-            "sql": "WITH source(\"afstand\", \"reacties\", \"instemming_pct\", \"afwijzing_pct\") AS (\n  VALUES\n  ('0-100 m', 202, 31.2, 68.8),\n  ('100-125 m', 94, 27.7, 72.3),\n  ('125-150 m', 97, 16.5, 83.5),\n  ('150-275 m', 300, 12, 88),\n  ('>275 m', 116, 4.3, 95.7)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-13T22:15:00+02:00"
-          }
-        },
-        "encodings": {
-          "x": {
-            "field": "afstand",
-            "type": "nominal",
-            "label": "Loopafstand"
-          },
-          "y": {
-            "field": "instemming_pct",
-            "type": "quantitative",
-            "label": "Instemming (%)"
-          },
-          "tooltip": [
-            {
-              "field": "reacties",
-              "type": "quantitative",
-              "label": "Reacties"
             },
             {
-              "field": "afwijzing_pct",
+              "field": "p95_m",
               "type": "quantitative",
-              "label": "Afwijzing (%)"
+              "label": "P95 (m)"
             }
           ]
         }
@@ -138,1719 +141,1596 @@
     ],
     "tables": [
       {
-        "id": "locations_table",
-        "title": "Elf bestaande locaties en 38 aanvullende zoekankers",
-        "subtitle": "Exacte modelcoordinaten; aanvullende ankers zijn geen bouwpinnen.",
-        "dataset": "locations",
+        "id": "scenario_table",
+        "title": "Vier relevante scenario’s",
+        "subtitle": "Kernmaatstaven; lees de routebasis en status in de omliggende toelichting. De 33- en 34-locatievarianten zijn niet dezelfde locatieset.",
+        "dataset": "scenarios",
+        "density": "dense",
         "source": {
-          "id": "locations_sql",
-          "label": "Gecorrigeerde locatieset",
+          "id": "scenario_table_sql",
+          "label": "Scenariomaatstaven",
           "query": {
-            "description": "Vaste HVC-punten plus de gevonden set-cover-bovengrens bij 225 meter.",
-            "sql": "WITH source(\"id\", \"soort\", \"toegang\", \"nabij_adres\", \"latitude\", \"longitude\", \"hvc_id\", \"oud_site_nummer\", \"luchtfoto\", \"gemeentegrond_screen\", \"dichtstbijzijnde_adressen_ongecapaciteerd\", \"toegewezen_bij_100\", \"toegewezen_bij_75\", \"bakken_bij_100\", \"bakken_bij_75\", \"maximum_m\", \"lokaal_vervolg\") AS (\n  VALUES\n  ('WH03', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Rietzangerstraat 17', '52.727210', '4.741939', '80799', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 42, 100, 75, 1, 1, 182.6, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH05', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Kuipersven 36', '52.726883', '4.748476', '81617', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 94, 100, 75, 1, 1, 211.9, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH06', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Soeverein 2', '52.727578', '4.750383', '81653', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 24, 91, 75, 1, 1, 159.4, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH08', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Dorpsstraat 89', '52.725435', '4.739056', '81580', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 54, 91, 75, 1, 1, 219.1, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH14', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Doorbraak 23', '52.722411', '4.740981', '81206', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 106, 100, 75, 1, 1, 208, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH23', 'bestaande HVC-locatie', 'privé/allowlist', 'Molenaarsweg 7', '52.720329', '4.738551', '80365', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 0, 3, 3, 1, 1, NULL, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH24', 'bestaande HVC-locatie', 'privé/allowlist', 'Pastoor Willemsestraat 80', '52.720753', '4.740240', '80428', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 4, 4, 4, 1, 1, 171.3, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH26', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Regelhaalder 42', '52.718557', '4.741484', '80299', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 118, 100, 150, 1, 2, 196.6, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH27', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Zigt 97', '52.718151', '4.743409', '80552', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 74, 100, 75, 1, 1, 134.8, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH33', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Zuiderkruis 36', '52.729898', '4.748450', '81782', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 84, 93, 75, 1, 1, 162.4, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('WH34', 'bestaande HVC-locatie', 'openbaar modelaanbod', 'Poolster 25', '52.730485', '4.750576', '81783', NULL, 'bestaand', 'bestaande locatie; niet opnieuw gescreend', 36, 26, 44, 1, 1, 155.9, 'Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen.'),\n  ('model-225-01', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oostwal 63', '52.730007', '4.743017', '-', 33, 'rood', 'exacte positieve hit', 17, 51, 52, 1, 1, 185.7, 'Zoek 60-100 meter noord of zuid naar een aantoonbaar bredere gemeentelijke berm of zijwegmond, met voldoende afstand tot woningen en eventuele sloten.'),\n  ('model-225-02', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Fuik 10', '52.729632', '4.738858', '-', 18, 'rood', 'exacte positieve hit', 20, 28, 28, 1, 1, 182, 'Verplaats noord- of westwaarts naar een openbare rand aan een doorgaande route, of combineer deze vraagzone met site 6 of 22; voer daarna de afstandsoptimalisatie opnieuw uit.'),\n  ('model-225-03', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oostwal 79', '52.729332', '4.742866', '-', 15, 'rood', 'exacte positieve hit', 49, 9, 9, 1, 1, 215.5, 'Zoek zuidelijk bij de zichtbaar bredere kruising of een aantoonbaar gemeentelijk bermvak; houd de bak uit de sloot- en erfzone en herbereken de dekking.'),\n  ('model-225-04', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Fuik 14', '52.729323', '4.738286', '-', 36, 'rood', 'geen hit binnen 25 m', 2, 2, 2, 1, 1, 166.2, 'Verlaat de exacte pin en zoek 40-70 meter oost bij de openbare Oostwal/De Fuik-aansluiting op gemeentelijke grond; voorkom een doodlopende bediening.'),\n  ('model-225-05', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Dorpsstraat 15', '52.727714', '4.739324', '-', 22, 'oranje', 'exacte positieve hit', 67, 79, 75, 1, 1, 219.2, 'Neem WH02 als voorkeurszoekpin en schuif zo nodig 4 tot 10 meter westelijk of noordwestelijk naar een vrij randvak buiten de rijlijnen; verifieer met een voertuigmal en parkeerregime.'),\n  ('model-225-06', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Spanakker 1', '52.727455', '4.748183', '-', 32, 'oranje', 'exacte positieve hit', 38, 63, 75, 1, 1, 185.3, 'Verschuif 10-20 meter noordoost in de brede groenstrook, met bediening vanaf het rechte stuk en buiten kruispunt, afsluitpaal en toekomstige boomkronen.'),\n  ('model-225-07', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Rietzangerstraat 3', '52.727288', '4.740098', '-', 6, 'oranje', 'exacte positieve hit', 33, 27, 56, 1, 1, 193.6, 'Schuif 10 tot 20 meter oostelijk langs het rechtere straatdeel en onderzoek de groenrand buiten de bocht; toets de route met een voertuigmal.'),\n  ('model-225-08', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Heerlijkheid 16', '52.726951', '4.750100', '-', 25, 'oranje', 'exacte positieve hit', 63, 14, 42, 1, 1, 192.4, 'Reserveer een vak aan de westzijde van de noord-zuidstraat, circa 10-20 meter noordwest van de pin en weg van de waterkant; toets aan de definitieve inrichtingstekening van de nieuwbouw.'),\n  ('model-225-09', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Nachtegaalstraat 12', '52.726883', '4.743400', '-', 8, 'rood', 'exacte positieve hit', 99, 74, 75, 1, 1, 216.7, 'Verplaats naar een grotere groen- of parkeerzoom buiten de woonstraatkruising; vergelijk daarbij expliciet de bestaande WH03-zone op circa 105 meter.'),\n  ('model-225-10', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oud Wulpendorp 11', '52.726561', '4.738293', '-', 12, 'rood', 'exacte positieve hit', 77, 38, 42, 1, 1, 223.9, 'Onderzoek de gemeentelijke WH07-zone op circa 82 meter of een ruimere groenrand langs de doorgaande Dorpsstraat en herbereken vanaf die locatie.'),\n  ('model-225-11', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Baljuw 1', '52.725928', '4.750240', '-', 41, 'rood', 'exacte positieve hit', 48, 16, 16, 1, 1, 181.8, 'Zoek 60-100 meter west of noordwest bij een bredere buurtentree of nog onbebouwde openbare rand, buiten water- en boomzone.'),\n  ('model-225-12', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Baan 27', '52.725414', '4.743329', '-', 16, 'groen', 'exacte positieve hit', 49, 33, 41, 1, 1, 207.5, 'Gebruik de WH10-conceptpin als voorkeurspositie en leg het ondergrondse deel 3 tot 7 meter zuidelijk van de rijbaan, in een aantoonbare open ruimte tussen wortelzones.'),\n  ('model-225-13', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Veilingweg 70D', '52.725182', '4.734133', '-', 43, 'rood', 'geen hit binnen 25 m', 1, 1, 1, 1, 1, 0, 'Zoek 20-40 meter noord/oost aan de openbare Veilingweg-rand of een aantoonbaar gemeentelijk hoekvak; vermijd het parkeerterrein en het agrarische perceel.'),\n  ('model-225-14', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Burg. Burgerstraat 20', '52.724953', '4.737802', '-', 11, 'rood', 'exacte positieve hit', 53, 41, 44, 1, 1, 200.7, 'Zoek zuidelijk richting een doorgaande kruising of aan de westelijke parkzoom met in- en uitrit; de nieuwe pin moet opnieuw in de loopoptimalisatie worden opgenomen.'),\n  ('model-225-15', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Remmerdel 46', '52.724896', '4.746141', '-', 19, 'rood', 'exacte positieve hit', 35, 29, 29, 1, 1, 224.5, 'Verplaats 55 tot 75 meter noordelijk naar de Remmerdel-zijde van de brug en zoek daar een wegberm- of parkeerrand; herbereken de loopafstand vanaf de nieuwe pin.'),\n  ('model-225-16', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Langedijker 13', '52.723875', '4.742236', '-', 28, 'rood', 'exacte positieve hit', 97, 95, 75, 1, 1, 209, 'Zoek circa 60-90 meter west/noordwest bij het ruimere speel- of parkeervak aan de rand van de buurt; toets daar bereik en bomen opnieuw.'),\n  ('model-225-17', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Veilingweg 74A', '52.723250', '4.733730', '-', 26, 'rood', 'exacte positieve hit', 8, 35, 35, 1, 1, 188.5, 'Verlaat deze pin; zoek westelijk of noordwestelijk langs een bredere Veilingweg-rand of een publiek parkeerterrein met vrije opstelstrook, niet in deze bedrijfsstraat.'),\n  ('model-225-18', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Posthoorn 10', '52.723232', '4.736527', '-', 34, 'rood', 'exacte positieve hit', 75, 61, 67, 1, 1, 221.8, 'Zoek richting west/noordwest bij de bredere Dorpsstraat- of parkeeromgeving, niet tussen de woningen van Posthoorn; herbereken vanaf de alternatieve locatie.'),\n  ('model-225-19', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Puttersakker 19', '52.722612', '4.745902', '-', 10, 'rood', 'exacte positieve hit', 102, 91, 103, 1, 2, 220.7, 'Gebruik de ruimere gemeentelijke WH12-zone op circa 63 meter oostelijk als eerste alternatief en herbereken de dekking vanaf die bouwpin.'),\n  ('model-225-20', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Stationsstraat 22A', '52.722359', '4.734768', '-', 14, 'oranje', 'exacte positieve hit', 26, 55, 55, 1, 1, 173.5, 'Schuif westelijk of zuidwestelijk naar een open segment langs het grasveld, met voldoende afstand tot bomen, bank en kruising; leg de stopplek langs het rechte straatdeel.'),\n  ('model-225-21', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Wonge 1', '52.722228', '4.729308', '-', 20, 'oranje', 'exacte positieve hit', 66, 100, 75, 1, 1, 189.4, 'Gebruik WH17 als referentie en schuif 5 tot 15 meter zuidelijk de Wonge in, naar een open gemeentelijke groen- of trottoirrand; toets een doorgaande HVC-route zonder stop op de Stationsstraat.'),\n  ('model-225-22', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Dorpsstraat 140', '52.721751', '4.737998', '-', 31, 'rood', 'exacte positieve hit', 94, 86, 75, 1, 1, 194.9, 'Verplaats de zoekzone 80-120 meter zuid naar een ruimere openbare rand bij Theresiaplein of een parkeerterrein, en herbereken de loopafstanden vanaf die alternatieve pin.'),\n  ('model-225-23', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Goudsboer 2', '52.721107', '4.730812', '-', 3, 'oranje', 'exacte positieve hit', 105, 100, 75, 1, 1, 199.9, 'Onderzoek 20 tot 35 meter oostelijk of zuidoostelijk de rand van de ruimere groen- en parkeerzone en herbereken de loopafstanden op die pin.'),\n  ('model-225-24', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Pastoor Willemsestraat 98A', '52.721046', '4.740490', '-', 23, 'oranje', 'exacte positieve hit', 9, 91, 75, 1, 1, 177.3, 'Onderzoek een verschuiving circa 25-40 meter zuidwest naar een verbrede, verharde rand aan de Pastoor Willemsestraat; behoud afstand tot de waterkant en begraafplaats en voorkom hijsen over parkeerplaatsen.'),\n  ('model-225-25', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Schelphoek Zuid 32', '52.720964', '4.733879', '-', 29, 'oranje', 'exacte positieve hit', 71, 71, 75, 1, 1, 177.1, 'Schuif 20-35 meter zuid langs het rechte deel van Schelphoek Zuid of naar een verbreding westelijk, buiten boom-, kast- en waterzone.'),\n  ('model-225-26', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Beuninge 80', '52.720613', '4.727223', '-', 7, 'rood', 'exacte positieve hit', 111, 97, 75, 1, 1, 200, 'Verplaats 35 tot 55 meter zuidwestelijk naar de rechte rand van het grotere grasvak langs de lus en voer een nieuwe eigendoms- en afstandstoets uit.'),\n  ('model-225-27', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oudewal 1', '52.719871', '4.734113', '-', 39, 'rood', 'exacte positieve hit', 51, 28, 50, 1, 1, 196.5, 'Zoek 70-120 meter west of zuidwest aan de bredere Stationsstraat/Oudewal-rand of een bedrijfsterrein met openbare opstelzone.'),\n  ('model-225-28', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oudewal 51', '52.719263', '4.726936', '-', 35, 'oranje', 'exacte positieve hit', 39, 22, 65, 1, 1, 212.8, 'Onderzoek een verschuiving 15-30 meter oost naar een recht wegvak met bruikbare berm, buiten boom en greppel, en verbied parkeren tijdens lediging.'),\n  ('model-225-29', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Verzetslaan 13', '52.719149', '4.744779', '-', 13, 'rood', 'exacte positieve hit', 78, 86, 72, 1, 1, 217.8, 'Verplaats richting de ruimere groenrand of de gemeentelijke WH28-zone op circa 94 meter oostelijk en toets de resulterende loopafstand opnieuw.'),\n  ('model-225-30', 'aanvullend zoekanker', 'openbaar modelaanbod', '''t Eiland 2', '52.719010', '4.737550', '-', 21, 'rood', 'exacte positieve hit', 77, 84, 75, 1, 1, 190.2, 'Verplaats richting de gemeentelijke WH25-zone bij Molenaarweg 42 op circa 91 meter zuidoostelijk en herbereken de dekking; onderzoek of site 5 en 21 kunnen worden samengevoegd.'),\n  ('model-225-31', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Molenaarweg 3', '52.719005', '4.738631', '-', 5, 'oranje', 'exacte positieve hit', 115, 12, 68, 1, 1, 198.7, 'Zoek zuidelijk richting de ruimere kruising en vergelijk dit met de gemeentelijke WH25-zone op circa 67 meter; vermijd de oeverstrook.'),\n  ('model-225-32', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Camper 1', '52.718727', '4.731121', '-', 30, 'groen', 'exacte positieve hit', 11, 15, 18, 1, 1, 199.7, 'Onderzoek een vak circa 8-15 meter noordwest van de pin aan de rand van de verharde pleinhoek, zodat de doorgaande rijbaan vrij blijft en niet over auto''s wordt gehesen.'),\n  ('model-225-33', 'aanvullend zoekanker', 'openbaar modelaanbod', 'De Cres 14', '52.717586', '4.731269', '-', 17, 'oranje', 'exacte positieve hit', 20, 28, 28, 1, 1, 184.2, 'Onderzoek 10 tot 20 meter oostelijk of noordoostelijk een gemeentelijk verhard zijvak langs het rechte wegdeel en borg vrije bedrijfsinritten.'),\n  ('model-225-34', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Bregweid 1', '52.716958', '4.733817', '-', 27, 'oranje', 'exacte positieve hit', 15, 7, 7, 1, 1, 161.2, 'Verschuif circa 8-15 meter noordoost naar de rand van de grote grasstrook en laat de rijloper vrij; benut een kraanopstelling vanaf de rechte straatsectie.'),\n  ('model-225-35', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Schoffel 1', '52.716676', '4.742833', '-', 37, 'oranje', 'exacte positieve hit', 83, 76, 75, 1, 1, 221.9, 'Onderzoek 15-25 meter noord op de graszoom vóór de woonstraten of een opstelplek aan de zuidelijke Debbemeerwegzijde; houd kraan en fundering ruim van water en bomen.'),\n  ('model-225-36', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Debbemeerweg 33', '52.716574', '4.739700', '-', 38, 'groen', 'exacte positieve hit', 28, 15, 12, 1, 1, 214.1, 'Onderzoek de grasdriehoek circa 8-15 meter noord/noordwest van de pin, met bediening vanaf het rechte oost-west wegvak en behoud van zicht en fietsroute.'),\n  ('model-225-37', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oudevaart 87', '52.716019', '4.728100', '-', 24, 'groen', 'exacte positieve hit', 10, 10, 10, 1, 1, 170.6, 'Projecteer de container niet op het asfalt maar circa 6-10 meter noord/noordoost in de gemeentelijke grasstrook, buiten de greppel en boomprojectie, met kraanbereik vanaf Oudevaart.'),\n  ('model-225-38', 'aanvullend zoekanker', 'openbaar modelaanbod', 'Oudevaart 89', '52.715879', '4.726680', '-', 42, 'groen', 'exacte positieve hit', 1, 1, 1, 1, 1, 224.5, 'Onderzoek circa 10-20 meter oost/zuidoost, aan de parkeerterreinzijde van de zijweg, zodat de container vanaf de zijweg kan worden bediend en niet vanaf de doorgaande rijbaan.')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-13T22:15:00+02:00"
+            "description": "Samenvatting van de vier doorgerekende scenario’s.",
+            "sql": "WITH source(\"scenario\", \"grafiek_label\", \"locaties\", \"aanvullingen\", \"gemiddeld_m\", \"p95_m\", \"maximum_m\", \"binnen_275\", \"boven_275\", \"binnen_275_pct\", \"routebasis\", \"status\") AS (\n  VALUES\n  ('Huidige 11 locaties', 'Huidige 11', 11, 0, 375.6, 1056.4, 1572.1, 1288, 1291, 49.9, 'historische OSRM-segmentgraaf', 'nulmeting'),\n  ('Precies 11 vrij herverdeeld', '11 herverdeeld', 11, 0, 252.48, 413, 499.1, 1454, 1125, 56.4, 'lokale OSM-voetgangersgraaf', 'lokaal zoekoptimum; niet bouwrijp'),\n  ('11 behouden + 23 zoekzones', '11 + 23 zones', 34, 23, 140.2, 235, 273.1, 2579, 0, 100, 'historische OSRM-segmentgraaf', 'ruimtelijke behoefte; 14 ankers rood'),\n  ('33-locatie plan-/reporeferentie', '33-puntenplan', 33, 22, 137.3, 283.2, 447.5, 2427, 152, 94.1, 'opgeslagen OSRM-deur-tot-puntroutes', 'actuele voorlopige plan-/reporeferentie')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
           }
         },
-        "defaultSort": {
-          "field": "soort",
-          "direction": "desc"
+        "columns": [
+          {
+            "field": "scenario",
+            "label": "Scenario",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "locaties",
+            "label": "Locaties",
+            "type": "number",
+            "sizing": "content"
+          },
+          {
+            "field": "p95_m",
+            "label": "P95 m",
+            "type": "number",
+            "sizing": "content"
+          },
+          {
+            "field": "maximum_m",
+            "label": "Max m",
+            "type": "number",
+            "sizing": "content"
+          },
+          {
+            "field": "binnen_275",
+            "label": "≤275 m",
+            "type": "number",
+            "sizing": "content"
+          }
+        ]
+      },
+      {
+        "id": "criteria_table",
+        "title": "Vertaling van Nevrlý et al. naar Warmenhuizen",
+        "subtitle": "Waarom dit dossier een scenariostudie is en nog geen volledige viercriteria-MILP.",
+        "dataset": "criteria",
+        "density": "dense",
+        "source": {
+          "id": "criteria_sql",
+          "label": "Onderzoekscriteria en lokale datadekking",
+          "query": {
+            "description": "Methodische vergelijking met het opgegeven artikel.",
+            "sql": "WITH source(\"criterium_artikel\", \"warmenhuizen_in_dit_dossier\", \"ontbreekt_voor_volledige_toepassing\", \"oordeel\") AS (\n  VALUES\n  ('Volumegewogen loopafstand', 'Netwerkafstand; één gelijk gewicht per BAG-woonadres', 'Bewoners/huishoudgrootte, afvalvolume en werkelijk gebruik per privacyveilige vraagzone', 'gedeeltelijk toegepast'),\n  ('Aantal inzamelpunten', 'Exact 11 en behoud-plus-uitbreiding; gevonden boven- en packing-ondergrenzen', 'Een globale MILP-optimaliteitsverklaring over vooraf goedgekeurde bouwpinnen', 'heuristisch toegepast'),\n  ('Servicetijd inzamelvoertuig', 'OSM-wegindicatie, BGT en luchtfotobureauscreen', 'HVC-route, stop- en hijstijd, voertuigmal, verkeersvensters en routevolgorde', 'niet geoptimaliseerd'),\n  ('Aanschafkosten containers', 'Geen betrouwbare lokale kostendata', 'Bak-, plaatsings-, civiele, verplaatsings-, beheer- en ledigingskosten', 'niet geoptimaliseerd'),\n  ('Capaciteit en vulgraad', 'Alleen adresbelasting per dichtstbijzijnde locatie', 'Bakvolume, kilogrammen, ledigingsfrequentie, minimale/gemiddelde vulgraad en piekbelasting', 'niet aantoonbaar')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
+          }
+        },
+        "columns": [
+          {
+            "field": "criterium_artikel",
+            "label": "Criterium artikel",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "warmenhuizen_in_dit_dossier",
+            "label": "Wat nu is gemodelleerd",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "ontbreekt_voor_volledige_toepassing",
+            "label": "Wat nog ontbreekt",
+            "type": "text",
+            "sizing": "content"
+          }
+        ]
+      },
+      {
+        "id": "exact11_table",
+        "title": "Theoretische verdeling van precies elf vrij verplaatsbare assets",
+        "subtitle": "Eén bestaande HVC-locatie, vijf gemeentelijke voorstelpunten en vijf analytische ankers; lokale zoekuitkomst.",
+        "dataset": "exact11_locations",
+        "density": "dense",
+        "source": {
+          "id": "exact11_sql",
+          "label": "Exact-11 geselecteerde locaties en belasting",
+          "query": {
+            "description": "Afgeleid uit exact-11-reallocation.json.",
+            "sql": "WITH source(\"id\", \"rol\", \"adresreferentie\", \"latitude\", \"longitude\", \"toegewezen_adresproxies\", \"voertuig_snap_m\", \"gereedheid\") AS (\n  VALUES\n  ('WH25', 'gemeentelijk voorstel', 'Molenaarweg 42', '52.719605', '4.738471', 317, 6.5, 'voorlopig voorstel; integraal toetsen'),\n  ('M004', 'modelmedoïde', 'modelpunt nabij Dorusakker 9', '52.720997', '4.727394', 251, 20.4, 'analytisch anker; nieuwe bouwpin zoeken'),\n  ('M154', 'corridoranker', 'corridoranker nabij Dergmeerweg 52', '52.728478', '4.743779', 204, 22.5, 'analytisch anker; nieuwe bouwpin zoeken'),\n  ('M168', 'corridoranker', 'corridoranker nabij Oudevaart 71', '52.715337', '4.729482', 8, 73.6, 'analytisch anker; nieuwe bouwpin zoeken'),\n  ('WH13', 'gemeentelijk voorstel', 'Alingterp 2', '52.723362', '4.735266', 201, 4, 'voorlopig voorstel; integraal toetsen'),\n  ('WH29', 'gemeentelijk voorstel', 'Schoffel 1', '52.716677', '4.742937', 336, 12.7, 'voorlopig voorstel; integraal toetsen'),\n  ('WH06', 'bestaande HVC-locatie', 'Soeverein 2', '52.727578', '4.750383', 378, 12.8, 'bestaand; behoud/status bevestigen'),\n  ('M027', 'modelmedoïde', 'modelpunt nabij Hartendorp 4', '52.727713', '4.738602', 248, 13.6, 'analytisch anker; nieuwe bouwpin zoeken'),\n  ('WH19', 'gemeentelijk voorstel', 'Zwartepad 32', '52.720963', '4.733820', 224, 6, 'voorlopig voorstel; integraal toetsen'),\n  ('M144', 'blinde-vlekanker', 'blindevlekanker nabij De Cres 8', '52.717429', '4.731297', 44, 26.5, 'analytisch anker; nieuwe bouwpin zoeken'),\n  ('WH11', 'gemeentelijk voorstel', 'Wiekeland 2', '52.723809', '4.743822', 368, 8.1, 'voorlopig voorstel; integraal toetsen')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
+          }
         },
         "columns": [
           {
             "field": "id",
             "label": "ID",
-            "type": "text"
+            "type": "text",
+            "sizing": "content"
           },
           {
-            "field": "soort",
-            "label": "Soort",
-            "type": "text"
+            "field": "adresreferentie",
+            "label": "Adresreferentie",
+            "type": "text",
+            "sizing": "content"
           },
           {
-            "field": "toegang",
-            "label": "Toegang",
-            "type": "text"
+            "field": "toegewezen_adresproxies",
+            "label": "Adresproxies",
+            "type": "number",
+            "sizing": "content"
           },
           {
-            "field": "nabij_adres",
-            "label": "Adres/zoekzone",
-            "type": "text"
-          },
-          {
-            "field": "latitude",
-            "label": "Latitude",
-            "type": "text"
-          },
-          {
-            "field": "longitude",
-            "label": "Longitude",
-            "type": "text"
-          },
-          {
-            "field": "hvc_id",
-            "label": "HVC-ID",
-            "type": "text"
-          },
-          {
-            "field": "oud_site_nummer",
-            "label": "Eerdere site",
-            "type": "number"
-          },
-          {
-            "field": "luchtfoto",
-            "label": "Luchtfoto",
-            "type": "text"
-          },
-          {
-            "field": "gemeentegrond_screen",
-            "label": "Grondscreen",
-            "type": "text"
-          },
-          {
-            "field": "dichtstbijzijnde_adressen_ongecapaciteerd",
-            "label": "Dichtstbij (ongecap.)",
-            "type": "number"
-          },
-          {
-            "field": "toegewezen_bij_100",
-            "label": "Flow bij 100",
-            "type": "number"
-          },
-          {
-            "field": "toegewezen_bij_75",
-            "label": "Flow bij 75",
-            "type": "number"
-          },
-          {
-            "field": "bakken_bij_100",
-            "label": "Bakken bij 100",
-            "type": "number"
-          },
-          {
-            "field": "bakken_bij_75",
-            "label": "Bakken bij 75",
-            "type": "number"
-          },
-          {
-            "field": "maximum_m",
-            "label": "Max m",
-            "type": "number"
-          },
-          {
-            "field": "lokaal_vervolg",
-            "label": "Vervolg",
-            "type": "text"
+            "field": "gereedheid",
+            "label": "Gereedheid",
+            "type": "text",
+            "sizing": "content"
           }
         ]
       },
       {
-        "id": "survey_table",
-        "title": "Enquete-uitkomsten per afstandsband",
-        "subtitle": "Geldige online en papieren reacties op 2 juli 2026.",
-        "dataset": "survey_distance",
+        "id": "service_locations_table",
+        "title": "Ruimtelijke behoefteverdeling: elf behouden plus 23 zoekzones",
+        "subtitle": "Exacte rekenankers, adresbelasting, bureauscreen en noodzakelijk vervolg; géén uitvoeringspinnen.",
+        "dataset": "service_locations",
+        "density": "dense",
         "source": {
-          "id": "survey_table_sql",
-          "label": "Inwonersenquete naar afstandsband",
+          "id": "service_locations_sql",
+          "label": "Locaties en zoekzones in het 275-meterscenario",
           "query": {
-            "description": "Afstandsbandtotalen uit survey-analysis-2026-07-02.json.",
-            "sql": "WITH source(\"afstand\", \"reacties\", \"instemming_pct\", \"afwijzing_pct\") AS (\n  VALUES\n  ('0-100 m', 202, 31.2, 68.8),\n  ('100-125 m', 94, 27.7, 72.3),\n  ('125-150 m', 97, 16.5, 83.5),\n  ('150-275 m', 300, 12, 88),\n  ('>275 m', 116, 4.3, 95.7)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-13T22:15:00+02:00"
+            "description": "Gecombineerd uit scenario-, luchtfoto/BGT-, eigendoms- en HVC-auditbestanden.",
+            "sql": "WITH source(\"id\", \"rol\", \"adres_of_zone\", \"latitude\", \"longitude\", \"toegewezen_adresproxies\", \"status\", \"luchtfoto_bgt\", \"grondscreen\", \"vervolg\") AS (\n  VALUES\n  ('WH03', 'bestaand openbaar', 'Rietzangerstraat 17', '52.727210', '4.741939', 129, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00G2037', 'Stoppositie, draaibeweging en parkeervrij hijsen vastleggen.'),\n  ('WH05', 'bestaand openbaar', 'Kuipersven 36', '52.726883', '4.748476', 144, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00I1012', 'Actieve status, pasregels en exacte inrichting handmatig bevestigen.'),\n  ('WH06', 'bestaand openbaar', 'Soeverein 2', '52.727578', '4.750383', 68, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00I1012', 'KLIC, waterkant, fietspad en hijslijn met hoge prioriteit toetsen.'),\n  ('WH08', 'bestaand openbaar', 'Dorpsstraat 89', '52.725435', '4.739056', 123, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'niet-gemeentelijke indicatie WMH00G2606', 'Recht/toestemming en actuele toegang schriftelijk vastleggen.'),\n  ('WH14', 'bestaand openbaar', 'Doorbraak 23', '52.722411', '4.740981', 150, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00G2658', 'KLIC en netbeheerderstoets uitvoeren.'),\n  ('WH23', 'bestaand privé', 'Molenaarsweg 7', '52.720329', '4.738551', 3, 'bestaande privélocatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'particuliere Angelaparklocatie WMH00G1926', 'Niet als algemeen openbaar punt tellen; rechten en HVC-route bevestigen.'),\n  ('WH24', 'bestaand privé', 'Pastoor Willemsestraat 80', '52.720753', '4.740240', 4, 'bestaande privélocatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'particuliere Angelaparklocatie WMH00G1928', 'Niet algemeen openstellen zonder schriftelijke HVC-/rechthebbendenbevestiging.'),\n  ('WH26', 'bestaand openbaar', 'Regelhaalder 42', '52.718557', '4.741484', 144, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00G2723', 'Kraanopstelling en parkeervrij venster inmeten.'),\n  ('WH27', 'bestaand openbaar', 'Zigt 97', '52.718151', '4.743409', 144, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00G2723', 'Adres-/ID-conflict met gemeente reconciliëren en hijslijn toetsen.'),\n  ('WH33', 'bestaand openbaar', 'Zuiderkruis 36', '52.729898', '4.748450', 84, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00I1067', 'As-built inmeting en HVC-coördinaat bevestigen.'),\n  ('WH34', 'bestaand openbaar', 'Poolster 25', '52.730485', '4.750576', 36, 'bestaande openbare locatie; status en capaciteit bevestigen', 'bestaande asset; risico-audit in aparte tabel', 'gemeente-indicatie WMH00I1067', 'Exacte stopzijde en hijslijn controleren.'),\n  ('model-275-01', 'aanvullende zoekzone', 'De Fuik 10', '52.729632', '4.738858', 29, 'rood; Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.', 'rood: Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.', 'exacte gemeente-indicatie WMH00G2659', 'Zoek noord/west een bredere openbare rand en herbereken.'),\n  ('model-275-02', 'aanvullende zoekzone', 'Oostwal 79', '52.729332', '4.742866', 66, 'rood; Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.', 'rood: Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.', 'exacte gemeente-indicatie WMH00G1667', 'Zoek zuidelijk buiten inritten en zichtdriehoek.'),\n  ('model-275-03', 'aanvullende zoekzone', 'Veilingweg 37', '52.727869', '4.736561', 80, 'rood; Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.', 'rood: Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.', 'exacte gemeente-indicatie WMH00F577', 'Verplaats dieper Hartendorp in en herbereken.'),\n  ('model-275-04', 'aanvullende zoekzone', 'De Hoge Werf 2', '52.727520', '4.745155', 60, 'rood; Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.', 'rood: Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.', 'exacte gemeente-indicatie WMH00I535', 'Nieuwe voertuigbereikbare zoekzone nodig.'),\n  ('model-275-05', 'aanvullende zoekzone', 'Baljuw 37', '52.726407', '4.750878', 41, 'oranje; Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.', 'oranje: Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.', 'exacte gemeente-indicatie WMH00I1012', 'Onderzoek 5–10 m verschuiving naar grasrand.'),\n  ('model-275-06', 'aanvullende zoekzone', 'De Baan 33', '52.725362', '4.744268', 86, 'rood; T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.', 'rood: T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.', 'exacte gemeente-indicatie WMH00I296', 'Gebruik liever de eerder groen beoordeelde WH10-zone circa 64 m westelijk en herbereken.'),\n  ('model-275-07', 'aanvullende zoekzone', 'Veilingweg 70D', '52.725182', '4.734133', 1, 'rood; Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.', 'rood: Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.', 'geen gemeente-indicatie binnen 25 m', 'Zoek 20–40 m noord/oost aan openbare Veilingweg-rand.'),\n  ('model-275-08', 'aanvullende zoekzone', 'De Huisweid 17', '52.724578', '4.732146', 6, 'rood; Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.', 'rood: Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.', 'geen gemeente-indicatie binnen 25 m', 'Zoek buiten het erf aan openbare weg.'),\n  ('model-275-09', 'aanvullende zoekzone', 'Wiekeland 7', '52.723768', '4.744820', 98, 'oranje; Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.', 'oranje: Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.', 'exacte gemeente-indicatie WMH00I695', 'Onderzoek 4–6 m oost/noordoost.'),\n  ('model-275-10', 'aanvullende zoekzone', 'Posthoorn 25', '52.723336', '4.735225', 86, 'rood; Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.', 'rood: Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.', 'exacte gemeente-indicatie WMH00G2687', 'Zoek 15–30 m westelijk en herbereken.'),\n  ('model-275-11', 'aanvullende zoekzone', 'Vijfven 7', '52.722262', '4.726312', 38, 'rood; Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.', 'rood: Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.', 'exacte gemeente-indicatie WMH00G2696', 'Zoek aan de woonstraat, niet in de fiets-/watercorridor.'),\n  ('model-275-12', 'aanvullende zoekzone', 'De Negen Geerzen 29', '52.722171', '4.746228', 60, 'oranje; Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.', 'oranje: Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.', 'exacte gemeente-indicatie WMH00I695', 'Onderzoek 5–8 m oost/noordoost.'),\n  ('model-275-13', 'aanvullende zoekzone', 'Dorpsstraat 110A', '52.722061', '4.737997', 146, 'rood; Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.', 'rood: Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.', 'exacte gemeente-indicatie WMH00G2401', 'Alleen mogelijk met expliciete parkeerplaatsconversie.'),\n  ('model-275-14', 'aanvullende zoekzone', 'Goudsboer 3', '52.721476', '4.730818', 175, 'oranje; Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.', 'oranje: Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.', 'exacte gemeente-indicatie WMH00G2696', 'Onderzoek 8–12 m west/noordwest aan speelgroenrand.'),\n  ('model-275-15', 'aanvullende zoekzone', 'Gaspad 2', '52.720165', '4.727523', 121, 'rood; Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.', 'rood: Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.', 'geen exacte hit; gemeente-indicatie binnen 25 m', 'Zoek 15–25 m west/zuidwest naar bredere openbare berm.'),\n  ('model-275-16', 'aanvullende zoekzone', 'Zwartepad 44', '52.720109', '4.733948', 119, 'rood; Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.', 'rood: Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.', 'exacte gemeente-indicatie WMH00G491', 'Zoek 15–30 m verder aan recht straatdeel.'),\n  ('model-275-17', 'aanvullende zoekzone', 'De Camper 1', '52.718727', '4.731121', 17, 'groen; Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.', 'groen: Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.', 'exacte gemeente-indicatie WMH00G2664', 'Onderzoek 8–15 m noordwest, buiten parkeer- en hijszone.'),\n  ('model-275-18', 'aanvullende zoekzone', 'Fabrieksstraat 29', '52.718710', '4.738679', 176, 'oranje; Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.', 'oranje: Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.', 'exacte gemeente-indicatie WMH00G1784', 'Onderzoek noord/oostelijke grasrand.'),\n  ('model-275-19', 'aanvullende zoekzone', 'De Cres 14', '52.717429', '4.731297', 20, 'oranje; Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.', 'oranje: Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.', 'exacte gemeente-indicatie WMH00H1276', 'Onderzoek 8–15 m noordoost.'),\n  ('model-275-20', 'aanvullende zoekzone', 'Zigt 26', '52.716857', '4.744610', 87, 'rood; Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.', 'rood: Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.', 'exacte gemeente-indicatie WMH00G2723', 'Geen overtuigend lokaal alternatief; vervang zoekzone.'),\n  ('model-275-21', 'aanvullende zoekzone', 'Oudevaart 42A', '52.716524', '4.734070', 16, 'oranje; Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.', 'oranje: Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.', 'exacte gemeente-indicatie WMH00H1719', 'Onderzoek 8–15 m in open randvak.'),\n  ('model-275-22', 'aanvullende zoekzone', 'Oudevaart 89', '52.715879', '4.726680', 13, 'groen; Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.', 'groen: Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.', 'exacte gemeente-indicatie WMH00H1719', 'Onderzoek 10–20 m oost/zuidoost en laat HVC uitsluitend vanaf de zijweg bedienen.'),\n  ('model-275-23', 'aanvullende zoekzone', 'Debbemeerweg 39', '52.715777', '4.738744', 9, 'rood; Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.', 'rood: Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.', 'exacte gemeente-indicatie WMH00H1719', 'Vervang door een nieuwe zoekzone.')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
           }
-        },
-        "defaultSort": {
-          "field": "reacties",
-          "direction": "desc"
         },
         "columns": [
           {
-            "field": "afstand",
-            "label": "Afstand",
-            "type": "text"
+            "field": "id",
+            "label": "ID",
+            "type": "text",
+            "sizing": "content"
           },
           {
-            "field": "reacties",
-            "label": "Reacties",
-            "type": "number"
+            "field": "adres_of_zone",
+            "label": "Adres/zoekzone",
+            "type": "text",
+            "sizing": "content"
           },
           {
-            "field": "instemming_pct",
-            "label": "Instemming %",
-            "type": "number"
+            "field": "toegewezen_adresproxies",
+            "label": "Dichtstbij",
+            "type": "number",
+            "sizing": "content"
           },
           {
-            "field": "afwijzing_pct",
-            "label": "Afwijzing %",
-            "type": "number"
+            "field": "status",
+            "label": "Bureaustatus",
+            "type": "text",
+            "sizing": "content"
+          }
+        ]
+      },
+      {
+        "id": "existing_table",
+        "title": "Audit van de elf bestaande repositorylocaties",
+        "subtitle": "Acht exacte HVC-adresmatches; WH05, WH08 en WH23 vereisen handmatige bevestiging.",
+        "dataset": "existing_locations",
+        "density": "dense",
+        "source": {
+          "id": "existing_sql",
+          "label": "Bestaande HVC-locaties en desk-screen",
+          "query": {
+            "description": "Gecombineerd uit HVC-dry-run, luchtfoto/BGT/BRK en route-audit.",
+            "sql": "WITH source(\"id\", \"adres\", \"toegang\", \"latitude\", \"longitude\", \"hvc_id_repo\", \"live_hvc_adrescheck\", \"grondscreen\", \"hoofdrisico\", \"vervolg\") AS (\n  VALUES\n  ('WH03', 'Rietzangerstraat 17', 'algemeen gemodelleerd', '52.727210', '4.741939', '80799', 'exact bevestigd', 'gemeente-indicatie WMH00G2037', 'Smalle hof/bocht; parkeren en heggen dicht bij stop-/hijszone.', 'Stoppositie, draaibeweging en parkeervrij hijsen vastleggen.'),\n  ('WH05', 'Kuipersven 36', 'algemeen gemodelleerd', '52.726883', '4.748476', '81617', 'handmatige controle nodig', 'gemeente-indicatie WMH00I1012', 'Groen/heesters en boom; publieke HVC-adresrespons leverde geen restlocatie op.', 'Actieve status, pasregels en exacte inrichting handmatig bevestigen.'),\n  ('WH06', 'Soeverein 2', 'algemeen gemodelleerd', '52.727578', '4.750383', '81653', 'exact bevestigd', 'gemeente-indicatie WMH00I1012', 'Water circa 5,3 m, fietspad en meerdere kasten nabij.', 'KLIC, waterkant, fietspad en hijslijn met hoge prioriteit toetsen.'),\n  ('WH08', 'Dorpsstraat 89', 'algemeen gemodelleerd', '52.725435', '4.739056', '81580', 'handmatige controle nodig', 'niet-gemeentelijke indicatie WMH00G2606', 'Parkeren, voetpad en boom nabij; HVC-adresrespons leverde geen restlocatie op.', 'Recht/toestemming en actuele toegang schriftelijk vastleggen.'),\n  ('WH14', 'Doorbraak 23', 'algemeen gemodelleerd', '52.722411', '4.740981', '81206', 'exact bevestigd', 'gemeente-indicatie WMH00G2658', 'Transformator-/kastobjecten circa 2,4–3,0 m van pin.', 'KLIC en netbeheerderstoets uitvoeren.'),\n  ('WH23', 'Molenaarsweg 7', 'privé/allowlist', '52.720329', '4.738551', '80365', 'handmatige controle nodig', 'particuliere Angelaparklocatie WMH00G1926', 'Gevel circa 4,5 m; interne route niet in OSM; geen HVC-restlocatie in adresrespons.', 'Niet als algemeen openbaar punt tellen; rechten en HVC-route bevestigen.'),\n  ('WH24', 'Pastoor Willemsestraat 80', 'privé/allowlist', '52.720753', '4.740240', '80428', 'exact bevestigd', 'particuliere Angelaparklocatie WMH00G1928', 'Gevel circa 3,8 m en water nabij; alleen geconfigureerde allowlist.', 'Niet algemeen openstellen zonder schriftelijke HVC-/rechthebbendenbevestiging.'),\n  ('WH26', 'Regelhaalder 42', 'algemeen gemodelleerd', '52.718557', '4.741484', '80299', 'exact bevestigd', 'gemeente-indicatie WMH00G2723', 'Gevel, boom en parkeren in krappe bochtomgeving.', 'Kraanopstelling en parkeervrij venster inmeten.'),\n  ('WH27', 'Zigt 97', 'algemeen gemodelleerd', '52.718151', '4.743409', '80552', 'exact bevestigd', 'gemeente-indicatie WMH00G2723', 'Lichtmast en parkeerplaatsen nabij; officiële pagina noemt Verzetslaan 40, repo Zigt 97.', 'Adres-/ID-conflict met gemeente reconciliëren en hijslijn toetsen.'),\n  ('WH33', 'Zuiderkruis 36', 'algemeen gemodelleerd', '52.729898', '4.748450', '81782', 'exact bevestigd', 'gemeente-indicatie WMH00I1067', 'Pin ligt zeer dicht bij de rijbaan in recente nieuwbouw.', 'As-built inmeting en HVC-coördinaat bevestigen.'),\n  ('WH34', 'Poolster 25', 'algemeen gemodelleerd', '52.730485', '4.750576', '81783', 'exact bevestigd', 'gemeente-indicatie WMH00I1067', 'Mogelijk fietspad tussen stopzijde en bak.', 'Exacte stopzijde en hijslijn controleren.')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
+          }
+        },
+        "columns": [
+          {
+            "field": "id",
+            "label": "ID",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "adres",
+            "label": "Adres",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "hoofdrisico",
+            "label": "Hoofdrisico",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "vervolg",
+            "label": "Vervolg",
+            "type": "text",
+            "sizing": "content"
+          }
+        ]
+      },
+      {
+        "id": "feasibility_table",
+        "title": "Bureauscreen van de 23 aanvullende ankers",
+        "subtitle": "2 groen, 7 oranje en 14 rood; groen is nog steeds geen bouwgoedkeuring.",
+        "dataset": "feasibility",
+        "density": "dense",
+        "source": {
+          "id": "feasibility_sql",
+          "label": "Visuele en objectgerichte desk-screen",
+          "query": {
+            "description": "Beoordeling op PDOK-luchtfoto 2026, BGT en openbare grootgrondeigenaarindicatie.",
+            "sql": "WITH source(\"id\", \"adresreferentie\", \"oordeel\", \"exacte_gemeente_indicatie\", \"bevinding\", \"vervolg\", \"luchtfoto\") AS (\n  VALUES\n  ('model-275-01', 'De Fuik 10', 'rood', 'ja', 'Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.', 'Zoek noord/west een bredere openbare rand en herbereken.', 'aerial-275/model-275-01.jpg'),\n  ('model-275-02', 'Oostwal 79', 'rood', 'ja', 'Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.', 'Zoek zuidelijk buiten inritten en zichtdriehoek.', 'aerial-275/model-275-02.jpg'),\n  ('model-275-03', 'Veilingweg 37', 'rood', 'ja', 'Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.', 'Verplaats dieper Hartendorp in en herbereken.', 'aerial-275/model-275-03.jpg'),\n  ('model-275-04', 'De Hoge Werf 2', 'rood', 'ja', 'Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.', 'Nieuwe voertuigbereikbare zoekzone nodig.', 'aerial-275/model-275-04.jpg'),\n  ('model-275-05', 'Baljuw 37', 'oranje', 'ja', 'Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.', 'Onderzoek 5–10 m verschuiving naar grasrand.', 'aerial-275/model-275-05.jpg'),\n  ('model-275-06', 'De Baan 33', 'rood', 'ja', 'T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.', 'Gebruik liever de eerder groen beoordeelde WH10-zone circa 64 m westelijk en herbereken.', 'aerial-275/model-275-06.jpg'),\n  ('model-275-07', 'Veilingweg 70D', 'rood', 'nee', 'Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.', 'Zoek 20–40 m noord/oost aan openbare Veilingweg-rand.', 'aerial-275/model-275-07.jpg'),\n  ('model-275-08', 'De Huisweid 17', 'rood', 'nee', 'Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.', 'Zoek buiten het erf aan openbare weg.', 'aerial-275/model-275-08.jpg'),\n  ('model-275-09', 'Wiekeland 7', 'oranje', 'ja', 'Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.', 'Onderzoek 4–6 m oost/noordoost.', 'aerial-275/model-275-09.jpg'),\n  ('model-275-10', 'Posthoorn 25', 'rood', 'ja', 'Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.', 'Zoek 15–30 m westelijk en herbereken.', 'aerial-275/model-275-10.jpg'),\n  ('model-275-11', 'Vijfven 7', 'rood', 'ja', 'Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.', 'Zoek aan de woonstraat, niet in de fiets-/watercorridor.', 'aerial-275/model-275-11.jpg'),\n  ('model-275-12', 'De Negen Geerzen 29', 'oranje', 'ja', 'Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.', 'Onderzoek 5–8 m oost/noordoost.', 'aerial-275/model-275-12.jpg'),\n  ('model-275-13', 'Dorpsstraat 110A', 'rood', 'ja', 'Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.', 'Alleen mogelijk met expliciete parkeerplaatsconversie.', 'aerial-275/model-275-13.jpg'),\n  ('model-275-14', 'Goudsboer 3', 'oranje', 'ja', 'Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.', 'Onderzoek 8–12 m west/noordwest aan speelgroenrand.', 'aerial-275/model-275-14.jpg'),\n  ('model-275-15', 'Gaspad 2', 'rood', 'nee', 'Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.', 'Zoek 15–25 m west/zuidwest naar bredere openbare berm.', 'aerial-275/model-275-15.jpg'),\n  ('model-275-16', 'Zwartepad 44', 'rood', 'ja', 'Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.', 'Zoek 15–30 m verder aan recht straatdeel.', 'aerial-275/model-275-16.jpg'),\n  ('model-275-17', 'De Camper 1', 'groen', 'ja', 'Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.', 'Onderzoek 8–15 m noordwest, buiten parkeer- en hijszone.', 'aerial-275/model-275-17.jpg'),\n  ('model-275-18', 'Fabrieksstraat 29', 'oranje', 'ja', 'Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.', 'Onderzoek noord/oostelijke grasrand.', 'aerial-275/model-275-18.jpg'),\n  ('model-275-19', 'De Cres 14', 'oranje', 'ja', 'Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.', 'Onderzoek 8–15 m noordoost.', 'aerial-275/model-275-19.jpg'),\n  ('model-275-20', 'Zigt 26', 'rood', 'ja', 'Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.', 'Geen overtuigend lokaal alternatief; vervang zoekzone.', 'aerial-275/model-275-20.jpg'),\n  ('model-275-21', 'Oudevaart 42A', 'oranje', 'ja', 'Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.', 'Onderzoek 8–15 m in open randvak.', 'aerial-275/model-275-21.jpg'),\n  ('model-275-22', 'Oudevaart 89', 'groen', 'ja', 'Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.', 'Onderzoek 10–20 m oost/zuidoost en laat HVC uitsluitend vanaf de zijweg bedienen.', 'aerial-275/model-275-22.jpg'),\n  ('model-275-23', 'Debbemeerweg 39', 'rood', 'ja', 'Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.', 'Vervang door een nieuwe zoekzone.', 'aerial-275/model-275-23.jpg')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-13T23:49:23.193Z"
+          }
+        },
+        "columns": [
+          {
+            "field": "id",
+            "label": "ID",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "adresreferentie",
+            "label": "Adresreferentie",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "oordeel",
+            "label": "Oordeel",
+            "type": "text",
+            "sizing": "content"
+          },
+          {
+            "field": "bevinding",
+            "label": "Bevinding",
+            "type": "text",
+            "sizing": "content"
           }
         ]
       }
     ],
     "sources": [
       {
-        "id": "fixed_existing_input",
-        "label": "Audit vaste bestaande HVC-restlocaties",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-input-audit.md"
+        "id": "paper",
+        "label": "Nevrlý et al. (2021), Location of municipal waste containers: Trade-off between criteria",
+        "href": "https://www.sciencedirect.com/science/article/pii/S0959652620334909"
       },
       {
-        "id": "fixed_existing_model",
-        "label": "Reproduceerbare optimalisatie met bestaande locaties als harde randvoorwaarde",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-route-optimization.json"
+        "id": "paper_metadata",
+        "label": "OpenAIRE metadata en abstract, DOI 10.1016/j.jclepro.2020.123445",
+        "href": "https://oamonitor.ireland.openaire.eu/national/search/publication?pid=10.1016%2Fj.jclepro.2020.123445"
       },
       {
-        "id": "household_map_data",
-        "label": "Per woonadres berekende dekking in het behoudscenario",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-225.json"
+        "id": "paper_open_context",
+        "label": "Open voorloper: Municipal Solid Waste Container Location Based on Walking Distance and Distribution of Population",
+        "href": "https://www.cetjournal.it/index.php/cet/article/view/CET1976093"
       },
       {
-        "id": "household_map",
-        "label": "Interactieve huishoudkaart van het behoudscenario",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-map.html"
+        "id": "habilitation",
+        "label": "Openbare habilitatiescriptie V. Nevrlý, methodische context pp. 40–42",
+        "href": "https://www.vut.cz/en/board/habilitation?action=priloha&priloha=241034"
       },
       {
-        "id": "current_coverage",
-        "label": "Actuele 33-locatie plan-/reporeferentie",
-        "path": "data/places/warmenhuizen/house-coverage.json"
-      },
-      {
-        "id": "prior_site_screen",
-        "label": "Eerdere openbare-grond-, voertuigroute- en luchtfotoscreen van 43 vrije modelankers",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/recommended-locations.json"
-      },
-      {
-        "id": "ownership_screen",
-        "label": "Provincie Noord-Holland BRK-percelen, grootgrondgebruik",
-        "href": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1"
-      },
-      {
-        "id": "aerial_bgt",
-        "label": "PDOK Luchtfoto 2026 en Basisregistratie Grootschalige Topografie",
-        "href": "https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/aerial-bgt-screen.json"
-      },
-      {
-        "id": "osm_access",
-        "label": "OpenStreetMap-wegennet Warmenhuizen",
-        "href": "https://www.openstreetmap.org/copyright",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
-      },
-      {
-        "id": "schagen_policy",
-        "label": "Gemeente Schagen: plaatsing ondergrondse restafvalcontainers Warmenhuizen",
+        "id": "schagen",
+        "label": "Gemeente Schagen: plaatsing ondergrondse restafvalcontainers Warmenhuizen, bijgewerkt 4 augustus 2026",
         "href": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen"
       },
       {
-        "id": "schagen_lior",
-        "label": "Gemeente Schagen LIOR, deel 2",
-        "href": "https://www.schagen.nl/sites/default/files/2023-11/Leidraad%20inrichting%20openbare%20ruimte%20%20-%20deel%202%20-%20versie%20nov.pdf"
+        "id": "bag_osrm",
+        "label": "Repositorydekking: BAG-woonfunctieadressen en opgeslagen OSRM-voetgangersroutes",
+        "path": "data/places/warmenhuizen/house-coverage.json"
       },
       {
-        "id": "schagen_hoep_decision",
-        "label": "Aanwijzingsbesluit ondergrondse containers De Hoep",
-        "href": "https://lokaleregelgeving.overheid.nl/CVDR757179/1"
+        "id": "fixed_model",
+        "label": "Vaste-bestaande routegraafoptimalisatie en afstandsdrempelgevoeligheid",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-route-optimization.json"
       },
       {
-        "id": "council_of_state",
-        "label": "Raad van State 2021:1194",
-        "href": "https://www.raadvanstate.nl/uitspraken/@124982/202101193-1-r1-en-202101193-2-r1/"
+        "id": "exact11",
+        "label": "Reproduceerbare lokale zoekuitkomst voor precies elf vrij te plaatsen assets",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/exact-11-reallocation.json"
       },
       {
-        "id": "hvc_requirements_note",
-        "label": "Bronnotitie HVC-ledigingseisen en vergelijkingsmaten",
-        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/hvc-vehicle-requirements.md"
+        "id": "walking_matrix",
+        "label": "Vastgelegde OSM-loopafstandsmatrix: 2.579 adressen bij 207 kandidaatrecords",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/walking-matrix.json"
       },
       {
-        "id": "hvc_information",
-        "label": "HVC: ondergrondse restafvalcontainer",
-        "href": "https://www.hvcgroep.nl/ondergrondse-restafval"
+        "id": "service275",
+        "label": "Huishoudtoewijzing: elf behouden plus 23 zoekzones bij circa 275 meter",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-275.json"
+      },
+      {
+        "id": "map_existing",
+        "label": "Interactieve kaart huidige elf locaties",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/existing-11-household-coverage-map.html"
+      },
+      {
+        "id": "map_exact11",
+        "label": "Interactieve kaart theoretische herverdeling van elf assets",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/exact-11-reallocation-map.html"
+      },
+      {
+        "id": "map_275",
+        "label": "Interactieve overzichtskaart 11 behouden plus 23 zoekzones",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/recommended-275-household-coverage-map.html"
+      },
+      {
+        "id": "pdok_bgt",
+        "label": "PDOK Basisregistratie Grootschalige Topografie OGC API",
+        "href": "https://api.pdok.nl/lv/bgt/ogc/v1",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/aerial-bgt-screen-275.json"
+      },
+      {
+        "id": "pdok_aerial",
+        "label": "PDOK Luchtfoto RGB WMS, 2026_orthoHR",
+        "href": "https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-"
+      },
+      {
+        "id": "ownership",
+        "label": "Provincie Noord-Holland openbare BRK-grootgrondgebruiksscreen",
+        "href": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1/query",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/ownership-screen-275.json"
+      },
+      {
+        "id": "feasibility",
+        "label": "Locatiespecifieke luchtfoto-, BGT- en perceelbureauscreen van de 23 zoekzones",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/feasibility-screen-275.json"
+      },
+      {
+        "id": "hvc_audit",
+        "label": "Live publieke HVC-adresresponsaudit van de elf bestaande locaties, dry-run 14 augustus 2026",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/hvc-existing-audit-2026-08-14.json"
+      },
+      {
+        "id": "osm",
+        "label": "OpenStreetMap-wegennet, ODbL",
+        "href": "https://www.openstreetmap.org/copyright",
+        "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
       },
       {
         "id": "klic",
         "label": "Kadaster KLIC-orientatieverzoek",
         "href": "https://www.kadaster.nl/zakelijk/producten/graafwerk/orientatieverzoek"
-      },
-      {
-        "id": "survey",
-        "label": "Inwonersenquete Warmenhuizen, 2 juli 2026",
-        "path": "data/places/warmenhuizen/survey-analysis-2026-07-02.json"
       }
     ],
     "blocks": [
       {
         "id": "title",
         "type": "markdown",
-        "body": "# Warmenhuizen: bestaande HVC-locaties behouden en gericht aanvullen"
+        "body": "# Warmenhuizen: verdeling van elf ondergrondse restcontainer-assets"
       },
       {
         "id": "executive_summary",
         "type": "markdown",
-        "body": "## Executive Summary\n\n- **Correctie:** alle **11 bestaande HVC-restlocaties blijven als harde randvoorwaarde staan**: 9 openbaar en WH23/WH24 alleen voor hun zeven vastgelegde Angelapark-adressen.\n- **Advies:** hanteer **225 meter als ontwerpmaximum** en 275 meter alleen als gemotiveerde uitzondering. Het reproduceerbare model vindt bij 225 meter **38 aanvullende zoekankers**, dus **49 locaties/modelpunten in het scenario**. Het bewezen modelinterval is 39-49; 49 is geen bewezen minimum.\n- **Afstand:** de gecorrigeerde variant komt uit op gemiddeld **110.4 m**, P95 **194.9 m** en maximaal **224.5 m**. De 33-locatie plan-/reporeferentie staat op 137.3 m, 283 m en 447.5 m.\n- **Capaciteit:** op de vaste 49 modelpunten zijn **49 bakken bij maximaal 100 adres-equivalenten** en **51 bij 75** exact haalbaar binnen de modelmatrix. Actieve passen, kilogrammen en vulgraad ontbreken.\n- **Geen bouwbesluit:** van de 38 aanvullende ankers zijn er op luchtfoto/BGT **5 groen, 14 oranje en 19 rood**. Na het verplaatsen van rode punten moet opnieuw worden gerouteerd; 49 locaties en de 225-metergarantie zijn daarom nog niet fysiek bewezen.\n- **Kaart:** de aparte huishoudkaart kleurt alle **2.579 BAG-woonfunctie-adressen** volgens dezelfde zes afstandsbanden als de repo en onderscheidt bestaande openbare, bestaande private en aanvullende locaties."
+        "body": "## Besluit in één minuut\n\n**Met precies elf ondergrondse assets is een dorpsbreed serviceniveau van circa 275 meter niet haalbaar in deze data.** De huidige elf laten op de historische routegraaf 1.291 van 2.579 woonadresproxies boven 275 meter. In een afzonderlijke lokale OSM-berekening laat de hier gevonden vrije herverdeling van precies elf nog 1.125 adressen (43.6%) erboven; P95 is 413 m en het maximum 499.1 m. De twee aantallen zijn door de andere routebasis geen gemeten voor-na-verbetering.\n\nAls “elf containers” letterlijk elf fysieke bakken betekent, is ook de capaciteit onbewezen en waarschijnlijk de eerste beperking: bij de uitsluitend illustratieve grenzen van 100 of 75 adresproxies per bak zijn nominaal minimaal 26 respectievelijk 35 bakken nodig. In dit dossier betekent **34 daarom locaties/zoekzones, niet 34 bewezen fysieke bakken**.\n\nAls de officiële service-intentie—**maximaal ongeveer 275 meter, met toegang tot de drie dichtstbijzijnde containers**—leidend is, kom ik voor ruimtelijke reservering uit op **ongeveer 34 locaties: de elf bestaande plus 23 aanvullende zoekzones**. Dat is een heuristische bovengrens; een geldige ondergrens is 29 totaal. De 34 exacte rekenankers zijn geen uitvoeringsplan: van de 23 aanvullingen zijn 2 groen, 7 oranje en 14 rood in de luchtfoto/BGT-bureauscreen.\n\n**Mijn aanbeveling:** reserveer voorlopig ruimte voor circa 34 locaties, maar neem nog geen plaatsingsbesluit over de 23 ankers. Laat gemeente en HVC eerst een bouwbare kandidaatpool vaststellen en los daarna de vier criteria uit Nevrlý et al. opnieuw op met lokale afvalvolumes, voertuigtijden en echte kosten."
       },
       {
-        "id": "correction",
+        "id": "scope",
         "type": "markdown",
-        "body": "## Wat door deze correctie verandert\n\nDe eerdere vrije optimalisatie mocht ieder punt vervangen en kwam uit op 43 modelankers. Dat beantwoordde niet de feitelijke randvoorwaarde dat bestaande HVC-bakken blijven staan. De nieuwe run fixeert daarom WH03, WH05, WH06, WH08, WH14, WH23, WH24, WH26, WH27, WH33 en WH34 voordat aanvullingen worden gekozen.\n\nDe eerdere 43-nodeoplossing kan daarna naar 38 aanvullende ankers worden teruggesnoeid. De vervallen vrije ankers zijn site 1 (Zigt), site 2 (Kuipersven), site 4 (Leuneweg), site 9 (Poolster), site 40 (Torenvenplein). Drie daarvan liggen bij bestaande HVC-locaties in Zigt, Kuipersven en Poolster; de dekking van de overige twee wordt door de gezamenlijke vaste-plus-aanvullende set overgenomen.",
-        "sourceId": "fixed_existing_input"
+        "body": "## Scope en interpretatie\n\n“Uitgaan van de bestaande 11” is in drie afzonderlijke vragen vertaald:\n\n1. Wat gebeurt er als de huidige elf locaties blijven zoals ze zijn?\n2. Wat is theoretisch mogelijk als precies elf bestaande assets vrij mogen worden verplaatst?\n3. Hoeveel locaties zijn ruimtelijk nodig als de elf blijven en circa 275 meter de service-intentie is?\n\nDe populatie omvat 2.579 BAG-adressen met woonfunctie binnen de gebruikte bebouwde-komgrens. Van 2.882 woonfunctieadressen in de bredere BAG-woonplaats vallen 303 buiten deze scope. Volgens Schagen blijft de inzameling buiten de bebouwde kom ongewijzigd. Een adres is hier een huishoudproxy, niet één bewezen huishouden, inwonertal of afvalvolume."
       },
       {
-        "id": "decision",
-        "type": "markdown",
-        "body": "## Het besluit dat ik zou nemen\n\nOntwerp lexicografisch: **(1) behoud de 11 bestaande HVC-punten, (2) voorkom dat een adres boven het afgesproken maximum komt, (3) verlaag daarna P95 en gemiddelde, (4) beperk pas daarna locaties en bakken, en (5) gebruik uitsluitend technisch en juridisch goedgekeurde bouwpinnen**.\n\nBij 225 meter ligt de reproduceerbare ondergrens op **39 totale locaties**: 11 verplicht bestaand plus minimaal 28 aanvullingen. De gevonden haalbare bovengrens is 49. De 50 meter buffer tot de bestuurlijke circa 275 meter is nuttig voor lokale inpassing, maar kan een grote verplaatsing van een rood anker niet automatisch opvangen."
-      },
-      {
-        "id": "definitions",
-        "type": "markdown",
-        "body": "## Wat is precies gemeten?\n\nDe vraagpopulatie bestaat uit **2.579 BAG-adressen met woonfunctie binnen de gebruikte bebouwde-komgrens**. Van de 2.882 woonfunctie-adressen in de BAG-woonplaats vallen 303 adressen (10.5%) buiten deze scope. Een adres is een huishoudproxy, geen inwonertal; mobiliteitsbeperkingen en toegankelijke routekwaliteit ontbreken.\n\nEen modelsite is een punt in de locatieanalyse; alleen de 11 bestaande HVC-punten zijn al fysieke locaties. Een bak is een afzonderlijke 5.000-litercontainer; een uiteindelijke site kan meer dan één bak nodig hebben. De repo identificeert één bestaande restbak met uniek HVC-ID op elk van de 11 vaste locaties, maar kan eventuele extra co-gelokaliseerde bakken niet representeren.\n\nDe modelafstand is de kortste route over een gereconstrueerde historische OSRM-voetgangersgraaf. Korte benen tussen BAG-/containercoordinaten en hun gesnapte netwerkknoop ontbreken. De uitkomst is geschikt voor vergelijking en zoekzones, niet voor civieltechnische maatvoering."
-      },
-      {
-        "id": "current_state",
-        "type": "markdown",
-        "body": "## De 33-locatie plan-/reporeferentie houdt een lange staart\n\nIn de actuele repo-referentie liggen 152 adressen (5.9%) boven 275 meter en is het maximum 447.5 meter. Het behoudscenario brengt alle gemodelleerde adressen onder 225 meter en verlaagt P95 van 283 naar 194.9 meter. De vergelijking is conservatief: de referentiegenerator bewaart alleen routes naar zes hemelsbreed voorgeselecteerde kandidaten en kan daardoor enkele werkelijke minima missen."
-      },
-      {
-        "id": "distance_chart",
+        "id": "coverage_chart",
         "type": "chart",
-        "chartId": "distance_comparison"
+        "chartId": "coverage_275"
       },
       {
-        "id": "distance_chart_note",
+        "id": "coverage_note",
         "type": "markdown",
-        "body": "De verbetering zit vooral in de staart van de verdeling. Dat ondersteunt een maximumafstandsdoelstelling naast het gemiddelde, maar bewijst nog niet dat iedere aanvullende pin uitvoerbaar is."
+        "body": "De conclusie dat elf onvoldoende is, is robuust voor beide gebruikte routemodellen. De exacte meterwaarden tussen scenario’s zijn niet één-op-één vergelijkbaar: de exact-11-run gebruikt een lokale OSM-graaf, de behoudscenario’s een gereconstrueerde historische OSRM-segmentgraaf en de 33-locatiereferentie opgeslagen deur-tot-puntroutes."
       },
       {
-        "id": "frontier_text",
-        "type": "markdown",
-        "body": "## De Pareto-afweging met elf verplichte locaties\n\nDe grafiek toont geen exact optimum. De ondergrens is een 2T-packing van resterende vraagpunten plus de elf verplichte locaties; de bovengrens is de beste reproduceerbaar gevonden set. Bij 150 meter ligt het interval op 70-90 locaties, bij 225 meter op 39-49 en bij 275 meter op 29-34. Dit maakt 225 meter een verdedigbare balans tussen service, uitvoeringsbuffer en ruimtebeslag.",
-        "sourceId": "fixed_existing_model"
-      },
-      {
-        "id": "frontier_chart",
-        "type": "chart",
-        "chartId": "fixed_frontier"
-      },
-      {
-        "id": "frontier_note",
-        "type": "markdown",
-        "body": "Een kleinere bovengrens kan met een zwaardere solver nog bestaan. De grafiek mag daarom niet worden gelezen als bewijs dat precies 49 locaties noodzakelijk zijn."
-      },
-      {
-        "id": "locations_intro",
-        "type": "markdown",
-        "body": "## Waar de locaties en zoekzones exact liggen\n\nDe tabel bevat de 11 exacte bestaande HVC-coordinaten en 38 exacte **analytische ankers**. Voor aanvullingen is ook het eerdere luchtfoto-/BGT-oordeel gekoppeld. Van die aanvullingen hebben 36 een exacte positieve Gemeente Schagen-perceelhit, 0 alleen een positieve hit binnen 25 meter en 2 geen gemeentelijke hit binnen 25 meter. Een positieve hit is geen kadastraal bewijs of vergunning.\n\nDe bestaande HVC-punten zijn behoudspunten, maar hun actuele assetaantal, operationele status en toegang moeten alsnog door HVC worden bevestigd. WH23 en WH24 tellen fysiek mee maar mogen in het model uitsluitend hun geconfigureerde privé-adressen bedienen. “Dichtstbij (ongecap.)” is de afstandstoewijzing; de twee flowkolommen zijn aparte capaciteitsherverdelingen en minimaliseren de loopafstand niet opnieuw."
-      },
-      {
-        "id": "locations_table_block",
+        "id": "scenario_table_block",
         "type": "table",
-        "tableId": "locations_table"
+        "tableId": "scenario_table"
       },
       {
-        "id": "household_map",
-        "type": "markdown",
-        "body": "## Huishoudkaart met dezelfde afstandskleuren als de repo\n\nDe interactieve kaart staat als **`fixed-existing-household-coverage-map.html`** naast dit rapport; **`fixed-existing-household-coverage-map.svg`** is de zelfstandig schaalbare versie. Alle 2.579 adressen zijn afzonderlijk zichtbaar: groen 0-100 m, geel 100-125 m, oranje 125-150 m, rood 150-275 m, donkerrood boven 275 m en grijs zonder route. Bestaande openbare, bestaande private en aanvullende punten hebben ieder een eigen markersymbool. De kaarttabel bevat alle 49 locaties met adresreferentie en status.\n\nDe kaart is een modelweergave. Afstanden komen uit het vaste historische routenetwerk en niet uit een nieuwe live deur-tot-containerberekening.",
-        "sourceId": "household_map"
-      },
-      {
-        "id": "aerial_screen",
-        "type": "markdown",
-        "body": "## Luchtfoto en BGT: 5 groen, 14 oranje, 19 rood\n\nDe 38 aanvullingen zijn een subset van de eerder visueel beoordeelde 43 nodes, zodat hun 2026-luchtfoto/BGT-screen herbruikbaar is. Groen betekent alleen “direct technisch inmeten”; oranje vraagt een lokale variant; rood betekent “exact anker verlaten en de zoekzone opnieuw ontwerpen”. Luchtfoto is hier beter dekkend dan KartaView, maar toont geen kabels, fundering, stempeldraagkracht, wortels, hoogte of piekparkeren.\n\nOmdat 19 ankers rood zijn, is de set van 49 modelcoordinaten **niet uitvoerbaar verklaard**. Verplaatsingen moeten eerst in een kandidaatpool worden gezet en daarna samen met alle adressen opnieuw worden gerouteerd.",
-        "sourceId": "prior_site_screen"
-      },
-      {
-        "id": "land_access",
-        "type": "markdown",
-        "body": "## Gemeentegrond en HVC-bereikbaarheid blijven harde poorten\n\nSchagen verlangt onder meer een veilige stop, achteruitrijden vermijden, geen hijsen over geparkeerde auto's, minimaal 3 meter afstand tot een woongevel, obstakelvrijheid, onderzoek naar kabels/leidingen en verharding die as- en stempeldruk draagt. Openbare regels uit meerdere HVC-gemeenten ondersteunen als voorlopige kraan-/ledigingsafstand maximaal 5,0 meter van wagen tot containerhart. Exacte lengte, breedte, massa, stempeluitslag en kraandiagram van het Schagen-voertuig zijn niet openbaar gevonden en moeten schriftelijk door HVC worden bevestigd.\n\nDe eerder gebruikte 12,0 x 3,10 meter, 40 ton, 4 meter routehoogte, 12 meter werkhoogte en circa 23 meter buitenste draaicirkel zijn conservatieve openbare vergelijkingsmaten, nadrukkelijk geen HVC-goedkeuring."
-      },
-      {
-        "id": "capacity",
-        "type": "markdown",
-        "body": "## Capaciteit: 49 bakken bij 100 adressen, 51 bij 75\n\nOp de vaste set van 49 locaties is één bak per locatie voldoende bij maximaal 100 adres-equivalenten: **49 bakken totaal**. Bij maximaal 75 zijn **51 bakken** nodig; de twee extra bakken staan in de modelscreen bij WH26 (Regelhaalder 42) en model-225-19 (Puttersakker 19). Max-flow bewijst binnen deze vaste afstandsmatrix dat geen kleinere bakmultiset aan de respectieve capaciteitslimiet voldoet.\n\nDit is geen exploitatieadvies. Een BAG-adres is geen actieve afvalpas en zegt niets over kilogrammen, vulgraad, hoogbouw, seizoenspiek of ledigingsfrequentie. Vraag HVC daarom om een actueel asset-, pas- en vulgraadbestand en herbereken capaciteit op de technisch goedgekeurde bouwpinnen.",
-        "sourceId": "fixed_existing_model"
-      },
-      {
-        "id": "survey_context",
-        "type": "markdown",
-        "body": "## De inwonersenquete ondersteunt een kortere ontwerpafstand\n\nVan 809 geldige reacties was 82% tegen het voorliggende plan. Onder de tegenstemmers noemde 62.3% de afstand te groot en 81.6% problemen voor ouderen of mensen met een beperking. De steekproef is zelfgeselecteerd en bewijst geen causaliteit, maar bevestigt dat de lange staart bestuurlijk relevant is.",
-        "sourceId": "survey"
-      },
-      {
-        "id": "survey_chart",
+        "id": "tail_chart",
         "type": "chart",
-        "chartId": "survey_agreement"
+        "chartId": "tail_distances"
       },
       {
-        "id": "survey_table_block",
+        "id": "paper_method",
+        "type": "markdown",
+        "body": "## Wat het opgegeven onderzoek werkelijk vraagt\n\nNevrlý et al. formuleren het locatieprobleem als een mixed-integer linear program met vier conflicterende doelen: volumegewogen loopafstand, aantal inzamelpunten, servicetijd van het inzamelvoertuig en aanschafkosten van containers. Hun voorkeurscompromis beperkt de verslechtering ten opzichte van de afzonderlijke criteriumoptima; capaciteit en vulgraad zijn onderdeel van de casus. Het artikel levert geen universele 225- of 275-metergrens.\n\nDe methode is overdraagbaar, maar de casusparameters voor plasticinzameling in een Tsjechische gemeente zijn dat niet. Voor Warmenhuizen ontbreken openbare, locatiespecifieke vraag-, voertuig- en kostendata. Daarom is “optimaal” hier alleen verantwoord voor een expliciet rekenmodel; niet als bestuurlijke of civieltechnische einduitkomst."
+      },
+      {
+        "id": "criteria_table_block",
         "type": "table",
-        "tableId": "survey_table"
+        "tableId": "criteria_table"
+      },
+      {
+        "id": "exact11_intro",
+        "type": "markdown",
+        "body": "## Als er echt maar elf assets mogen zijn\n\nDe reproduceerbare exact-11-run gebruikt één deterministische greedy start op maximumafstand, daarna P95 en gemiddelde, en voert vervolgens dertien best-improving één-op-éénwissels uit tot de volledige één-swapbuurt geen strikte verbetering bevat. De matrix bevat 2.579 adressen en 207 als algemeen bruikbaar gemarkeerde kandidaatrecords op 186 unieke coördinaten; feitelijke openbare en technische geschiktheid is daarmee niet vastgesteld. De vastgelegde matrix en BAG-dekkingsbron worden met SHA-256 gecontroleerd. Er is geen multistart- of globaal optimaliteitsbewijs; identieke afstandskolommen kunnen bovendien equivalente ID-sets geven.\n\nUitkomst: gemiddeld 252.48 m, P95 413 m, maximum 499.1 m; 1.454 adressen binnen en 1.125 boven 275 meter. De locatiebelasting loopt van 8 tot 378 adresproxies. Onder de illustratieve 100/75-proxygrenzen vraagt juist deze dichtstbijzijnde-toewijzing 33/40 fysieke bakken op de elf sites. Dat is geen globale optimaliteitsverklaring en geen operationele capaciteitstoets.\n\nDe kaart staat in [exact-11-reallocation-map.html](exact-11-reallocation-map.html); de SVG-versie staat ernaast."
+      },
+      {
+        "id": "exact11_table_block",
+        "type": "table",
+        "tableId": "exact11_table"
+      },
+      {
+        "id": "service_intro",
+        "type": "markdown",
+        "body": "## Als circa 275 meter de service-eis is\n\nMet alle elf bestaande locaties als vaste scenario-invoer vindt de set-coverheuristiek 23 aanvullingen: 34 locaties totaal, gemiddeld 140.2 m, P95 235 m en maximum 273.1 m op de gebruikte routegraaf. De packing-ondergrens is 18 aanvullingen, dus het aantoonbare interval is **29–34 totaal**; 34 is een reproduceerbare haalbare bovengrens, geen bewezen minimum.\n\nDe aparte [recommended-275-household-coverage-map.html](recommended-275-household-coverage-map.html) gebruikt exact de repo-kleuren: groen ≤100 m, geel 100–125 m, oranje 125–150 m, rood 150–275 m, donkerrood >275 m en grijs zonder route. De JSON bevat per woonadres ook de drie dichtstbijzijnde toegankelijke scenariolocaties. WH23 en WH24 blijven alleen beschikbaar voor hun geconfigureerde private adressen."
+      },
+      {
+        "id": "sensitivity_chart",
+        "type": "chart",
+        "chartId": "distance_sensitivity"
+      },
+      {
+        "id": "sensitivity_note",
+        "type": "markdown",
+        "body": "225 meter is in dit dossier alleen een ambitie-/gevoeligheidsvariant: zij vraagt 49 modelpunten en is geen gemeentelijke norm. De actuele Schagen-pagina noemt circa 275 meter met veiligheids-/bereikbaarheidsexcepties."
+      },
+      {
+        "id": "service_locations_block",
+        "type": "table",
+        "tableId": "service_locations_table"
+      },
+      {
+        "id": "feasibility_intro",
+        "type": "markdown",
+        "body": "## De rekenpunten zijn nog geen bouwpunten\n\nVoor elk aanvullend 275-meteranker is een PDOK-luchtfoto uit laag `2026_orthoHR` opgeslagen en zijn BGT-objecten binnen 20 meter gemeten. Dit zijn luchtfoto’s, geen satellietbeelden. De provinciale openbare BRK-laag geeft op 20 van 23 exacte ankers een Gemeente Schagen-indicatie en bij 21 een indicatie binnen 25 meter; dit is nadrukkelijk geen volledige kadastrale recherche of juridisch bewijs.\n\nSlechts model-275-17 en model-275-22 hebben een geloofwaardige nabije zoekzone. Ze zijn ook nog niet goedgekeurd. Veertien rode punten liggen bijvoorbeeld in rijbaan, fietspad, erf of een krappe obstakelzone en moeten materieel verplaatsen. Iedere verplaatsing vereist nieuwe routing voor alle huishoudens."
+      },
+      {
+        "id": "feasibility_table_block",
+        "type": "table",
+        "tableId": "feasibility_table"
+      },
+      {
+        "id": "existing_intro",
+        "type": "markdown",
+        "body": "## De elf bestaande locaties zijn niet zonder voorbehoud “actueel”\n\nEen live dry-run tegen de publieke, adresafhankelijke HVC-respons bevestigde acht repository-ID’s en coördinaten exact. Voor WH05, WH08 en WH23 kwamen bij het referentieadres geen HVC-restlocatiekandidaten terug; die drie vragen handmatige controle. De API is geen formeel assetregister en het aantal teruggegeven locaties zegt niet hoeveel bakken op één site staan.\n\nWH23 en WH24 zijn private Angelaparkpunten. De huidige model-allowlist mag niet zonder schriftelijke bevestiging worden uitgebreid. Daarnaast noemt de actuele gemeentepagina WH27 bij Verzetslaan 40, terwijl de repository/HVC-respons Zigt 97 gebruikt."
+      },
+      {
+        "id": "existing_table_block",
+        "type": "table",
+        "tableId": "existing_table"
+      },
+      {
+        "id": "household_allocation",
+        "type": "markdown",
+        "body": "## Verdeling over huishoudens\n\nVoor beleidsuitvoering zou ik ieder adres **de drie dichtstbijzijnde technisch goedgekeurde en toegankelijke locaties** toewijzen, niet één exclusieve bak. Dat volgt de actuele Schagen-systematiek, biedt uitwijk bij storing/lediging en voorkomt dat de kaarttoewijzing als toegangslijst wordt misbruikt. Voor capaciteitsplanning moet de feitelijke vraag daarna met afvalpassen/volumegegevens over die drie opties worden verdeeld.\n\nDe kaarten tonen voor leesbaarheid telkens de dichtstbijzijnde locatie en de afstandsband. De volledige scenario-JSON’s bewaren per adres rang 1–3. De [existing-11-household-coverage-map.html](existing-11-household-coverage-map.html) maakt zichtbaar waar de huidige elf tekortschieten."
       },
       {
         "id": "implementation",
         "type": "markdown",
-        "body": "## Uitvoeringsroute\n\n1. **Bevestig de vaste assets:** laat HVC alle 11 ID's, aantallen bakken, volumes, operationele status en privétoegang valideren.\n2. **Bevries de service-eis:** 225 meter ontwerpmaximum; alleen gemotiveerd maatwerk tot 275 meter. Laat Schagen ook uitleggen hoe de LIOR-straal van 150 meter zich tot werkelijke loopafstand verhoudt.\n3. **Maak een goedgekeurde kandidaatpool:** meet de 5 groene zones in, ontwerp lokale varianten voor 14 oranje en vervang 19 rode; toets eigendom, verkeer, KLIC, bodem, bomen, parkeren en HVC-voertuigmal.\n4. **Optimaliseer opnieuw:** routeer alle 2.579 adressen naar uitsluitend goedgekeurde pins, los locatie en capaciteit gezamenlijk op en publiceer iedere uitzondering.\n5. **Valideer buitengebied en toegankelijkheid:** leg voor de 303 adressen buiten de kom het inzamelregime vast en voer een aparte rolstoel-/rollatorroute-audit uit."
+        "body": "## Aanpak naar een besluitrijpe verdeling\n\n1. **Bevestig de basis:** laat HVC de elf assets, toegang, aantal bakken, volume en status schriftelijk valideren; reconcileer WH27.\n2. **Leg criteria en gewichten vast:** circa 275 meter als service-intentie, plus gelijkheid/P95; spreek kosten-, voertuigtijd- en vulgraadcriteria af.\n3. **Maak een bouwbare kandidaatpool:** vervang de veertien rode ankers en werk de zeven oranje/twee groene zones uit met veldinmeting, KLIC, bodem/water, bomen, parkeren, eigendom/rechten en HVC-voertuigmal.\n4. **Verzamel operationele data:** privacyveilig afvalvolume, passen, ledigingsfrequentie, vulgraden, servicetijden en volledige plaatsings-/verplaatsingskosten.\n5. **Los de viercriteria-MILP opnieuw op:** bereken eerst ieder criterium afzonderlijk, daarna meerdere niet-gedomineerde compromissen; rapporteer ook maximum, P95 en uitzonderingen.\n6. **Valideer en besluit:** routeer deur-tot-goedgekeurde-pin, geef elk adres de drie dichtstbijzijnde opties en publiceer de definitieve locatie- en uitzonderingenkaart."
       },
       {
-        "id": "uncertainty",
+        "id": "limitations",
         "type": "markdown",
-        "body": "## Wat dit rapport niet kan bewijzen\n\n- 49 is een reproduceerbare haalbare bovengrens, geen exact of uniek Pareto-optimum; het modelinterval is 39-49 locaties.\n- De 38 aanvullende coordinaten zijn zoekankers. Vooral de 19 rode ankers moeten veranderen, waarna de harde 225-metergrens opnieuw moet worden bewezen.\n- De openbare perceellaag is een positieve eigendomsscreen, geen kadastraal bewijs of plaatsingsbesluit.\n- De routegraaf is gereconstrueerd uit een historische snapshot; snapbenen en toegankelijke-routekenmerken ontbreken.\n- De referentie selecteert zes hemelsbreed dichtstbijzijnde containers en overschat daardoor enkele minima.\n- De 49/51 bakken zijn uitsluitend capaciteitsgevoeligheden op de vaste modelmatrix, geen investerings- of ledigingsplan."
+        "body": "## Grenzen van de conclusie\n\n- De 34-locatieset is een ongecapaciteerde ruimtelijke bovengrens. Zonder kilogrammen, bakvolume en ledigingsfrequentie volgt hieruit geen betrouwbaar aantal fysieke bakken. De woorden asset, locatie en bak mogen in een uitvoeringsbesluit niet als synoniemen worden gebruikt.\n- De exact-11-set is een lokaal zoekoptimum op een 207-puntenpool, geen bewezen mondiaal optimum.\n- De routegraaf reconstrueert historische OSRM-segmenten en laat korte snapbenen weg; de lokale OSM-matrix wijkt bij calibratie af.\n- De gemeentelijke 33-locatie plan-/reporeferentie en het 34-puntenmodel hebben bijna hetzelfde aantal, maar andere locaties en routebasis; men mag hieruit niet afleiden dat “één extra bak” volstaat.\n- 303 woonfunctieadressen buiten de gehanteerde kom vallen buiten de containeroptimalisatie.\n- Luchtfoto, BGT en grootgrondgebruik zijn bureauscreens; zij vervangen geen veldonderzoek, KLIC, juridische titel of HVC-goedkeuring."
       },
       {
-        "id": "further_questions",
+        "id": "questions",
         "type": "markdown",
-        "body": "## Open vragen voor gemeente en HVC\n\n- Zijn alle 11 HVC-ID's actief, hoeveel fysieke bakken staan per locatie en blijven ze formeel behouden?\n- Is 225 meter als ontwerpmaximum acceptabel en welke uitzonderingsprocedure geldt tot 275 meter?\n- Geldt daarnaast de LIOR-straal van 150 meter als harde filter?\n- Welke exacte voertuigmal, stempellast, kraanreikwijdte, obstakelvrije hoogte en stopduur gelden in Warmenhuizen?\n- Welke alternatieve bouwpinnen voor de rode zoekankers liggen aantoonbaar op gemeentelijke grond?\n- Hoeveel actieve aansluitingen en kilogrammen restafval horen per zone bij de uiteindelijke pins?"
+        "body": "## Open vragen aan gemeente en HVC\n\n- Zijn alle elf repositorylocaties fysiek actief en hoeveel bakken/volume staat per locatie?\n- Welke 275-meterdefinitie geldt: deur-tot-inwerpzuil langs een toegankelijke route, en hoe worden uitzonderingen vastgesteld?\n- Welke voertuigmal, kraan-/stempelruimte, stopduur en routevensters gelden?\n- Wat zijn plaatsings-, civiele, verplaatsings-, ledigings- en beheerprijzen?\n- Welke privacyveilig geaggregeerde afvalvolumes en vulgraden zijn per vraagzone beschikbaar?\n- Welke vervangende bouwzones voor de veertien rode ankers zijn bestuurlijk en technisch acceptabel?"
       }
     ]
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-13T22:15:00+02:00",
+    "generatedAt": "2026-08-13T23:49:23.193Z",
     "status": "ready",
     "datasets": {
-      "scenario_frontier": [
+      "scenarios": [
         {
-          "cap_m": "150 m",
+          "scenario": "Huidige 11 locaties",
+          "grafiek_label": "Huidige 11",
+          "locaties": 11,
+          "aanvullingen": 0,
+          "gemiddeld_m": 375.6,
+          "p95_m": 1056.4,
+          "maximum_m": 1572.1,
+          "binnen_275": 1288,
+          "boven_275": 1291,
+          "binnen_275_pct": 49.9,
+          "routebasis": "historische OSRM-segmentgraaf",
+          "status": "nulmeting"
+        },
+        {
+          "scenario": "Precies 11 vrij herverdeeld",
+          "grafiek_label": "11 herverdeeld",
+          "locaties": 11,
+          "aanvullingen": 0,
+          "gemiddeld_m": 252.48,
+          "p95_m": 413,
+          "maximum_m": 499.1,
+          "binnen_275": 1454,
+          "boven_275": 1125,
+          "binnen_275_pct": 56.4,
+          "routebasis": "lokale OSM-voetgangersgraaf",
+          "status": "lokaal zoekoptimum; niet bouwrijp"
+        },
+        {
+          "scenario": "11 behouden + 23 zoekzones",
+          "grafiek_label": "11 + 23 zones",
+          "locaties": 34,
+          "aanvullingen": 23,
+          "gemiddeld_m": 140.2,
+          "p95_m": 235,
+          "maximum_m": 273.1,
+          "binnen_275": 2579,
+          "boven_275": 0,
+          "binnen_275_pct": 100,
+          "routebasis": "historische OSRM-segmentgraaf",
+          "status": "ruimtelijke behoefte; 14 ankers rood"
+        },
+        {
+          "scenario": "33-locatie plan-/reporeferentie",
+          "grafiek_label": "33-puntenplan",
+          "locaties": 33,
+          "aanvullingen": 22,
+          "gemiddeld_m": 137.3,
+          "p95_m": 283.2,
+          "maximum_m": 447.5,
+          "binnen_275": 2427,
+          "boven_275": 152,
+          "binnen_275_pct": 94.1,
+          "routebasis": "opgeslagen OSRM-deur-tot-puntroutes",
+          "status": "actuele voorlopige plan-/reporeferentie"
+        }
+      ],
+      "frontier": [
+        {
+          "afstandsplafond": "150 m",
           "ondergrens_totaal": 70,
           "gevonden_totaal": 90,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 79
+          "aanvullingen": 79,
+          "p95_m": 134.8,
+          "maximum_m": 149.6
         },
         {
-          "cap_m": "175 m",
+          "afstandsplafond": "175 m",
           "ondergrens_totaal": 54,
           "gevonden_totaal": 73,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 62
+          "aanvullingen": 62,
+          "p95_m": 154,
+          "maximum_m": 174.8
         },
         {
-          "cap_m": "200 m",
+          "afstandsplafond": "200 m",
           "ondergrens_totaal": 44,
           "gevonden_totaal": 57,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 46
+          "aanvullingen": 46,
+          "p95_m": 180.7,
+          "maximum_m": 200
         },
         {
-          "cap_m": "225 m",
+          "afstandsplafond": "225 m",
           "ondergrens_totaal": 39,
           "gevonden_totaal": 49,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 38
+          "aanvullingen": 38,
+          "p95_m": 194.9,
+          "maximum_m": 224.5
         },
         {
-          "cap_m": "250 m",
+          "afstandsplafond": "250 m",
           "ondergrens_totaal": 33,
           "gevonden_totaal": 40,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 29
+          "aanvullingen": 29,
+          "p95_m": 219.2,
+          "maximum_m": 249.2
         },
         {
-          "cap_m": "275 m",
+          "afstandsplafond": "275 m",
           "ondergrens_totaal": 29,
           "gevonden_totaal": 34,
-          "bestaande_locaties": 11,
-          "aanvullingen_gevonden": 23
+          "aanvullingen": 23,
+          "p95_m": 235,
+          "maximum_m": 273.1
         }
       ],
-      "distance_bands": [
+      "criteria": [
         {
-          "band": "0-100 m",
-          "referentie": 943,
-          "voorstel": 1117
+          "criterium_artikel": "Volumegewogen loopafstand",
+          "warmenhuizen_in_dit_dossier": "Netwerkafstand; één gelijk gewicht per BAG-woonadres",
+          "ontbreekt_voor_volledige_toepassing": "Bewoners/huishoudgrootte, afvalvolume en werkelijk gebruik per privacyveilige vraagzone",
+          "oordeel": "gedeeltelijk toegepast"
         },
         {
-          "band": "100-125 m",
-          "referentie": 349,
-          "voorstel": 407
+          "criterium_artikel": "Aantal inzamelpunten",
+          "warmenhuizen_in_dit_dossier": "Exact 11 en behoud-plus-uitbreiding; gevonden boven- en packing-ondergrenzen",
+          "ontbreekt_voor_volledige_toepassing": "Een globale MILP-optimaliteitsverklaring over vooraf goedgekeurde bouwpinnen",
+          "oordeel": "heuristisch toegepast"
         },
         {
-          "band": "125-150 m",
-          "referentie": 332,
-          "voorstel": 393
+          "criterium_artikel": "Servicetijd inzamelvoertuig",
+          "warmenhuizen_in_dit_dossier": "OSM-wegindicatie, BGT en luchtfotobureauscreen",
+          "ontbreekt_voor_volledige_toepassing": "HVC-route, stop- en hijstijd, voertuigmal, verkeersvensters en routevolgorde",
+          "oordeel": "niet geoptimaliseerd"
         },
         {
-          "band": "150-200 m",
-          "referentie": 473,
-          "voorstel": 574
+          "criterium_artikel": "Aanschafkosten containers",
+          "warmenhuizen_in_dit_dossier": "Geen betrouwbare lokale kostendata",
+          "ontbreekt_voor_volledige_toepassing": "Bak-, plaatsings-, civiele, verplaatsings-, beheer- en ledigingskosten",
+          "oordeel": "niet geoptimaliseerd"
         },
         {
-          "band": "200-225 m",
-          "referentie": 113,
-          "voorstel": 88
-        },
-        {
-          "band": "225-275 m",
-          "referentie": 217,
-          "voorstel": 0
-        },
-        {
-          "band": ">275 m",
-          "referentie": 152,
-          "voorstel": 0
+          "criterium_artikel": "Capaciteit en vulgraad",
+          "warmenhuizen_in_dit_dossier": "Alleen adresbelasting per dichtstbijzijnde locatie",
+          "ontbreekt_voor_volledige_toepassing": "Bakvolume, kilogrammen, ledigingsfrequentie, minimale/gemiddelde vulgraad en piekbelasting",
+          "oordeel": "niet aantoonbaar"
         }
       ],
-      "current_vs_proposal": [
+      "exact11_locations": [
         {
-          "metric": "Gemiddeld",
-          "referentie_m": 137.3,
-          "voorstel_m": 110.4
+          "id": "WH25",
+          "rol": "gemeentelijk voorstel",
+          "adresreferentie": "Molenaarweg 42",
+          "latitude": "52.719605",
+          "longitude": "4.738471",
+          "toegewezen_adresproxies": 317,
+          "voertuig_snap_m": 6.5,
+          "gereedheid": "voorlopig voorstel; integraal toetsen"
         },
         {
-          "metric": "P95",
-          "referentie_m": 283,
-          "voorstel_m": 194.9
+          "id": "M004",
+          "rol": "modelmedoïde",
+          "adresreferentie": "modelpunt nabij Dorusakker 9",
+          "latitude": "52.720997",
+          "longitude": "4.727394",
+          "toegewezen_adresproxies": 251,
+          "voertuig_snap_m": 20.4,
+          "gereedheid": "analytisch anker; nieuwe bouwpin zoeken"
         },
         {
-          "metric": "Maximum",
-          "referentie_m": 447.5,
-          "voorstel_m": 224.5
-        }
-      ],
-      "locations": [
-        {
-          "id": "WH03",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Rietzangerstraat 17",
-          "straat": "Rietzangerstraat",
-          "latitude": "52.727210",
-          "longitude": "4.741939",
-          "hvc_id": "80799",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 42,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 70.5,
-          "p95_m": 169.6,
-          "maximum_m": 182.6,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "id": "M154",
+          "rol": "corridoranker",
+          "adresreferentie": "corridoranker nabij Dergmeerweg 52",
+          "latitude": "52.728478",
+          "longitude": "4.743779",
+          "toegewezen_adresproxies": 204,
+          "voertuig_snap_m": 22.5,
+          "gereedheid": "analytisch anker; nieuwe bouwpin zoeken"
         },
         {
-          "id": "WH05",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Kuipersven 36",
-          "straat": "Kuipersven",
-          "latitude": "52.726883",
-          "longitude": "4.748476",
-          "hvc_id": "81617",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 94,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 114.8,
-          "p95_m": 199.9,
-          "maximum_m": 211.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "id": "M168",
+          "rol": "corridoranker",
+          "adresreferentie": "corridoranker nabij Oudevaart 71",
+          "latitude": "52.715337",
+          "longitude": "4.729482",
+          "toegewezen_adresproxies": 8,
+          "voertuig_snap_m": 73.6,
+          "gereedheid": "analytisch anker; nieuwe bouwpin zoeken"
+        },
+        {
+          "id": "WH13",
+          "rol": "gemeentelijk voorstel",
+          "adresreferentie": "Alingterp 2",
+          "latitude": "52.723362",
+          "longitude": "4.735266",
+          "toegewezen_adresproxies": 201,
+          "voertuig_snap_m": 4,
+          "gereedheid": "voorlopig voorstel; integraal toetsen"
+        },
+        {
+          "id": "WH29",
+          "rol": "gemeentelijk voorstel",
+          "adresreferentie": "Schoffel 1",
+          "latitude": "52.716677",
+          "longitude": "4.742937",
+          "toegewezen_adresproxies": 336,
+          "voertuig_snap_m": 12.7,
+          "gereedheid": "voorlopig voorstel; integraal toetsen"
         },
         {
           "id": "WH06",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Soeverein 2",
-          "straat": "Soeverein",
+          "rol": "bestaande HVC-locatie",
+          "adresreferentie": "Soeverein 2",
           "latitude": "52.727578",
           "longitude": "4.750383",
-          "hvc_id": "81653",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 24,
-          "toegewezen_bij_100": 91,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 74.9,
-          "p95_m": 149.6,
-          "maximum_m": 159.4,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 378,
+          "voertuig_snap_m": 12.8,
+          "gereedheid": "bestaand; behoud/status bevestigen"
+        },
+        {
+          "id": "M027",
+          "rol": "modelmedoïde",
+          "adresreferentie": "modelpunt nabij Hartendorp 4",
+          "latitude": "52.727713",
+          "longitude": "4.738602",
+          "toegewezen_adresproxies": 248,
+          "voertuig_snap_m": 13.6,
+          "gereedheid": "analytisch anker; nieuwe bouwpin zoeken"
+        },
+        {
+          "id": "WH19",
+          "rol": "gemeentelijk voorstel",
+          "adresreferentie": "Zwartepad 32",
+          "latitude": "52.720963",
+          "longitude": "4.733820",
+          "toegewezen_adresproxies": 224,
+          "voertuig_snap_m": 6,
+          "gereedheid": "voorlopig voorstel; integraal toetsen"
+        },
+        {
+          "id": "M144",
+          "rol": "blinde-vlekanker",
+          "adresreferentie": "blindevlekanker nabij De Cres 8",
+          "latitude": "52.717429",
+          "longitude": "4.731297",
+          "toegewezen_adresproxies": 44,
+          "voertuig_snap_m": 26.5,
+          "gereedheid": "analytisch anker; nieuwe bouwpin zoeken"
+        },
+        {
+          "id": "WH11",
+          "rol": "gemeentelijk voorstel",
+          "adresreferentie": "Wiekeland 2",
+          "latitude": "52.723809",
+          "longitude": "4.743822",
+          "toegewezen_adresproxies": 368,
+          "voertuig_snap_m": 8.1,
+          "gereedheid": "voorlopig voorstel; integraal toetsen"
+        }
+      ],
+      "service_locations": [
+        {
+          "id": "WH03",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Rietzangerstraat 17",
+          "latitude": "52.727210",
+          "longitude": "4.741939",
+          "toegewezen_adresproxies": 129,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00G2037",
+          "vervolg": "Stoppositie, draaibeweging en parkeervrij hijsen vastleggen."
+        },
+        {
+          "id": "WH05",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Kuipersven 36",
+          "latitude": "52.726883",
+          "longitude": "4.748476",
+          "toegewezen_adresproxies": 144,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00I1012",
+          "vervolg": "Actieve status, pasregels en exacte inrichting handmatig bevestigen."
+        },
+        {
+          "id": "WH06",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Soeverein 2",
+          "latitude": "52.727578",
+          "longitude": "4.750383",
+          "toegewezen_adresproxies": 68,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00I1012",
+          "vervolg": "KLIC, waterkant, fietspad en hijslijn met hoge prioriteit toetsen."
         },
         {
           "id": "WH08",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Dorpsstraat 89",
-          "straat": "Dorpsstraat",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Dorpsstraat 89",
           "latitude": "52.725435",
           "longitude": "4.739056",
-          "hvc_id": "81580",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 54,
-          "toegewezen_bij_100": 91,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 112.4,
-          "p95_m": 202.8,
-          "maximum_m": 219.1,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 123,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "niet-gemeentelijke indicatie WMH00G2606",
+          "vervolg": "Recht/toestemming en actuele toegang schriftelijk vastleggen."
         },
         {
           "id": "WH14",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Doorbraak 23",
-          "straat": "Doorbraak",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Doorbraak 23",
           "latitude": "52.722411",
           "longitude": "4.740981",
-          "hvc_id": "81206",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 106,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 113,
-          "p95_m": 197.5,
-          "maximum_m": 208,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 150,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00G2658",
+          "vervolg": "KLIC en netbeheerderstoets uitvoeren."
         },
         {
           "id": "WH23",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "privé/allowlist",
-          "nabij_adres": "Molenaarsweg 7",
-          "straat": "Molenaarsweg",
+          "rol": "bestaand privé",
+          "adres_of_zone": "Molenaarsweg 7",
           "latitude": "52.720329",
           "longitude": "4.738551",
-          "hvc_id": "80365",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 0,
-          "toegewezen_bij_100": 3,
-          "toegewezen_bij_75": 3,
-          "gemiddelde_m": null,
-          "p95_m": null,
-          "maximum_m": null,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 3,
+          "status": "bestaande privélocatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "particuliere Angelaparklocatie WMH00G1926",
+          "vervolg": "Niet als algemeen openbaar punt tellen; rechten en HVC-route bevestigen."
         },
         {
           "id": "WH24",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "privé/allowlist",
-          "nabij_adres": "Pastoor Willemsestraat 80",
-          "straat": "Pastoor Willemsestraat",
+          "rol": "bestaand privé",
+          "adres_of_zone": "Pastoor Willemsestraat 80",
           "latitude": "52.720753",
           "longitude": "4.740240",
-          "hvc_id": "80428",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 4,
-          "toegewezen_bij_100": 4,
-          "toegewezen_bij_75": 4,
-          "gemiddelde_m": 94,
-          "p95_m": 159.7,
-          "maximum_m": 171.3,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 4,
+          "status": "bestaande privélocatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "particuliere Angelaparklocatie WMH00G1928",
+          "vervolg": "Niet algemeen openstellen zonder schriftelijke HVC-/rechthebbendenbevestiging."
         },
         {
           "id": "WH26",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Regelhaalder 42",
-          "straat": "Regelhaalder",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Regelhaalder 42",
           "latitude": "52.718557",
           "longitude": "4.741484",
-          "hvc_id": "80299",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 118,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 150,
-          "gemiddelde_m": 79.9,
-          "p95_m": 157.2,
-          "maximum_m": 196.6,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 2,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 144,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00G2723",
+          "vervolg": "Kraanopstelling en parkeervrij venster inmeten."
         },
         {
           "id": "WH27",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Zigt 97",
-          "straat": "Zigt",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Zigt 97",
           "latitude": "52.718151",
           "longitude": "4.743409",
-          "hvc_id": "80552",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 74,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 73.5,
-          "p95_m": 117.3,
-          "maximum_m": 134.8,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 144,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00G2723",
+          "vervolg": "Adres-/ID-conflict met gemeente reconciliëren en hijslijn toetsen."
         },
         {
           "id": "WH33",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Zuiderkruis 36",
-          "straat": "Zuiderkruis",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Zuiderkruis 36",
           "latitude": "52.729898",
           "longitude": "4.748450",
-          "hvc_id": "81782",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 84,
-          "toegewezen_bij_100": 93,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 88.2,
-          "p95_m": 149.9,
-          "maximum_m": 162.4,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 84,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00I1067",
+          "vervolg": "As-built inmeting en HVC-coördinaat bevestigen."
         },
         {
           "id": "WH34",
-          "soort": "bestaande HVC-locatie",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Poolster 25",
-          "straat": "Poolster",
+          "rol": "bestaand openbaar",
+          "adres_of_zone": "Poolster 25",
           "latitude": "52.730485",
           "longitude": "4.750576",
-          "hvc_id": "81783",
-          "oud_site_nummer": null,
-          "luchtfoto": "bestaand",
-          "gemeentegrond_screen": "bestaande locatie; niet opnieuw gescreend",
-          "voertuigroute_screen": "bestaande HVC-locatie",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 36,
-          "toegewezen_bij_100": 26,
-          "toegewezen_bij_75": 44,
-          "gemiddelde_m": 92.2,
-          "p95_m": 147.5,
-          "maximum_m": 155.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Actuele status, assetaantal, bereikbaarheid en behoud schriftelijk door HVC bevestigen."
+          "toegewezen_adresproxies": 36,
+          "status": "bestaande openbare locatie; status en capaciteit bevestigen",
+          "luchtfoto_bgt": "bestaande asset; risico-audit in aparte tabel",
+          "grondscreen": "gemeente-indicatie WMH00I1067",
+          "vervolg": "Exacte stopzijde en hijslijn controleren."
         },
         {
-          "id": "model-225-01",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oostwal 63",
-          "straat": "Oostwal",
-          "latitude": "52.730007",
-          "longitude": "4.743017",
-          "hvc_id": "-",
-          "oud_site_nummer": 33,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 17,
-          "toegewezen_bij_100": 51,
-          "toegewezen_bij_75": 52,
-          "gemiddelde_m": 114.1,
-          "p95_m": 159.7,
-          "maximum_m": 185.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek 60-100 meter noord of zuid naar een aantoonbaar bredere gemeentelijke berm of zijwegmond, met voldoende afstand tot woningen en eventuele sloten."
-        },
-        {
-          "id": "model-225-02",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Fuik 10",
-          "straat": "De Fuik",
+          "id": "model-275-01",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Fuik 10",
           "latitude": "52.729632",
           "longitude": "4.738858",
-          "hvc_id": "-",
-          "oud_site_nummer": 18,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 20,
-          "toegewezen_bij_100": 28,
-          "toegewezen_bij_75": 28,
-          "gemiddelde_m": 119.6,
-          "p95_m": 181.3,
-          "maximum_m": 182,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats noord- of westwaarts naar een openbare rand aan een doorgaande route, of combineer deze vraagzone met site 6 of 22; voer daarna de afstandsoptimalisatie opnieuw uit."
+          "toegewezen_adresproxies": 29,
+          "status": "rood; Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.",
+          "luchtfoto_bgt": "rood: Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2659",
+          "vervolg": "Zoek noord/west een bredere openbare rand en herbereken."
         },
         {
-          "id": "model-225-03",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oostwal 79",
-          "straat": "Oostwal",
+          "id": "model-275-02",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Oostwal 79",
           "latitude": "52.729332",
           "longitude": "4.742866",
-          "hvc_id": "-",
-          "oud_site_nummer": 15,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 49,
-          "toegewezen_bij_100": 9,
-          "toegewezen_bij_75": 9,
-          "gemiddelde_m": 117,
-          "p95_m": 204.5,
-          "maximum_m": 215.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek zuidelijk bij de zichtbaar bredere kruising of een aantoonbaar gemeentelijk bermvak; houd de bak uit de sloot- en erfzone en herbereken de dekking."
+          "toegewezen_adresproxies": 66,
+          "status": "rood; Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.",
+          "luchtfoto_bgt": "rood: Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G1667",
+          "vervolg": "Zoek zuidelijk buiten inritten en zichtdriehoek."
         },
         {
-          "id": "model-225-04",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Fuik 14",
-          "straat": "De Fuik",
-          "latitude": "52.729323",
-          "longitude": "4.738286",
-          "hvc_id": "-",
-          "oud_site_nummer": 36,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "geen hit binnen 25 m",
-          "voertuigroute_screen": "service (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 2,
-          "toegewezen_bij_100": 2,
-          "toegewezen_bij_75": 2,
-          "gemiddelde_m": 83.1,
-          "p95_m": 157.9,
-          "maximum_m": 166.2,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verlaat de exacte pin en zoek 40-70 meter oost bij de openbare Oostwal/De Fuik-aansluiting op gemeentelijke grond; voorkom een doodlopende bediening."
+          "id": "model-275-03",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Veilingweg 37",
+          "latitude": "52.727869",
+          "longitude": "4.736561",
+          "toegewezen_adresproxies": 80,
+          "status": "rood; Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.",
+          "luchtfoto_bgt": "rood: Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00F577",
+          "vervolg": "Verplaats dieper Hartendorp in en herbereken."
         },
         {
-          "id": "model-225-05",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Dorpsstraat 15",
-          "straat": "Dorpsstraat",
-          "latitude": "52.727714",
-          "longitude": "4.739324",
-          "hvc_id": "-",
-          "oud_site_nummer": 22,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 67,
-          "toegewezen_bij_100": 79,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 96.8,
-          "p95_m": 192.1,
-          "maximum_m": 219.2,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Neem WH02 als voorkeurszoekpin en schuif zo nodig 4 tot 10 meter westelijk of noordwestelijk naar een vrij randvak buiten de rijlijnen; verifieer met een voertuigmal en parkeerregime."
+          "id": "model-275-04",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Hoge Werf 2",
+          "latitude": "52.727520",
+          "longitude": "4.745155",
+          "toegewezen_adresproxies": 60,
+          "status": "rood; Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.",
+          "luchtfoto_bgt": "rood: Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.",
+          "grondscreen": "exacte gemeente-indicatie WMH00I535",
+          "vervolg": "Nieuwe voertuigbereikbare zoekzone nodig."
         },
         {
-          "id": "model-225-06",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Spanakker 1",
-          "straat": "De Spanakker",
-          "latitude": "52.727455",
-          "longitude": "4.748183",
-          "hvc_id": "-",
-          "oud_site_nummer": 32,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 38,
-          "toegewezen_bij_100": 63,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 102.4,
-          "p95_m": 176.5,
-          "maximum_m": 185.3,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verschuif 10-20 meter noordoost in de brede groenstrook, met bediening vanaf het rechte stuk en buiten kruispunt, afsluitpaal en toekomstige boomkronen."
+          "id": "model-275-05",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Baljuw 37",
+          "latitude": "52.726407",
+          "longitude": "4.750878",
+          "toegewezen_adresproxies": 41,
+          "status": "oranje; Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.",
+          "luchtfoto_bgt": "oranje: Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00I1012",
+          "vervolg": "Onderzoek 5–10 m verschuiving naar grasrand."
         },
         {
-          "id": "model-225-07",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Rietzangerstraat 3",
-          "straat": "Rietzangerstraat",
-          "latitude": "52.727288",
-          "longitude": "4.740098",
-          "hvc_id": "-",
-          "oud_site_nummer": 6,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 33,
-          "toegewezen_bij_100": 27,
-          "toegewezen_bij_75": 56,
-          "gemiddelde_m": 109.2,
-          "p95_m": 173.6,
-          "maximum_m": 193.6,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Schuif 10 tot 20 meter oostelijk langs het rechtere straatdeel en onderzoek de groenrand buiten de bocht; toets de route met een voertuigmal."
+          "id": "model-275-06",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Baan 33",
+          "latitude": "52.725362",
+          "longitude": "4.744268",
+          "toegewezen_adresproxies": 86,
+          "status": "rood; T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.",
+          "luchtfoto_bgt": "rood: T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00I296",
+          "vervolg": "Gebruik liever de eerder groen beoordeelde WH10-zone circa 64 m westelijk en herbereken."
         },
         {
-          "id": "model-225-08",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Heerlijkheid 16",
-          "straat": "Heerlijkheid",
-          "latitude": "52.726951",
-          "longitude": "4.750100",
-          "hvc_id": "-",
-          "oud_site_nummer": 25,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 63,
-          "toegewezen_bij_100": 14,
-          "toegewezen_bij_75": 42,
-          "gemiddelde_m": 85.2,
-          "p95_m": 173,
-          "maximum_m": 192.4,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Reserveer een vak aan de westzijde van de noord-zuidstraat, circa 10-20 meter noordwest van de pin en weg van de waterkant; toets aan de definitieve inrichtingstekening van de nieuwbouw."
-        },
-        {
-          "id": "model-225-09",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Nachtegaalstraat 12",
-          "straat": "Nachtegaalstraat",
-          "latitude": "52.726883",
-          "longitude": "4.743400",
-          "hvc_id": "-",
-          "oud_site_nummer": 8,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0.1 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 99,
-          "toegewezen_bij_100": 74,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 108.5,
-          "p95_m": 200.7,
-          "maximum_m": 216.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats naar een grotere groen- of parkeerzoom buiten de woonstraatkruising; vergelijk daarbij expliciet de bestaande WH03-zone op circa 105 meter."
-        },
-        {
-          "id": "model-225-10",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oud Wulpendorp 11",
-          "straat": "Oud Wulpendorp",
-          "latitude": "52.726561",
-          "longitude": "4.738293",
-          "hvc_id": "-",
-          "oud_site_nummer": 12,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 77,
-          "toegewezen_bij_100": 38,
-          "toegewezen_bij_75": 42,
-          "gemiddelde_m": 127.5,
-          "p95_m": 222.9,
-          "maximum_m": 223.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek de gemeentelijke WH07-zone op circa 82 meter of een ruimere groenrand langs de doorgaande Dorpsstraat en herbereken vanaf die locatie."
-        },
-        {
-          "id": "model-225-11",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Baljuw 1",
-          "straat": "Baljuw",
-          "latitude": "52.725928",
-          "longitude": "4.750240",
-          "hvc_id": "-",
-          "oud_site_nummer": 41,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 48,
-          "toegewezen_bij_100": 16,
-          "toegewezen_bij_75": 16,
-          "gemiddelde_m": 117.8,
-          "p95_m": 170,
-          "maximum_m": 181.8,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek 60-100 meter west of noordwest bij een bredere buurtentree of nog onbebouwde openbare rand, buiten water- en boomzone."
-        },
-        {
-          "id": "model-225-12",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Baan 27",
-          "straat": "De Baan",
-          "latitude": "52.725414",
-          "longitude": "4.743329",
-          "hvc_id": "-",
-          "oud_site_nummer": 16,
-          "luchtfoto": "groen",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 49,
-          "toegewezen_bij_100": 33,
-          "toegewezen_bij_75": 41,
-          "gemiddelde_m": 113.3,
-          "p95_m": 195.8,
-          "maximum_m": 207.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Gebruik de WH10-conceptpin als voorkeurspositie en leg het ondergrondse deel 3 tot 7 meter zuidelijk van de rijbaan, in een aantoonbare open ruimte tussen wortelzones."
-        },
-        {
-          "id": "model-225-13",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Veilingweg 70D",
-          "straat": "Veilingweg",
+          "id": "model-275-07",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Veilingweg 70D",
           "latitude": "52.725182",
           "longitude": "4.734133",
-          "hvc_id": "-",
-          "oud_site_nummer": 43,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "geen hit binnen 25 m",
-          "voertuigroute_screen": "service (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 1,
-          "toegewezen_bij_100": 1,
-          "toegewezen_bij_75": 1,
-          "gemiddelde_m": 0,
-          "p95_m": 0,
-          "maximum_m": 0,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek 20-40 meter noord/oost aan de openbare Veilingweg-rand of een aantoonbaar gemeentelijk hoekvak; vermijd het parkeerterrein en het agrarische perceel."
+          "toegewezen_adresproxies": 1,
+          "status": "rood; Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.",
+          "luchtfoto_bgt": "rood: Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.",
+          "grondscreen": "geen gemeente-indicatie binnen 25 m",
+          "vervolg": "Zoek 20–40 m noord/oost aan openbare Veilingweg-rand."
         },
         {
-          "id": "model-225-14",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Burg. Burgerstraat 20",
-          "straat": "Burg. Burgerstraat",
-          "latitude": "52.724953",
-          "longitude": "4.737802",
-          "hvc_id": "-",
-          "oud_site_nummer": 11,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 53,
-          "toegewezen_bij_100": 41,
-          "toegewezen_bij_75": 44,
-          "gemiddelde_m": 117.5,
-          "p95_m": 194.8,
-          "maximum_m": 200.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek zuidelijk richting een doorgaande kruising of aan de westelijke parkzoom met in- en uitrit; de nieuwe pin moet opnieuw in de loopoptimalisatie worden opgenomen."
+          "id": "model-275-08",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Huisweid 17",
+          "latitude": "52.724578",
+          "longitude": "4.732146",
+          "toegewezen_adresproxies": 6,
+          "status": "rood; Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.",
+          "luchtfoto_bgt": "rood: Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.",
+          "grondscreen": "geen gemeente-indicatie binnen 25 m",
+          "vervolg": "Zoek buiten het erf aan openbare weg."
         },
         {
-          "id": "model-225-15",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Remmerdel 46",
-          "straat": "Remmerdel",
-          "latitude": "52.724896",
-          "longitude": "4.746141",
-          "hvc_id": "-",
-          "oud_site_nummer": 19,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (54.8 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 35,
-          "toegewezen_bij_100": 29,
-          "toegewezen_bij_75": 29,
-          "gemiddelde_m": 150.7,
-          "p95_m": 212.5,
-          "maximum_m": 224.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats 55 tot 75 meter noordelijk naar de Remmerdel-zijde van de brug en zoek daar een wegberm- of parkeerrand; herbereken de loopafstand vanaf de nieuwe pin."
+          "id": "model-275-09",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Wiekeland 7",
+          "latitude": "52.723768",
+          "longitude": "4.744820",
+          "toegewezen_adresproxies": 98,
+          "status": "oranje; Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.",
+          "luchtfoto_bgt": "oranje: Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00I695",
+          "vervolg": "Onderzoek 4–6 m oost/noordoost."
         },
         {
-          "id": "model-225-16",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Langedijker 13",
-          "straat": "Langedijker",
-          "latitude": "52.723875",
-          "longitude": "4.742236",
-          "hvc_id": "-",
-          "oud_site_nummer": 28,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "living_street (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 97,
-          "toegewezen_bij_100": 95,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 118.1,
-          "p95_m": 195.5,
-          "maximum_m": 209,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek circa 60-90 meter west/noordwest bij het ruimere speel- of parkeervak aan de rand van de buurt; toets daar bereik en bomen opnieuw."
+          "id": "model-275-10",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Posthoorn 25",
+          "latitude": "52.723336",
+          "longitude": "4.735225",
+          "toegewezen_adresproxies": 86,
+          "status": "rood; Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.",
+          "luchtfoto_bgt": "rood: Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2687",
+          "vervolg": "Zoek 15–30 m westelijk en herbereken."
         },
         {
-          "id": "model-225-17",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Veilingweg 74A",
-          "straat": "Veilingweg",
-          "latitude": "52.723250",
-          "longitude": "4.733730",
-          "hvc_id": "-",
-          "oud_site_nummer": 26,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 8,
-          "toegewezen_bij_100": 35,
-          "toegewezen_bij_75": 35,
-          "gemiddelde_m": 149.3,
-          "p95_m": 186.6,
-          "maximum_m": 188.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verlaat deze pin; zoek westelijk of noordwestelijk langs een bredere Veilingweg-rand of een publiek parkeerterrein met vrije opstelstrook, niet in deze bedrijfsstraat."
+          "id": "model-275-11",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Vijfven 7",
+          "latitude": "52.722262",
+          "longitude": "4.726312",
+          "toegewezen_adresproxies": 38,
+          "status": "rood; Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.",
+          "luchtfoto_bgt": "rood: Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2696",
+          "vervolg": "Zoek aan de woonstraat, niet in de fiets-/watercorridor."
         },
         {
-          "id": "model-225-18",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Posthoorn 10",
-          "straat": "Posthoorn",
-          "latitude": "52.723232",
-          "longitude": "4.736527",
-          "hvc_id": "-",
-          "oud_site_nummer": 34,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 75,
-          "toegewezen_bij_100": 61,
-          "toegewezen_bij_75": 67,
-          "gemiddelde_m": 151.6,
-          "p95_m": 218.4,
-          "maximum_m": 221.8,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek richting west/noordwest bij de bredere Dorpsstraat- of parkeeromgeving, niet tussen de woningen van Posthoorn; herbereken vanaf de alternatieve locatie."
+          "id": "model-275-12",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Negen Geerzen 29",
+          "latitude": "52.722171",
+          "longitude": "4.746228",
+          "toegewezen_adresproxies": 60,
+          "status": "oranje; Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.",
+          "luchtfoto_bgt": "oranje: Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.",
+          "grondscreen": "exacte gemeente-indicatie WMH00I695",
+          "vervolg": "Onderzoek 5–8 m oost/noordoost."
         },
         {
-          "id": "model-225-19",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Puttersakker 19",
-          "straat": "Puttersakker",
-          "latitude": "52.722612",
-          "longitude": "4.745902",
-          "hvc_id": "-",
-          "oud_site_nummer": 10,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "living_street (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 102,
-          "toegewezen_bij_100": 91,
-          "toegewezen_bij_75": 103,
-          "gemiddelde_m": 102.6,
-          "p95_m": 175.6,
-          "maximum_m": 220.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 2,
-          "lokaal_vervolg": "Gebruik de ruimere gemeentelijke WH12-zone op circa 63 meter oostelijk als eerste alternatief en herbereken de dekking vanaf die bouwpin."
+          "id": "model-275-13",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Dorpsstraat 110A",
+          "latitude": "52.722061",
+          "longitude": "4.737997",
+          "toegewezen_adresproxies": 146,
+          "status": "rood; Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.",
+          "luchtfoto_bgt": "rood: Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2401",
+          "vervolg": "Alleen mogelijk met expliciete parkeerplaatsconversie."
         },
         {
-          "id": "model-225-20",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Stationsstraat 22A",
-          "straat": "Stationsstraat",
-          "latitude": "52.722359",
-          "longitude": "4.734768",
-          "hvc_id": "-",
-          "oud_site_nummer": 14,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0.1 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 26,
-          "toegewezen_bij_100": 55,
-          "toegewezen_bij_75": 55,
-          "gemiddelde_m": 100.8,
-          "p95_m": 169.8,
-          "maximum_m": 173.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Schuif westelijk of zuidwestelijk naar een open segment langs het grasveld, met voldoende afstand tot bomen, bank en kruising; leg de stopplek langs het rechte straatdeel."
+          "id": "model-275-14",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Goudsboer 3",
+          "latitude": "52.721476",
+          "longitude": "4.730818",
+          "toegewezen_adresproxies": 175,
+          "status": "oranje; Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.",
+          "luchtfoto_bgt": "oranje: Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2696",
+          "vervolg": "Onderzoek 8–12 m west/noordwest aan speelgroenrand."
         },
         {
-          "id": "model-225-21",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Wonge 1",
-          "straat": "Wonge",
-          "latitude": "52.722228",
-          "longitude": "4.729308",
-          "hvc_id": "-",
-          "oud_site_nummer": 20,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 66,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 95.5,
-          "p95_m": 162.3,
-          "maximum_m": 189.4,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Gebruik WH17 als referentie en schuif 5 tot 15 meter zuidelijk de Wonge in, naar een open gemeentelijke groen- of trottoirrand; toets een doorgaande HVC-route zonder stop op de Stationsstraat."
+          "id": "model-275-15",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Gaspad 2",
+          "latitude": "52.720165",
+          "longitude": "4.727523",
+          "toegewezen_adresproxies": 121,
+          "status": "rood; Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.",
+          "luchtfoto_bgt": "rood: Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.",
+          "grondscreen": "geen exacte hit; gemeente-indicatie binnen 25 m",
+          "vervolg": "Zoek 15–25 m west/zuidwest naar bredere openbare berm."
         },
         {
-          "id": "model-225-22",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Dorpsstraat 140",
-          "straat": "Dorpsstraat",
-          "latitude": "52.721751",
-          "longitude": "4.737998",
-          "hvc_id": "-",
-          "oud_site_nummer": 31,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 94,
-          "toegewezen_bij_100": 86,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 124.3,
-          "p95_m": 194.9,
-          "maximum_m": 194.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats de zoekzone 80-120 meter zuid naar een ruimere openbare rand bij Theresiaplein of een parkeerterrein, en herbereken de loopafstanden vanaf die alternatieve pin."
+          "id": "model-275-16",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Zwartepad 44",
+          "latitude": "52.720109",
+          "longitude": "4.733948",
+          "toegewezen_adresproxies": 119,
+          "status": "rood; Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.",
+          "luchtfoto_bgt": "rood: Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G491",
+          "vervolg": "Zoek 15–30 m verder aan recht straatdeel."
         },
         {
-          "id": "model-225-23",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Goudsboer 2",
-          "straat": "Goudsboer",
-          "latitude": "52.721107",
-          "longitude": "4.730812",
-          "hvc_id": "-",
-          "oud_site_nummer": 3,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "living_street (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 105,
-          "toegewezen_bij_100": 100,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 128,
-          "p95_m": 191.9,
-          "maximum_m": 199.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek 20 tot 35 meter oostelijk of zuidoostelijk de rand van de ruimere groen- en parkeerzone en herbereken de loopafstanden op die pin."
-        },
-        {
-          "id": "model-225-24",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Pastoor Willemsestraat 98A",
-          "straat": "Pastoor Willemsestraat",
-          "latitude": "52.721046",
-          "longitude": "4.740490",
-          "hvc_id": "-",
-          "oud_site_nummer": 23,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "service (13.1 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 9,
-          "toegewezen_bij_100": 91,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 114.5,
-          "p95_m": 175.3,
-          "maximum_m": 177.3,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek een verschuiving circa 25-40 meter zuidwest naar een verbrede, verharde rand aan de Pastoor Willemsestraat; behoud afstand tot de waterkant en begraafplaats en voorkom hijsen over parkeerplaatsen."
-        },
-        {
-          "id": "model-225-25",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Schelphoek Zuid 32",
-          "straat": "Schelphoek Zuid",
-          "latitude": "52.720964",
-          "longitude": "4.733879",
-          "hvc_id": "-",
-          "oud_site_nummer": 29,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 71,
-          "toegewezen_bij_100": 71,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 106,
-          "p95_m": 174.9,
-          "maximum_m": 177.1,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Schuif 20-35 meter zuid langs het rechte deel van Schelphoek Zuid of naar een verbreding westelijk, buiten boom-, kast- en waterzone."
-        },
-        {
-          "id": "model-225-26",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Beuninge 80",
-          "straat": "Beuninge",
-          "latitude": "52.720613",
-          "longitude": "4.727223",
-          "hvc_id": "-",
-          "oud_site_nummer": 7,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "living_street (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 111,
-          "toegewezen_bij_100": 97,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 111.8,
-          "p95_m": 182.8,
-          "maximum_m": 200,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats 35 tot 55 meter zuidwestelijk naar de rechte rand van het grotere grasvak langs de lus en voer een nieuwe eigendoms- en afstandstoets uit."
-        },
-        {
-          "id": "model-225-27",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oudewal 1",
-          "straat": "Oudewal",
-          "latitude": "52.719871",
-          "longitude": "4.734113",
-          "hvc_id": "-",
-          "oud_site_nummer": 39,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 51,
-          "toegewezen_bij_100": 28,
-          "toegewezen_bij_75": 50,
-          "gemiddelde_m": 97.1,
-          "p95_m": 186.8,
-          "maximum_m": 196.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek 70-120 meter west of zuidwest aan de bredere Stationsstraat/Oudewal-rand of een bedrijfsterrein met openbare opstelzone."
-        },
-        {
-          "id": "model-225-28",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oudewal 51",
-          "straat": "Oudewal",
-          "latitude": "52.719263",
-          "longitude": "4.726936",
-          "hvc_id": "-",
-          "oud_site_nummer": 35,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 39,
-          "toegewezen_bij_100": 22,
-          "toegewezen_bij_75": 65,
-          "gemiddelde_m": 113.3,
-          "p95_m": 198.5,
-          "maximum_m": 212.8,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek een verschuiving 15-30 meter oost naar een recht wegvak met bruikbare berm, buiten boom en greppel, en verbied parkeren tijdens lediging."
-        },
-        {
-          "id": "model-225-29",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Verzetslaan 13",
-          "straat": "Verzetslaan",
-          "latitude": "52.719149",
-          "longitude": "4.744779",
-          "hvc_id": "-",
-          "oud_site_nummer": 13,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0.1 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 78,
-          "toegewezen_bij_100": 86,
-          "toegewezen_bij_75": 72,
-          "gemiddelde_m": 98.9,
-          "p95_m": 186.4,
-          "maximum_m": 217.8,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats richting de ruimere groenrand of de gemeentelijke WH28-zone op circa 94 meter oostelijk en toets de resulterende loopafstand opnieuw."
-        },
-        {
-          "id": "model-225-30",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "'t Eiland 2",
-          "straat": "'t Eiland",
-          "latitude": "52.719010",
-          "longitude": "4.737550",
-          "hvc_id": "-",
-          "oud_site_nummer": 21,
-          "luchtfoto": "rood",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 77,
-          "toegewezen_bij_100": 84,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 112.4,
-          "p95_m": 173.3,
-          "maximum_m": 190.2,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verplaats richting de gemeentelijke WH25-zone bij Molenaarweg 42 op circa 91 meter zuidoostelijk en herbereken de dekking; onderzoek of site 5 en 21 kunnen worden samengevoegd."
-        },
-        {
-          "id": "model-225-31",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Molenaarweg 3",
-          "straat": "Molenaarweg",
-          "latitude": "52.719005",
-          "longitude": "4.738631",
-          "hvc_id": "-",
-          "oud_site_nummer": 5,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 115,
-          "toegewezen_bij_100": 12,
-          "toegewezen_bij_75": 68,
-          "gemiddelde_m": 139.6,
-          "p95_m": 169.4,
-          "maximum_m": 198.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Zoek zuidelijk richting de ruimere kruising en vergelijk dit met de gemeentelijke WH25-zone op circa 67 meter; vermijd de oeverstrook."
-        },
-        {
-          "id": "model-225-32",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Camper 1",
-          "straat": "De Camper",
+          "id": "model-275-17",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Camper 1",
           "latitude": "52.718727",
           "longitude": "4.731121",
-          "hvc_id": "-",
-          "oud_site_nummer": 30,
-          "luchtfoto": "groen",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 11,
-          "toegewezen_bij_100": 15,
-          "toegewezen_bij_75": 18,
-          "gemiddelde_m": 132.7,
-          "p95_m": 198.1,
-          "maximum_m": 199.7,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek een vak circa 8-15 meter noordwest van de pin aan de rand van de verharde pleinhoek, zodat de doorgaande rijbaan vrij blijft en niet over auto's wordt gehesen."
+          "toegewezen_adresproxies": 17,
+          "status": "groen; Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.",
+          "luchtfoto_bgt": "groen: Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2664",
+          "vervolg": "Onderzoek 8–15 m noordwest, buiten parkeer- en hijszone."
         },
         {
-          "id": "model-225-33",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "De Cres 14",
-          "straat": "De Cres",
-          "latitude": "52.717586",
-          "longitude": "4.731269",
-          "hvc_id": "-",
-          "oud_site_nummer": 17,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 20,
-          "toegewezen_bij_100": 28,
-          "toegewezen_bij_75": 28,
-          "gemiddelde_m": 95.6,
-          "p95_m": 181.4,
-          "maximum_m": 184.2,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek 10 tot 20 meter oostelijk of noordoostelijk een gemeentelijk verhard zijvak langs het rechte wegdeel en borg vrije bedrijfsinritten."
+          "id": "model-275-18",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Fabrieksstraat 29",
+          "latitude": "52.718710",
+          "longitude": "4.738679",
+          "toegewezen_adresproxies": 176,
+          "status": "oranje; Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.",
+          "luchtfoto_bgt": "oranje: Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G1784",
+          "vervolg": "Onderzoek noord/oostelijke grasrand."
         },
         {
-          "id": "model-225-34",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Bregweid 1",
-          "straat": "Bregweid",
-          "latitude": "52.716958",
-          "longitude": "4.733817",
-          "hvc_id": "-",
-          "oud_site_nummer": 27,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 15,
-          "toegewezen_bij_100": 7,
-          "toegewezen_bij_75": 7,
-          "gemiddelde_m": 105.5,
-          "p95_m": 142.8,
-          "maximum_m": 161.2,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Verschuif circa 8-15 meter noordoost naar de rand van de grote grasstrook en laat de rijloper vrij; benut een kraanopstelling vanaf de rechte straatsectie."
+          "id": "model-275-19",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "De Cres 14",
+          "latitude": "52.717429",
+          "longitude": "4.731297",
+          "toegewezen_adresproxies": 20,
+          "status": "oranje; Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.",
+          "luchtfoto_bgt": "oranje: Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00H1276",
+          "vervolg": "Onderzoek 8–15 m noordoost."
         },
         {
-          "id": "model-225-35",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Schoffel 1",
-          "straat": "Schoffel",
-          "latitude": "52.716676",
-          "longitude": "4.742833",
-          "hvc_id": "-",
-          "oud_site_nummer": 37,
-          "luchtfoto": "oranje",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "residential (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 83,
-          "toegewezen_bij_100": 76,
-          "toegewezen_bij_75": 75,
-          "gemiddelde_m": 129.6,
-          "p95_m": 206.1,
-          "maximum_m": 221.9,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek 15-25 meter noord op de graszoom vóór de woonstraten of een opstelplek aan de zuidelijke Debbemeerwegzijde; houd kraan en fundering ruim van water en bomen."
+          "id": "model-275-20",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Zigt 26",
+          "latitude": "52.716857",
+          "longitude": "4.744610",
+          "toegewezen_adresproxies": 87,
+          "status": "rood; Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.",
+          "luchtfoto_bgt": "rood: Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00G2723",
+          "vervolg": "Geen overtuigend lokaal alternatief; vervang zoekzone."
         },
         {
-          "id": "model-225-36",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Debbemeerweg 33",
-          "straat": "Debbemeerweg",
-          "latitude": "52.716574",
-          "longitude": "4.739700",
-          "hvc_id": "-",
-          "oud_site_nummer": 38,
-          "luchtfoto": "groen",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "tertiary (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 28,
-          "toegewezen_bij_100": 15,
-          "toegewezen_bij_75": 12,
-          "gemiddelde_m": 151.1,
-          "p95_m": 211.6,
-          "maximum_m": 214.1,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek de grasdriehoek circa 8-15 meter noord/noordwest van de pin, met bediening vanaf het rechte oost-west wegvak en behoud van zicht en fietsroute."
+          "id": "model-275-21",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Oudevaart 42A",
+          "latitude": "52.716524",
+          "longitude": "4.734070",
+          "toegewezen_adresproxies": 16,
+          "status": "oranje; Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.",
+          "luchtfoto_bgt": "oranje: Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00H1719",
+          "vervolg": "Onderzoek 8–15 m in open randvak."
         },
         {
-          "id": "model-225-37",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oudevaart 87",
-          "straat": "Oudevaart",
-          "latitude": "52.716019",
-          "longitude": "4.728100",
-          "hvc_id": "-",
-          "oud_site_nummer": 24,
-          "luchtfoto": "groen",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0.1 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 10,
-          "toegewezen_bij_100": 10,
-          "toegewezen_bij_75": 10,
-          "gemiddelde_m": 92.8,
-          "p95_m": 160.3,
-          "maximum_m": 170.6,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Projecteer de container niet op het asfalt maar circa 6-10 meter noord/noordoost in de gemeentelijke grasstrook, buiten de greppel en boomprojectie, met kraanbereik vanaf Oudevaart."
-        },
-        {
-          "id": "model-225-38",
-          "soort": "aanvullend zoekanker",
-          "toegang": "openbaar modelaanbod",
-          "nabij_adres": "Oudevaart 89",
-          "straat": "Oudevaart",
+          "id": "model-275-22",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Oudevaart 89",
           "latitude": "52.715879",
           "longitude": "4.726680",
-          "hvc_id": "-",
-          "oud_site_nummer": 42,
-          "luchtfoto": "groen",
-          "gemeentegrond_screen": "exacte positieve hit",
-          "voertuigroute_screen": "unclassified (0 m)",
-          "dichtstbijzijnde_adressen_ongecapaciteerd": 1,
-          "toegewezen_bij_100": 1,
-          "toegewezen_bij_75": 1,
-          "gemiddelde_m": 224.5,
-          "p95_m": 224.5,
-          "maximum_m": 224.5,
-          "bakken_bij_100": 1,
-          "bakken_bij_75": 1,
-          "lokaal_vervolg": "Onderzoek circa 10-20 meter oost/zuidoost, aan de parkeerterreinzijde van de zijweg, zodat de container vanaf de zijweg kan worden bediend en niet vanaf de doorgaande rijbaan."
+          "toegewezen_adresproxies": 13,
+          "status": "groen; Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.",
+          "luchtfoto_bgt": "groen: Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.",
+          "grondscreen": "exacte gemeente-indicatie WMH00H1719",
+          "vervolg": "Onderzoek 10–20 m oost/zuidoost en laat HVC uitsluitend vanaf de zijweg bedienen."
+        },
+        {
+          "id": "model-275-23",
+          "rol": "aanvullende zoekzone",
+          "adres_of_zone": "Debbemeerweg 39",
+          "latitude": "52.715777",
+          "longitude": "4.738744",
+          "toegewezen_adresproxies": 9,
+          "status": "rood; Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.",
+          "luchtfoto_bgt": "rood: Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.",
+          "grondscreen": "exacte gemeente-indicatie WMH00H1719",
+          "vervolg": "Vervang door een nieuwe zoekzone."
         }
       ],
-      "survey_distance": [
+      "existing_locations": [
         {
-          "afstand": "0-100 m",
-          "reacties": 202,
-          "instemming_pct": 31.2,
-          "afwijzing_pct": 68.8
+          "id": "WH03",
+          "adres": "Rietzangerstraat 17",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.727210",
+          "longitude": "4.741939",
+          "hvc_id_repo": "80799",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00G2037",
+          "hoofdrisico": "Smalle hof/bocht; parkeren en heggen dicht bij stop-/hijszone.",
+          "vervolg": "Stoppositie, draaibeweging en parkeervrij hijsen vastleggen."
         },
         {
-          "afstand": "100-125 m",
-          "reacties": 94,
-          "instemming_pct": 27.7,
-          "afwijzing_pct": 72.3
+          "id": "WH05",
+          "adres": "Kuipersven 36",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.726883",
+          "longitude": "4.748476",
+          "hvc_id_repo": "81617",
+          "live_hvc_adrescheck": "handmatige controle nodig",
+          "grondscreen": "gemeente-indicatie WMH00I1012",
+          "hoofdrisico": "Groen/heesters en boom; publieke HVC-adresrespons leverde geen restlocatie op.",
+          "vervolg": "Actieve status, pasregels en exacte inrichting handmatig bevestigen."
         },
         {
-          "afstand": "125-150 m",
-          "reacties": 97,
-          "instemming_pct": 16.5,
-          "afwijzing_pct": 83.5
+          "id": "WH06",
+          "adres": "Soeverein 2",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.727578",
+          "longitude": "4.750383",
+          "hvc_id_repo": "81653",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00I1012",
+          "hoofdrisico": "Water circa 5,3 m, fietspad en meerdere kasten nabij.",
+          "vervolg": "KLIC, waterkant, fietspad en hijslijn met hoge prioriteit toetsen."
         },
         {
-          "afstand": "150-275 m",
-          "reacties": 300,
-          "instemming_pct": 12,
-          "afwijzing_pct": 88
+          "id": "WH08",
+          "adres": "Dorpsstraat 89",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.725435",
+          "longitude": "4.739056",
+          "hvc_id_repo": "81580",
+          "live_hvc_adrescheck": "handmatige controle nodig",
+          "grondscreen": "niet-gemeentelijke indicatie WMH00G2606",
+          "hoofdrisico": "Parkeren, voetpad en boom nabij; HVC-adresrespons leverde geen restlocatie op.",
+          "vervolg": "Recht/toestemming en actuele toegang schriftelijk vastleggen."
         },
         {
-          "afstand": ">275 m",
-          "reacties": 116,
-          "instemming_pct": 4.3,
-          "afwijzing_pct": 95.7
+          "id": "WH14",
+          "adres": "Doorbraak 23",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.722411",
+          "longitude": "4.740981",
+          "hvc_id_repo": "81206",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00G2658",
+          "hoofdrisico": "Transformator-/kastobjecten circa 2,4–3,0 m van pin.",
+          "vervolg": "KLIC en netbeheerderstoets uitvoeren."
+        },
+        {
+          "id": "WH23",
+          "adres": "Molenaarsweg 7",
+          "toegang": "privé/allowlist",
+          "latitude": "52.720329",
+          "longitude": "4.738551",
+          "hvc_id_repo": "80365",
+          "live_hvc_adrescheck": "handmatige controle nodig",
+          "grondscreen": "particuliere Angelaparklocatie WMH00G1926",
+          "hoofdrisico": "Gevel circa 4,5 m; interne route niet in OSM; geen HVC-restlocatie in adresrespons.",
+          "vervolg": "Niet als algemeen openbaar punt tellen; rechten en HVC-route bevestigen."
+        },
+        {
+          "id": "WH24",
+          "adres": "Pastoor Willemsestraat 80",
+          "toegang": "privé/allowlist",
+          "latitude": "52.720753",
+          "longitude": "4.740240",
+          "hvc_id_repo": "80428",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "particuliere Angelaparklocatie WMH00G1928",
+          "hoofdrisico": "Gevel circa 3,8 m en water nabij; alleen geconfigureerde allowlist.",
+          "vervolg": "Niet algemeen openstellen zonder schriftelijke HVC-/rechthebbendenbevestiging."
+        },
+        {
+          "id": "WH26",
+          "adres": "Regelhaalder 42",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.718557",
+          "longitude": "4.741484",
+          "hvc_id_repo": "80299",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00G2723",
+          "hoofdrisico": "Gevel, boom en parkeren in krappe bochtomgeving.",
+          "vervolg": "Kraanopstelling en parkeervrij venster inmeten."
+        },
+        {
+          "id": "WH27",
+          "adres": "Zigt 97",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.718151",
+          "longitude": "4.743409",
+          "hvc_id_repo": "80552",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00G2723",
+          "hoofdrisico": "Lichtmast en parkeerplaatsen nabij; officiële pagina noemt Verzetslaan 40, repo Zigt 97.",
+          "vervolg": "Adres-/ID-conflict met gemeente reconciliëren en hijslijn toetsen."
+        },
+        {
+          "id": "WH33",
+          "adres": "Zuiderkruis 36",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.729898",
+          "longitude": "4.748450",
+          "hvc_id_repo": "81782",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00I1067",
+          "hoofdrisico": "Pin ligt zeer dicht bij de rijbaan in recente nieuwbouw.",
+          "vervolg": "As-built inmeting en HVC-coördinaat bevestigen."
+        },
+        {
+          "id": "WH34",
+          "adres": "Poolster 25",
+          "toegang": "algemeen gemodelleerd",
+          "latitude": "52.730485",
+          "longitude": "4.750576",
+          "hvc_id_repo": "81783",
+          "live_hvc_adrescheck": "exact bevestigd",
+          "grondscreen": "gemeente-indicatie WMH00I1067",
+          "hoofdrisico": "Mogelijk fietspad tussen stopzijde en bak.",
+          "vervolg": "Exacte stopzijde en hijslijn controleren."
+        }
+      ],
+      "feasibility": [
+        {
+          "id": "model-275-01",
+          "adresreferentie": "De Fuik 10",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.",
+          "vervolg": "Zoek noord/west een bredere openbare rand en herbereken.",
+          "luchtfoto": "aerial-275/model-275-01.jpg"
+        },
+        {
+          "id": "model-275-02",
+          "adresreferentie": "Oostwal 79",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.",
+          "vervolg": "Zoek zuidelijk buiten inritten en zichtdriehoek.",
+          "luchtfoto": "aerial-275/model-275-02.jpg"
+        },
+        {
+          "id": "model-275-03",
+          "adresreferentie": "Veilingweg 37",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.",
+          "vervolg": "Verplaats dieper Hartendorp in en herbereken.",
+          "luchtfoto": "aerial-275/model-275-03.jpg"
+        },
+        {
+          "id": "model-275-04",
+          "adresreferentie": "De Hoge Werf 2",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.",
+          "vervolg": "Nieuwe voertuigbereikbare zoekzone nodig.",
+          "luchtfoto": "aerial-275/model-275-04.jpg"
+        },
+        {
+          "id": "model-275-05",
+          "adresreferentie": "Baljuw 37",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.",
+          "vervolg": "Onderzoek 5–10 m verschuiving naar grasrand.",
+          "luchtfoto": "aerial-275/model-275-05.jpg"
+        },
+        {
+          "id": "model-275-06",
+          "adresreferentie": "De Baan 33",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.",
+          "vervolg": "Gebruik liever de eerder groen beoordeelde WH10-zone circa 64 m westelijk en herbereken.",
+          "luchtfoto": "aerial-275/model-275-06.jpg"
+        },
+        {
+          "id": "model-275-07",
+          "adresreferentie": "Veilingweg 70D",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "nee",
+          "bevinding": "Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.",
+          "vervolg": "Zoek 20–40 m noord/oost aan openbare Veilingweg-rand.",
+          "luchtfoto": "aerial-275/model-275-07.jpg"
+        },
+        {
+          "id": "model-275-08",
+          "adresreferentie": "De Huisweid 17",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "nee",
+          "bevinding": "Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.",
+          "vervolg": "Zoek buiten het erf aan openbare weg.",
+          "luchtfoto": "aerial-275/model-275-08.jpg"
+        },
+        {
+          "id": "model-275-09",
+          "adresreferentie": "Wiekeland 7",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.",
+          "vervolg": "Onderzoek 4–6 m oost/noordoost.",
+          "luchtfoto": "aerial-275/model-275-09.jpg"
+        },
+        {
+          "id": "model-275-10",
+          "adresreferentie": "Posthoorn 25",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.",
+          "vervolg": "Zoek 15–30 m westelijk en herbereken.",
+          "luchtfoto": "aerial-275/model-275-10.jpg"
+        },
+        {
+          "id": "model-275-11",
+          "adresreferentie": "Vijfven 7",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.",
+          "vervolg": "Zoek aan de woonstraat, niet in de fiets-/watercorridor.",
+          "luchtfoto": "aerial-275/model-275-11.jpg"
+        },
+        {
+          "id": "model-275-12",
+          "adresreferentie": "De Negen Geerzen 29",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.",
+          "vervolg": "Onderzoek 5–8 m oost/noordoost.",
+          "luchtfoto": "aerial-275/model-275-12.jpg"
+        },
+        {
+          "id": "model-275-13",
+          "adresreferentie": "Dorpsstraat 110A",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.",
+          "vervolg": "Alleen mogelijk met expliciete parkeerplaatsconversie.",
+          "luchtfoto": "aerial-275/model-275-13.jpg"
+        },
+        {
+          "id": "model-275-14",
+          "adresreferentie": "Goudsboer 3",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.",
+          "vervolg": "Onderzoek 8–12 m west/noordwest aan speelgroenrand.",
+          "luchtfoto": "aerial-275/model-275-14.jpg"
+        },
+        {
+          "id": "model-275-15",
+          "adresreferentie": "Gaspad 2",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "nee",
+          "bevinding": "Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.",
+          "vervolg": "Zoek 15–25 m west/zuidwest naar bredere openbare berm.",
+          "luchtfoto": "aerial-275/model-275-15.jpg"
+        },
+        {
+          "id": "model-275-16",
+          "adresreferentie": "Zwartepad 44",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.",
+          "vervolg": "Zoek 15–30 m verder aan recht straatdeel.",
+          "luchtfoto": "aerial-275/model-275-16.jpg"
+        },
+        {
+          "id": "model-275-17",
+          "adresreferentie": "De Camper 1",
+          "oordeel": "groen",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.",
+          "vervolg": "Onderzoek 8–15 m noordwest, buiten parkeer- en hijszone.",
+          "luchtfoto": "aerial-275/model-275-17.jpg"
+        },
+        {
+          "id": "model-275-18",
+          "adresreferentie": "Fabrieksstraat 29",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.",
+          "vervolg": "Onderzoek noord/oostelijke grasrand.",
+          "luchtfoto": "aerial-275/model-275-18.jpg"
+        },
+        {
+          "id": "model-275-19",
+          "adresreferentie": "De Cres 14",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.",
+          "vervolg": "Onderzoek 8–15 m noordoost.",
+          "luchtfoto": "aerial-275/model-275-19.jpg"
+        },
+        {
+          "id": "model-275-20",
+          "adresreferentie": "Zigt 26",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.",
+          "vervolg": "Geen overtuigend lokaal alternatief; vervang zoekzone.",
+          "luchtfoto": "aerial-275/model-275-20.jpg"
+        },
+        {
+          "id": "model-275-21",
+          "adresreferentie": "Oudevaart 42A",
+          "oordeel": "oranje",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.",
+          "vervolg": "Onderzoek 8–15 m in open randvak.",
+          "luchtfoto": "aerial-275/model-275-21.jpg"
+        },
+        {
+          "id": "model-275-22",
+          "adresreferentie": "Oudevaart 89",
+          "oordeel": "groen",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.",
+          "vervolg": "Onderzoek 10–20 m oost/zuidoost en laat HVC uitsluitend vanaf de zijweg bedienen.",
+          "luchtfoto": "aerial-275/model-275-22.jpg"
+        },
+        {
+          "id": "model-275-23",
+          "adresreferentie": "Debbemeerweg 39",
+          "oordeel": "rood",
+          "exacte_gemeente_indicatie": "ja",
+          "bevinding": "Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.",
+          "vervolg": "Vervang door een nieuwe zoekzone.",
+          "luchtfoto": "aerial-275/model-275-23.jpg"
         }
       ]
     }
   },
   "sources": [
     {
-      "id": "fixed_existing_input",
-      "label": "Audit vaste bestaande HVC-restlocaties",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-input-audit.md"
+      "id": "paper",
+      "label": "Nevrlý et al. (2021), Location of municipal waste containers: Trade-off between criteria",
+      "href": "https://www.sciencedirect.com/science/article/pii/S0959652620334909"
     },
     {
-      "id": "fixed_existing_model",
-      "label": "Reproduceerbare optimalisatie met bestaande locaties als harde randvoorwaarde",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-route-optimization.json"
+      "id": "paper_metadata",
+      "label": "OpenAIRE metadata en abstract, DOI 10.1016/j.jclepro.2020.123445",
+      "href": "https://oamonitor.ireland.openaire.eu/national/search/publication?pid=10.1016%2Fj.jclepro.2020.123445"
     },
     {
-      "id": "household_map_data",
-      "label": "Per woonadres berekende dekking in het behoudscenario",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-225.json"
+      "id": "paper_open_context",
+      "label": "Open voorloper: Municipal Solid Waste Container Location Based on Walking Distance and Distribution of Population",
+      "href": "https://www.cetjournal.it/index.php/cet/article/view/CET1976093"
     },
     {
-      "id": "household_map",
-      "label": "Interactieve huishoudkaart van het behoudscenario",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-map.html"
+      "id": "habilitation",
+      "label": "Openbare habilitatiescriptie V. Nevrlý, methodische context pp. 40–42",
+      "href": "https://www.vut.cz/en/board/habilitation?action=priloha&priloha=241034"
     },
     {
-      "id": "current_coverage",
-      "label": "Actuele 33-locatie plan-/reporeferentie",
-      "path": "data/places/warmenhuizen/house-coverage.json"
-    },
-    {
-      "id": "prior_site_screen",
-      "label": "Eerdere openbare-grond-, voertuigroute- en luchtfotoscreen van 43 vrije modelankers",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/recommended-locations.json"
-    },
-    {
-      "id": "ownership_screen",
-      "label": "Provincie Noord-Holland BRK-percelen, grootgrondgebruik",
-      "href": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1"
-    },
-    {
-      "id": "aerial_bgt",
-      "label": "PDOK Luchtfoto 2026 en Basisregistratie Grootschalige Topografie",
-      "href": "https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/aerial-bgt-screen.json"
-    },
-    {
-      "id": "osm_access",
-      "label": "OpenStreetMap-wegennet Warmenhuizen",
-      "href": "https://www.openstreetmap.org/copyright",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
-    },
-    {
-      "id": "schagen_policy",
-      "label": "Gemeente Schagen: plaatsing ondergrondse restafvalcontainers Warmenhuizen",
+      "id": "schagen",
+      "label": "Gemeente Schagen: plaatsing ondergrondse restafvalcontainers Warmenhuizen, bijgewerkt 4 augustus 2026",
       "href": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen"
     },
     {
-      "id": "schagen_lior",
-      "label": "Gemeente Schagen LIOR, deel 2",
-      "href": "https://www.schagen.nl/sites/default/files/2023-11/Leidraad%20inrichting%20openbare%20ruimte%20%20-%20deel%202%20-%20versie%20nov.pdf"
+      "id": "bag_osrm",
+      "label": "Repositorydekking: BAG-woonfunctieadressen en opgeslagen OSRM-voetgangersroutes",
+      "path": "data/places/warmenhuizen/house-coverage.json"
     },
     {
-      "id": "schagen_hoep_decision",
-      "label": "Aanwijzingsbesluit ondergrondse containers De Hoep",
-      "href": "https://lokaleregelgeving.overheid.nl/CVDR757179/1"
+      "id": "fixed_model",
+      "label": "Vaste-bestaande routegraafoptimalisatie en afstandsdrempelgevoeligheid",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-route-optimization.json"
     },
     {
-      "id": "council_of_state",
-      "label": "Raad van State 2021:1194",
-      "href": "https://www.raadvanstate.nl/uitspraken/@124982/202101193-1-r1-en-202101193-2-r1/"
+      "id": "exact11",
+      "label": "Reproduceerbare lokale zoekuitkomst voor precies elf vrij te plaatsen assets",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/exact-11-reallocation.json"
     },
     {
-      "id": "hvc_requirements_note",
-      "label": "Bronnotitie HVC-ledigingseisen en vergelijkingsmaten",
-      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/hvc-vehicle-requirements.md"
+      "id": "walking_matrix",
+      "label": "Vastgelegde OSM-loopafstandsmatrix: 2.579 adressen bij 207 kandidaatrecords",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/walking-matrix.json"
     },
     {
-      "id": "hvc_information",
-      "label": "HVC: ondergrondse restafvalcontainer",
-      "href": "https://www.hvcgroep.nl/ondergrondse-restafval"
+      "id": "service275",
+      "label": "Huishoudtoewijzing: elf behouden plus 23 zoekzones bij circa 275 meter",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/fixed-existing-household-coverage-275.json"
+    },
+    {
+      "id": "map_existing",
+      "label": "Interactieve kaart huidige elf locaties",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/existing-11-household-coverage-map.html"
+    },
+    {
+      "id": "map_exact11",
+      "label": "Interactieve kaart theoretische herverdeling van elf assets",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/exact-11-reallocation-map.html"
+    },
+    {
+      "id": "map_275",
+      "label": "Interactieve overzichtskaart 11 behouden plus 23 zoekzones",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/recommended-275-household-coverage-map.html"
+    },
+    {
+      "id": "pdok_bgt",
+      "label": "PDOK Basisregistratie Grootschalige Topografie OGC API",
+      "href": "https://api.pdok.nl/lv/bgt/ogc/v1",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/aerial-bgt-screen-275.json"
+    },
+    {
+      "id": "pdok_aerial",
+      "label": "PDOK Luchtfoto RGB WMS, 2026_orthoHR",
+      "href": "https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-"
+    },
+    {
+      "id": "ownership",
+      "label": "Provincie Noord-Holland openbare BRK-grootgrondgebruiksscreen",
+      "href": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1/query",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/ownership-screen-275.json"
+    },
+    {
+      "id": "feasibility",
+      "label": "Locatiespecifieke luchtfoto-, BGT- en perceelbureauscreen van de 23 zoekzones",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/feasibility-screen-275.json"
+    },
+    {
+      "id": "hvc_audit",
+      "label": "Live publieke HVC-adresresponsaudit van de elf bestaande locaties, dry-run 14 augustus 2026",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/hvc-existing-audit-2026-08-14.json"
+    },
+    {
+      "id": "osm",
+      "label": "OpenStreetMap-wegennet, ODbL",
+      "href": "https://www.openstreetmap.org/copyright",
+      "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
     },
     {
       "id": "klic",
       "label": "Kadaster KLIC-orientatieverzoek",
       "href": "https://www.kadaster.nl/zakelijk/producten/graafwerk/orientatieverzoek"
-    },
-    {
-      "id": "survey",
-      "label": "Inwonersenquete Warmenhuizen, 2 juli 2026",
-      "path": "data/places/warmenhuizen/survey-analysis-2026-07-02.json"
     }
   ]
 }

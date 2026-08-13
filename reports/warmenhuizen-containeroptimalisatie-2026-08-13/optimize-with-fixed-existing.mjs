@@ -9,6 +9,7 @@ const ROUTE_SNAPSHOT = "9631171:data/places/warmenhuizen/house-coverage.json";
 const PRIOR_UNCONSTRAINED_RESULT = "route-graph-optimization.json";
 const THRESHOLDS_M = [150, 175, 200, 225, 250, 275];
 const DETAIL_THRESHOLD_M = 225;
+const SUPPLEMENTAL_ONLY = process.argv.includes("--supplemental-only");
 const EARTH_RADIUS_M = 6_371_008.8;
 const ROUTE_MODEL = "shortest path over deduplicated historical OSRM route segments";
 
@@ -976,89 +977,199 @@ const output = {
   capacitySensitivity225M,
 };
 
-writeFileSync(
-  new URL("fixed-existing-route-optimization.json", REPORT_DIR),
-  `${JSON.stringify(output, null, 2)}\n`,
-);
+if (!SUPPLEMENTAL_ONLY) {
+  writeFileSync(
+    new URL("fixed-existing-route-optimization.json", REPORT_DIR),
+    `${JSON.stringify(output, null, 2)}\n`,
+  );
+}
 
-const detailedScenario = scenarios.find(({ maximumWalkingDistanceTargetM }) => (
-  maximumWalkingDistanceTargetM === DETAIL_THRESHOLD_M
-));
-const publicLocations = [
-  ...fixedLocations.filter(({ accessScope }) => accessScope === "public"),
-  ...detailAdditionalLocations,
-];
-const privateLocations = fixedLocations.filter(({ accessScope }) => accessScope === "private");
-const privateById = new Map(privateLocations.map((location) => [location.id, location]));
-const publicRoutes = multiSourceDijkstra(graph.adjacency, publicLocations);
-const privateRoutes = new Map(privateLocations.map((location) => [
-  location.id,
-  dijkstra(graph.adjacency, location.graphNode, true),
-]));
-const houses = currentCoverage.houses.map((house) => {
-  const demandIndex = demandIndexByHouseId.get(house.id);
-  const demand = demandGroups[demandIndex];
-  const startNode = demand.graphNode;
-  let nearestLocation = publicLocations[publicRoutes.sourceIndexes[startNode]];
-  let walkingDistance = publicRoutes.distances[startNode];
-  let previous = publicRoutes.previous;
-  for (const locationId of demand.allowedPrivateLocationIds) {
-    const location = privateById.get(locationId);
-    const route = privateRoutes.get(locationId);
-    if (location && route.distances[startNode] < walkingDistance) {
-      nearestLocation = location;
-      walkingDistance = route.distances[startNode];
-      previous = route.previous;
+function buildDetailedOutput({
+  additionalLocations,
+  capacitySensitivity = [],
+  presentation,
+  scenario,
+}) {
+  const publicLocations = [
+    ...fixedLocations.filter(({ accessScope }) => accessScope === "public"),
+    ...additionalLocations,
+  ];
+  const privateLocations = fixedLocations.filter(({ accessScope }) => accessScope === "private");
+  const privateById = new Map(privateLocations.map((location) => [location.id, location]));
+  const publicRoutes = new Map(publicLocations.map((location) => [
+    location.id,
+    dijkstra(graph.adjacency, location.graphNode, true),
+  ]));
+  const privateRoutes = new Map(privateLocations.map((location) => [
+    location.id,
+    dijkstra(graph.adjacency, location.graphNode, true),
+  ]));
+  const houses = currentCoverage.houses.map((house) => {
+    const demandIndex = demandIndexByHouseId.get(house.id);
+    const demand = demandGroups[demandIndex];
+    const startNode = demand.graphNode;
+    const eligibleLocations = [
+      ...publicLocations.map((location) => ({
+        location,
+        route: publicRoutes.get(location.id),
+      })),
+      ...demand.allowedPrivateLocationIds.map((locationId) => ({
+        location: privateById.get(locationId),
+        route: privateRoutes.get(locationId),
+      })),
+    ].filter(({ location, route }) => location && Number.isFinite(route.distances[startNode]));
+    eligibleLocations.sort((left, right) => (
+      left.route.distances[startNode] - right.route.distances[startNode]
+      || left.location.id.localeCompare(right.location.id, "en", { numeric: true })
+    ));
+    const nearest = eligibleLocations[0];
+    const nearestLocation = nearest?.location;
+    const walkingDistance = nearest?.route.distances[startNode] ?? Number.POSITIVE_INFINITY;
+    const previous = nearest?.route.previous;
+    const nearestLocations = eligibleLocations.slice(0, 3).map(({ location, route }, index) => ({
+      rank: index + 1,
+      id: location.id,
+      kind: location.kind,
+      accessScope: location.accessScope,
+      walkingDistanceM: round(route.distances[startNode], 2),
+      coverageStatus: getCoverageStatus(route.distances[startNode]),
+    }));
+    if (!nearestLocation || !Number.isFinite(walkingDistance)) {
+      return {
+        id: house.id,
+        address: house.address,
+        postcode: house.postcode,
+        lat: house.lat,
+        lon: house.lon,
+        nearestLocationId: null,
+        nearestLocationKind: null,
+        nearestLocationAccessScope: null,
+        walkingDistanceM: null,
+        coverageStatus: "unreachable",
+        nearestLocations: [],
+        routeGeometry: [],
+      };
     }
-  }
-  if (!nearestLocation || !Number.isFinite(walkingDistance)) {
     return {
       id: house.id,
       address: house.address,
       postcode: house.postcode,
       lat: house.lat,
       lon: house.lon,
-      nearestLocationId: null,
-      nearestLocationKind: null,
-      nearestLocationAccessScope: null,
-      walkingDistanceM: null,
-      coverageStatus: "unreachable",
-      routeGeometry: [],
+      nearestLocationId: nearestLocation.id,
+      nearestLocationKind: nearestLocation.kind,
+      nearestLocationAccessScope: nearestLocation.accessScope,
+      walkingDistanceM: round(walkingDistance, 2),
+      coverageStatus: getCoverageStatus(walkingDistance),
+      nearestLocations,
+      routeGeometry: traceRouteGeometry(startNode, nearestLocation.graphNode, previous, graph),
     };
-  }
+  });
+
   return {
-    id: house.id,
-    address: house.address,
-    postcode: house.postcode,
-    lat: house.lat,
-    lon: house.lon,
-    nearestLocationId: nearestLocation.id,
-    nearestLocationKind: nearestLocation.kind,
-    nearestLocationAccessScope: nearestLocation.accessScope,
-    walkingDistanceM: round(walkingDistance, 2),
-    coverageStatus: getCoverageStatus(walkingDistance),
-    routeGeometry: traceRouteGeometry(startNode, nearestLocation.graphNode, previous, graph),
+    generatedAt: output.generatedAt,
+    scenario,
+    capacitySensitivity,
+    locations: [...fixedLocations, ...additionalLocations],
+    houses,
+    presentation,
+    method: {
+      routeDistance: ROUTE_MODEL,
+      geometry: "Graph-node path from the historical house route snap to the selected location route endpoint/search anchor.",
+      access: "Public locations are eligible for all houses; private existing locations only for their configured allowed addresses.",
+      passAllocation: "Each household row includes its three nearest eligible scenario locations, matching the municipal policy of access to the three nearest containers.",
+      caveat: "Geometry and distance omit the short straight access legs between exact BAG/container coordinates and their historical graph snaps. They are suitable for comparative screening, not engineering measurement.",
+    },
   };
-});
+}
 
-const detailedOutput = {
-  generatedAt: output.generatedAt,
-  scenario: detailedScenario,
-  capacitySensitivity: capacitySensitivity225M,
-  locations: [...fixedLocations, ...detailAdditionalLocations],
-  houses,
-  method: {
-    routeDistance: ROUTE_MODEL,
-    geometry: "Graph-node path from the historical house route snap to the selected location route endpoint/search anchor.",
-    access: "Public locations are eligible for all houses; private existing locations only for their configured allowed addresses.",
-    caveat: "Geometry and distance omit the short straight access legs between exact BAG/container coordinates and their historical graph snaps. They are suitable for comparative screening, not engineering measurement.",
-  },
+const baselineScenario = {
+  ...evaluateScenario(distanceRows, demandGroups, fixedLocations, [], 275),
+  scenarioType: "existing-eleven-baseline",
+  selectedAdditionalSites: [],
 };
-
+const baselineOutput = buildDetailedOutput({
+  additionalLocations: [],
+  scenario: baselineScenario,
+  presentation: {
+    title: "Huidige elf ondergrondse restlocaties",
+    subtitle: "Negen algemeen gemodelleerd · WH23 en WH24 privé · afstandsreferentie circa 275 meter",
+    note: "Dit is een scenario op basis van de repository-invoer. De actuele HVC-status van WH05, WH08 en WH23 vereist handmatige bevestiging.",
+    locationIntro: "Deze kaart toont uitsluitend de elf in de repository als bestaand geregistreerde HVC-restlocaties. WH23 en WH24 bedienen alleen hun vastgelegde adres-allowlist.",
+  },
+});
 writeFileSync(
-  new URL("fixed-existing-household-coverage-225.json", REPORT_DIR),
-  `${JSON.stringify(detailedOutput)}\n`,
+  new URL("existing-11-household-coverage.json", REPORT_DIR),
+  `${JSON.stringify(baselineOutput)}\n`,
 );
+
+const scenario275 = scenarios.find(({ maximumWalkingDistanceTargetM }) => (
+  maximumWalkingDistanceTargetM === 275
+));
+const additionalLocations275 = scenarioInternals.get(275).additionalLocations;
+const detailedOutput275 = buildDetailedOutput({
+  additionalLocations: additionalLocations275,
+  scenario: scenario275,
+  presentation: {
+    title: "Servicenetwerk bij circa 275 meter",
+    subtitle: "Elf bestaande locaties behouden + 23 analytische zoekzones · geen bouwbesluit",
+    note: "De 23 aanvullingen zijn routegraafankers. Eigendom, KLIC, voertuigopstelling, toegankelijkheid en actuele routing moeten per zone nog worden goedgekeurd.",
+    locationIntro: "De elf bestaande HVC-locaties zijn vaste scenario-invoer. De 23 aanvullingen zijn geen bouwpinnen maar zoekzones die eerst technisch, juridisch en operationeel moeten worden gevalideerd.",
+  },
+});
+writeFileSync(
+  new URL("fixed-existing-household-coverage-275.json", REPORT_DIR),
+  `${JSON.stringify(detailedOutput275)}\n`,
+);
+
+const geoJson275 = {
+  type: "FeatureCollection",
+  name: "Warmenhuizen: 11 bestaande locaties plus 23 zoekzones bij circa 275 meter",
+  generatedAt: output.generatedAt,
+  coordinateReferenceSystem: "WGS84 (EPSG:4326)",
+  scenario: {
+    ...scenario275,
+    selectedAdditionalSites: undefined,
+    assignedHouseholdsByLocation: undefined,
+    note: "Additional features are analytical search-zone anchors, not build-ready pins.",
+  },
+  features: detailedOutput275.locations.map((location) => ({
+    type: "Feature",
+    id: location.id,
+    geometry: { type: "Point", coordinates: [location.lon, location.lat] },
+    properties: {
+      id: location.id,
+      kind: location.kind,
+      status: location.kind === "existing"
+        ? "fixed-existing-hvc-location"
+        : "search-zone-anchor-not-build-pin",
+      address: location.address ?? null,
+      accessScope: location.accessScope,
+      graphNode: location.graphNode,
+      assignedHouseholdsUncapacitated: scenario275.assignedHouseholdsByLocation[location.id] ?? 0,
+      coordinateMeaning: location.coordinateMeaning ?? "exact HVC coordinate from the repository audit",
+    },
+  })),
+};
+writeFileSync(
+  new URL("recommended-275-search-zones.geojson", REPORT_DIR),
+  `${JSON.stringify(geoJson275, null, 2)}\n`,
+);
+
+if (!SUPPLEMENTAL_ONLY) {
+  const detailedScenario225 = scenarios.find(({ maximumWalkingDistanceTargetM }) => (
+    maximumWalkingDistanceTargetM === DETAIL_THRESHOLD_M
+  ));
+  const detailedOutput225 = buildDetailedOutput({
+    additionalLocations: detailAdditionalLocations,
+    capacitySensitivity: capacitySensitivity225M,
+    scenario: detailedScenario225,
+  });
+  writeFileSync(
+    new URL("fixed-existing-household-coverage-225.json", REPORT_DIR),
+    `${JSON.stringify(detailedOutput225)}\n`,
+  );
+}
 
 console.log(JSON.stringify({
   fixedExistingLocations: fixedLocations.map(({ id, accessScope, graphSnapDistanceM }) => ({
@@ -1067,5 +1178,6 @@ console.log(JSON.stringify({
     graphSnapDistanceM,
   })),
   scenarios: scenarios.map(({ selectedAdditionalSites: _sites, assignedHouseholdsByLocation: _assignments, ...scenario }) => scenario),
-  detailedHouseholds: houses.length,
+  baselineHouseholds: baselineOutput.houses.length,
+  recommended275Households: detailedOutput275.houses.length,
 }, null, 2));

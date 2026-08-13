@@ -1,0 +1,383 @@
+{
+  "generatedAt": "2026-08-13T23:16:11.105Z",
+  "method": "Manual desk screen of the exact analytical anchor and immediate surroundings using PDOK 2026 orthophotography, BGT objects within 20 m and the provincial public BRK large-owner layer.",
+  "interpretation": {
+    "groen": "A credible nearby search zone is visible; still requires all field, ownership, KLIC, safety and HVC checks.",
+    "oranje": "A local alternative may exist but at least one decisive terrain or vehicle check is unresolved.",
+    "rood": "The exact anchor and immediate surroundings are not credible; materially relocate and rerun all walking assignments."
+  },
+  "limitation": "This is not a build approval. The exact model anchors are route-network nodes, often in carriageway or cycleway. Every move changes distances and must be rerouted.",
+  "sources": {
+    "aerialBgt": "aerial-bgt-screen-275.json",
+    "ownership": "ownership-screen-275.json"
+  },
+  "counts": {
+    "groen": 2,
+    "oranje": 7,
+    "rood": 14
+  },
+  "sites": [
+    {
+      "id": "model-275-01",
+      "rating": "rood",
+      "referenceAddress": "De Fuik 10",
+      "latitude": 52.729632,
+      "longitude": 4.738858,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2659"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-01.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.737745452015469%2C52.728953512574634%2C4.73997054798453%2C52.73031048742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Pin midden in smalle rijbaan; erven 1,1 m, gevels 5,9/6,0 m en parkeren 11 m.",
+      "followUp": "Zoek noord/west een bredere openbare rand en herbereken."
+    },
+    {
+      "id": "model-275-02",
+      "rating": "rood",
+      "referenceAddress": "Oostwal 79",
+      "latitude": 52.729332,
+      "longitude": 4.742866,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G1667"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-02.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.741753459670394%2C52.72865351257463%2C4.743978540329606%2C52.73001048742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Kruising met voetpaden 2,6/3,3 m, inritten 4,8/5,9 m en gevel 10,6 m.",
+      "followUp": "Zoek zuidelijk buiten inritten en zichtdriehoek."
+    },
+    {
+      "id": "model-275-03",
+      "rating": "rood",
+      "referenceAddress": "Veilingweg 37",
+      "latitude": 52.727869,
+      "longitude": 4.736561,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00F577"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-03.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.735448496998964%2C52.72719051257463%2C4.737673503001036%2C52.72854748742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Zijwegaansluiting; fietspaden 4,1/4,2 m, bordpaal 5,5 m, gevel 13,9 m en water 14 m.",
+      "followUp": "Verplaats dieper Hartendorp in en herbereken."
+    },
+    {
+      "id": "model-275-04",
+      "rating": "rood",
+      "referenceAddress": "De Hoge Werf 2",
+      "latitude": 52.72752,
+      "longitude": 4.745155,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I535"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-04.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.744042505903251%2C52.72684151257463%2C4.746267494096748%2C52.72819848742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Exact op voetpad; lichtmast 3 m, water 8,7 m, gevel 9,5 m; rijbaan circa 19,8 m weg.",
+      "followUp": "Nieuwe voertuigbereikbare zoekzone nodig."
+    },
+    {
+      "id": "model-275-05",
+      "rating": "oranje",
+      "referenceAddress": "Baljuw 37",
+      "latitude": 52.726407,
+      "longitude": 4.750878,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I1012"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-05.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.749765534298792%2C52.725728512574634%2C4.751990465701208%2C52.72708548742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Parkeren 1,9 m, voetpad/inritten 3,5–4,1 m, lichtmast 4,9 m, bomen vanaf 7,8 m en water 11,7 m.",
+      "followUp": "Onderzoek 5–10 m verschuiving naar grasrand."
+    },
+    {
+      "id": "model-275-06",
+      "rating": "rood",
+      "referenceAddress": "De Baan 33",
+      "latitude": 52.725362,
+      "longitude": 4.744268,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I296"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-06.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.7431555609577725%2C52.72468351257463%2C4.745380439042227%2C52.726040487425365&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "T-aansluiting; lichtmast 3 m, droge sloot 5,8 m, boom 7,1 m en afsluitpaal 8,1 m.",
+      "followUp": "Gebruik liever de eerder groen beoordeelde WH10-zone circa 64 m westelijk en herbereken."
+    },
+    {
+      "id": "model-275-07",
+      "rating": "rood",
+      "referenceAddress": "Veilingweg 70D",
+      "latitude": 52.725182,
+      "longitude": 4.734133,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": false,
+      "aerialImage": "aerial-275/model-275-07.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.733020565549584%2C52.72450351257463%2C4.735245434450416%2C52.725860487425365&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Actief parkeerterrein/erf; geen gemeentelijk perceel binnen 25 m en BAG-snap 92,9 m.",
+      "followUp": "Zoek 20–40 m noord/oost aan openbare Veilingweg-rand."
+    },
+    {
+      "id": "model-275-08",
+      "rating": "rood",
+      "referenceAddress": "De Huisweid 17",
+      "latitude": 52.724578,
+      "longitude": 4.732146,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": false,
+      "aerialImage": "aerial-275/model-275-08.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.7310335809573045%2C52.72389951257463%2C4.733258419042696%2C52.72525648742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Besloten erfcluster; erf 2,3 m, gevels 5,4/9,4 m en smalle interne toegang; geen gemeentelijk perceel binnen 25 m.",
+      "followUp": "Zoek buiten het erf aan openbare weg."
+    },
+    {
+      "id": "model-275-09",
+      "rating": "oranje",
+      "referenceAddress": "Wiekeland 7",
+      "latitude": 52.723768,
+      "longitude": 4.74482,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-09.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.7437076016191115%2C52.72308951257463%2C4.745932398380888%2C52.72444648742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Wegkop; tweede rijbaan 1,2 m, voetpad 3,8 m, gras 3,9 m, boom 5,0 m en lichtmast 5,1 m.",
+      "followUp": "Onderzoek 4–6 m oost/noordoost."
+    },
+    {
+      "id": "model-275-10",
+      "rating": "rood",
+      "referenceAddress": "Posthoorn 25",
+      "latitude": 52.723336,
+      "longitude": 4.735225,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2687"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-10.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.734112612638338%2C52.722657512574635%2C4.736337387361662%2C52.72401448742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Complexe fiets-/voetkruising; fietspaden 2,1/3,5 m, voetpad 2,5 m, bordpalen 5,1/5,8 m en boom 6,9 m.",
+      "followUp": "Zoek 15–30 m westelijk en herbereken."
+    },
+    {
+      "id": "model-275-11",
+      "rating": "rood",
+      "referenceAddress": "Vijfven 7",
+      "latitude": 52.722262,
+      "longitude": 4.726312,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-11.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.725199640032137%2C52.72158351257463%2C4.727424359967863%2C52.72294048742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Exact op fietspad; rijbaan 3,3 m, boom 5,0 m en water 6,1 m.",
+      "followUp": "Zoek aan de woonstraat, niet in de fiets-/watercorridor."
+    },
+    {
+      "id": "model-275-12",
+      "rating": "oranje",
+      "referenceAddress": "De Negen Geerzen 29",
+      "latitude": 52.722171,
+      "longitude": 4.746228,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00I695"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-12.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.745115642353134%2C52.721492512574635%2C4.747340357646866%2C52.72284948742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Rijbaan; voetpad 2,1 m, erf 3,9 m, gevel en parkeren 7,8 m; brede groenzone zichtbaar.",
+      "followUp": "Onderzoek 5–8 m oost/noordoost."
+    },
+    {
+      "id": "model-275-13",
+      "rating": "rood",
+      "referenceAddress": "Dorpsstraat 110A",
+      "latitude": 52.722061,
+      "longitude": 4.737997,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2401"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-13.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.736884645158717%2C52.72138251257463%2C4.739109354841283%2C52.722739487425365&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Druk verblijfs-/parkeergebied; parkeren 2,3/3,2 m, boom 5,8 m en veel afsluitpalen vanaf 6,8 m.",
+      "followUp": "Alleen mogelijk met expliciete parkeerplaatsconversie."
+    },
+    {
+      "id": "model-275-14",
+      "rating": "oranje",
+      "referenceAddress": "Goudsboer 3",
+      "latitude": 52.721476,
+      "longitude": 4.730818,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2696"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-14.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.729705660079012%2C52.720797512574634%2C4.731930339920988%2C52.72215448742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Smalle straat; voetpad 1,4 m, lichtmast 3,7 m, bomen 5,4/5,5 m, parkeren 6,5 m en gevel 9,7 m.",
+      "followUp": "Onderzoek 8–12 m west/noordwest aan speelgroenrand."
+    },
+    {
+      "id": "model-275-15",
+      "rating": "rood",
+      "referenceAddress": "Gaspad 2",
+      "latitude": 52.720165,
+      "longitude": 4.727523,
+      "exactMunicipal": false,
+      "exactMunicipalParcels": [],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-15.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.726410693513899%2C52.71948651257463%2C4.7286353064861%2C52.72084348742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Erf/voetpad; voetpad 0,6 m, gevels 3,9/4,3 m en rijbaan 4,6 m; pin niet op gemeentelijk perceel.",
+      "followUp": "Zoek 15–25 m west/zuidwest naar bredere openbare berm."
+    },
+    {
+      "id": "model-275-16",
+      "rating": "rood",
+      "referenceAddress": "Zwartepad 44",
+      "latitude": 52.720109,
+      "longitude": 4.733948,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G491"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-16.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.732835694942029%2C52.71943051257463%2C4.735060305057971%2C52.72078748742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Rijbaan en verkeerseiland 1,2 m; lichtmast 6,3 m, bomen 6,4–8,4 m en water 14,2 m.",
+      "followUp": "Zoek 15–30 m verder aan recht straatdeel."
+    },
+    {
+      "id": "model-275-17",
+      "rating": "groen",
+      "referenceAddress": "De Camper 1",
+      "latitude": 52.718727,
+      "longitude": 4.731121,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2664"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-17.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.730008730184731%2C52.71804851257463%2C4.732233269815269%2C52.71940548742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Pin op rijbaan, maar bruikbare verharde pleinhoek zichtbaar; parkeren 3,6 m, inrit 4,4 m en gevel 11,5 m.",
+      "followUp": "Onderzoek 8–15 m noordwest, buiten parkeer- en hijszone."
+    },
+    {
+      "id": "model-275-18",
+      "rating": "oranje",
+      "referenceAddress": "Fabrieksstraat 29",
+      "latitude": 52.71871,
+      "longitude": 4.738679,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G1784"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-18.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.7375667306182345%2C52.71803151257463%2C4.739791269381766%2C52.71938848742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Kruising; groen 4,3/4,5 m, lichtmast 6 m, voetpad 7 m, droge sloot 7,8 m en gevel 11,1 m.",
+      "followUp": "Onderzoek noord/oostelijke grasrand."
+    },
+    {
+      "id": "model-275-19",
+      "rating": "oranje",
+      "referenceAddress": "De Cres 14",
+      "latitude": 52.717429,
+      "longitude": 4.731297,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1276"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-19.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.730184763282707%2C52.716750512574635%2C4.7324092367172925%2C52.71810748742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Wegkruising; parkeren 3,2 m, voetpad 7,4 m, lichtmast 9,8 m, afsluitpaal 10,9 m, gevel 11,3 m en kast 11,5 m.",
+      "followUp": "Onderzoek 8–15 m noordoost."
+    },
+    {
+      "id": "model-275-20",
+      "rating": "rood",
+      "referenceAddress": "Zigt 26",
+      "latitude": 52.716857,
+      "longitude": 4.74461,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00G2723"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-20.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.743497777867449%2C52.71617851257463%2C4.74572222213255%2C52.717535487425366&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Zeer krappe woonbocht; inrit 2,9 m, boom 4,5 m, lichtmast 5,3 m, gevel 6,7 m en kast 7,1 m.",
+      "followUp": "Geen overtuigend lokaal alternatief; vervang zoekzone."
+    },
+    {
+      "id": "model-275-21",
+      "rating": "oranje",
+      "referenceAddress": "Oudevaart 42A",
+      "latitude": 52.716524,
+      "longitude": 4.73407,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-21.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.73295778635799%2C52.71584551257463%2C4.73518221364201%2C52.71720248742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Groene rand aanwezig, maar bordpaal 2,5 m, boom 3,8 m, inrit 4,6 m, voetpad 4,9 m en droge sloot 8,6 m.",
+      "followUp": "Onderzoek 8–15 m in open randvak."
+    },
+    {
+      "id": "model-275-22",
+      "rating": "groen",
+      "referenceAddress": "Oudevaart 89",
+      "latitude": 52.715879,
+      "longitude": 4.72668,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-22.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.725567802803156%2C52.71520051257463%2C4.727792197196844%2C52.71655748742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Exacte pin conflicteert met fietspad op 2,2 m, maar zijweg-/parkeerrand is zichtbaar.",
+      "followUp": "Onderzoek 10–20 m oost/zuidoost en laat HVC uitsluitend vanaf de zijweg bedienen."
+    },
+    {
+      "id": "model-275-23",
+      "rating": "rood",
+      "referenceAddress": "Debbemeerweg 39",
+      "latitude": 52.715777,
+      "longitude": 4.738744,
+      "exactMunicipal": true,
+      "exactMunicipalParcels": [
+        "WMH00H1719"
+      ],
+      "municipalParcelWithin25M": true,
+      "aerialImage": "aerial-275/model-275-23.jpg",
+      "aerialSourceUrl": "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=2026_orthoHR&STYLES=&SRS=EPSG%3A4326&BBOX=4.737631805403729%2C52.715098512574635%2C4.73985619459627%2C52.71645548742537&WIDTH=900&HEIGHT=900&FORMAT=image%2Fjpeg",
+      "finding": "Exact op fietspad/kruising; inritten 1,5 m, bordpaal 2,7 m, rijbaan 4,5 m, lichtmasten 4,9/5,6 m en water 6,6 m.",
+      "followUp": "Vervang door een nieuwe zoekzone."
+    }
+  ]
+}

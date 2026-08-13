@@ -3,13 +3,19 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const REPORT_DIR = new URL("./", import.meta.url);
-const AERIAL_DIR = new URL("aerial/", REPORT_DIR);
-const BGT_DIR = new URL("bgt/", REPORT_DIR);
-const RECOMMENDATION_URL = new URL("recommended-locations.json", REPORT_DIR);
+const REPORT_DIR = dirname(fileURLToPath(import.meta.url));
+const argumentsByName = Object.fromEntries(process.argv.slice(2).map((argument) => {
+  const [name, ...valueParts] = argument.split("=");
+  return [name, valueParts.length ? valueParts.join("=") : true];
+}));
+const AERIAL_DIR = resolve(REPORT_DIR, argumentsByName["--aerial-dir"] || "aerial");
+const BGT_DIR = resolve(REPORT_DIR, "bgt");
+const RECOMMENDATION_PATH = resolve(REPORT_DIR, argumentsByName["--input"] || "recommended-locations.json");
+const OUTPUT_PATH = resolve(REPORT_DIR, argumentsByName["--output"] || "aerial-bgt-screen.json");
+const ADDITIONAL_ONLY = argumentsByName["--additional-only"] === true;
 const BGT_BASE_URL = "https://api.pdok.nl/lv/bgt/ogc/v1";
 const AERIAL_WMS_URL = "https://service.pdok.nl/hwh/luchtfotorgb/wms/v1_0";
 const SNAPSHOT_TIME = "2026-08-13T23:59:59Z";
@@ -163,7 +169,7 @@ function buildAerialUrl(site, halfExtentM = 75, sizePx = 900) {
 
 function annotateAerial(inputPath, outputPath, site, sizePx = 900) {
   const center = sizePx / 2;
-  const label = `Site ${site.site} | ${site.referenceAddress}`.replaceAll("'", "");
+  const label = `${site.id || `Site ${site.site}`} | ${site.referenceAddress}`.replaceAll("'", "");
   execFileSync("convert", [
     inputPath,
     "-stroke", "#ff2020",
@@ -184,20 +190,31 @@ function annotateAerial(inputPath, outputPath, site, sizePx = 900) {
 mkdirSync(AERIAL_DIR, { recursive: true });
 mkdirSync(BGT_DIR, { recursive: true });
 const temporaryDirectory = mkdtempSync(join(tmpdir(), "warmenhuizen-aerial-"));
-const recommendation = JSON.parse(readFileSync(RECOMMENDATION_URL, "utf8"));
+const recommendation = JSON.parse(readFileSync(RECOMMENDATION_PATH, "utf8"));
 
 const bgt = {};
 for (const collection of COLLECTIONS) {
-  const cacheUrl = new URL(`${collection}.json`, BGT_DIR);
-  const data = existsSync(cacheUrl)
-    ? JSON.parse(readFileSync(cacheUrl, "utf8"))
+  const cachePath = join(BGT_DIR, `${collection}.json`);
+  const data = existsSync(cachePath)
+    ? JSON.parse(readFileSync(cachePath, "utf8"))
     : fetchCollection(collection);
   bgt[collection] = data.features;
-  if (!existsSync(cacheUrl)) writeFileSync(cacheUrl, `${JSON.stringify(data)}\n`);
+  if (!existsSync(cachePath)) writeFileSync(cachePath, `${JSON.stringify(data)}\n`);
   console.log(`BGT ${collection}: ${data.features.length}`);
 }
 
-const sites = recommendation.sites.map((site) => {
+const sourceSites = (recommendation.sites ?? recommendation.locations ?? [])
+  .filter((site) => !ADDITIONAL_ONLY || !String(site.role ?? site.kind ?? "").includes("existing"))
+  .map((site, index) => ({
+    ...site,
+    id: site.id ?? `site-${index + 1}`,
+    site: site.site ?? index + 1,
+    referenceAddress: site.referenceAddress ?? site.address ?? site.id ?? `zoekzone ${index + 1}`,
+    latitude: site.latitude ?? site.lat,
+    longitude: site.longitude ?? site.lon,
+  }));
+
+const sites = sourceSites.map((site) => {
   const point = [site.longitude, site.latitude];
   const nearby = [];
   for (const [collection, features] of Object.entries(bgt)) {
@@ -215,9 +232,10 @@ const sites = recommendation.sites.map((site) => {
   }
   nearby.sort((a, b) => a.distanceM - b.distanceM || a.collection.localeCompare(b.collection));
 
-  const aerialName = `site-${String(site.site).padStart(2, "0")}.jpg`;
+  const safeId = String(site.id || `site-${site.site}`).replaceAll(/[^a-zA-Z0-9_-]/g, "-").toLowerCase();
+  const aerialName = `${safeId}.jpg`;
   const rawPath = join(temporaryDirectory, `raw-${aerialName}`);
-  const outputPath = fileURLToPath(new URL(aerialName, AERIAL_DIR));
+  const outputPath = join(AERIAL_DIR, aerialName);
   const aerialUrl = buildAerialUrl(site);
   if (!existsSync(outputPath)) {
     curlFile(aerialUrl, rawPath);
@@ -226,11 +244,12 @@ const sites = recommendation.sites.map((site) => {
   console.log(`luchtfoto site ${site.site}`);
 
   return {
+    id: site.id,
     site: site.site,
     referenceAddress: site.referenceAddress,
     latitude: site.latitude,
     longitude: site.longitude,
-    aerialImage: `aerial/${aerialName}`,
+    aerialImage: `${basename(AERIAL_DIR)}/${aerialName}`,
     aerialSourceUrl: aerialUrl,
     googleStreetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${site.latitude},${site.longitude}`,
     bgtNearbyWithin20M: nearby,
@@ -239,7 +258,7 @@ const sites = recommendation.sites.map((site) => {
   };
 });
 
-writeFileSync(new URL("aerial-bgt-screen.json", REPORT_DIR), `${JSON.stringify({
+writeFileSync(OUTPUT_PATH, `${JSON.stringify({
   generatedAt: new Date().toISOString(),
   aerial: {
     source: AERIAL_WMS_URL,
@@ -253,6 +272,7 @@ writeFileSync(new URL("aerial-bgt-screen.json", REPORT_DIR), `${JSON.stringify({
     collections: COLLECTIONS,
     searchRadiusM: 20,
   },
+  input: basename(RECOMMENDATION_PATH),
   sites,
 }, null, 2)}\n`);
 
