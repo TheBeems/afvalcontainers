@@ -1,0 +1,422 @@
+{
+  "generatedAt": "2026-08-13T18:25:00+02:00",
+  "scope": "Visuele voorselectie van afstandsoptimale zoekpunten 1 tot en met 22",
+  "method": {
+    "primarySource": "PDOK Luchtfoto 2026 Ortho 5 en 8 cm RGB, uitsnede van 150 bij 150 meter per zoekpunt",
+    "secondarySource": "PDOK BGT, objecten op en binnen 20 meter van ieder zoekpunt",
+    "ownershipScreen": "Provinciale BRK-grootbezitterslaag; alle 22 punten vallen in de voorselectie op een perceel met Gemeente Schagen als eigenaar. Dit is geen juridische eigendomsverklaring.",
+    "kartaview": "Alleen gebruikt bij site 20. De betreffende opname ligt berekend circa 11 meter van het zoekpunt en dateert uit 2017. Alle andere gevonden KartaView-foto's liggen meer dan 50 meter van hun zoekpunt en zijn niet gebruikt.",
+    "vehicleScreen": "Visuele plausibiliteit van een indicatieve vrije opstelstrook van 12,0 bij 3,1 meter, een benadering zonder achteruitrijden, en een vrije hijszone. Afmetingen, bochtstralen, aslast, stempeldruk en kraanbereik zijn niet ingemeten.",
+    "statusMeaning": {
+      "groen": "De zoekzone toont een geloofwaardige combinatie van ruimte en route; technische inmeting blijft nodig.",
+      "oranje": "De zoekzone kan werken na een beperkte verschuiving of na het oplossen van zichtbare conflicten.",
+      "rood": "Het gemarkeerde punt en de directe omgeving tonen een fundamenteel ruimte- of routeconflict; herplaatsing en herberekening zijn nodig."
+    },
+    "limitations": [
+      "Een luchtfoto toont geen kabels en leidingen, bodem, boomwortels, hoogtebeperkingen, helling, draagkracht, verkeersintensiteit of actuele parkeerdruk.",
+      "De rode kruismarkering is een loopnetwerkknooppunt en geen ingemeten bouwvlak.",
+      "De beoordeling is analytisch en kan geen instemming van HVC of een gemeentelijk locatiebesluit vervangen."
+    ]
+  },
+  "summary": {
+    "green": 4,
+    "orange": 7,
+    "red": 11,
+    "mainFinding": "Slechts vier zones zijn visueel sterk genoeg om direct technisch te laten inmeten. Bij elf punten ligt het modelpunt in een smalle woonstraat, op een voetpad of op een plek zonder zichtbaar containerbouwvlak naast een veilige opstelroute."
+  },
+  "sites": [
+    {
+      "site": 1,
+      "referenceAddress": "Zigt 91",
+      "latitude": 52.71804,
+      "longitude": 4.7431,
+      "status": "groen",
+      "visibleSpace": "Het kruis ligt in de klinkerrijbaan bij een ruimere binnengebiedontsluiting. De exacte rijbaanpin is geen bouwvlak; op circa 24 meter ligt de bestaande restlocatie WH27.",
+      "parkingTreesWaterFacades": "Parkeren ligt direct ten noorden en oosten. BGT registreert een gevel op 6,1 meter, een boom op 7,6 meter, heesters op 5,6 meter en een kast op 10,6 meter; geen water binnen 20 meter.",
+      "hvcRoute": "Een 12,0 bij 3,1 meter voertuig kan de lokale route visueel benaderen, maar niet veilig op het kruis opstellen zonder de rijbaan te blokkeren. De feitelijk bestaande WH27-locatie is de sterkste aanwijzing dat lediging in deze zone uitvoerbaar is.",
+      "keyRisks": [
+        "hijsen boven geparkeerde auto's",
+        "korte afstand tot gevel en boom",
+        "smalle gebogen binnengebiedroute"
+      ],
+      "preferredAdjustment": "Gebruik WH27 bij Zigt 97 als praktische bouw- en routepin en behoud site 1 alleen als afstandsanker.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 2,
+      "referenceAddress": "Kuipersven 36",
+      "latitude": 52.726966,
+      "longitude": 4.748411,
+      "status": "groen",
+      "visibleSpace": "De zoekzone ligt aan een relatief ruime, rechte woonstraat met een brede grasstrook aan de oostzijde. De bestaande restlocatie WH05 ligt slechts 10,2 meter van het kruis.",
+      "parkingTreesWaterFacades": "Langsparkeren is zichtbaar aan de westzijde. BGT registreert gras op 3,4 meter, een lichtmast op 4,1 meter, een boom op 7,5 meter en de dichtstbijzijnde gevel op 13,9 meter; geen water binnen 20 meter.",
+      "hvcRoute": "Een rechte opstelroute van circa 12 meter is zichtbaar plausibel, maar het kruis valt op een verkeersdrempel. Lediging van de bestaande WH05 is sterk praktijkbewijs voor de zone.",
+      "keyRisks": [
+        "verkeersdrempel op het modelpunt",
+        "lichtmast en boom naast de grasstrook",
+        "langsparkeren in de hijs- of veiligheidszone"
+      ],
+      "preferredAdjustment": "Leg de analysegemarkeerde locatie vast op de bestaande WH05-pin en reserveer tijdens lediging een parkeervrije opstelstrook.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 3,
+      "referenceAddress": "Goudsboer 2",
+      "latitude": 52.721107,
+      "longitude": 4.730812,
+      "status": "oranje",
+      "visibleSpace": "Het kruis ligt in een smalle klinkerstraat nabij een woonerf. Ten oosten en zuidoosten is een iets ruimere groen- en parkeerzone zichtbaar, maar geen ononderbroken bouwvlak bij het kruis.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 1,1 meter, een erf op 4,3 meter, een lichtmast op 6,0 meter, een boom op 6,9 meter, een gevel op 11,1 meter en water op 16,9 meter.",
+      "hvcRoute": "Aanrijden is via een woonerf mogelijk, maar een vrije opstelstrook van 12,0 bij 3,1 meter zonder blokkering of krappe bocht is niet overtuigend zichtbaar.",
+      "keyRisks": [
+        "krappe woonerfroute",
+        "heesters en boomwortels",
+        "water en erfgrenzen dichtbij",
+        "geen duidelijk parkeervrij hijsvak"
+      ],
+      "preferredAdjustment": "Onderzoek 20 tot 35 meter oostelijk of zuidoostelijk de rand van de ruimere groen- en parkeerzone en herbereken de loopafstanden op die pin.",
+      "confidence": "middel"
+    },
+    {
+      "site": 4,
+      "referenceAddress": "Leuneweg 1",
+      "latitude": 52.723389,
+      "longitude": 4.741102,
+      "status": "rood",
+      "visibleSpace": "Het gemarkeerde punt ligt volgens BGT op een betegeld voetpad tussen achtererven en beplanting; de luchtfoto toont geen voertuigopstelplaats of containerbouwvlak.",
+      "parkingTreesWaterFacades": "Een gevel ligt op 4,9 meter, een lichtmast op 1,7 meter, een boom op 2,2 meter, een kast op 2,8 meter en heesters en erf op circa 1,2 meter.",
+      "hvcRoute": "De dichtstbijzijnde openbare voertuigroute ligt circa 12,5 meter van het punt. Een HVC-voertuig kan de pin niet rechtstreeks bereiken en een vrije hijszone ontbreekt.",
+      "keyRisks": [
+        "voetpad zonder voertuigtoegang",
+        "gevel binnen 5 meter",
+        "boom, lichtmast en kast op het bouwvlak",
+        "achtererven en smalle doorgang"
+      ],
+      "preferredAdjustment": "Verplaats het zoekpunt zuidoostelijk naar de Reijneweg of een aangrenzend breder parkeerhof, of neem de bestaande WH14-zone op circa 108 meter als alternatief; daarna opnieuw routeren.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 5,
+      "referenceAddress": "Molenaarweg 3",
+      "latitude": 52.719005,
+      "longitude": 4.738631,
+      "status": "oranje",
+      "visibleSpace": "Het kruis ligt in een smalle noord-zuidlopende woonstraat. Een grasstrook ligt direct oostelijk, maar die wordt begrensd door een watergang en oogt te smal voor vanzelfsprekende plaatsing.",
+      "parkingTreesWaterFacades": "BGT registreert gras op 1,8 meter, een lichtmast op 8,2 meter, water op 14,2 meter en een gevel op 14,8 meter. Enkele auto's staan langs de route en bij het zuidelijke kruispunt.",
+      "hvcRoute": "Doorgaand aanrijden is visueel plausibel, maar stilstaan blokkeert waarschijnlijk de smalle straat en de ondergrondse bak komt dicht bij de watergang.",
+      "keyRisks": [
+        "smalle opstelstrook",
+        "waterkering of slappe oeverzone",
+        "beperkte passeerruimte",
+        "lichtmast"
+      ],
+      "preferredAdjustment": "Zoek zuidelijk richting de ruimere kruising en vergelijk dit met de gemeentelijke WH25-zone op circa 67 meter; vermijd de oeverstrook.",
+      "confidence": "middel"
+    },
+    {
+      "site": 6,
+      "referenceAddress": "Rietzangerstraat 3",
+      "latitude": 52.727288,
+      "longitude": 4.740098,
+      "status": "oranje",
+      "visibleSpace": "Het modelpunt ligt in de rijbaan bij een bocht en een T-aansluiting. Ten zuiden en oosten zijn groenstroken zichtbaar, maar de directe rand is met heesters ingericht.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 3,1 meter, een kast op 4,6 meter, een lichtmast op 8,7 meter, een boom op 9,8 meter, een gevel op 11,4 meter en een verkeerseiland op 13,4 meter.",
+      "hvcRoute": "Aanrijden is mogelijk, maar de bocht en het eiland maken een recht en vrij 12-meter-opstelvak onzeker. De kraanopstelling mag de T-splitsing niet afsluiten.",
+      "keyRisks": [
+        "bocht en kruispuntconflict",
+        "kast en groeninrichting",
+        "boomkroon",
+        "geen aantoonbaar rechte opstelstrook"
+      ],
+      "preferredAdjustment": "Schuif 10 tot 20 meter oostelijk langs het rechtere straatdeel en onderzoek de groenrand buiten de bocht; toets de route met een voertuigmal.",
+      "confidence": "middel"
+    },
+    {
+      "site": 7,
+      "referenceAddress": "Beuninge 80",
+      "latitude": 52.720613,
+      "longitude": 4.727223,
+      "status": "rood",
+      "visibleSpace": "Het kruis ligt in een bocht direct bij woningen en een erf. Een groter grasvak ligt verder zuidelijk langs de lus, maar niet op de gemarkeerde plek.",
+      "parkingTreesWaterFacades": "BGT registreert erf op 1,3 meter, een lichtmast op 3,8 meter, een gevel op 5,5 meter, bosplantsoen op 5,2 meter en een boom op 9,1 meter. Water ligt zichtbaar rond het noordelijke bouwblok.",
+      "hvcRoute": "De bocht, geparkeerde voertuigen en korte gevelafstand laten geen veilige rechte opstel- en hijszone zien.",
+      "keyRisks": [
+        "gevel op 5,5 meter",
+        "bochtige woonerfroute",
+        "boom en bosplantsoen",
+        "omringende watergangen"
+      ],
+      "preferredAdjustment": "Verplaats 35 tot 55 meter zuidwestelijk naar de rechte rand van het grotere grasvak langs de lus en voer een nieuwe eigendoms- en afstandstoets uit.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 8,
+      "referenceAddress": "Nachtegaalstraat 12",
+      "latitude": 52.726883,
+      "longitude": 4.7434,
+      "status": "rood",
+      "visibleSpace": "Het punt ligt midden in een dicht bebouwde woonstraatkruising. De luchtfoto toont parkeerplaatsen, voortuinen en kleine plantvakken, maar geen vrij containerbouwvlak.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 3,9 meter, een boom en lichtmast beide op 5,4 meter, erf op 5,3 meter en een gevel op 10,1 meter.",
+      "hvcRoute": "Een voertuig kan de straat bereiken, maar de combinatie van kruising, parkeren en groenobjecten laat geen vrij 12-meter-opstelvak of veilige hijszone zien.",
+      "keyRisks": [
+        "kruispunt blokkeren",
+        "parkeren direct rond de pin",
+        "boom en lichtmast",
+        "geen vrije ondergrondse footprint"
+      ],
+      "preferredAdjustment": "Verplaats naar een grotere groen- of parkeerzoom buiten de woonstraatkruising; vergelijk daarbij expliciet de bestaande WH03-zone op circa 105 meter.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 9,
+      "referenceAddress": "Poolster 23",
+      "latitude": 52.729656,
+      "longitude": 4.75046,
+      "status": "groen",
+      "visibleSpace": "De jonge wijk heeft een rechte woonstraat met een brede, open grasstrook aan de oostzijde. De exacte pin ligt op de rijbaan, maar op enkele meters afstand is een geloofwaardige bouwzone zichtbaar.",
+      "parkingTreesWaterFacades": "BGT registreert gras op 3,9 meter, grasklinkers op 8,7 meter, een lichtmast op 12,5 meter en een gevel op 13,7 meter. Er zijn geen bomen of waterdelen binnen 20 meter geregistreerd; langsparkeren is wel zichtbaar.",
+      "hvcRoute": "Een rechte 12,0 bij 3,1 meter opstelstrook is visueel goed inpasbaar, mits tijdens lediging geen auto's tussen voertuig en bak staan.",
+      "keyRisks": [
+        "langsparkeren",
+        "nog niet aantoonbare kabels en leidingen in de nieuwe wijk",
+        "watergangen op grotere afstand aan oost- en zuidrand"
+      ],
+      "preferredAdjustment": "Schuif 4 tot 8 meter oostelijk de grasstrook in, buiten de lichtmastzone, en leg een parkeervrije servicezone vast.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 10,
+      "referenceAddress": "Puttersakker 19",
+      "latitude": 52.722612,
+      "longitude": 4.745902,
+      "status": "rood",
+      "visibleSpace": "Het kruis ligt op een woonerfkruising tussen rijwoningen en geparkeerde auto's. Kleine plantvakken bieden geen zichtbaar volwaardig bouwvlak.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 2,7 meter, een lichtmast op 3,5 meter, een boom op 6,2 meter, erf op 6,0 meter en een gevel op 10,7 meter.",
+      "hvcRoute": "De straat is bereikbaar, maar parkeren, een haakse aansluiting en groenobjecten maken een vrij en recht opstelvak onaannemelijk.",
+      "keyRisks": [
+        "hijsen boven auto's",
+        "lichtmast en boom",
+        "kruispuntblokkade",
+        "smalle woonerfgeometrie"
+      ],
+      "preferredAdjustment": "Gebruik de ruimere gemeentelijke WH12-zone op circa 63 meter oostelijk als eerste alternatief en herbereken de dekking vanaf die bouwpin.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 11,
+      "referenceAddress": "Burg. Burgerstraat 20",
+      "latitude": 52.724953,
+      "longitude": 4.737802,
+      "status": "rood",
+      "visibleSpace": "Het modelpunt ligt aan het einde van een smalle parkeerstraat tegen een parkpad. Open gras ligt noordelijk, maar tussen veel volwassen bomen en zonder doorgaande voertuigroute.",
+      "parkingTreesWaterFacades": "Auto's staan langs vrijwel de hele zuidelijke aanrijroute. BGT registreert gras op 4,0 meter, een boom op 5,2 meter, een lichtmast op 5,5 meter, erf op 5,0 meter en een gevel op 15,3 meter.",
+      "hvcRoute": "De luchtfoto toont een doodlopend einde zonder overtuigende keermogelijkheid voor een voertuig van circa 12 meter; achteruitrijden lijkt nodig.",
+      "keyRisks": [
+        "doodlopende aanrijroute",
+        "langsparkeren",
+        "volwassen bomen en wortelzones",
+        "parkpad in plaats van uitrijroute"
+      ],
+      "preferredAdjustment": "Zoek zuidelijk richting een doorgaande kruising of aan de westelijke parkzoom met in- en uitrit; de nieuwe pin moet opnieuw in de loopoptimalisatie worden opgenomen.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 12,
+      "referenceAddress": "Oud Wulpendorp 11",
+      "latitude": 52.726561,
+      "longitude": 4.738293,
+      "status": "rood",
+      "visibleSpace": "Het kruis ligt in een smalle T-aansluiting, direct tussen woningen, opritten en een klein plant- of speelvak. Er is geen vrije bouwstrook zichtbaar.",
+      "parkingTreesWaterFacades": "BGT registreert een kast op 4,4 meter, erf op 4,5 meter, gras op 4,9 meter, een gevel op 6,9 meter, een boom op 7,5 meter, een verkeersbordpaal op 8,5 meter en een speelvoorziening op 10,9 meter.",
+      "hvcRoute": "Een 12-meter-voertuig moet bij de T-aansluiting manoeuvreren en zou de straat grotendeels blokkeren; de vrije hijszone is onvoldoende.",
+      "keyRisks": [
+        "gevel op 6,9 meter",
+        "kast en speelvoorziening",
+        "krappe T-aansluiting",
+        "geen afzonderlijk opstelvak"
+      ],
+      "preferredAdjustment": "Onderzoek de gemeentelijke WH07-zone op circa 82 meter of een ruimere groenrand langs de doorgaande Dorpsstraat en herbereken vanaf die locatie.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 13,
+      "referenceAddress": "Verzetslaan 13",
+      "latitude": 52.719149,
+      "longitude": 4.744779,
+      "status": "rood",
+      "visibleSpace": "De pin ligt in een vrijwel volledig verharde woonstraat zonder zichtbare openbare zijberm. Woningen, opritten en parkeerplaatsen begrenzen de rijbaan.",
+      "parkingTreesWaterFacades": "BGT registreert een lichtmast op 4,8 meter, erf op 5,0 meter en een gevel op 10,7 meter. Auto's en een bestelbus staan nabij de oostelijke aansluiting; water ligt ten noorden van de woningen.",
+      "hvcRoute": "De straat is bereikbaar en heeft oostelijk een kleine keerlus, maar op het modelpunt ontbreekt ruimte voor de bak en een parkeervrije hijszone.",
+      "keyRisks": [
+        "geen groen- of trottoirbouwvlak",
+        "parkeren en opritten",
+        "lichtmast",
+        "woonstraat grotendeels blokkeren"
+      ],
+      "preferredAdjustment": "Verplaats richting de ruimere groenrand of de gemeentelijke WH28-zone op circa 94 meter oostelijk en toets de resulterende loopafstand opnieuw.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 14,
+      "referenceAddress": "Stationsstraat 22A",
+      "latitude": 52.722359,
+      "longitude": 4.734768,
+      "status": "oranje",
+      "visibleSpace": "De Stationsstraat is een duidelijke doorgaande route. Ten zuidwesten ligt een groot openbaar ogend grasveld en noordwestelijk een ruim verhard erf; het kruis zelf ligt in de rijbaan bij een kruising.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 4,5 meter, een verkeersbordpaal op 4,4 meter, een boom op 8,0 meter, een bank op 8,7 meter en een kast op 10,9 meter. Er is geen gevel of water binnen 20 meter geregistreerd.",
+      "hvcRoute": "Een rechte 12-meter-opstelroute is op de Stationsstraat plausibel, maar niet precies op het kruispunt. Een bouwvak in de grasrand moet buiten boomkronen en verblijfsmeubilair liggen.",
+      "keyRisks": [
+        "kruispunt en oversteek",
+        "volwassen bomen en wortelzones",
+        "bank, bordpaal en kast",
+        "mogelijk sport- of verblijfsgebruik van het grasveld"
+      ],
+      "preferredAdjustment": "Schuif westelijk of zuidwestelijk naar een open segment langs het grasveld, met voldoende afstand tot bomen, bank en kruising; leg de stopplek langs het rechte straatdeel.",
+      "confidence": "middel"
+    },
+    {
+      "site": 15,
+      "referenceAddress": "Oostwal 79",
+      "latitude": 52.729332,
+      "longitude": 4.742866,
+      "status": "rood",
+      "visibleSpace": "Het kruis ligt op een smalle asfaltweg in lintbebouwing. De bermen zijn grotendeels oprit of erf en er is geen duidelijk openbaar bouwvlak zichtbaar.",
+      "parkingTreesWaterFacades": "BGT registreert erf op 4,2 meter, een gevel op 10,6 meter, een lichtmast op 13,1 meter en een boom op 17,2 meter. Sloten liggen achter of naast de erven en auto's staan incidenteel in de smalle route.",
+      "hvcRoute": "Doorgaand rijden is mogelijk, maar stilstaan met een circa 3,1 meter breed voertuig blokkeert waarschijnlijk de Oostwal en de kraan zou dicht bij particuliere erven werken.",
+      "keyRisks": [
+        "geen openbaar zijvlak",
+        "smalle lintweg",
+        "particuliere opritten en gevels",
+        "sloten en zachte bermen"
+      ],
+      "preferredAdjustment": "Zoek zuidelijk bij de zichtbaar bredere kruising of een aantoonbaar gemeentelijk bermvak; houd de bak uit de sloot- en erfzone en herbereken de dekking.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 16,
+      "referenceAddress": "De Baan 27",
+      "latitude": 52.725414,
+      "longitude": 4.743329,
+      "status": "groen",
+      "visibleSpace": "Aan de zuidzijde van de rechte woonstraat ligt een brede parkachtige grasrand. De gemeentelijke conceptlocatie WH10 ligt slechts 6,4 meter van het kruis.",
+      "parkingTreesWaterFacades": "BGT registreert gras op 3,3 meter, erf op 5,6 meter, een lichtmast op 12,3 meter en de dichtstbijzijnde gevel op 14,7 meter. De luchtfoto toont volwassen bomen verder in het park en water op grotere afstand zuidelijk.",
+      "hvcRoute": "Een rechte opstelstrook langs De Baan en een bouwvlak in de grasrand zijn visueel plausibel. De boomwortelzone en exacte kraanzijde moeten nog worden ingemeten.",
+      "keyRisks": [
+        "wortelzones van parkbomen",
+        "parkpad en voetgangers",
+        "lichtmast",
+        "nog onbekende kabels en leidingen"
+      ],
+      "preferredAdjustment": "Gebruik de WH10-conceptpin als voorkeurspositie en leg het ondergrondse deel 3 tot 7 meter zuidelijk van de rijbaan, in een aantoonbare open ruimte tussen wortelzones.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 17,
+      "referenceAddress": "De Cres 14",
+      "latitude": 52.717586,
+      "longitude": 4.731269,
+      "status": "oranje",
+      "visibleSpace": "Het punt ligt op een brede asfaltkruising in een bedrijfsgebied. Verharde erven en brede rijbanen bieden manoeuvreerruimte, maar geen duidelijk afzonderlijk openbaar containerbouwvlak.",
+      "parkingTreesWaterFacades": "BGT registreert erf op 3,7 meter, een gevel op 8,3 meter, heesters op 8,0 meter, een lichtmast op 8,8 meter en een kast op 17,1 meter. Er zijn weinig bomen en geen water binnen 20 meter.",
+      "hvcRoute": "Aanrijden en doorgaand verlaten met een groot voertuig zijn geloofwaardig. De opstelling moet uit de kruising en uit bedrijfsinritten worden geschoven.",
+      "keyRisks": [
+        "bedrijfsinritten en vrachtbewegingen",
+        "gevel op 8,3 meter",
+        "mogelijk particulier verhard erf",
+        "kruispuntblokkade"
+      ],
+      "preferredAdjustment": "Onderzoek 10 tot 20 meter oostelijk of noordoostelijk een gemeentelijk verhard zijvak langs het rechte wegdeel en borg vrije bedrijfsinritten.",
+      "confidence": "middel"
+    },
+    {
+      "site": 18,
+      "referenceAddress": "De Fuik 10",
+      "latitude": 52.729632,
+      "longitude": 4.738858,
+      "status": "rood",
+      "visibleSpace": "Het kruis ligt in een zeer smalle, kronkelende woon- en erftoegang tussen vrijstaande woningen. Open groen ligt verder weg, maar niet direct aan een geschikte openbare opstelroute.",
+      "parkingTreesWaterFacades": "BGT registreert erf op 1,1 meter en een gevel op 5,9 meter. Een lichtmast ligt op 11,5 meter en heesters op 16,3 meter; op de luchtfoto liggen tuinen, schuren en bomen dicht rond de route.",
+      "hvcRoute": "Een voertuig van circa 12 meter kan hier niet overtuigend keren of passeren zonder particuliere ruimte te gebruiken; achteruitrijden is waarschijnlijk.",
+      "keyRisks": [
+        "gevel op 5,9 meter",
+        "route door erfachtige ruimte",
+        "geen zichtbaar bouwvlak",
+        "geen veilige keermogelijkheid"
+      ],
+      "preferredAdjustment": "Verplaats noord- of westwaarts naar een openbare rand aan een doorgaande route, of combineer deze vraagzone met site 6 of 22; voer daarna de afstandsoptimalisatie opnieuw uit.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 19,
+      "referenceAddress": "Remmerdel 46",
+      "latitude": 52.724896,
+      "longitude": 4.746141,
+      "status": "rood",
+      "visibleSpace": "Het modelpunt ligt midden op een voetpad in een door water omsloten grasgebied. De dichtstbijzijnde woonstraat ligt aan de noordzijde, via een smalle voetgangersbrug.",
+      "parkingTreesWaterFacades": "BGT registreert het punt als voetpad, met gras op 0,5 meter, een boom op 3,5 meter en een lichtmast op 3,7 meter. Hoewel het water in de 20-meterselectie niet op de pin valt, is het aan drie zijden duidelijk zichtbaar.",
+      "hvcRoute": "De openbare voertuigroute ligt circa 54,8 meter van het modelpunt. Een HVC-voertuig kan de pin niet bereiken; de voetgangersbrug en het pad zijn geen opstelroute.",
+      "keyRisks": [
+        "geen voertuigtoegang",
+        "water aan drie zijden",
+        "voetpad en smalle brug",
+        "boom en lichtmast op het zoekvlak"
+      ],
+      "preferredAdjustment": "Verplaats 55 tot 75 meter noordelijk naar de Remmerdel-zijde van de brug en zoek daar een wegberm- of parkeerrand; herbereken de loopafstand vanaf de nieuwe pin.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 20,
+      "referenceAddress": "Wonge 1",
+      "latitude": 52.722228,
+      "longitude": 4.729308,
+      "status": "oranje",
+      "visibleSpace": "Het kruis ligt bij de aansluiting van Wonge op de Stationsstraat, vrijwel gelijk aan de gemeentelijke conceptlocatie WH17. Een kleine groenrand ligt naast de lokale straat, maar de exacte pin valt in de rijbaan en onder boomkronen.",
+      "parkingTreesWaterFacades": "BGT registreert heesters op 2,8 meter, een lichtmast op 3,5 meter, een boom op 5,6 meter, erf op 6,4 meter en een gevel op 11,3 meter. De KartaView-opname uit 2017 op circa 11 meter toont dat de Stationsstraat een duidelijke tweerichtingsroute is, maar geen veilige permanente stopstrook heeft.",
+      "hvcRoute": "Aanrijden via de lokale straat is plausibel, maar lediging mag niet op de doorgaande Stationsstraat plaatsvinden. De route door Wonge moet aantonen dat zonder achteruitrijden kan worden doorgereden.",
+      "keyRisks": [
+        "conflict met doorgaand verkeer op Stationsstraat",
+        "boom, heesters en lichtmast",
+        "krappe aansluiting",
+        "onbewezen uitrijroute door de woonbuurt"
+      ],
+      "preferredAdjustment": "Gebruik WH17 als referentie en schuif 5 tot 15 meter zuidelijk de Wonge in, naar een open gemeentelijke groen- of trottoirrand; toets een doorgaande HVC-route zonder stop op de Stationsstraat.",
+      "confidence": "middel"
+    },
+    {
+      "site": 21,
+      "referenceAddress": "'t Eiland 2",
+      "latitude": 52.71901,
+      "longitude": 4.73755,
+      "status": "rood",
+      "visibleSpace": "Het punt ligt in een smalle kruising van historische woonstraten. De randen bestaan uit erven, hagen, bomen en opritten; een zelfstandig openbaar bouwvlak is niet zichtbaar.",
+      "parkingTreesWaterFacades": "BGT registreert erf op 4,7 meter, een boom op 5,1 meter, heesters op 6,0 meter, een lichtmast op 6,8 meter en een gevel op 10,1 meter. Parkeren vindt plaats aan de zuidelijke straatrand.",
+      "hvcRoute": "De kronkelende, smalle straten en de kruising bieden geen overtuigend recht 12-meter-opstelvak; stilstaan zou de lokale ontsluiting blokkeren.",
+      "keyRisks": [
+        "smalle historische straatgeometrie",
+        "boom, haag en lichtmast",
+        "particuliere erfgrenzen",
+        "geen parkeervrij hijsvak"
+      ],
+      "preferredAdjustment": "Verplaats richting de gemeentelijke WH25-zone bij Molenaarweg 42 op circa 91 meter zuidoostelijk en herbereken de dekking; onderzoek of site 5 en 21 kunnen worden samengevoegd.",
+      "confidence": "hoog"
+    },
+    {
+      "site": 22,
+      "referenceAddress": "Dorpsstraat 15",
+      "latitude": 52.727714,
+      "longitude": 4.739324,
+      "status": "oranje",
+      "visibleSpace": "De zoekzone ligt op een relatief ruim meerarmig kruispunt met een groen vak en enkele parkeer- of opstelvakken. De gemeentelijke WH02-conceptpin ligt slechts 4,1 meter van het kruis.",
+      "parkingTreesWaterFacades": "BGT registreert een lichtmast op 4,0 meter, erf op 5,8 meter, een gevel op 9,2 meter, een boom op 10,1 meter, heesters op 10,2 meter en een kast op 14,4 meter. Meerdere auto's staan rondom het kruispunt.",
+      "hvcRoute": "Een groot voertuig kan de zone waarschijnlijk bereiken en verlaten, maar de opstelstrook mag niet midden op de kruising liggen en de kraan mag niet over geparkeerde auto's hijsen.",
+      "keyRisks": [
+        "kruispuntblokkade",
+        "gevel op 9,2 meter",
+        "parkeren in de hijszone",
+        "lichtmast, boom en kast"
+      ],
+      "preferredAdjustment": "Neem WH02 als voorkeurszoekpin en schuif zo nodig 4 tot 10 meter westelijk of noordwestelijk naar een vrij randvak buiten de rijlijnen; verifieer met een voertuigmal en parkeerregime.",
+      "confidence": "middel"
+    }
+  ]
+}

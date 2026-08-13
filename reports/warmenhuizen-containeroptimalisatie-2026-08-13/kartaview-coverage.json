@@ -1,0 +1,746 @@
+{
+  "generatedAt": "2026-08-13T15:36:21.165Z",
+  "source": "https://api.openstreetcam.org/2.0/photo/",
+  "note": "Openbare KartaView-beelden; visuele observaties blijven indicatief en tijdsgebonden.",
+  "sites": [
+    {
+      "site": 1,
+      "referenceAddress": "Zigt 91",
+      "latitude": 52.71804,
+      "longitude": 4.7431,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.71804&lng=4.7431&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 2,
+      "referenceAddress": "Kuipersven 36",
+      "latitude": 52.726966,
+      "longitude": 4.748411,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.726966&lng=4.748411&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 3,
+      "referenceAddress": "Goudsboer 2",
+      "latitude": 52.721107,
+      "longitude": 4.730812,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.721107&lng=4.730812&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-03-1364336625.jpg"
+      }
+    },
+    {
+      "site": 4,
+      "referenceAddress": "Leuneweg 1",
+      "latitude": 52.723389,
+      "longitude": 4.741102,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.723389&lng=4.741102&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-04-1364337153.jpg"
+      }
+    },
+    {
+      "site": 5,
+      "referenceAddress": "Molenaarweg 3",
+      "latitude": 52.719005,
+      "longitude": 4.738631,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.719005&lng=4.738631&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337129",
+        "latitude": 52.722136,
+        "longitude": 4.738008,
+        "reportedDistanceM": 0,
+        "heading": 351.39,
+        "shotDate": "2017-04-13 11:13:32.000",
+        "sequenceId": "3795681",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY4MV9jZDQ3YV82MTFhOTgxMDc3NDkyLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795681/0/track-info",
+        "localImage": "streetview/site-05-1364337129.jpg"
+      }
+    },
+    {
+      "site": 6,
+      "referenceAddress": "Rietzangerstraat 3",
+      "latitude": 52.727288,
+      "longitude": 4.740098,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.727288&lng=4.740098&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364339417",
+        "latitude": 52.726675,
+        "longitude": 4.736058,
+        "reportedDistanceM": 11.45,
+        "heading": 187.18,
+        "shotDate": "2017-04-13 11:06:08.000",
+        "sequenceId": "3795669",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY2OV8zY2IwMF82MTFhOTg5YzQ3NGE4LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795669/130/track-info",
+        "localImage": "streetview/site-06-1364339417.jpg"
+      }
+    },
+    {
+      "site": 7,
+      "referenceAddress": "Beuninge 80",
+      "latitude": 52.720613,
+      "longitude": 4.727223,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.720613&lng=4.727223&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364333981",
+        "latitude": 52.720652,
+        "longitude": 4.725973,
+        "reportedDistanceM": 13.79,
+        "heading": 3.59,
+        "shotDate": "2017-04-12 11:57:29.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV8xOWMyNF82MTFhOTc1OGNlMjE4LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/128/track-info",
+        "localImage": "streetview/site-07-1364333981.jpg"
+      }
+    },
+    {
+      "site": 8,
+      "referenceAddress": "Nachtegaalstraat 12",
+      "latitude": 52.726883,
+      "longitude": 4.7434,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.726883&lng=4.7434&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364339417",
+        "latitude": 52.726675,
+        "longitude": 4.736058,
+        "reportedDistanceM": 11.45,
+        "heading": 187.18,
+        "shotDate": "2017-04-13 11:06:08.000",
+        "sequenceId": "3795669",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY2OV8zY2IwMF82MTFhOTg5YzQ3NGE4LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795669/130/track-info",
+        "localImage": "streetview/site-08-1364339417.jpg"
+      }
+    },
+    {
+      "site": 9,
+      "referenceAddress": "Poolster 23",
+      "latitude": 52.729656,
+      "longitude": 4.75046,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.729656&lng=4.75046&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 10,
+      "referenceAddress": "Puttersakker 19",
+      "latitude": 52.722612,
+      "longitude": 4.745902,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.722612&lng=4.745902&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 11,
+      "referenceAddress": "Burg. Burgerstraat 20",
+      "latitude": 52.724953,
+      "longitude": 4.737802,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.724953&lng=4.737802&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-11-1364337153.jpg"
+      }
+    },
+    {
+      "site": 12,
+      "referenceAddress": "Oud Wulpendorp 11",
+      "latitude": 52.726561,
+      "longitude": 4.738293,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.726561&lng=4.738293&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-12-1364337153.jpg"
+      }
+    },
+    {
+      "site": 13,
+      "referenceAddress": "Verzetslaan 13",
+      "latitude": 52.719149,
+      "longitude": 4.744779,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.719149&lng=4.744779&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 14,
+      "referenceAddress": "Stationsstraat 22A",
+      "latitude": 52.722359,
+      "longitude": 4.734768,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.722359&lng=4.734768&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-14-1364336625.jpg"
+      }
+    },
+    {
+      "site": 15,
+      "referenceAddress": "Oostwal 79",
+      "latitude": 52.729332,
+      "longitude": 4.742866,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.729332&lng=4.742866&radius=500",
+      "photoCount": 2,
+      "nearest": {
+        "id": "1364337245",
+        "latitude": 52.729982,
+        "longitude": 4.737167,
+        "reportedDistanceM": 12.4,
+        "heading": 10.1,
+        "shotDate": "2017-04-12 11:59:55.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV80N2E0Zl82MTFhOTgxODA1OGM3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/250/track-info",
+        "localImage": "streetview/site-15-1364337245.jpg"
+      }
+    },
+    {
+      "site": 16,
+      "referenceAddress": "De Baan 27",
+      "latitude": 52.725414,
+      "longitude": 4.743329,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.725414&lng=4.743329&radius=500",
+      "photoCount": 2,
+      "nearest": {
+        "id": "1364337281",
+        "latitude": 52.722574,
+        "longitude": 4.737991,
+        "reportedDistanceM": 11.83,
+        "heading": 273.89,
+        "shotDate": "2017-04-13 11:12:43.000",
+        "sequenceId": "3795681",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY4MV85NDdmYV82MTFhOTgxYTI1ODlhLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795681/4/track-info",
+        "localImage": "streetview/site-16-1364337281.jpg"
+      }
+    },
+    {
+      "site": 17,
+      "referenceAddress": "De Cres 14",
+      "latitude": 52.717586,
+      "longitude": 4.731269,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.717586&lng=4.731269&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364338437",
+        "latitude": 52.717141,
+        "longitude": 4.726244,
+        "reportedDistanceM": 14.87,
+        "heading": 171.52,
+        "shotDate": "2017-04-12 13:15:12.000",
+        "sequenceId": "3795645",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY0NV8zOWVmMF82MTFhOTg2MjIwYzVjLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795645/189/track-info",
+        "localImage": "streetview/site-17-1364338437.jpg"
+      }
+    },
+    {
+      "site": 18,
+      "referenceAddress": "De Fuik 10",
+      "latitude": 52.729632,
+      "longitude": 4.738858,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.729632&lng=4.738858&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364339401",
+        "latitude": 52.726772,
+        "longitude": 4.736001,
+        "reportedDistanceM": 11.89,
+        "heading": 160.41,
+        "shotDate": "2017-04-13 11:06:06.000",
+        "sequenceId": "3795669",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY2OV8zYmE3OF82MTFhOTg5YWM3NTQ4LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795669/129/track-info",
+        "localImage": "streetview/site-18-1364339401.jpg"
+      }
+    },
+    {
+      "site": 19,
+      "referenceAddress": "Remmerdel 46",
+      "latitude": 52.724896,
+      "longitude": 4.746141,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.724896&lng=4.746141&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 20,
+      "referenceAddress": "Wonge 1",
+      "latitude": 52.722228,
+      "longitude": 4.729308,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.722228&lng=4.729308&radius=500",
+      "photoCount": 4,
+      "nearest": {
+        "id": "1364334721",
+        "latitude": 52.722323,
+        "longitude": 4.729265,
+        "reportedDistanceM": 11.38,
+        "heading": 87.69,
+        "shotDate": "2017-04-12 11:58:06.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV8zNWM4N182MTFhOTc4NjYwNDBmLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/159/track-info",
+        "localImage": "streetview/site-20-1364334721.jpg"
+      }
+    },
+    {
+      "site": 21,
+      "referenceAddress": "'t Eiland 2",
+      "latitude": 52.71901,
+      "longitude": 4.73755,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.71901&lng=4.73755&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-21-1364336625.jpg"
+      }
+    },
+    {
+      "site": 22,
+      "referenceAddress": "Dorpsstraat 15",
+      "latitude": 52.727714,
+      "longitude": 4.739324,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.727714&lng=4.739324&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364339417",
+        "latitude": 52.726675,
+        "longitude": 4.736058,
+        "reportedDistanceM": 11.45,
+        "heading": 187.18,
+        "shotDate": "2017-04-13 11:06:08.000",
+        "sequenceId": "3795669",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY2OV8zY2IwMF82MTFhOTg5YzQ3NGE4LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795669/130/track-info",
+        "localImage": "streetview/site-22-1364339417.jpg"
+      }
+    },
+    {
+      "site": 23,
+      "referenceAddress": "Pastoor Willemsestraat 98A",
+      "latitude": 52.721046,
+      "longitude": 4.74049,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.721046&lng=4.74049&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337129",
+        "latitude": 52.722136,
+        "longitude": 4.738008,
+        "reportedDistanceM": 0,
+        "heading": 351.39,
+        "shotDate": "2017-04-13 11:13:32.000",
+        "sequenceId": "3795681",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY4MV9jZDQ3YV82MTFhOTgxMDc3NDkyLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795681/0/track-info",
+        "localImage": "streetview/site-23-1364337129.jpg"
+      }
+    },
+    {
+      "site": 24,
+      "referenceAddress": "Oudevaart 87",
+      "latitude": 52.716019,
+      "longitude": 4.7281,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.716019&lng=4.7281&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364338593",
+        "latitude": 52.715916,
+        "longitude": 4.726565,
+        "reportedDistanceM": 15.28,
+        "heading": 171.61,
+        "shotDate": "2017-04-12 13:15:21.000",
+        "sequenceId": "3795645",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY0NV85NWNmMF82MTFhOTg2Yjc2MGVkLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795645/195/track-info",
+        "localImage": "streetview/site-24-1364338593.jpg"
+      }
+    },
+    {
+      "site": 25,
+      "referenceAddress": "Heerlijkheid 16",
+      "latitude": 52.726951,
+      "longitude": 4.7501,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.726951&lng=4.7501&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 26,
+      "referenceAddress": "Veilingweg 74A",
+      "latitude": 52.72325,
+      "longitude": 4.73373,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.72325&lng=4.73373&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-26-1364337153.jpg"
+      }
+    },
+    {
+      "site": 27,
+      "referenceAddress": "Bregweid 1",
+      "latitude": 52.716958,
+      "longitude": 4.733817,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.716958&lng=4.733817&radius=500",
+      "photoCount": 1,
+      "nearest": {
+        "id": "1364332501",
+        "latitude": 52.715929,
+        "longitude": 4.728165,
+        "reportedDistanceM": 10.73,
+        "heading": 173.65,
+        "shotDate": "2017-04-12 11:55:54.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV84YzU4Zl82MTFhOTcwMzcyZjhmLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/71/track-info",
+        "localImage": "streetview/site-27-1364332501.jpg"
+      }
+    },
+    {
+      "site": 28,
+      "referenceAddress": "Langedijker 13",
+      "latitude": 52.723875,
+      "longitude": 4.742236,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.723875&lng=4.742236&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-28-1364337153.jpg"
+      }
+    },
+    {
+      "site": 29,
+      "referenceAddress": "Schelphoek Zuid 32",
+      "latitude": 52.720964,
+      "longitude": 4.733879,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.720964&lng=4.733879&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-29-1364336625.jpg"
+      }
+    },
+    {
+      "site": 30,
+      "referenceAddress": "De Camper 1",
+      "latitude": 52.718727,
+      "longitude": 4.731121,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.718727&lng=4.731121&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-30-1364336625.jpg"
+      }
+    },
+    {
+      "site": 31,
+      "referenceAddress": "Dorpsstraat 140",
+      "latitude": 52.721751,
+      "longitude": 4.737998,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.721751&lng=4.737998&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337129",
+        "latitude": 52.722136,
+        "longitude": 4.738008,
+        "reportedDistanceM": 0,
+        "heading": 351.39,
+        "shotDate": "2017-04-13 11:13:32.000",
+        "sequenceId": "3795681",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY4MV9jZDQ3YV82MTFhOTgxMDc3NDkyLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795681/0/track-info",
+        "localImage": "streetview/site-31-1364337129.jpg"
+      }
+    },
+    {
+      "site": 32,
+      "referenceAddress": "De Spanakker 1",
+      "latitude": 52.727455,
+      "longitude": 4.748183,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.727455&lng=4.748183&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 33,
+      "referenceAddress": "Oostwal 63",
+      "latitude": 52.730007,
+      "longitude": 4.743017,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.730007&lng=4.743017&radius=500",
+      "photoCount": 2,
+      "nearest": {
+        "id": "1364337357",
+        "latitude": 52.730644,
+        "longitude": 4.737348,
+        "reportedDistanceM": 13,
+        "heading": 8.16,
+        "shotDate": "2017-04-12 12:00:01.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV82YTE0NV82MTFhOTgxZmFiZjJhLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/255/track-info",
+        "localImage": "streetview/site-33-1364337357.jpg"
+      }
+    },
+    {
+      "site": 34,
+      "referenceAddress": "Posthoorn 10",
+      "latitude": 52.723232,
+      "longitude": 4.736527,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.723232&lng=4.736527&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364335681",
+        "latitude": 52.723427,
+        "longitude": 4.735136,
+        "reportedDistanceM": 10.27,
+        "heading": 9.71,
+        "shotDate": "2017-04-12 11:58:54.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV9lYTQyY182MTFhOTdiYzNjY2JlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/194/track-info",
+        "localImage": "streetview/site-34-1364335681.jpg"
+      }
+    },
+    {
+      "site": 35,
+      "referenceAddress": "Oudewal 51",
+      "latitude": 52.719263,
+      "longitude": 4.726936,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.719263&lng=4.726936&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364338045",
+        "latitude": 52.719293,
+        "longitude": 4.725983,
+        "reportedDistanceM": 13.26,
+        "heading": 176.21,
+        "shotDate": "2017-04-12 13:14:55.000",
+        "sequenceId": "3795645",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY0NV83NzRkZl82MTFhOTg0OTJkZGU0LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795645/174/track-info",
+        "localImage": "streetview/site-35-1364338045.jpg"
+      }
+    },
+    {
+      "site": 36,
+      "referenceAddress": "De Fuik 14",
+      "latitude": 52.729323,
+      "longitude": 4.738286,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.729323&lng=4.738286&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364337121",
+        "latitude": 52.729437,
+        "longitude": 4.736992,
+        "reportedDistanceM": 11.87,
+        "heading": 13.43,
+        "shotDate": "2017-04-12 11:59:50.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV85ZGMxOF82MTFhOTgxMDI2YjM2LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/245/track-info",
+        "localImage": "streetview/site-36-1364337121.jpg"
+      }
+    },
+    {
+      "site": 37,
+      "referenceAddress": "Schoffel 1",
+      "latitude": 52.716676,
+      "longitude": 4.742833,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.716676&lng=4.742833&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 38,
+      "referenceAddress": "Debbemeerweg 33",
+      "latitude": 52.716574,
+      "longitude": 4.7397,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.716574&lng=4.7397&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 39,
+      "referenceAddress": "Oudewal 1",
+      "latitude": 52.719871,
+      "longitude": 4.734113,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.719871&lng=4.734113&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364336625",
+        "latitude": 52.721167,
+        "longitude": 4.737084,
+        "reportedDistanceM": 0,
+        "heading": 73.1,
+        "shotDate": "2017-04-13 11:08:27.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N18zZmI4OV82MTFhOTdmNWQ1Y2FlLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/0/track-info",
+        "localImage": "streetview/site-39-1364336625.jpg"
+      }
+    },
+    {
+      "site": 40,
+      "referenceAddress": "Torenvenplein 8",
+      "latitude": 52.725478,
+      "longitude": 4.739068,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.725478&lng=4.739068&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337153",
+        "latitude": 52.722088,
+        "longitude": 4.738005,
+        "reportedDistanceM": 10.9,
+        "heading": 357.88,
+        "shotDate": "2017-04-13 11:09:19.000",
+        "sequenceId": "3795677",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY3N182MDdkMl82MTFhOTgxMWU4OWI3LmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795677/12/track-info",
+        "localImage": "streetview/site-40-1364337153.jpg"
+      }
+    },
+    {
+      "site": 41,
+      "referenceAddress": "Baljuw 1",
+      "latitude": 52.725928,
+      "longitude": 4.75024,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.725928&lng=4.75024&radius=500",
+      "photoCount": 0,
+      "nearest": null
+    },
+    {
+      "site": 42,
+      "referenceAddress": "Oudevaart 89",
+      "latitude": 52.715879,
+      "longitude": 4.72668,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.715879&lng=4.72668&radius=500",
+      "photoCount": 3,
+      "nearest": {
+        "id": "1364332353",
+        "latitude": 52.715901,
+        "longitude": 4.726777,
+        "reportedDistanceM": 12.66,
+        "heading": 81.03,
+        "shotDate": "2017-04-12 11:55:16.000",
+        "sequenceId": "3795629",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTYyOV9mMTI5NF82MTFhOTZmYTQzMjYwLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795629/65/track-info",
+        "localImage": "streetview/site-42-1364332353.jpg"
+      }
+    },
+    {
+      "site": 43,
+      "referenceAddress": "Veilingweg 70D",
+      "latitude": 52.725182,
+      "longitude": 4.734133,
+      "queryUrl": "https://api.openstreetcam.org/2.0/photo/?lat=52.725182&lng=4.734133&radius=500",
+      "photoCount": 5,
+      "nearest": {
+        "id": "1364337929",
+        "latitude": 52.722357,
+        "longitude": 4.73409,
+        "reportedDistanceM": 10.74,
+        "heading": 272.12,
+        "shotDate": "2017-04-13 11:13:26.000",
+        "sequenceId": "3795681",
+        "imageUrl": "https://cdn.kartaview.org/pr:sharp/aHR0cHM6Ly9zdG9yYWdlMTMub3BlbnN0cmVldGNhbS5vcmcvZmlsZXMvcGhvdG8vMjAyMS84LzE2L3Byb2MvMzc5NTY4MV85NzRmNV82MTFhOTg0MmVkYTlkLmpwZw",
+        "detailsUrl": "https://kartaview.org/details/3795681/23/track-info",
+        "localImage": "streetview/site-43-1364337929.jpg"
+      }
+    }
+  ]
+}

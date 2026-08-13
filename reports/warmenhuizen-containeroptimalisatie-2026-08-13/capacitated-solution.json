@@ -1,0 +1,31 @@
+{
+  "method": "integral bipartite max-flow followed by min-cost max-flow on the reconstructed walking-distance matrix",
+  "population": 2579,
+  "maximumWalkingDistanceM": 225,
+  "scenarios": [
+    {
+      "capacityPerContainer": 100,
+      "containers": 45,
+      "additionalContainers": 2,
+      "additionalAtSites": { "1": 1, "9": 1 },
+      "meanWalkingDistanceM": 118.0,
+      "maxWalkingDistanceM": 224.9,
+      "cumulativeBands": { "within100": 960, "within150": 1795, "within200": 2428, "within225": 2579 },
+      "proof": "All 43 possible one-extra-container placements were tested and were infeasible; this two-extra placement is feasible."
+    },
+    {
+      "capacityPerContainer": 75,
+      "containers": 48,
+      "additionalContainers": 5,
+      "additionalAtSites": { "1": 2, "4": 1, "9": 1, "10": 1 },
+      "meanWalkingDistanceM": 122.0,
+      "maxWalkingDistanceM": 224.7,
+      "cumulativeBands": { "within100": 921, "within150": 1707, "within200": 2358, "within225": 2579 },
+      "proof": "All 286 three-extra distributions and 8,363 relevant four-extra distributions were infeasible under the exact max-flow cuts; this five-extra placement is feasible."
+    }
+  ],
+  "limitations": [
+    "Capacity is modeled in active address equivalents, not measured residual-waste mass or fill rate.",
+    "The exactness claim applies only to the fixed set of 43 analytical sites and the reconstructed distance matrix."
+  ]
+}

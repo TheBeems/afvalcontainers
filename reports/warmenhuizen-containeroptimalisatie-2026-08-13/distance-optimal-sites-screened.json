@@ -1,0 +1,1956 @@
+{
+  "generatedAt": "2026-08-13T15:22:34.310Z",
+  "source": "https://geoservices.noord-holland.nl/ags/rest/services/pnh_op/pnh_brk_percelen/MapServer/1/query",
+  "note": "Openbare BRK-grootgrondgebruiksscreening; geen juridische eigendomsverklaring en geen KLIC- of terreintoets.",
+  "sites": [
+    {
+      "site": 1,
+      "node": 957,
+      "latitude": 52.71804,
+      "longitude": 4.7431,
+      "street": "Zigt",
+      "referenceAddress": "Zigt 91",
+      "referenceSnapM": 13.9,
+      "assignedAddresses": 188,
+      "meanWalkingDistanceM": 126.1,
+      "p95WalkingDistanceM": 217.8,
+      "maxWalkingDistanceM": 223.2,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 3,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2723",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 2,
+      "node": 74,
+      "latitude": 52.726966,
+      "longitude": 4.748411,
+      "street": "Kuipersven",
+      "referenceAddress": "Kuipersven 36",
+      "referenceSnapM": 17.3,
+      "assignedAddresses": 96,
+      "meanWalkingDistanceM": 113,
+      "p95WalkingDistanceM": 198.3,
+      "maxWalkingDistanceM": 207.9,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I506",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I506",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1012",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00I506",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 3,
+      "node": 319,
+      "latitude": 52.721107,
+      "longitude": 4.730812,
+      "street": "Goudsboer",
+      "referenceAddress": "Goudsboer 2",
+      "referenceSnapM": 14.2,
+      "assignedAddresses": 105,
+      "meanWalkingDistanceM": 128,
+      "p95WalkingDistanceM": 191.9,
+      "maxWalkingDistanceM": 199.9,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2696",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 4,
+      "node": 651,
+      "latitude": 52.723389,
+      "longitude": 4.741102,
+      "street": "Leuneweg",
+      "referenceAddress": "Leuneweg 1",
+      "referenceSnapM": 7.8,
+      "assignedAddresses": 119,
+      "meanWalkingDistanceM": 114.5,
+      "p95WalkingDistanceM": 199.5,
+      "maxWalkingDistanceM": 207.9,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2658",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2658",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2658",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1759",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 5,
+      "node": 6,
+      "latitude": 52.719005,
+      "longitude": 4.738631,
+      "street": "Molenaarweg",
+      "referenceAddress": "Molenaarweg 3",
+      "referenceSnapM": 27.5,
+      "assignedAddresses": 118,
+      "meanWalkingDistanceM": 141.3,
+      "p95WalkingDistanceM": 178.6,
+      "maxWalkingDistanceM": 219.4,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1784",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1784",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2279",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1618",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1643",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht op gedeelte van perceel"
+        },
+        {
+          "perceelsaanduiding": "WMH00G680",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1784",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 6,
+      "node": 2796,
+      "latitude": 52.727288,
+      "longitude": 4.740098,
+      "street": "Rietzangerstraat",
+      "referenceAddress": "Rietzangerstraat 3",
+      "referenceSnapM": 14.1,
+      "assignedAddresses": 57,
+      "meanWalkingDistanceM": 128.3,
+      "p95WalkingDistanceM": 187.4,
+      "maxWalkingDistanceM": 196,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2037",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G360",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 7,
+      "node": 335,
+      "latitude": 52.720613,
+      "longitude": 4.727223,
+      "street": "Beuninge",
+      "referenceAddress": "Beuninge 80",
+      "referenceSnapM": 11.9,
+      "assignedAddresses": 111,
+      "meanWalkingDistanceM": 111.8,
+      "p95WalkingDistanceM": 182.8,
+      "maxWalkingDistanceM": 200,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2696",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2506",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2506",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2505",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 8,
+      "node": 2175,
+      "latitude": 52.726883,
+      "longitude": 4.7434,
+      "street": "Nachtegaalstraat",
+      "referenceAddress": "Nachtegaalstraat 12",
+      "referenceSnapM": 12.9,
+      "assignedAddresses": 115,
+      "meanWalkingDistanceM": 107.7,
+      "p95WalkingDistanceM": 195.7,
+      "maxWalkingDistanceM": 216.7,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2037",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 9,
+      "node": 2544,
+      "latitude": 52.729656,
+      "longitude": 4.75046,
+      "street": "Poolster",
+      "referenceAddress": "Poolster 23",
+      "referenceSnapM": 18.8,
+      "assignedAddresses": 120,
+      "meanWalkingDistanceM": 131,
+      "p95WalkingDistanceM": 212.4,
+      "maxWalkingDistanceM": 224.2,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1067",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I1067",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1067",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00I1085",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 10,
+      "node": 839,
+      "latitude": 52.722612,
+      "longitude": 4.745902,
+      "street": "Puttersakker",
+      "referenceAddress": "Puttersakker 19",
+      "referenceSnapM": 15.2,
+      "assignedAddresses": 102,
+      "meanWalkingDistanceM": 102.6,
+      "p95WalkingDistanceM": 175.6,
+      "maxWalkingDistanceM": 220.7,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I695",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I695",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I695",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 11,
+      "node": 159,
+      "latitude": 52.724953,
+      "longitude": 4.737802,
+      "street": "Burg. Burgerstraat",
+      "referenceAddress": "Burg. Burgerstraat 20",
+      "referenceSnapM": 18.1,
+      "assignedAddresses": 53,
+      "meanWalkingDistanceM": 117.5,
+      "p95WalkingDistanceM": 194.8,
+      "maxWalkingDistanceM": 200.7,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2687",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2687",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2687",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 12,
+      "node": 831,
+      "latitude": 52.726561,
+      "longitude": 4.738293,
+      "street": "Oud Wulpendorp",
+      "referenceAddress": "Oud Wulpendorp 11",
+      "referenceSnapM": 10.9,
+      "assignedAddresses": 77,
+      "meanWalkingDistanceM": 127.5,
+      "p95WalkingDistanceM": 222.9,
+      "maxWalkingDistanceM": 223.9,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1671",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1671",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1671",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2511",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2513",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1669",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 13,
+      "node": 3315,
+      "latitude": 52.719149,
+      "longitude": 4.744779,
+      "street": "Verzetslaan",
+      "referenceAddress": "Verzetslaan 13",
+      "referenceSnapM": 16,
+      "assignedAddresses": 103,
+      "meanWalkingDistanceM": 117.8,
+      "p95WalkingDistanceM": 213.2,
+      "maxWalkingDistanceM": 222.3,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2723",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 14,
+      "node": 143,
+      "latitude": 52.722359,
+      "longitude": 4.734768,
+      "street": "Stationsstraat",
+      "referenceAddress": "Stationsstraat 22A",
+      "referenceSnapM": 30.2,
+      "assignedAddresses": 26,
+      "meanWalkingDistanceM": 100.8,
+      "p95WalkingDistanceM": 169.8,
+      "maxWalkingDistanceM": 173.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2696",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00F586",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G838",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2520",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00F585",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 15,
+      "node": 2272,
+      "latitude": 52.729332,
+      "longitude": 4.742866,
+      "street": "Oostwal",
+      "referenceAddress": "Oostwal 79",
+      "referenceSnapM": 15.1,
+      "assignedAddresses": 49,
+      "meanWalkingDistanceM": 117,
+      "p95WalkingDistanceM": 204.5,
+      "maxWalkingDistanceM": 215.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1667",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1667",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1667",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 16,
+      "node": 89,
+      "latitude": 52.725414,
+      "longitude": 4.743329,
+      "street": "De Baan",
+      "referenceAddress": "De Baan 27",
+      "referenceSnapM": 20.3,
+      "assignedAddresses": 49,
+      "meanWalkingDistanceM": 113.3,
+      "p95WalkingDistanceM": 195.8,
+      "maxWalkingDistanceM": 207.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2037",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 17,
+      "node": 457,
+      "latitude": 52.717586,
+      "longitude": 4.731269,
+      "street": "De Cres",
+      "referenceAddress": "De Cres 14",
+      "referenceSnapM": 14.6,
+      "assignedAddresses": 20,
+      "meanWalkingDistanceM": 95.6,
+      "p95WalkingDistanceM": 181.4,
+      "maxWalkingDistanceM": 184.2,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1276",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00H1276",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1276",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 18,
+      "node": 679,
+      "latitude": 52.729632,
+      "longitude": 4.738858,
+      "street": "De Fuik",
+      "referenceAddress": "De Fuik 10",
+      "referenceSnapM": 10.2,
+      "assignedAddresses": 20,
+      "meanWalkingDistanceM": 119.6,
+      "p95WalkingDistanceM": 181.3,
+      "maxWalkingDistanceM": 182,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2659",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2659",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2659",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2408",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 19,
+      "node": 1458,
+      "latitude": 52.724896,
+      "longitude": 4.746141,
+      "street": "Remmerdel",
+      "referenceAddress": "Remmerdel 46",
+      "referenceSnapM": 68.4,
+      "assignedAddresses": 35,
+      "meanWalkingDistanceM": 150.7,
+      "p95WalkingDistanceM": 212.5,
+      "maxWalkingDistanceM": 224.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I381",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I381",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I381",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00I473",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 20,
+      "node": 307,
+      "latitude": 52.722228,
+      "longitude": 4.729308,
+      "street": "Wonge",
+      "referenceAddress": "Wonge 1",
+      "referenceSnapM": 17,
+      "assignedAddresses": 66,
+      "meanWalkingDistanceM": 95.5,
+      "p95WalkingDistanceM": 162.4,
+      "maxWalkingDistanceM": 189.4,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2696",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 21,
+      "node": 3,
+      "latitude": 52.71901,
+      "longitude": 4.73755,
+      "street": "'t Eiland",
+      "referenceAddress": "'t Eiland 2",
+      "referenceSnapM": 15,
+      "assignedAddresses": 77,
+      "meanWalkingDistanceM": 112.4,
+      "p95WalkingDistanceM": 173.3,
+      "maxWalkingDistanceM": 190.2,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2574",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2574",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G678",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2630",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2574",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1643",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht op gedeelte van perceel"
+        }
+      ]
+    },
+    {
+      "site": 22,
+      "node": 683,
+      "latitude": 52.727714,
+      "longitude": 4.739324,
+      "street": "Dorpsstraat",
+      "referenceAddress": "Dorpsstraat 15",
+      "referenceSnapM": 14.4,
+      "assignedAddresses": 67,
+      "meanWalkingDistanceM": 96.8,
+      "p95WalkingDistanceM": 192.1,
+      "maxWalkingDistanceM": 219.2,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1673",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1673",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1667",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2659",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1673",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1669",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 23,
+      "node": 41,
+      "latitude": 52.721046,
+      "longitude": 4.74049,
+      "street": "Pastoor Willemsestraat",
+      "referenceAddress": "Pastoor Willemsestraat 98A",
+      "referenceSnapM": 40.5,
+      "assignedAddresses": 15,
+      "meanWalkingDistanceM": 127.9,
+      "p95WalkingDistanceM": 211.7,
+      "maxWalkingDistanceM": 217,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1919",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1919",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1919",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1238",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G910",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2461",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Erfpacht (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 24,
+      "node": 454,
+      "latitude": 52.716019,
+      "longitude": 4.7281,
+      "street": "Oudevaart",
+      "referenceAddress": "Oudevaart 87",
+      "referenceSnapM": 29.4,
+      "assignedAddresses": 10,
+      "meanWalkingDistanceM": 92.8,
+      "p95WalkingDistanceM": 160.3,
+      "maxWalkingDistanceM": 170.6,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1719",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00H1719",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1719",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00H1310",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 25,
+      "node": 80,
+      "latitude": 52.726951,
+      "longitude": 4.7501,
+      "street": "Heerlijkheid",
+      "referenceAddress": "Heerlijkheid 16",
+      "referenceSnapM": 16.1,
+      "assignedAddresses": 83,
+      "meanWalkingDistanceM": 91.1,
+      "p95WalkingDistanceM": 170.2,
+      "maxWalkingDistanceM": 192.4,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1012",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I1012",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1012",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 26,
+      "node": 788,
+      "latitude": 52.72325,
+      "longitude": 4.73373,
+      "street": "Veilingweg",
+      "referenceAddress": "Veilingweg 74A",
+      "referenceSnapM": 70.7,
+      "assignedAddresses": 8,
+      "meanWalkingDistanceM": 149.3,
+      "p95WalkingDistanceM": 186.6,
+      "maxWalkingDistanceM": 188.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00F636",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00F636",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00F636",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00F636",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 27,
+      "node": 451,
+      "latitude": 52.716958,
+      "longitude": 4.733817,
+      "street": "Bregweid",
+      "referenceAddress": "Bregweid 1",
+      "referenceSnapM": 25,
+      "assignedAddresses": 15,
+      "meanWalkingDistanceM": 105.5,
+      "p95WalkingDistanceM": 142.8,
+      "maxWalkingDistanceM": 161.2,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1094",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00H1094",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1094",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 28,
+      "node": 647,
+      "latitude": 52.723875,
+      "longitude": 4.742236,
+      "street": "Langedijker",
+      "referenceAddress": "Langedijker 13",
+      "referenceSnapM": 10.3,
+      "assignedAddresses": 80,
+      "meanWalkingDistanceM": 112.7,
+      "p95WalkingDistanceM": 188.6,
+      "maxWalkingDistanceM": 206.6,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2658",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2658",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2658",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1738",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 29,
+      "node": 17,
+      "latitude": 52.720964,
+      "longitude": 4.733879,
+      "street": "Schelphoek Zuid",
+      "referenceAddress": "Schelphoek Zuid 32",
+      "referenceSnapM": 18,
+      "assignedAddresses": 71,
+      "meanWalkingDistanceM": 106,
+      "p95WalkingDistanceM": 174.9,
+      "maxWalkingDistanceM": 177.1,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G491",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G491",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2721",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G493",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2696",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1753",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G492",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G491",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G625",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 30,
+      "node": 461,
+      "latitude": 52.718727,
+      "longitude": 4.731121,
+      "street": "De Camper",
+      "referenceAddress": "De Camper 1",
+      "referenceSnapM": 16.7,
+      "assignedAddresses": 11,
+      "meanWalkingDistanceM": 132.7,
+      "p95WalkingDistanceM": 198.1,
+      "maxWalkingDistanceM": 199.7,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2664",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2664",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2664",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 31,
+      "node": 1185,
+      "latitude": 52.721751,
+      "longitude": 4.737998,
+      "street": "Dorpsstraat",
+      "referenceAddress": "Dorpsstraat 140",
+      "referenceSnapM": 11.8,
+      "assignedAddresses": 105,
+      "meanWalkingDistanceM": 130.8,
+      "p95WalkingDistanceM": 194.9,
+      "maxWalkingDistanceM": 201.9,
+      "capacityUnitsAt100": 2,
+      "capacityUnitsAt75": 2,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2401",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2401",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2401",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 32,
+      "node": 760,
+      "latitude": 52.727455,
+      "longitude": 4.748183,
+      "street": "De Spanakker",
+      "referenceAddress": "De Spanakker 1",
+      "referenceSnapM": 19.7,
+      "assignedAddresses": 38,
+      "meanWalkingDistanceM": 102.4,
+      "p95WalkingDistanceM": 176.5,
+      "maxWalkingDistanceM": 185.3,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I535",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I535",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I535",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00I506",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 33,
+      "node": 2201,
+      "latitude": 52.730007,
+      "longitude": 4.743017,
+      "street": "Oostwal",
+      "referenceAddress": "Oostwal 63",
+      "referenceSnapM": 12.8,
+      "assignedAddresses": 17,
+      "meanWalkingDistanceM": 114.1,
+      "p95WalkingDistanceM": 159.7,
+      "maxWalkingDistanceM": 185.7,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1667",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1667",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1667",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00F754",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00F604",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 34,
+      "node": 2606,
+      "latitude": 52.723232,
+      "longitude": 4.736527,
+      "street": "Posthoorn",
+      "referenceAddress": "Posthoorn 10",
+      "referenceSnapM": 11.6,
+      "assignedAddresses": 67,
+      "meanWalkingDistanceM": 143.8,
+      "p95WalkingDistanceM": 205.1,
+      "maxWalkingDistanceM": 219.3,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G1",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 35,
+      "node": 384,
+      "latitude": 52.719263,
+      "longitude": 4.726936,
+      "street": "Oudewal",
+      "referenceAddress": "Oudewal 51",
+      "referenceSnapM": 20.8,
+      "assignedAddresses": 39,
+      "meanWalkingDistanceM": 113.3,
+      "p95WalkingDistanceM": 198.5,
+      "maxWalkingDistanceM": 212.8,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G766",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G766",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G766",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2533",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2534",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        }
+      ]
+    },
+    {
+      "site": 36,
+      "node": 704,
+      "latitude": 52.729323,
+      "longitude": 4.738286,
+      "street": "De Fuik",
+      "referenceAddress": "De Fuik 14",
+      "referenceSnapM": 11.1,
+      "assignedAddresses": 2,
+      "meanWalkingDistanceM": 83.1,
+      "p95WalkingDistanceM": 157.9,
+      "maxWalkingDistanceM": 166.2,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G1200",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1200",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": false,
+      "exactMunicipalParcel": null,
+      "municipalParcelWithin25M": false,
+      "nearbyMunicipalParcels": []
+    },
+    {
+      "site": 37,
+      "node": 954,
+      "latitude": 52.716676,
+      "longitude": 4.742833,
+      "street": "Schoffel",
+      "referenceAddress": "Schoffel 1",
+      "referenceSnapM": 20.4,
+      "assignedAddresses": 59,
+      "meanWalkingDistanceM": 117,
+      "p95WalkingDistanceM": 201.3,
+      "maxWalkingDistanceM": 221.9,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G2723",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 38,
+      "node": 960,
+      "latitude": 52.716574,
+      "longitude": 4.7397,
+      "street": "Debbemeerweg",
+      "referenceAddress": "Debbemeerweg 33",
+      "referenceSnapM": 30.2,
+      "assignedAddresses": 27,
+      "meanWalkingDistanceM": 148.6,
+      "p95WalkingDistanceM": 205.9,
+      "maxWalkingDistanceM": 208.3,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I525",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I525",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I525",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00I569",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2723",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 39,
+      "node": 15,
+      "latitude": 52.719871,
+      "longitude": 4.734113,
+      "street": "Oudewal",
+      "referenceAddress": "Oudewal 1",
+      "referenceSnapM": 20.7,
+      "assignedAddresses": 51,
+      "meanWalkingDistanceM": 97.1,
+      "p95WalkingDistanceM": 186.8,
+      "maxWalkingDistanceM": 196.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G702",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00G702",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G766",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G702",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G491",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2325",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 40,
+      "node": 140,
+      "latitude": 52.725478,
+      "longitude": 4.739068,
+      "street": "Torenvenplein",
+      "referenceAddress": "Torenvenplein 8",
+      "referenceSnapM": 26.1,
+      "assignedAddresses": 54,
+      "meanWalkingDistanceM": 112.4,
+      "p95WalkingDistanceM": 202.9,
+      "maxWalkingDistanceM": 219.1,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2606",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": false,
+      "exactMunicipalParcel": null,
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00G2037",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2604",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G1673",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00G2687",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 41,
+      "node": 233,
+      "latitude": 52.725928,
+      "longitude": 4.75024,
+      "street": "Baljuw",
+      "referenceAddress": "Baljuw 1",
+      "referenceSnapM": 11.7,
+      "assignedAddresses": 52,
+      "meanWalkingDistanceM": 120.5,
+      "p95WalkingDistanceM": 173.1,
+      "maxWalkingDistanceM": 188.6,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1012",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00I1012",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00I1012",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 42,
+      "node": 1471,
+      "latitude": 52.715879,
+      "longitude": 4.72668,
+      "street": "Oudevaart",
+      "referenceAddress": "Oudevaart 89",
+      "referenceSnapM": 61.4,
+      "assignedAddresses": 1,
+      "meanWalkingDistanceM": 224.5,
+      "p95WalkingDistanceM": 224.5,
+      "maxWalkingDistanceM": 224.5,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1719",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ],
+      "exactMunicipal": true,
+      "exactMunicipalParcel": "WMH00H1719",
+      "municipalParcelWithin25M": true,
+      "nearbyMunicipalParcels": [
+        {
+          "perceelsaanduiding": "WMH00H1719",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00H1036",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00H1293",
+          "naam": "Gemeente Schagen",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        }
+      ]
+    },
+    {
+      "site": 43,
+      "node": 3280,
+      "latitude": 52.725182,
+      "longitude": 4.734133,
+      "street": "Veilingweg",
+      "referenceAddress": "Veilingweg 70D",
+      "referenceSnapM": 92.9,
+      "assignedAddresses": 1,
+      "meanWalkingDistanceM": 0,
+      "p95WalkingDistanceM": 0,
+      "maxWalkingDistanceM": 0,
+      "capacityUnitsAt100": 1,
+      "capacityUnitsAt75": 1,
+      "exactParcels": [
+        {
+          "perceelsaanduiding": "WMH00F495",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Eigendom (recht van)"
+        },
+        {
+          "perceelsaanduiding": "WMH00F495",
+          "naam": "Provincie Noord-Holland",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00F495",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Zakelijk recht als bedoeld in artikel 5, lid 3, onder b, van de Belemmeringenwet Privaatrecht"
+        },
+        {
+          "perceelsaanduiding": "WMH00F495",
+          "naam": "Anoniem",
+          "aardzakelijkrecht": "Opstalrecht Nutsvoorzieningen op gedeelte van perceel"
+        }
+      ],
+      "exactMunicipal": false,
+      "exactMunicipalParcel": null,
+      "municipalParcelWithin25M": false,
+      "nearbyMunicipalParcels": []
+    }
+  ]
+}
