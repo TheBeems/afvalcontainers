@@ -302,6 +302,7 @@
         "status": "existing"
       }
     ],
+    "hvcContainerId": "80365",
     "access": {
       "scope": "private",
       "label": "Privé Angelapark",
@@ -311,8 +312,7 @@
           "houseNumbers": "9, 131, 224"
         }
       ]
-    },
-    "hvcContainerId": "80365"
+    }
   },
   {
     "id": "WH24",
@@ -326,6 +326,7 @@
         "status": "existing"
       }
     ],
+    "hvcContainerId": "80428",
     "access": {
       "scope": "private",
       "label": "Privé Angelapark",
@@ -335,8 +336,7 @@
           "houseNumbers": "80, 82, 84, 86"
         }
       ]
-    },
-    "hvcContainerId": "80428"
+    }
   },
   {
     "id": "WH25",
@@ -479,5 +479,18 @@
       }
     ],
     "hvcContainerId": "81783"
+  },
+  {
+    "id": "WH35",
+    "address": "Kruising Oudevaart-Bregweid",
+    "lat": 52.716584,
+    "lon": 4.734056,
+    "accuracy": "handmatig bepaald (hoog, onzekerheid +/- 3m)",
+    "streams": [
+      {
+        "type": "rest",
+        "status": "new"
+      }
+    ]
   }
 ]
