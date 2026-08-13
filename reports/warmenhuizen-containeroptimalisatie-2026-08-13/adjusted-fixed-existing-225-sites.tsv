@@ -1,0 +1,36 @@
+label	id	graph_node	latitude	longitude	adjustment_status	address_reference	nearest_households	adjustment_reason
+A1	model-225-01	2201	52.730007	4.743017	retained	Oostwal 63	17	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A2	model-225-02	679	52.729632	4.738858	retained	De Fuik 10	22	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A3	model-225-03	2272	52.729332	4.742866	retained	Oostwal 79	49	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A5	model-225-05	683	52.727714	4.739324	retained	Dorpsstraat 15	67	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A6	model-225-06	760	52.727455	4.748183	retained	De Spanakker 1	38	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A7	model-225-07	2796	52.727288	4.740098	retained	Rietzangerstraat 3	33	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A9	model-225-09	2175	52.726883	4.743400	retained	Nachtegaalstraat 12	99	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A10	model-225-10	831	52.726561	4.738293	retained	Oud Wulpendorp 11	77	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A11	model-225-11	233	52.725928	4.750240	retained	Baljuw 1	62	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A12	model-225-12	89	52.725414	4.743329	retained	De Baan 27	49	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A13	model-225-13	3282	52.725436	4.734408	replacement-anchor-unverified-public-edge	Vervangingszoekzone nabij Veilingweg 70D	1	Vervangt de afgewezen pin op het private parkeerterrein; openbare grond en HVC-inpassing zijn nog niet bevestigd.
+A14	model-225-14	159	52.724953	4.737802	retained	Burg. Burgerstraat 20	53	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A15	model-225-15	1458	52.724896	4.746141	retained	Remmerdel 46	35	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A16	model-225-16	647	52.723875	4.742236	retained	Langedijker 13	97	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A17	model-225-17	788	52.723250	4.733730	retained	Veilingweg 74A	8	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A18	model-225-18	2606	52.723232	4.736527	retained	Posthoorn 10	75	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A19	model-225-19	839	52.722612	4.745902	retained	Puttersakker 19	102	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A20	model-225-20	143	52.722359	4.734768	retained	Stationsstraat 22A	26	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A21	model-225-21	307	52.722228	4.729308	retained	Wonge 1	66	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A22	model-225-22	1185	52.721751	4.737998	retained	Dorpsstraat 140	94	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A23	model-225-23	319	52.721107	4.730812	retained	Goudsboer 2	105	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A25	model-225-25	17	52.720964	4.733879	retained	Schelphoek Zuid 32	71	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A26	model-225-26	335	52.720613	4.727223	retained	Beuninge 80	111	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A27	model-225-27	15	52.719871	4.734113	retained	Oudewal 1	51	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A28	model-225-28	384	52.719263	4.726936	retained	Oudewal 51	39	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A29	model-225-29	3315	52.719149	4.744779	retained	Verzetslaan 13	78	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A30	model-225-30	3	52.719010	4.737550	retained	't Eiland 2	77	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A31	model-225-31	6	52.719005	4.738631	retained	Molenaarweg 3	79	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A32	model-225-32	461	52.718727	4.731121	retained	De Camper 1	11	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A33	model-225-33	457	52.717586	4.731269	retained	De Cres 14	20	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A34	model-225-34	451	52.716958	4.733817	retained	Bregweid 1	15	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A35	model-225-35	954	52.716676	4.742833	retained	Schoffel 1	63	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A36	model-225-36	969	52.717021	4.740205	relocated-not-reassessed	Verplaatste zoekzone noord/noordoost van Debbemeerweg 33	50	Circa 60 meter noord/noordoost verplaatst; luchtfoto, eigendom en HVC-inpassing moeten opnieuw worden beoordeeld.
+A37	model-225-37	454	52.716019	4.728100	retained	Oudevaart 87	10	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
+A38	model-225-38	1471	52.715879	4.726680	retained	Oudevaart 89	1	Ongewijzigd analytisch zoekanker uit de vaste-bestaande variant.
