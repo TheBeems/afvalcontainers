@@ -40,7 +40,7 @@ const seoBlockPattern = /  <!-- SEO_META_START -->[\s\S]*?  <!-- SEO_META_END --
 const GOOGLE_SITE_VERIFICATION = 'ES3ubYr2R7I0_Pg-HaWZvCWxyjLok_cc0ehza4pJauU';
 const DATASET_LICENSE_NAME = 'CC BY 4.0';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
-const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-07-02.json');
+const SURVEY_ANALYSIS_PATH = resolve(projectRoot, 'data/places/warmenhuizen/survey-analysis-2026-08-14.json');
 
 const ANALYSIS_HEADER_DESCRIPTIONS = {
   'Gem. afstand': 'De gemiddelde loopafstand: alle afstanden bij elkaar opgeteld en gedeeld door het aantal adressen.',
@@ -1130,11 +1130,12 @@ function renderSurveyTable(headers, rows, { className = '', minWidth = 720 } = {
 
 function renderSurveyMetrics(data) {
   const summary = data.summary;
+  const participation = data.participation;
   return `<div class="metric-grid" aria-label="Kerncijfers enquête">
       <div class="metric"><strong>${formatSurveyCount(summary.total)}</strong><span>geldige reacties</span></div>
       <div class="metric"><strong>${formatSurveyCount(summary.no)}</strong><span>Nee (${formatRatioPercent(summary.noRatio)})</span></div>
       <div class="metric"><strong>${formatSurveyCount(summary.yes)}</strong><span>Ja (${formatRatioPercent(summary.yesRatio)})</span></div>
-      <div class="metric"><strong>${formatSurveyCount(data.quality.rawRecords)}</strong><span>ruwe records voor opschoning</span></div>
+      <div class="metric"><strong>&gt;${formatRatioPercent(participation.responseRateLowerBound)}</strong><span>respons: ${formatSurveyCount(participation.respondedHouseholdsLowerBound)}+ van circa ${formatSurveyCount(participation.invitedHouseholds)} huishoudens</span></div>
     </div>`;
 }
 
@@ -1261,6 +1262,10 @@ async function buildSurveyPage(places) {
   });
   const firstBand = data.distanceBands.find((row) => row.status === 'within_100');
   const lastBand = data.distanceBands.find((row) => row.status === 'over_275');
+  const bottleneckStreetNames = new Intl.ListFormat('nl-NL', {
+    style: 'long',
+    type: 'conjunction'
+  }).format(data.distanceAndConcernBottlenecks.slice(0, 9).map((row) => row.label));
 
   return `<!DOCTYPE html>
 <html lang="nl">
@@ -1490,6 +1495,7 @@ ${seoBlock}
     <p class="status-note">Dit zijn online en papieren inzendingen tot en met ${escapeHtml(data.surveyDate)}. De pagina toont alleen samengevoegde uitkomsten; persoonsgegevens en letterlijke antwoorden zijn niet gepubliceerd.</p>
 
     ${renderSurveyMetrics(data)}
+    <p class="note">De enquête is uitgezet onder circa ${formatSurveyCount(data.participation.invitedHouseholds)} huishoudens. Volgens de verspreidingscijfers reageerden ruim ${formatSurveyCount(data.participation.respondedHouseholdsLowerBound)} huishoudens: meer dan ${formatRatioPercent(data.participation.responseRateLowerBound)}. Na controle op ongeldige en dubbele inzendingen bevat deze analyse ${formatSurveyCount(data.summary.total)} geldige reacties.</p>
 
     <section aria-labelledby="survey-main-findings">
       <h2 id="survey-main-findings">Belangrijkste bevindingen</h2>
@@ -1497,7 +1503,7 @@ ${seoBlock}
         <div class="finding"><strong>Afstand bepaalt veel van de weerstand</strong><p>Het aandeel Nee loopt op van ${formatRatioPercent(firstBand?.noRatio)} bij 0-100 meter naar ${formatRatioPercent(lastBand?.noRatio)} boven 275 meter.</p></div>
         <div class="finding"><strong>De zorg is breder dan afstand alleen</strong><p>Ouderen en mindervaliden, bijplaatsingen, stank, ongedierte en straatbeeld komen het vaakst terug in de gesloten redenen.</p></div>
         <div class="finding"><strong>Ook Ja-antwoorden zijn vaak niet zorgeloos</strong><p>Een Ja betekent meestal dat de wijziging acceptabel lijkt, maar toelichtingen noemen alsnog zorgen zoals afstand, VIOS en oud papier, straatbeeld, stank, bijplaatsingen of kosten.</p></div>
-        <div class="finding"><strong>Zorgen en afstand vallen vaak samen</strong><p>Bij onder meer Bregweid, Krankhoorn, Dorpsstraat, Fabrieksstraat, Beuninge, De Fuik, Oudevaart, 't Eiland en Burg. Burgerstraat vallen veel Nee-reacties samen met grote loopafstanden in de <a href="../analyses/">straatanalyse</a>.</p></div>
+        <div class="finding"><strong>Zorgen en afstand vallen vaak samen</strong><p>Bij onder meer ${escapeHtml(bottleneckStreetNames)} vallen veel Nee-reacties samen met grote loopafstanden in de <a href="../analyses/">straatanalyse</a>.</p></div>
       </div>
     </section>
 

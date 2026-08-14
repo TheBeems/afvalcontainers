@@ -7,8 +7,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.thematic-coding.csv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.thematic-report.md"
+DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.thematic-coding.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.thematic-report.md"
 
 THEME_LABELS = {
     "distance_or_accessibility": "Afstand en toegankelijkheid",

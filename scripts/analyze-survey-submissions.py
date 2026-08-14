@@ -8,8 +8,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.cleaned.csv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.analysis-report.md"
+DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.cleaned.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.analysis-report.md"
 
 SMALL_COUNT_THRESHOLD = 1
 TOP_LIMIT = 15

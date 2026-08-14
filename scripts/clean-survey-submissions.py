@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "data/survey/submissions_2026-05-28.csv"
+DEFAULT_INPUT = PROJECT_ROOT / "data/survey/submissions_2026-08-14.csv"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/survey/processed"
 
 SUBMISSION_ID_FIELD = "Submission ID"

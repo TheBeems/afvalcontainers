@@ -8,8 +8,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.cleaned.csv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-05-28.thematic-coding.csv"
+DEFAULT_INPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.cleaned.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.thematic-coding.csv"
 
 ACCEPTABILITY_FIELD = "Vind je de wijziging van restafval ophalen naar zelf wegbrengen acceptabel?"
 ACCEPTABLE_REASON_FIELD = "Waarom vind je de wijziging acceptabel?"

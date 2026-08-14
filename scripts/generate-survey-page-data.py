@@ -10,14 +10,16 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.cleaned.csv"
-DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.thematic-coding.csv"
-DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-07-02.quality-report.md"
+DEFAULT_CLEANED = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.cleaned.csv"
+DEFAULT_THEMATIC = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.thematic-coding.csv"
+DEFAULT_QUALITY_REPORT = PROJECT_ROOT / "data/survey/processed/submissions_2026-08-14.quality-report.md"
 DEFAULT_HOUSE_DETAILS_DIR = PROJECT_ROOT / "data/places/warmenhuizen/house-details"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-07-02.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data/places/warmenhuizen/survey-analysis-2026-08-14.json"
 
 MIN_GROUP_SIZE = 5
-DEFAULT_SURVEY_DATE = "2026-07-02"
+DEFAULT_SURVEY_DATE = "2026-08-14"
+INVITED_HOUSEHOLDS = 2100
+RESPONDED_HOUSEHOLDS_LOWER_BOUND = 850
 PLACE_ID = "warmenhuizen"
 PLACE_NAME = "Warmenhuizen"
 
@@ -485,6 +487,15 @@ def build_payload(args):
             "publishedData": "Alleen geaggregeerde tellingen, percentages, thema's en dekkingstatistieken.",
         },
         "quality": parse_quality_counts(args.quality_report),
+        "participation": {
+            "invitedHouseholds": INVITED_HOUSEHOLDS,
+            "respondedHouseholdsLowerBound": RESPONDED_HOUSEHOLDS_LOWER_BOUND,
+            "responseRateLowerBound": format_ratio(
+                RESPONDED_HOUSEHOLDS_LOWER_BOUND,
+                INVITED_HOUSEHOLDS,
+            ),
+            "basis": "Campagnecijfers van de Dorpsraad; niet afgeleid uit de survey-export.",
+        },
         "summary": acceptability_summary(cleaned_rows),
         "distanceBands": coverage_band_rows(cleaned_rows),
         "reasonFlags": reason_flag_rows(cleaned_rows),
