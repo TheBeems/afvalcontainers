@@ -1,0 +1,1155 @@
+{
+  "type": "FeatureCollection",
+  "name": "Warmenhuizen capacity-first plan, approximately 75 BAG residential address proxies per bin",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741939,
+          52.72721
+        ]
+      },
+      "properties": {
+        "id": "WH03",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Rietzangerstraat 17",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 70,
+        "screeningRating": "green-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 3.6,
+          "openSpace": 8.9,
+          "facade": 14.2,
+          "water": 181.2,
+          "tree": 6.2,
+          "obstacle": 6.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.748476,
+          52.726883
+        ]
+      },
+      "properties": {
+        "id": "WH05",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Kuipersven 36",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "green-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 3.1,
+          "openSpace": 4.3,
+          "facade": 17.9,
+          "water": 96.5,
+          "tree": 8.5,
+          "obstacle": 11
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750383,
+          52.727578
+        ]
+      },
+      "properties": {
+        "id": "WH06",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Soeverein 2",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 5.3,
+          "openSpace": 0.6,
+          "facade": 15.4,
+          "water": 5.3,
+          "tree": 36.7,
+          "obstacle": 1.6
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739056,
+          52.725435
+        ]
+      },
+      "properties": {
+        "id": "WH08",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Dorpsstraat 89",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 51,
+        "screeningRating": "orange-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 2.2,
+          "openSpace": 0,
+          "facade": 22.9,
+          "water": 81.8,
+          "tree": 5.4,
+          "obstacle": 7.1
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.740981,
+          52.722411
+        ]
+      },
+      "properties": {
+        "id": "WH14",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Doorbraak 23",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 84,
+        "screeningRating": "orange-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 3.6,
+          "openSpace": 9.9,
+          "facade": 9.5,
+          "water": 27.7,
+          "tree": 14.1,
+          "obstacle": 3
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74024,
+          52.720753
+        ]
+      },
+      "properties": {
+        "id": "WH24",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Pastoor Willemsestraat 80",
+        "sourceType": "hvc-existing-user-confirmed-public",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 44,
+        "screeningRating": "fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": null,
+          "openSpace": null,
+          "facade": null,
+          "water": null,
+          "tree": null,
+          "obstacle": null
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.741484,
+          52.718557
+        ]
+      },
+      "properties": {
+        "id": "WH26",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Regelhaalder 42",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "red-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 2.3,
+          "openSpace": 1.3,
+          "facade": 4.1,
+          "water": 91.3,
+          "tree": 6.4,
+          "obstacle": 12.4
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.743409,
+          52.718151
+        ]
+      },
+      "properties": {
+        "id": "WH27",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Zigt 97",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 1.1,
+          "openSpace": 21.1,
+          "facade": 10.7,
+          "water": 153,
+          "tree": 10.5,
+          "obstacle": 4.1
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74845,
+          52.729898
+        ]
+      },
+      "properties": {
+        "id": "WH33",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Zuiderkruis 36",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 89,
+        "screeningRating": "green-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 3.6,
+          "facade": 12.6,
+          "water": 68.4,
+          "tree": 142.1,
+          "obstacle": 10
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.750576,
+          52.730485
+        ]
+      },
+      "properties": {
+        "id": "WH34",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Poolster 25",
+        "sourceType": "hvc-existing",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": null,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 31,
+        "screeningRating": "green-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": 3.9,
+          "openSpace": 1,
+          "facade": 15.3,
+          "water": 41.9,
+          "tree": 165.9,
+          "obstacle": 11.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.731634,
+          52.721767
+        ]
+      },
+      "properties": {
+        "id": "WH18",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Schelphoek Noord 48",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "green",
+        "bgtDistancesM": {
+          "vehicleRoad": 0.4,
+          "openSpace": 1.6,
+          "facade": 18.4,
+          "water": 10.8,
+          "tree": 6.4,
+          "obstacle": 9.6
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7397849,
+          52.7198587
+        ]
+      },
+      "properties": {
+        "id": "M044",
+        "kind": "new",
+        "status": "proposed",
+        "address": "'t Jaerlinger 16",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 8.3,
+          "facade": 9.8,
+          "water": 36.2,
+          "tree": 4.9,
+          "obstacle": 4.3
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7446873,
+          52.7230779
+        ]
+      },
+      "properties": {
+        "id": "M016",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Pastoorsgroet 1",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 70,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 7.1,
+          "facade": 8.3,
+          "water": 67.7,
+          "tree": 7.3,
+          "obstacle": 8.8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.737705,
+          52.7226117
+        ]
+      },
+      "properties": {
+        "id": "M101",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Dorpsstraat 106",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 6.1,
+          "facade": 5.3,
+          "water": 101.5,
+          "tree": 9.7,
+          "obstacle": 7.3
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7273943,
+          52.7209966
+        ]
+      },
+      "properties": {
+        "id": "M004",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Dorusakker 9",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 63,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 3.2,
+          "facade": 10.7,
+          "water": 10.5,
+          "tree": 6.8,
+          "obstacle": 3.3
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7315518,
+          52.7163151
+        ]
+      },
+      "properties": {
+        "id": "M149",
+        "kind": "new",
+        "status": "proposed",
+        "address": "De Cres 1",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 1.9,
+          "facade": 14.1,
+          "water": 11.2,
+          "tree": 4.9,
+          "obstacle": 3.2
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7386021,
+          52.7277134
+        ]
+      },
+      "properties": {
+        "id": "M027",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Hartendorp 4",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 6.8,
+          "facade": 11,
+          "water": 137.7,
+          "tree": 9.2,
+          "obstacle": 3.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.73382,
+          52.720963
+        ]
+      },
+      "properties": {
+        "id": "WH19",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Zwartepad 32",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0.9,
+          "openSpace": 7.2,
+          "facade": 10.8,
+          "water": 11.7,
+          "tree": 5.2,
+          "obstacle": 4
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74332,
+          52.725356
+        ]
+      },
+      "properties": {
+        "id": "WH10",
+        "kind": "new",
+        "status": "proposed",
+        "address": "De Baan 27",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 61,
+        "screeningRating": "green",
+        "bgtDistancesM": {
+          "vehicleRoad": 3.1,
+          "openSpace": 0,
+          "facade": 21.2,
+          "water": 65.8,
+          "tree": 22.6,
+          "obstacle": 11.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7437203,
+          52.71692
+        ]
+      },
+      "properties": {
+        "id": "M020",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Zigt 28",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 1.5,
+          "facade": 8.8,
+          "water": 41.8,
+          "tree": 4.4,
+          "obstacle": 5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7460736,
+          52.7265557
+        ]
+      },
+      "properties": {
+        "id": "M093",
+        "kind": "new",
+        "status": "proposed",
+        "address": "'t Lange Weidje 1A",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 5.1,
+          "facade": 8.7,
+          "water": 81.8,
+          "tree": 9.2,
+          "obstacle": 2
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.735266,
+          52.723362
+        ]
+      },
+      "properties": {
+        "id": "WH13",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Alingterp 2",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 88,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0.1,
+          "openSpace": 1.6,
+          "facade": 27.4,
+          "water": 18.8,
+          "tree": 5.8,
+          "obstacle": 1.8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7422359,
+          52.7238747
+        ]
+      },
+      "properties": {
+        "id": "M041",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Langedijker 18",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 22.9,
+          "facade": 7.5,
+          "water": 72.1,
+          "tree": 7.9,
+          "obstacle": 7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7516221,
+          52.7258004
+        ]
+      },
+      "properties": {
+        "id": "M134",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Baljuw 14",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 72,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 23.7,
+          "facade": 5.1,
+          "water": 14,
+          "tree": 7.4,
+          "obstacle": 7.2
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7371967,
+          52.725945
+        ]
+      },
+      "properties": {
+        "id": "M018",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Vierhuizen 5",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 61,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 5.5,
+          "facade": 9.9,
+          "water": 32.4,
+          "tree": 12.8,
+          "obstacle": 5.8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7290946,
+          52.7206833
+        ]
+      },
+      "properties": {
+        "id": "M100",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Beuninge 31",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 84,
+        "screeningRating": "green",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 3.5,
+          "facade": 12,
+          "water": 36.2,
+          "tree": 8,
+          "obstacle": 5.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.729399,
+          52.7195656
+        ]
+      },
+      "properties": {
+        "id": "M024",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Oudewal 29",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 8.7,
+          "facade": 11.9,
+          "water": 134.7,
+          "tree": 4.1,
+          "obstacle": 6.1
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7451624,
+          52.7185154
+        ]
+      },
+      "properties": {
+        "id": "M051",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Zigt 2",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 73,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 4.5,
+          "facade": 9.1,
+          "water": 34.5,
+          "tree": 11.7,
+          "obstacle": 2.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739241,
+          52.71779
+        ]
+      },
+      "properties": {
+        "id": "WH30",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Molenaarweg 1",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 1.9,
+          "openSpace": 0,
+          "facade": 33.5,
+          "water": 8.6,
+          "tree": 5.5,
+          "obstacle": 6.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.739284,
+          52.727742
+        ]
+      },
+      "properties": {
+        "id": "WH02",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Dorpsstraat 13",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 12.7,
+          "facade": 11.9,
+          "water": 151.9,
+          "tree": 11,
+          "obstacle": 3.1
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7354065,
+          52.7219446
+        ]
+      },
+      "properties": {
+        "id": "M045",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Krankhoorn 37",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 73,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 21.7,
+          "facade": 5.3,
+          "water": 8.4,
+          "tree": 25.1,
+          "obstacle": 36.5
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74644,
+          52.722146
+        ]
+      },
+      "properties": {
+        "id": "WH12",
+        "kind": "new",
+        "status": "proposed",
+        "address": "De Negen Geerzen 29",
+        "sourceType": "municipal-concept",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "green",
+        "bgtDistancesM": {
+          "vehicleRoad": 1.2,
+          "openSpace": 0,
+          "facade": 22.4,
+          "water": 29.4,
+          "tree": 11.2,
+          "obstacle": 8
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7410458,
+          52.7255628
+        ]
+      },
+      "properties": {
+        "id": "M094",
+        "kind": "new",
+        "status": "proposed",
+        "address": "De Baan 13",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 60,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 16.8,
+          "facade": 10,
+          "water": 53.7,
+          "tree": 23.2,
+          "obstacle": 7.7
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7282832,
+          52.721757
+        ]
+      },
+      "properties": {
+        "id": "M104",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Wonge 36",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 65,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 6,
+          "facade": 7,
+          "water": 73,
+          "tree": 10.6,
+          "obstacle": 3.9
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7433291,
+          52.7285395
+        ]
+      },
+      "properties": {
+        "id": "M157",
+        "kind": "new",
+        "status": "proposed",
+        "address": "Dergmeerweg 65",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumPolicyLoad": 60,
+        "maximumPolicyLoad": 90,
+        "assignedHouseholds": 87,
+        "screeningRating": "orange",
+        "bgtDistancesM": {
+          "vehicleRoad": 0,
+          "openSpace": 9.5,
+          "facade": 11.1,
+          "water": 13.6,
+          "tree": 12.3,
+          "obstacle": 4.2
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.738551,
+          52.720329
+        ]
+      },
+      "properties": {
+        "id": "WH23",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Molenaarsweg 7",
+        "hvcContainerId": "80365",
+        "sourceType": "hvc-existing-private",
+        "accessScope": "private",
+        "accessLabel": "Privé Angelapark",
+        "allowedAddresses": [
+          {
+            "street": "Pastoor Willemsestraat",
+            "houseNumbers": "9, 131, 224"
+          }
+        ],
+        "capacityUnits": 1,
+        "assignedHouseholds": 3,
+        "screeningRating": "private-fixed"
+      }
+    }
+  ]
+}
