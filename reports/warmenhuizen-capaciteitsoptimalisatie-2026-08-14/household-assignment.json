@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-14T09:41:29.574Z",
+  "generatedAt": "2026-08-14T09:50:25.083Z",
   "scenario": {
     "scenarioType": "capacity-first-fixed-existing-wh24-public",
     "targetHouseholdsPerContainer": 75,
@@ -34602,7 +34602,7 @@
     "formulation": "capacitated facility-location / p-median with fixed existing facilities and binary unique household assignment",
     "objectives": [
       "retain all 11 existing physical containers at their exact input coordinates",
-      "use the arithmetic minimum of 25 new public containers for an average close to 75",
+      "fix 25 new public containers from the policy target of an average close to 75",
       "minimize total pedestrian-network distance under the 60-90 new-location policy band",
       "report p95, maximum and repository distance bands as fairness diagnostics"
     ],

@@ -235,7 +235,7 @@ const blocks = [
 
 Behoud alle **11 bestaande** containers exact. Maak **WH24 openbaar** en houd alleen WH23 privé voor drie adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 35 openbaar. De 2.576 openbare BAG-woonadresproxies geven gemiddeld **73,6 adressen per openbare container**.
 
-De ondergrens is exact: \`ceil(2.576 / 75) = 35\` openbaar. De 25 nieuwe locaties hebben ieder 60–90 toegewezen adressen. Dit is de beste gevonden lokale locatieoplossing, niet een mondiaal optimaliteitsbewijs.`
+Het beleidsmatige doelaantal is: \`ceil(2.576 / 75) = 35\` openbaar. De 35 openbare containers geven gemiddeld 73,6 adressen; de 25 nieuwe locaties hebben ieder 60–90 toegewezen adressen. Dit is de beste gevonden lokale locatieoplossing, niet een mondiaal optimaliteitsbewijs.`
   },
   { id: 'scenario_table_block', type: 'table', tableId: 'scenario_table' },
   { id: 'distance_chart_block', type: 'chart', chartId: 'distance_comparison' },

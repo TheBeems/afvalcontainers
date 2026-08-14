@@ -32,9 +32,9 @@ const sourceById = new Map(sourceContainers.map((container) => [container.id, co
 assert(plan.decision.existingPhysicalContainersRetained === 11, 'Exactly 11 existing physical containers must remain.');
 assert(plan.decision.existingPublicContainers === 10, 'WH24 change should produce 10 public existing locations.');
 assert(plan.decision.existingPrivateContainers === 1, 'Only WH23 should remain private.');
-assert(plan.decision.newPublicContainers === 25, 'Arithmetic minimum should be 25 new public containers.');
+assert(plan.decision.newPublicContainers === 25, 'Target-75 scenario should use 25 new public containers.');
 assert(plan.decision.totalPhysicalContainers === 36, 'Expected 36 total physical containers.');
-assert(plan.decision.strict75ArithmeticLowerBound.requiredNewPublicContainers === 25, 'Strict-75 lower bound differs.');
+assert(plan.decision.target75ContainerCount.requiredNewPublicContainers === 25, 'Target-75 container count differs.');
 
 assert(assignments.houses.length === sourceCoverage.houses.length, 'Assignment count differs from BAG coverage.');
 assert(new Set(assignments.houses.map(({ houseId }) => houseId)).size === sourceCoverage.houses.length, 'Assignments are not unique by house ID.');

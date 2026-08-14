@@ -5,7 +5,7 @@
     "surface": "report",
     "title": "Warmenhuizen: circa 75 huishoudens per restcontainer",
     "description": "Brononderbouwd capaciteitsplan met WH24 openbaar, 11 bestaande en 25 nieuwe restcontainers.",
-    "generatedAt": "2026-08-14T09:41:29.774Z",
+    "generatedAt": "2026-08-14T09:50:25.208Z",
     "charts": [
       {
         "id": "distance_comparison",
@@ -19,7 +19,7 @@
           "query": {
             "description": "Afgeleid uit capacity-plan.json.",
             "sql": "WITH source(\"label\", \"gemiddeld_m\", \"p95_m\") AS (\n  VALUES\n  ('Gemeente', 178.741, 371.2),\n  ('Advies', 141.616, 288.5)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "encodings": {
@@ -62,7 +62,7 @@
           "query": {
             "description": "Afgeleid uit de capaciteitsassignments.",
             "sql": "WITH source(\"band\", \"gemeente\", \"advies\") AS (\n  VALUES\n  ('0–100 m', 578, 905),\n  ('100–125 m', 283, 343),\n  ('125–150 m', 340, 330),\n  ('150–275 m', 978, 841),\n  ('>275 m', 397, 157)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "encodings": {
@@ -105,7 +105,7 @@
           "query": {
             "description": "Geteld uit location-screening.json.",
             "sql": "WITH source(\"band\", \"aantal\") AS (\n  VALUES\n  ('60–74', 14),\n  ('75–89', 3),\n  ('90', 8)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "encodings": {
@@ -142,7 +142,7 @@
           "query": {
             "description": "Afgeleid uit capacity-plan.json.",
             "sql": "WITH source(\"scenario\", \"label\", \"openbare_locaties\", \"nieuwe_locaties\", \"gemiddeld_adressen\", \"gemiddeld_m\", \"p95_m\", \"maximum_m\", \"boven_275\", \"totale_loopafstand_m\") AS (\n  VALUES\n  ('Gemeentelijke restvoorstellen', 'Gemeente', 31, 21, 83.097, 178.741, 371.2, 689.9, 397, 460436.9),\n  ('Capaciteitsplan met WH24 openbaar', 'Advies', 35, 25, 73.6, 141.616, 288.5, 776, 157, 364802.2)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "columns": [
@@ -196,7 +196,7 @@
           "query": {
             "description": "Afgeleid uit location-screening.json.",
             "sql": "WITH source(\"id\", \"adresreferentie\", \"bron\", \"latitude\", \"longitude\", \"adressen\", \"bureauscreen\", \"status\") AS (\n  VALUES\n  ('WH18', 'Schelphoek Noord 48', 'gemeentelijk concept', 52.721767, 4.731634, 90, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M044', '''t Jaerlinger 16', 'eigen zoekanker', 52.7198587, 4.7397849, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M016', 'Pastoorsgroet 1', 'eigen zoekanker', 52.7230779, 4.7446873, 70, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M101', 'Dorpsstraat 106', 'eigen zoekanker', 52.7226117, 4.737705, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M004', 'Dorusakker 9', 'eigen zoekanker', 52.7209966, 4.7273943, 63, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M149', 'De Cres 1', 'eigen zoekanker', 52.7163151, 4.7315518, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M027', 'Hartendorp 4', 'eigen zoekanker', 52.7277134, 4.7386021, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH19', 'Zwartepad 32', 'gemeentelijk concept', 52.720963, 4.73382, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH10', 'De Baan 27', 'gemeentelijk concept', 52.725356, 4.74332, 61, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M020', 'Zigt 28', 'eigen zoekanker', 52.71692, 4.7437203, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M093', '''t Lange Weidje 1A', 'eigen zoekanker', 52.7265557, 4.7460736, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH13', 'Alingterp 2', 'gemeentelijk concept', 52.723362, 4.735266, 88, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M041', 'Langedijker 18', 'eigen zoekanker', 52.7238747, 4.7422359, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M134', 'Baljuw 14', 'eigen zoekanker', 52.7258004, 4.7516221, 72, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M018', 'Vierhuizen 5', 'eigen zoekanker', 52.725945, 4.7371967, 61, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M100', 'Beuninge 31', 'eigen zoekanker', 52.7206833, 4.7290946, 84, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M024', 'Oudewal 29', 'eigen zoekanker', 52.7195656, 4.729399, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M051', 'Zigt 2', 'eigen zoekanker', 52.7185154, 4.7451624, 73, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH30', 'Molenaarweg 1', 'gemeentelijk concept', 52.71779, 4.739241, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH02', 'Dorpsstraat 13', 'gemeentelijk concept', 52.727742, 4.739284, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M045', 'Krankhoorn 37', 'eigen zoekanker', 52.7219446, 4.7354065, 73, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH12', 'De Negen Geerzen 29', 'gemeentelijk concept', 52.722146, 4.74644, 60, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M094', 'De Baan 13', 'eigen zoekanker', 52.7255628, 4.7410458, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M104', 'Wonge 36', 'eigen zoekanker', 52.721757, 4.7282832, 65, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M157', 'Dergmeerweg 65', 'eigen zoekanker', 52.7285395, 4.7433291, 87, 'orange', 'lokale verschuiving/conflictcontrole nodig')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "columns": [
@@ -244,7 +244,7 @@
           "query": {
             "description": "Afgeleid uit location-screening.json.",
             "sql": "WITH source(\"id\", \"toegang\", \"adres\", \"adressen\", \"bureauscreen\", \"besluit\") AS (\n  VALUES\n  ('WH03', 'openbaar', 'Rietzangerstraat 17', 70, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH05', 'openbaar', 'Kuipersven 36', 90, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH06', 'openbaar', 'Soeverein 2', 60, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH08', 'openbaar', 'Dorpsstraat 89', 51, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH14', 'openbaar', 'Doorbraak 23', 84, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH24', 'openbaar', 'Pastoor Willemsestraat 80', 44, 'fixed', 'openbaar volgens expliciete scenarioaanname'),\n  ('WH26', 'openbaar', 'Regelhaalder 42', 90, 'red-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH27', 'openbaar', 'Zigt 97', 90, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH33', 'openbaar', 'Zuiderkruis 36', 89, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH34', 'openbaar', 'Poolster 25', 31, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH23', 'privé', 'Molenaarsweg 7', 3, 'private-fixed', 'bestaand; exacte locatie behouden')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "columns": [
@@ -292,7 +292,7 @@
           "query": {
             "description": "Methodische vertaling van Nevrlý et al.",
             "sql": "WITH source(\"criterium\", \"artikel\", \"toepassing\", \"grens\") AS (\n  VALUES\n  ('Loopafstand', 'volumegewogen afstand', 'één BAG-woonadresproxy, voetgangersnetwerkafstand', '275 m alleen rapportage'),\n  ('Aantal punten/bakken', 'aantal inzamelpunten en containertype', 'minimum 25 nieuwe openbare fysieke bakken', '35 openbaar + WH23 privé'),\n  ('Capaciteit', 'volume, frequentie en benutting', 'beleidsproxy 60–90 adressen per nieuwe bak', 'geen liter-/kilogrambewijs'),\n  ('Servicetijd', 'voertuigservicetijd', 'alleen BGT/OSM/orthofoto-voorselectie', 'HVC-ritten en stoptijden ontbreken'),\n  ('Kosten', 'aanschafkosten', 'sunk bestaande locaties; nieuwe aantallen geminimaliseerd', 'lokale civiele en beheerkosten ontbreken')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:41:29.774Z"
+            "executed_at": "2026-08-14T09:50:25.208Z"
           }
         },
         "columns": [
@@ -402,7 +402,7 @@
       {
         "id": "summary",
         "type": "markdown",
-        "body": "## Advies\n\nBehoud alle **11 bestaande** containers exact. Maak **WH24 openbaar** en houd alleen WH23 privé voor drie adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 35 openbaar. De 2.576 openbare BAG-woonadresproxies geven gemiddeld **73,6 adressen per openbare container**.\n\nDe ondergrens is exact: `ceil(2.576 / 75) = 35` openbaar. De 25 nieuwe locaties hebben ieder 60–90 toegewezen adressen. Dit is de beste gevonden lokale locatieoplossing, niet een mondiaal optimaliteitsbewijs."
+        "body": "## Advies\n\nBehoud alle **11 bestaande** containers exact. Maak **WH24 openbaar** en houd alleen WH23 privé voor drie adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 35 openbaar. De 2.576 openbare BAG-woonadresproxies geven gemiddeld **73,6 adressen per openbare container**.\n\nHet beleidsmatige doelaantal is: `ceil(2.576 / 75) = 35` openbaar. De 35 openbare containers geven gemiddeld 73,6 adressen; de 25 nieuwe locaties hebben ieder 60–90 toegewezen adressen. Dit is de beste gevonden lokale locatieoplossing, niet een mondiaal optimaliteitsbewijs."
       },
       {
         "id": "scenario_table_block",
@@ -473,7 +473,7 @@
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-14T09:41:29.774Z",
+    "generatedAt": "2026-08-14T09:50:25.208Z",
     "status": "ready",
     "datasets": {
       "scenarios": [

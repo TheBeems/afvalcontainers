@@ -341,7 +341,7 @@ const plan = {
     privateAllowlistedAddressProxies: privateAssignmentRows.length,
     targetHouseholdsPerContainer: TARGET,
     interpretation: 'Approximately 75: each new public site is assigned 60-90 BAG residential address proxies; fixed public sites are not forced to an artificial minimum and have a 90-proxy ceiling.',
-    strict75ArithmeticLowerBound: {
+    target75ContainerCount: {
       requiredPublicContainers: Math.ceil(publicIndexes.length / TARGET),
       requiredNewPublicContainers: Math.ceil(publicIndexes.length / TARGET) - FIXED_PUBLIC_IDS.length,
       totalIncludingOnePrivateContainer: Math.ceil(publicIndexes.length / TARGET) + 1
@@ -380,7 +380,7 @@ const plan = {
     formulation: 'capacitated facility-location / p-median with fixed existing facilities and binary unique household assignment',
     objectives: [
       'retain all 11 existing physical containers at their exact input coordinates',
-      'use the arithmetic minimum of 25 new public containers for an average close to 75',
+      'fix 25 new public containers from the policy target of an average close to 75',
       'minimize total pedestrian-network distance under the 60-90 new-location policy band',
       'report p95, maximum and repository distance bands as fairness diagnostics'
     ],

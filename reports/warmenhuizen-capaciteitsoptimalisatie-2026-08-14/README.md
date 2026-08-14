@@ -5,7 +5,7 @@ Status: zelfstandig onderzoeksadvies; zoekzones, geen uitvoeringsontwerp
 
 ## Advies in het kort
 
-Mijn capaciteitsminimale voorstel bestaat uit **36 fysieke restcontainers**:
+Mijn op het 75-doel gestuurde voorstel bestaat uit **36 fysieke restcontainers**:
 
 - alle **11 bestaande containers blijven exact staan**;
 - **WH24 is openbaar**, conform de expliciete scenarioaanname;
@@ -14,11 +14,11 @@ Mijn capaciteitsminimale voorstel bestaat uit **36 fysieke restcontainers**:
 - de openbare vraag van 2.576 BAG-woonadresproxies wordt dus over 35 openbare containers verdeeld: gemiddeld **73,6 adressen per container**;
 - iedere nieuwe locatie krijgt in de modeltoewijzing **60 tot en met 90 adressen**. Dat is de gekozen interpretatie van “ongeveer 75”.
 
-De rekenkundige ondergrens is exact:
+Het beleidsmatige doelaantal is:
 
 `ceil(2.576 / 75) = 35 openbare containers`
 
-Omdat tien bestaande containers openbaar zijn, zijn minimaal **25 nieuwe openbare containers** nodig. Met de ene private container WH23 komt het totaal op **36**. Dit ondergrensbewijs zegt alleen iets over aantallen; de locaties en toewijzing zijn daarna op loopafstand gekozen.
+Met tien bestaande containers openbaar kiest dit scenario **25 nieuwe openbare containers**. Met de ene private container WH23 komt het totaal op **36**. Deze rekensleutel fixeert alleen het beleidsmatige aantal; de locaties en toewijzing zijn daarna op loopafstand gekozen.
 
 De [interactieve overzichtskaart](overview-map.html) en [statische SVG-kaart](overview-map.svg) gebruiken exact de bestaande repositorykleuren:
 
@@ -121,7 +121,7 @@ Voor Warmenhuizen is de methode als volgt aangepast:
 - “75 huishoudens” is als adresproxycapaciteit gemodelleerd, niet als liter- of kilogramcapaciteit;
 - echte voetgangersnetwerkafstand vervangt hemelsbrede afstand;
 - WH23 heeft uitsluitend allowlist-randen; WH24 heeft na de scenarioaanpassing openbare randen;
-- eerst wordt het minimumaantal nieuwe bakken bepaald, daarna de totale loopafstand;
+- eerst wordt het beleidsmatige doelaantal containers vastgelegd, daarna wordt de totale loopafstand geminimaliseerd;
 - P95, maximum en afstandskleuren worden apart gerapporteerd om uitschieters niet te verbergen.
 
 Het resultaat is een capacitated facility-location/p-median-variant. De capaciteitsmatching voor de gekozen locaties is deterministisch en tot 0,01 m auction-epsilon opgelost. De locatiekeuze gebruikt een BGT-bewuste greedy/medoïde lokale zoekgang en een volledige leave-one-out-herberekening na de WH24-wijziging. Dit is de **beste gevonden lokale oplossing**, geen bewijs van mondiaal MILP-optimum.
@@ -130,7 +130,7 @@ De studie bevat geen universele 275-meterregel. De 200-metergrens en benuttingsp
 
 ## Loopafstand en uitschieters
 
-Het minimaliseren van het minimumaantal bakken en de somafstand laat bewust nog 157 openbare adressen boven 275 m. De grootste groepen liggen aan Dorpsstraat, Fabrieksstraat, De Fuik, Oostwal, Oudevaart en Oudewal. De langste berekende route is Debbemeerweg 39 naar M149: 776 m. Daarna volgen onder meer Oudewal 59–75 en Oudevaart 67.
+Het fixeren van het 75-doelaantal en het minimaliseren van de somafstand laat bewust nog 157 openbare adressen boven 275 m. De grootste groepen liggen aan Dorpsstraat, Fabrieksstraat, De Fuik, Oostwal, Oudevaart en Oudewal. De langste berekende route is Debbemeerweg 39 naar M149: 776 m. Daarna volgen onder meer Oudewal 59–75 en Oudevaart 67.
 
 Dit is geen fout ten opzichte van de opdracht: 275 m is geen harde grens en extra dunbezette bakken zouden de gemiddelde belasting onder het gekozen 75-doel drukken. Voor een bestuurlijke gelijkheidsvariant adviseer ik wel één aanvullende bouwbare corridorzone rond **Oudevaart 67–89/Oudewal 59–75** afzonderlijk te onderzoeken. Die variant moet opnieuw met capaciteit worden doorgerekend; de exacte huidige pinnen daar zijn nog niet bouwkundig vrijgegeven.
 

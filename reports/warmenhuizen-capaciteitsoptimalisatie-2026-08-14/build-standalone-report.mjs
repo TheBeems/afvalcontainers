@@ -185,7 +185,7 @@ const html = `<!doctype html>
     <section>
       <h2>Advies</h2>
       <p class="lead">Behoud alle elf bestaande containers exact. Maak WH24 openbaar en houd alleen WH23 privé voor Pastoor Willemsestraat 9, 131 en 224. Plaats 25 nieuwe openbare containers, zodat 2.576 openbare BAG-woonadresproxies over 35 openbare bakken worden verdeeld.</p>
-      <p class="callout"><strong>Ondergrens:</strong> ceil(2.576 / 75) = 35 openbare bakken. Met tien bestaande openbare bakken zijn 25 nieuwe nodig. Inclusief WH23 privé zijn dat 36 fysieke bakken.</p>
+      <p class="callout"><strong>Doelaantal:</strong> ceil(2.576 / 75) = 35 openbare bakken. Met tien bestaande openbare bakken kiest dit scenario 25 nieuwe. Inclusief WH23 privé zijn dat 36 fysieke bakken.</p>
       <p>Iedere nieuwe locatie krijgt 60–90 adressen; bestaande locaties krijgen geen kunstmatig minimum. De 275 meter is alleen een kwaliteitskleur, geen harde restrictie.</p>
     </section>
     <section>
