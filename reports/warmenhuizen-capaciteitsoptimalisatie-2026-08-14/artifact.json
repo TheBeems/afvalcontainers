@@ -3,14 +3,14 @@
   "manifest": {
     "version": 1,
     "surface": "report",
-    "title": "Warmenhuizen: circa 75 huishoudens per restcontainer",
-    "description": "Brononderbouwd capaciteitsplan met WH24 openbaar, 11 bestaande en 25 nieuwe restcontainers.",
-    "generatedAt": "2026-08-14T09:50:25.208Z",
+    "title": "Warmenhuizen: circa 75 huishoudens per openbare restcontainer",
+    "description": "Brononderbouwd capaciteitsplan met 11 bestaande, twee private allowlists en 25 nieuwe openbare restcontainers.",
+    "generatedAt": "2026-08-14T11:34:59.041Z",
     "charts": [
       {
         "id": "distance_comparison",
-        "title": "Het advies verkort gemiddelde en P95-loopafstand",
-        "subtitle": "Zelfde 2.576 openbare BAG-woonadresproxies, voetgangersmatrix en capaciteitsband.",
+        "title": "Capaciteitsgebalanceerde modelafstand",
+        "subtitle": "Exclusieve toewijzing van dezelfde 2.572 openbare BAG-woonadresproxies; advies heeft vier openbare locaties meer.",
         "type": "bar",
         "dataset": "scenarios",
         "source": {
@@ -18,8 +18,8 @@
           "label": "Afstandsvergelijking",
           "query": {
             "description": "Afgeleid uit capacity-plan.json.",
-            "sql": "WITH source(\"label\", \"gemiddeld_m\", \"p95_m\") AS (\n  VALUES\n  ('Gemeente', 178.741, 371.2),\n  ('Advies', 141.616, 288.5)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "sql": "WITH source(\"label\", \"toegewezen_gemiddeld_m\", \"toegewezen_p95_m\") AS (\n  VALUES\n  ('Gemeente', 186.499, 407.7),\n  ('Advies', 143.185, 301.6)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "encodings": {
@@ -30,20 +30,20 @@
           },
           "y": {
             "fields": [
-              "gemiddeld_m",
-              "p95_m"
+              "toegewezen_gemiddeld_m",
+              "toegewezen_p95_m"
             ],
             "type": "quantitative",
-            "label": "Loopafstand (m)"
+            "label": "Geschatte loopafstand (m)"
           },
           "tooltip": [
             {
-              "field": "gemiddeld_m",
+              "field": "toegewezen_gemiddeld_m",
               "type": "quantitative",
               "label": "Gemiddeld (m)"
             },
             {
-              "field": "p95_m",
+              "field": "toegewezen_p95_m",
               "type": "quantitative",
               "label": "P95 (m)"
             }
@@ -52,8 +52,8 @@
       },
       {
         "id": "distance_bands",
-        "title": "Afstandskleuren verschuiven naar kortere routes",
-        "subtitle": "275 meter is een rapportageband, geen harde optimalisatiegrens.",
+        "title": "Capaciteitsgebalanceerde afstandsbanden",
+        "subtitle": "Binnen dit model is 275 meter een rapportageband, geen optimalisatiegrens.",
         "type": "bar",
         "dataset": "distance_bands",
         "source": {
@@ -61,15 +61,15 @@
           "label": "Afstandsbanden",
           "query": {
             "description": "Afgeleid uit de capaciteitsassignments.",
-            "sql": "WITH source(\"band\", \"gemeente\", \"advies\") AS (\n  VALUES\n  ('0–100 m', 578, 905),\n  ('100–125 m', 283, 343),\n  ('125–150 m', 340, 330),\n  ('150–275 m', 978, 841),\n  ('>275 m', 397, 157)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "sql": "WITH source(\"band\", \"gemeente\", \"advies\") AS (\n  VALUES\n  ('0–100 m', 571, 899),\n  ('>100–125 m', 278, 337),\n  ('>125–150 m', 340, 332),\n  ('>150–275 m', 911, 828),\n  ('>275 m', 472, 176)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "encodings": {
           "x": {
             "field": "band",
             "type": "nominal",
-            "label": "Loopafstand"
+            "label": "Geschatte loopafstand"
           },
           "y": {
             "fields": [
@@ -95,17 +95,17 @@
       },
       {
         "id": "new_loads",
-        "title": "Nieuwe locaties liggen rond het doel van 75",
-        "subtitle": "Verdeling van de 25 nieuwe bakken binnen de beleidsband 60–90.",
+        "title": "Nieuwe locaties rond het zachte doel 75",
+        "subtitle": "Verdeling van 25 nieuwe bakken binnen de gekozen modelband 60–90.",
         "type": "bar",
         "dataset": "load_distribution",
         "source": {
           "id": "new_loads_sql",
           "label": "Belastingsbanden nieuwe locaties",
           "query": {
-            "description": "Geteld uit location-screening.json.",
-            "sql": "WITH source(\"band\", \"aantal\") AS (\n  VALUES\n  ('60–74', 14),\n  ('75–89', 3),\n  ('90', 8)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "description": "Geteld uit capacity-plan.json.",
+            "sql": "WITH source(\"band\", \"aantal\") AS (\n  VALUES\n  ('60–74', 12),\n  ('75–89', 4),\n  ('90', 9)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "encodings": {
@@ -132,8 +132,8 @@
     "tables": [
       {
         "id": "scenario_table",
-        "title": "Gelijke modelvergelijking",
-        "subtitle": "WH24 is in beide scenario’s openbaar; WH23 blijft privé.",
+        "title": "Twee interpretaties naast elkaar",
+        "subtitle": "WH23 en WH24 blijven in beide scenario’s privé; afstand is geschat over dezelfde lokale OSM-graaf.",
         "dataset": "scenarios",
         "density": "dense",
         "source": {
@@ -141,8 +141,8 @@
           "label": "Scenario-KPI’s",
           "query": {
             "description": "Afgeleid uit capacity-plan.json.",
-            "sql": "WITH source(\"scenario\", \"label\", \"openbare_locaties\", \"nieuwe_locaties\", \"gemiddeld_adressen\", \"gemiddeld_m\", \"p95_m\", \"maximum_m\", \"boven_275\", \"totale_loopafstand_m\") AS (\n  VALUES\n  ('Gemeentelijke restvoorstellen', 'Gemeente', 31, 21, 83.097, 178.741, 371.2, 689.9, 397, 460436.9),\n  ('Capaciteitsplan met WH24 openbaar', 'Advies', 35, 25, 73.6, 141.616, 288.5, 776, 157, 364802.2)\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "sql": "WITH source(\"scenario\", \"label\", \"openbare_locaties\", \"nieuwe_locaties\", \"gemiddeld_adressen\", \"toegewezen_gemiddeld_m\", \"toegewezen_p95_m\", \"toegewezen_boven_275\", \"dichtstbij_gemiddeld_m\", \"dichtstbij_p95_m\", \"dichtstbij_boven_275\") AS (\n  VALUES\n  ('Gemeentelijke restvoorstellen', 'Gemeente', 30, 21, 85.733, 186.499, 407.7, 472, 165.914, 326.5, 286),\n  ('Capaciteitsplan met private toegang behouden', 'Advies', 34, 25, 75.647, 143.185, 301.6, 176, 136.871, 280, 132)\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "columns": [
@@ -165,20 +165,26 @@
             "sizing": "content"
           },
           {
-            "field": "gemiddeld_m",
-            "label": "Gem. m",
+            "field": "toegewezen_gemiddeld_m",
+            "label": "Toegewezen gem. m",
             "type": "number",
             "sizing": "content"
           },
           {
-            "field": "p95_m",
-            "label": "P95 m",
+            "field": "toegewezen_p95_m",
+            "label": "Toegewezen P95 m",
             "type": "number",
             "sizing": "content"
           },
           {
-            "field": "boven_275",
-            "label": ">275 m",
+            "field": "dichtstbij_gemiddeld_m",
+            "label": "Dichtstbij gem. m",
+            "type": "number",
+            "sizing": "content"
+          },
+          {
+            "field": "dichtstbij_p95_m",
+            "label": "Dichtstbij P95 m",
             "type": "number",
             "sizing": "content"
           }
@@ -194,9 +200,9 @@
           "id": "new_locations_sql",
           "label": "Nieuwe zoekzones",
           "query": {
-            "description": "Afgeleid uit location-screening.json.",
-            "sql": "WITH source(\"id\", \"adresreferentie\", \"bron\", \"latitude\", \"longitude\", \"adressen\", \"bureauscreen\", \"status\") AS (\n  VALUES\n  ('WH18', 'Schelphoek Noord 48', 'gemeentelijk concept', 52.721767, 4.731634, 90, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M044', '''t Jaerlinger 16', 'eigen zoekanker', 52.7198587, 4.7397849, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M016', 'Pastoorsgroet 1', 'eigen zoekanker', 52.7230779, 4.7446873, 70, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M101', 'Dorpsstraat 106', 'eigen zoekanker', 52.7226117, 4.737705, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M004', 'Dorusakker 9', 'eigen zoekanker', 52.7209966, 4.7273943, 63, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M149', 'De Cres 1', 'eigen zoekanker', 52.7163151, 4.7315518, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M027', 'Hartendorp 4', 'eigen zoekanker', 52.7277134, 4.7386021, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH19', 'Zwartepad 32', 'gemeentelijk concept', 52.720963, 4.73382, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH10', 'De Baan 27', 'gemeentelijk concept', 52.725356, 4.74332, 61, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M020', 'Zigt 28', 'eigen zoekanker', 52.71692, 4.7437203, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M093', '''t Lange Weidje 1A', 'eigen zoekanker', 52.7265557, 4.7460736, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH13', 'Alingterp 2', 'gemeentelijk concept', 52.723362, 4.735266, 88, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M041', 'Langedijker 18', 'eigen zoekanker', 52.7238747, 4.7422359, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M134', 'Baljuw 14', 'eigen zoekanker', 52.7258004, 4.7516221, 72, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M018', 'Vierhuizen 5', 'eigen zoekanker', 52.725945, 4.7371967, 61, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M100', 'Beuninge 31', 'eigen zoekanker', 52.7206833, 4.7290946, 84, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M024', 'Oudewal 29', 'eigen zoekanker', 52.7195656, 4.729399, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M051', 'Zigt 2', 'eigen zoekanker', 52.7185154, 4.7451624, 73, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH30', 'Molenaarweg 1', 'gemeentelijk concept', 52.71779, 4.739241, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH02', 'Dorpsstraat 13', 'gemeentelijk concept', 52.727742, 4.739284, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M045', 'Krankhoorn 37', 'eigen zoekanker', 52.7219446, 4.7354065, 73, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH12', 'De Negen Geerzen 29', 'gemeentelijk concept', 52.722146, 4.74644, 60, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M094', 'De Baan 13', 'eigen zoekanker', 52.7255628, 4.7410458, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M104', 'Wonge 36', 'eigen zoekanker', 52.721757, 4.7282832, 65, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M157', 'Dergmeerweg 65', 'eigen zoekanker', 52.7285395, 4.7433291, 87, 'orange', 'lokale verschuiving/conflictcontrole nodig')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "description": "Afgeleid uit capacity-plan.json.",
+            "sql": "WITH source(\"id\", \"adresreferentie\", \"bron\", \"latitude\", \"longitude\", \"adressen\", \"bureauscreen\", \"status\") AS (\n  VALUES\n  ('WH18', 'Schelphoek Noord 48', 'gemeentelijk concept', 52.721767, 4.731634, 90, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M044', '''t Jaerlinger 16', 'eigen zoekanker', 52.7198587, 4.7397849, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M016', 'Pastoorsgroet 1', 'eigen zoekanker', 52.7230779, 4.7446873, 70, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M101', 'Dorpsstraat 106', 'eigen zoekanker', 52.7226117, 4.737705, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M004', 'Dorusakker 9', 'eigen zoekanker', 52.7209966, 4.7273943, 63, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M149', 'De Cres 1', 'eigen zoekanker', 52.7163151, 4.7315518, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M027', 'Hartendorp 4', 'eigen zoekanker', 52.7277134, 4.7386021, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH19', 'Zwartepad 32', 'gemeentelijk concept', 52.720963, 4.73382, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH10', 'De Baan 27', 'gemeentelijk concept', 52.725356, 4.74332, 62, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M020', 'Zigt 28', 'eigen zoekanker', 52.71692, 4.7437203, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M093', '''t Lange Weidje 1A', 'eigen zoekanker', 52.7265557, 4.7460736, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH13', 'Alingterp 2', 'gemeentelijk concept', 52.723362, 4.735266, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M041', 'Langedijker 18', 'eigen zoekanker', 52.7238747, 4.7422359, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M134', 'Baljuw 14', 'eigen zoekanker', 52.7258004, 4.7516221, 72, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M018', 'Vierhuizen 5', 'eigen zoekanker', 52.725945, 4.7371967, 62, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M100', 'Beuninge 31', 'eigen zoekanker', 52.7206833, 4.7290946, 85, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M024', 'Oudewal 29', 'eigen zoekanker', 52.7195656, 4.729399, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M051', 'Zigt 2', 'eigen zoekanker', 52.7185154, 4.7451624, 86, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH30', 'Molenaarweg 1', 'gemeentelijk concept', 52.71779, 4.739241, 90, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH02', 'Dorpsstraat 13', 'gemeentelijk concept', 52.727742, 4.739284, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M045', 'Krankhoorn 37', 'eigen zoekanker', 52.7219446, 4.7354065, 88, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('WH12', 'De Negen Geerzen 29', 'gemeentelijk concept', 52.722146, 4.74644, 60, 'green', 'plausibele zoekzone; integraal toetsen'),\n  ('M094', 'De Baan 13', 'eigen zoekanker', 52.7255628, 4.7410458, 60, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M104', 'Wonge 36', 'eigen zoekanker', 52.721757, 4.7282832, 65, 'orange', 'lokale verschuiving/conflictcontrole nodig'),\n  ('M157', 'Dergmeerweg 65', 'eigen zoekanker', 52.7285395, 4.7433291, 87, 'orange', 'lokale verschuiving/conflictcontrole nodig')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "columns": [
@@ -235,16 +241,16 @@
       {
         "id": "existing_table",
         "title": "De elf onverplaatste bestaande locaties",
-        "subtitle": "WH24 openbaar; WH23 als enige privélocatie.",
+        "subtitle": "Negen openbaar; WH23 en WH24 met hun bestaande private allowlists.",
         "dataset": "existing_locations",
         "density": "dense",
         "source": {
           "id": "existing_locations_sql",
           "label": "Bestaande locaties",
           "query": {
-            "description": "Afgeleid uit location-screening.json.",
-            "sql": "WITH source(\"id\", \"toegang\", \"adres\", \"adressen\", \"bureauscreen\", \"besluit\") AS (\n  VALUES\n  ('WH03', 'openbaar', 'Rietzangerstraat 17', 70, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH05', 'openbaar', 'Kuipersven 36', 90, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH06', 'openbaar', 'Soeverein 2', 60, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH08', 'openbaar', 'Dorpsstraat 89', 51, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH14', 'openbaar', 'Doorbraak 23', 84, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH24', 'openbaar', 'Pastoor Willemsestraat 80', 44, 'fixed', 'openbaar volgens expliciete scenarioaanname'),\n  ('WH26', 'openbaar', 'Regelhaalder 42', 90, 'red-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH27', 'openbaar', 'Zigt 97', 90, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH33', 'openbaar', 'Zuiderkruis 36', 89, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH34', 'openbaar', 'Poolster 25', 31, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH23', 'privé', 'Molenaarsweg 7', 3, 'private-fixed', 'bestaand; exacte locatie behouden')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "description": "Afgeleid uit capacity-plan.json.",
+            "sql": "WITH source(\"id\", \"toegang\", \"adres\", \"adressen\", \"bureauscreen\", \"besluit\") AS (\n  VALUES\n  ('WH03', 'openbaar', 'Rietzangerstraat 17', 70, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH05', 'openbaar', 'Kuipersven 36', 90, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH06', 'openbaar', 'Soeverein 2', 60, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH08', 'openbaar', 'Dorpsstraat 89', 52, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH14', 'openbaar', 'Doorbraak 23', 90, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH26', 'openbaar', 'Regelhaalder 42', 90, 'red-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH27', 'openbaar', 'Zigt 97', 90, 'orange-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH33', 'openbaar', 'Zuiderkruis 36', 89, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH34', 'openbaar', 'Poolster 25', 31, 'green-fixed', 'bestaand; exacte locatie behouden'),\n  ('WH23', 'privé', 'Molenaarsweg 7', 3, 'private-fixed', 'bestaande allowlist behouden'),\n  ('WH24', 'privé', 'Pastoor Willemsestraat 80', 4, 'private-fixed', 'bestaande allowlist behouden')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "columns": [
@@ -290,9 +296,9 @@
           "id": "criteria_sql",
           "label": "Onderzoekscriteria",
           "query": {
-            "description": "Methodische vertaling van Nevrlý et al.",
-            "sql": "WITH source(\"criterium\", \"artikel\", \"toepassing\", \"grens\") AS (\n  VALUES\n  ('Loopafstand', 'volumegewogen afstand', 'één BAG-woonadresproxy, voetgangersnetwerkafstand', '275 m alleen rapportage'),\n  ('Aantal punten/bakken', 'aantal inzamelpunten en containertype', 'minimum 25 nieuwe openbare fysieke bakken', '35 openbaar + WH23 privé'),\n  ('Capaciteit', 'volume, frequentie en benutting', 'beleidsproxy 60–90 adressen per nieuwe bak', 'geen liter-/kilogrambewijs'),\n  ('Servicetijd', 'voertuigservicetijd', 'alleen BGT/OSM/orthofoto-voorselectie', 'HVC-ritten en stoptijden ontbreken'),\n  ('Kosten', 'aanschafkosten', 'sunk bestaande locaties; nieuwe aantallen geminimaliseerd', 'lokale civiele en beheerkosten ontbreken')\n)\nSELECT * FROM source;",
-            "executed_at": "2026-08-14T09:50:25.208Z"
+            "description": "Methodische adaptatie van Nevrlý et al.",
+            "sql": "WITH source(\"criterium\", \"artikel\", \"toepassing\", \"grens\") AS (\n  VALUES\n  ('Loopafstand', 'volumegewogen afstand', 'één BAG-woonadresproxy; geschatte OSM-netwerkafstand', '275 m alleen modelrapportage'),\n  ('Aantal punten/bakken', 'aantal inzamelpunten en containertype', 'zacht doel round(2.572 / 75): 25 nieuwe openbare bakken', '34 openbaar + 2 privé'),\n  ('Capaciteit', 'volume, frequentie en benutting', 'gekozen modelband 60–90 adressen per nieuwe bak', 'geen liter-/kilogrambewijs'),\n  ('Servicetijd', 'voertuigservicetijd', 'alleen BGT/OSM/orthofoto-voorselectie', 'HVC-ritten en stoptijden ontbreken'),\n  ('Kosten', 'aanschafkosten', 'bestaande locaties vast; nieuw aantal uit zacht doel', 'lokale civiele en beheerkosten ontbreken')\n)\nSELECT * FROM source;",
+            "executed_at": "2026-08-14T11:34:59.041Z"
           }
         },
         "columns": [
@@ -326,7 +332,7 @@
     "sources": [
       {
         "id": "paper",
-        "label": "Nevrlý et al. (2021), Location of municipal waste containers: Trade-off between criteria",
+        "label": "Nevrlý et al. (2021), methodische bron over plasticafval",
         "href": "https://www.sciencedirect.com/science/article/pii/S0959652620334909"
       },
       {
@@ -341,7 +347,7 @@
       },
       {
         "id": "schagen_plan",
-        "label": "Gemeente Schagen conceptlocaties Warmenhuizen",
+        "label": "Gemeente Schagen conceptlocaties en toegang tot drie bakken",
         "href": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen"
       },
       {
@@ -351,8 +357,23 @@
       },
       {
         "id": "criteria",
-        "label": "Formele locatiecriteria gemeente Schagen",
+        "label": "Gemeentelijk locatiecriteria-precedent",
         "href": "https://zoek.officielebekendmakingen.nl/gmb-2026-70811.html"
+      },
+      {
+        "id": "lior",
+        "label": "Schagen LIOR deel 2",
+        "href": "https://www.schagen.nl/sites/default/files/2023-11/Leidraad%20inrichting%20openbare%20ruimte%20%20-%20deel%202%20-%20versie%20nov.pdf"
+      },
+      {
+        "id": "dergmeerweg",
+        "label": "Gemeente Schagen: Dergmeerweg",
+        "href": "https://www.schagen.nl/dergmeerweg"
+      },
+      {
+        "id": "landsheer",
+        "label": "Gemeente Schagen: Landsheer",
+        "href": "https://www.schagen.nl/nieuwbouwwijk-landsheer"
       },
       {
         "id": "bag",
@@ -373,9 +394,14 @@
       },
       {
         "id": "osm",
-        "label": "OpenStreetMap pedestrian network snapshot",
+        "label": "OpenStreetMap pedestrian-network snapshot",
         "href": "https://www.openstreetmap.org/copyright",
         "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
+      },
+      {
+        "id": "selection",
+        "label": "Volledige eindselectie van de 26-kandidatenpool",
+        "path": "reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json"
       },
       {
         "id": "plan_json",
@@ -397,12 +423,12 @@
       {
         "id": "title",
         "type": "markdown",
-        "body": "# Warmenhuizen: circa 75 huishoudens per restcontainer"
+        "body": "# Warmenhuizen: circa 75 huishoudens per openbare restcontainer"
       },
       {
         "id": "summary",
         "type": "markdown",
-        "body": "## Advies\n\nBehoud alle **11 bestaande** containers exact. Maak **WH24 openbaar** en houd alleen WH23 privé voor drie adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 35 openbaar. De 2.576 openbare BAG-woonadresproxies geven gemiddeld **73,6 adressen per openbare container**.\n\nHet beleidsmatige doelaantal is: `ceil(2.576 / 75) = 35` openbaar. De 35 openbare containers geven gemiddeld 73,6 adressen; de 25 nieuwe locaties hebben ieder 60–90 toegewezen adressen. Dit is de beste gevonden lokale locatieoplossing, niet een mondiaal optimaliteitsbewijs."
+        "body": "## Advies\n\nBehoud alle **11 bestaande** containers en hun toegangsrechten exact. WH23 en WH24 blijven privé voor samen zeven geconfigureerde adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 34 openbaar. De 2.572 openbare BAG-woonadresproxies geven gemiddeld **75.647 adressen per openbare container**.\n\nHet zachte doelaantal is `round(2.572 / 75) = 34` openbaar. De gekozen modelband voor nieuwe locaties is 60–90. Als 75 een harde bovengrens is, is 35 openbaar en 37 fysiek alleen een rekenkundige ondergrens; een 26-locatielijst en maximum-75-toewijzing zijn niet doorgerekend."
       },
       {
         "id": "scenario_table_block",
@@ -417,7 +443,7 @@
       {
         "id": "comparison",
         "type": "markdown",
-        "body": "Het advies gebruikt vier openbare locaties meer dan de 21 nieuwe gemeentelijke restvoorstellen, maar reduceert de totale openbare eenrichtingsloopafstand met **20.77%**, gemiddeld met 37.1 m en P95 met 82.7 m. Het aantal openbare adressen boven 275 m daalt van 397 naar 157."
+        "body": "De capaciteitsgebalanceerde één-op-één-toewijzing geeft **23.22%** minder totale modelafstand en 296 minder openbare adressen boven 275 m. In een optimistische gevoeligheid kiest ieder adres zonder capaciteitsbalans de dichtstbijzijnde geselecteerde locatie; dan is dat **17.5%** en 154. Het verschil tussen beide scenariominima is geen grens voor werkelijk gedrag. Het advies gebruikt vier openbare locaties meer; beide cijfers combineren dus locatiekeuze en extra capaciteit."
       },
       {
         "id": "band_chart_block",
@@ -427,7 +453,7 @@
       {
         "id": "paper",
         "type": "markdown",
-        "body": "## Onderzoek en model\n\nNevrlý et al. modelleren volumegewogen loopafstand, aantal inzamelpunten, aanschafkosten en voertuigservicetijd als conflicterende criteria. Er volgt geen universele 275-metergrens uit het artikel. Voor dit dossier zijn bestaande voorzieningen vast, huishoudens ondeelbaar en looproutes netwerkafstanden. De volledige artikeltekst was niet legaal openbaar beschikbaar; exacte formulering is gecontroleerd tegen openbare primaire auteursbronnen.\n\nDe 75 is hier een beleidsmatige adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, containervolume, vulgraad, ledigingsfrequentie, lokale kosten en echte HVC-servicetijden ontbreken."
+        "body": "## Onderzoek en model\n\nNevrlý et al. onderzoeken plasticafval en modelleren volumegewogen loopafstand, aantal inzamelpunten, aanschafkosten en voertuigservicetijd als conflicterende criteria. Dit rapport past de afwegingsmethode toe op restafval. Er volgt geen universele 275-metergrens uit het artikel.\n\nDe 75 is een BAG-adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, vulgraad, ledigingsfrequentie, lokale kosten en HVC-servicetijden ontbreken. De OSM-netwerkafstand is een schatting; de eerdere kalibratie had MAE 29,9 m en P95 absolute afwijking 80,9 m. De openbare scenariovergelijking gebruikt alleen deze matrix; de zeven private kaartrijen behouden hun opgeslagen OSRM-route en beïnvloeden de vergelijking niet."
       },
       {
         "id": "criteria_table_block",
@@ -450,97 +476,104 @@
         "tableId": "new_locations_table"
       },
       {
+        "id": "selection",
+        "type": "markdown",
+        "body": "## Eindselectie\n\nAlle 26 vastgelegde toevoegingskandidaten zijn onder dezelfde 60–90-regels vergeleken. M154 vervalt; de nummer twee (M157 laten vervallen) is 1207.6 modelmeter langer. De upstream kandidaatzoekgang is een vastgelegde beoordeelde invoer; dit is geen wereldwijd optimaliteitsbewijs."
+      },
+      {
         "id": "map",
         "type": "markdown",
-        "body": "## Kaart en afstandskleuren\n\nOpen [de interactieve overzichtskaart](overview-map.html) of [de SVG-kaart](overview-map.svg). Kleuren zijn exact de repo-indeling: groen 0–100, geel 100–125, oranje 125–150, rood 150–275, donkerrood boven 275 en grijs onbereikbaar. 275 m is alleen een kwaliteitsindicator."
+        "body": "## Kaart en afstandskleuren\n\nOpen [de interactieve overzichtskaart](overview-map.html) of [de SVG-kaart](overview-map.svg). Donker vierkant is bestaand openbaar, blauwe ruit is bestaand privé en magenta pluscirkel is een nieuw modelanker. Binnen dit model is 275 m alleen een kwaliteitsindicator."
       },
       {
         "id": "screening",
         "type": "markdown",
-        "body": "## Zoekzones zijn geen bouwpinnen\n\nVier nieuwe zones zijn groen en 21 oranje in de geautomatiseerde/visuele voorselectie. Geen enkele zone is uitvoeringsrijp. PDOK-orthofoto, BGT, OSM, BRK, HHNK, AHN en gemeentelijke stukken ondersteunen de bureauscreen, maar bewijzen geen eigendom, vrije kabel-/leidingruimte, boomwortelvrij volume, voertuigbeweging, actuele parkeerdruk of draagkracht.\n\nVereist: veldinmeting, KLIC en zo nodig proefsleuven, juridische titel, bodem/water/bomen, toegankelijkheid en een HVC swept-path-, stempel- en hijsproef. Iedere pinverschuiving vraagt een nieuwe route- en capaciteitsrun."
+        "body": "## Zoekzones zijn geen bouwpinnen\n\nVier nieuwe zones zijn groen en 21 oranje in de voorselectie. Geen enkele zone is uitvoeringsrijp. Orthofoto, BGT, OSM en gemeentelijke stukken bewijzen geen eigendom, vrije kabel-/leidingruimte, boomwortelvrij volume, voertuigbeweging, parkeerdruk of draagkracht.\n\nVereist: veldinmeting, KLIC en zo nodig proefsleuven, juridische titel, bodem/water/bomen, toegankelijkheid en een HVC rijcurve-, stempel- en hijsproef. Iedere pinverschuiving vraagt een nieuwe route- en capaciteitsrun."
       },
       {
         "id": "fairness",
         "type": "markdown",
-        "body": "## Afstandsuitschieters en groei\n\nEr blijven 157 openbare adressen boven 275 m; P95 is 288,5 m en het maximum 776 m bij Debbemeerweg 39. De grootste clusters liggen aan Dorpsstraat, Fabrieksstraat, De Fuik, Oostwal, Oudevaart en Oudewal. Een aparte gelijkheidsvariant kan een extra corridorzone rond Oudevaart 67–89 onderzoeken, maar verlaagt de gemiddelde belasting onder het minimale 75-plan.\n\nDergmeerweg noemt publiek 88 toekomstige woningen: reserveer ten minste twee extra bakken en heroptimaliseer zodra een gezaghebbende adressenlijst beschikbaar is. Controleer bij Landsheer welke van de 153 woningen al in de BAG-momentopname zitten."
+        "body": "## Scope, uitschieters en groei\n\nEr blijven 176 openbare adressen boven 275 m; model-P95 is 301.6 m en het maximum 776 m. De analyse sluit 303 BAG-woonfunctieadressen buiten de vastgelegde BRT-bebouwde-komgrens uit; dat blijft een beleidskeuze.\n\nDergmeerweg noemt 88 toekomstige woningen: reserveer ruimte voor één of twee extra bakken, afhankelijk van netto nieuwe adressen, spreiding, afvalvolume en reserve. Controleer bij Landsheer welke van de 153 woningen al in de BAG-momentopname zitten."
       },
       {
         "id": "reproducibility",
         "type": "markdown",
-        "body": "## Reproduceerbaarheid\n\n`build-wh24-public-column.mjs` voegt WH24 met dezelfde vastgelegde OSM-graaf toe. `build-capacity-plan.mjs` bouwt de unieke capaciteitsassignments. `validate-capacity-plan.mjs` controleert alle 2.579 adressen, lasten, private toegang, vaste coördinaten, bronhashes en kaartkleuren. Zie ook [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson)."
+        "body": "## Reproduceerbaarheid\n\n`evaluate-private-access-finalists.mjs` herbouwt de complete eindselectie. `build-capacity-plan.mjs` bouwt beide private allowlists en de unieke capaciteitsassignments. `validate-capacity-plan.mjs` controleert adressen, lasten, toegang, vaste coördinaten, bronhashes en kaartpresentatie. Zie [private-access-leave-one-out.json](private-access-leave-one-out.json), [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson)."
       }
     ]
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-14T09:50:25.208Z",
+    "generatedAt": "2026-08-14T11:34:59.041Z",
     "status": "ready",
     "datasets": {
       "scenarios": [
         {
           "scenario": "Gemeentelijke restvoorstellen",
           "label": "Gemeente",
-          "openbare_locaties": 31,
+          "openbare_locaties": 30,
           "nieuwe_locaties": 21,
-          "gemiddeld_adressen": 83.097,
-          "gemiddeld_m": 178.741,
-          "p95_m": 371.2,
-          "maximum_m": 689.9,
-          "boven_275": 397,
-          "totale_loopafstand_m": 460436.9
+          "gemiddeld_adressen": 85.733,
+          "toegewezen_gemiddeld_m": 186.499,
+          "toegewezen_p95_m": 407.7,
+          "toegewezen_boven_275": 472,
+          "dichtstbij_gemiddeld_m": 165.914,
+          "dichtstbij_p95_m": 326.5,
+          "dichtstbij_boven_275": 286
         },
         {
-          "scenario": "Capaciteitsplan met WH24 openbaar",
+          "scenario": "Capaciteitsplan met private toegang behouden",
           "label": "Advies",
-          "openbare_locaties": 35,
+          "openbare_locaties": 34,
           "nieuwe_locaties": 25,
-          "gemiddeld_adressen": 73.6,
-          "gemiddeld_m": 141.616,
-          "p95_m": 288.5,
-          "maximum_m": 776,
-          "boven_275": 157,
-          "totale_loopafstand_m": 364802.2
+          "gemiddeld_adressen": 75.647,
+          "toegewezen_gemiddeld_m": 143.185,
+          "toegewezen_p95_m": 301.6,
+          "toegewezen_boven_275": 176,
+          "dichtstbij_gemiddeld_m": 136.871,
+          "dichtstbij_p95_m": 280,
+          "dichtstbij_boven_275": 132
         }
       ],
       "distance_bands": [
         {
           "band": "0–100 m",
-          "gemeente": 578,
-          "advies": 905
+          "gemeente": 571,
+          "advies": 899
         },
         {
-          "band": "100–125 m",
-          "gemeente": 283,
-          "advies": 343
+          "band": ">100–125 m",
+          "gemeente": 278,
+          "advies": 337
         },
         {
-          "band": "125–150 m",
+          "band": ">125–150 m",
           "gemeente": 340,
-          "advies": 330
+          "advies": 332
         },
         {
-          "band": "150–275 m",
-          "gemeente": 978,
-          "advies": 841
+          "band": ">150–275 m",
+          "gemeente": 911,
+          "advies": 828
         },
         {
           "band": ">275 m",
-          "gemeente": 397,
-          "advies": 157
+          "gemeente": 472,
+          "advies": 176
         }
       ],
       "load_distribution": [
         {
           "band": "60–74",
-          "aantal": 14
+          "aantal": 12
         },
         {
           "band": "75–89",
-          "aantal": 3
+          "aantal": 4
         },
         {
           "band": "90",
-          "aantal": 8
+          "aantal": 9
         }
       ],
       "new_locations": [
@@ -630,7 +663,7 @@
           "bron": "gemeentelijk concept",
           "latitude": 52.725356,
           "longitude": 4.74332,
-          "adressen": 61,
+          "adressen": 62,
           "bureauscreen": "green",
           "status": "plausibele zoekzone; integraal toetsen"
         },
@@ -660,7 +693,7 @@
           "bron": "gemeentelijk concept",
           "latitude": 52.723362,
           "longitude": 4.735266,
-          "adressen": 88,
+          "adressen": 90,
           "bureauscreen": "orange",
           "status": "lokale verschuiving/conflictcontrole nodig"
         },
@@ -690,7 +723,7 @@
           "bron": "eigen zoekanker",
           "latitude": 52.725945,
           "longitude": 4.7371967,
-          "adressen": 61,
+          "adressen": 62,
           "bureauscreen": "orange",
           "status": "lokale verschuiving/conflictcontrole nodig"
         },
@@ -700,7 +733,7 @@
           "bron": "eigen zoekanker",
           "latitude": 52.7206833,
           "longitude": 4.7290946,
-          "adressen": 84,
+          "adressen": 85,
           "bureauscreen": "green",
           "status": "plausibele zoekzone; integraal toetsen"
         },
@@ -720,7 +753,7 @@
           "bron": "eigen zoekanker",
           "latitude": 52.7185154,
           "longitude": 4.7451624,
-          "adressen": 73,
+          "adressen": 86,
           "bureauscreen": "orange",
           "status": "lokale verschuiving/conflictcontrole nodig"
         },
@@ -750,7 +783,7 @@
           "bron": "eigen zoekanker",
           "latitude": 52.7219446,
           "longitude": 4.7354065,
-          "adressen": 73,
+          "adressen": 88,
           "bureauscreen": "orange",
           "status": "lokale verschuiving/conflictcontrole nodig"
         },
@@ -824,7 +857,7 @@
           "id": "WH08",
           "toegang": "openbaar",
           "adres": "Dorpsstraat 89",
-          "adressen": 51,
+          "adressen": 52,
           "bureauscreen": "orange-fixed",
           "besluit": "bestaand; exacte locatie behouden"
         },
@@ -832,17 +865,9 @@
           "id": "WH14",
           "toegang": "openbaar",
           "adres": "Doorbraak 23",
-          "adressen": 84,
+          "adressen": 90,
           "bureauscreen": "orange-fixed",
           "besluit": "bestaand; exacte locatie behouden"
-        },
-        {
-          "id": "WH24",
-          "toegang": "openbaar",
-          "adres": "Pastoor Willemsestraat 80",
-          "adressen": 44,
-          "bureauscreen": "fixed",
-          "besluit": "openbaar volgens expliciete scenarioaanname"
         },
         {
           "id": "WH26",
@@ -882,26 +907,34 @@
           "adres": "Molenaarsweg 7",
           "adressen": 3,
           "bureauscreen": "private-fixed",
-          "besluit": "bestaand; exacte locatie behouden"
+          "besluit": "bestaande allowlist behouden"
+        },
+        {
+          "id": "WH24",
+          "toegang": "privé",
+          "adres": "Pastoor Willemsestraat 80",
+          "adressen": 4,
+          "bureauscreen": "private-fixed",
+          "besluit": "bestaande allowlist behouden"
         }
       ],
       "criteria": [
         {
           "criterium": "Loopafstand",
           "artikel": "volumegewogen afstand",
-          "toepassing": "één BAG-woonadresproxy, voetgangersnetwerkafstand",
-          "grens": "275 m alleen rapportage"
+          "toepassing": "één BAG-woonadresproxy; geschatte OSM-netwerkafstand",
+          "grens": "275 m alleen modelrapportage"
         },
         {
           "criterium": "Aantal punten/bakken",
           "artikel": "aantal inzamelpunten en containertype",
-          "toepassing": "minimum 25 nieuwe openbare fysieke bakken",
-          "grens": "35 openbaar + WH23 privé"
+          "toepassing": "zacht doel round(2.572 / 75): 25 nieuwe openbare bakken",
+          "grens": "34 openbaar + 2 privé"
         },
         {
           "criterium": "Capaciteit",
           "artikel": "volume, frequentie en benutting",
-          "toepassing": "beleidsproxy 60–90 adressen per nieuwe bak",
+          "toepassing": "gekozen modelband 60–90 adressen per nieuwe bak",
           "grens": "geen liter-/kilogrambewijs"
         },
         {
@@ -913,7 +946,7 @@
         {
           "criterium": "Kosten",
           "artikel": "aanschafkosten",
-          "toepassing": "sunk bestaande locaties; nieuwe aantallen geminimaliseerd",
+          "toepassing": "bestaande locaties vast; nieuw aantal uit zacht doel",
           "grens": "lokale civiele en beheerkosten ontbreken"
         }
       ]
@@ -922,7 +955,7 @@
   "sources": [
     {
       "id": "paper",
-      "label": "Nevrlý et al. (2021), Location of municipal waste containers: Trade-off between criteria",
+      "label": "Nevrlý et al. (2021), methodische bron over plasticafval",
       "href": "https://www.sciencedirect.com/science/article/pii/S0959652620334909"
     },
     {
@@ -937,7 +970,7 @@
     },
     {
       "id": "schagen_plan",
-      "label": "Gemeente Schagen conceptlocaties Warmenhuizen",
+      "label": "Gemeente Schagen conceptlocaties en toegang tot drie bakken",
       "href": "https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen"
     },
     {
@@ -947,8 +980,23 @@
     },
     {
       "id": "criteria",
-      "label": "Formele locatiecriteria gemeente Schagen",
+      "label": "Gemeentelijk locatiecriteria-precedent",
       "href": "https://zoek.officielebekendmakingen.nl/gmb-2026-70811.html"
+    },
+    {
+      "id": "lior",
+      "label": "Schagen LIOR deel 2",
+      "href": "https://www.schagen.nl/sites/default/files/2023-11/Leidraad%20inrichting%20openbare%20ruimte%20%20-%20deel%202%20-%20versie%20nov.pdf"
+    },
+    {
+      "id": "dergmeerweg",
+      "label": "Gemeente Schagen: Dergmeerweg",
+      "href": "https://www.schagen.nl/dergmeerweg"
+    },
+    {
+      "id": "landsheer",
+      "label": "Gemeente Schagen: Landsheer",
+      "href": "https://www.schagen.nl/nieuwbouwwijk-landsheer"
     },
     {
       "id": "bag",
@@ -969,9 +1017,14 @@
     },
     {
       "id": "osm",
-      "label": "OpenStreetMap pedestrian network snapshot",
+      "label": "OpenStreetMap pedestrian-network snapshot",
       "href": "https://www.openstreetmap.org/copyright",
       "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json"
+    },
+    {
+      "id": "selection",
+      "label": "Volledige eindselectie van de 26-kandidatenpool",
+      "path": "reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json"
     },
     {
       "id": "plan_json",

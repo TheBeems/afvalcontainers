@@ -13,16 +13,16 @@ const paths = {
   containers: resolve(projectRoot, 'data/places/warmenhuizen/container-locations.json'),
   matrix: resolve(priorReport, 'walking-matrix.json'),
   existingCoverage: resolve(priorReport, 'existing-11-household-coverage.json'),
-  wh24Column: resolve(reportDirectory, 'wh24-public-column.json'),
   screening: resolve(reportDirectory, 'location-screening.json'),
+  evaluation: resolve(reportDirectory, 'private-access-leave-one-out.json'),
   plan: resolve(reportDirectory, 'capacity-plan.json'),
   assignments: resolve(reportDirectory, 'household-assignment.json'),
   tsv: resolve(reportDirectory, 'locations.tsv'),
   geojson: resolve(reportDirectory, 'locations.geojson')
 };
 
-const FIXED_PUBLIC_IDS = ['WH03', 'WH05', 'WH06', 'WH08', 'WH14', 'WH24', 'WH26', 'WH27', 'WH33', 'WH34'];
-const FIXED_PRIVATE_IDS = ['WH23'];
+const FIXED_PUBLIC_IDS = ['WH03', 'WH05', 'WH06', 'WH08', 'WH14', 'WH26', 'WH27', 'WH33', 'WH34'];
+const FIXED_PRIVATE_IDS = ['WH23', 'WH24'];
 const MUNICIPAL_REST_IDS = [
   'WH01', 'WH02', 'WH04', 'WH07', 'WH09', 'WH10', 'WH11', 'WH12', 'WH13',
   'WH15', 'WH16', 'WH17', 'WH18', 'WH19', 'WH20', 'WH21', 'WH22', 'WH25',
@@ -54,14 +54,7 @@ function quantile(sorted, probability) {
 
 function summarize(rows) {
   const values = rows.map(({ walkingDistanceM }) => walkingDistanceM).filter(Number.isFinite).sort((a, b) => a - b);
-  const counts = {
-    within_100: 0,
-    between_100_125: 0,
-    between_125_150: 0,
-    between_150_275: 0,
-    over_275: 0,
-    unreachable: 0
-  };
+  const counts = { within_100: 0, between_100_125: 0, between_125_150: 0, between_150_275: 0, over_275: 0, unreachable: 0 };
   rows.forEach(({ walkingDistanceM }) => { counts[distanceBand(walkingDistanceM)] += 1; });
   const total = values.reduce((sum, value) => sum + value, 0);
   return {
@@ -77,22 +70,11 @@ function summarize(rows) {
   };
 }
 
-function augmentMatrix(matrix, wh24Column) {
-  assert(wh24Column.houseIds.length === matrix.houseIds.length, 'WH24 column has a different household count.');
-  wh24Column.houseIds.forEach((houseId, index) => {
-    assert(houseId === matrix.houseIds[index], `WH24 household order differs at row ${index}.`);
-  });
-  assert(!matrix.candidateIds.includes('WH24'), 'WH24 unexpectedly already occurs in the public matrix.');
-  matrix.candidateIds.push('WH24');
-  matrix.candidates.push(wh24Column.candidate);
-  matrix.distances.forEach((row, index) => row.push(wh24Column.distances[index]));
-}
-
 function buildSites(ids, matrix, screeningById) {
   const candidateById = new Map(matrix.candidates.map((candidate, candidateIndex) => [candidate.id, { ...candidate, candidateIndex }]));
   return ids.map((id) => {
     const candidate = candidateById.get(id);
-    assert(candidate, `Candidate ${id} is missing from the augmented matrix.`);
+    assert(candidate, `Candidate ${id} is missing from the walking matrix.`);
     const screened = screeningById.get(id);
     const kind = FIXED_PUBLIC_IDS.includes(id) ? 'existing' : 'new';
     return {
@@ -158,11 +140,7 @@ function assign({ matrix, publicIndexes, sites }) {
   const rows = publicIndexes.map((houseIndex, person) => {
     const siteIndex = slots[assignment[person]].siteIndex;
     loads[siteIndex] += 1;
-    return {
-      houseIndex,
-      siteIndex,
-      walkingDistanceM: matrix.distances[houseIndex][columns[siteIndex]]
-    };
+    return { houseIndex, siteIndex, walkingDistanceM: matrix.distances[houseIndex][columns[siteIndex]] };
   });
   return { rows, loads, unusedSlots: personCount - realCount, epsilon: EPSILONS.at(-1) };
 }
@@ -187,16 +165,24 @@ function publicAssignmentRows(result, sites, matrix, houseById) {
   });
 }
 
-function scenario(sites, result, rows) {
+function nearestRows({ matrix, publicIndexes, sites }) {
+  const columns = sites.map(({ candidateIndex }) => candidateIndex);
+  return publicIndexes.map((houseIndex) => ({
+    walkingDistanceM: Math.min(...columns.map((column) => matrix.distances[houseIndex][column]))
+  }));
+}
+
+function scenario(sites, result, rows, nearestSiteRows) {
   return {
     publicLocationCount: sites.length,
     fixedPublicLocationCount: sites.filter(({ kind }) => kind === 'existing').length,
     newPublicLocationCount: sites.filter(({ kind }) => kind === 'new').length,
     averageHouseholdsPerPublicContainer: round(rows.length / sites.length, 3),
     targetHouseholdsPerContainer: TARGET,
-    newLocationPolicyBand: [NEW_MINIMUM, PUBLIC_MAXIMUM],
+    chosenModelBandForNewLocations: [NEW_MINIMUM, PUBLIC_MAXIMUM],
     assignedHouseholdsByLocation: Object.fromEntries(sites.map(({ id }, index) => [id, result.loads[index]])),
-    distance: summarize(rows),
+    capacityBalancedDistance: summarize(rows),
+    nearestSiteAccessSensitivity: summarize(nearestSiteRows),
     assignmentSolver: {
       method: 'deterministic epsilon-scaling auction over individual capacity slots',
       finalEpsilonM: result.epsilon,
@@ -219,8 +205,8 @@ function enrichedLocations(sites, loads, screeningById) {
       accessScope: 'public',
       capacityUnits: 1,
       targetHouseholds: TARGET,
-      minimumPolicyLoad: site.kind === 'new' ? NEW_MINIMUM : null,
-      maximumPolicyLoad: PUBLIC_MAXIMUM,
+      minimumModelLoad: site.kind === 'new' ? NEW_MINIMUM : null,
+      maximumModelLoad: PUBLIC_MAXIMUM,
       assignedHouseholds: loads[index],
       screeningRating: site.screeningRating,
       bgtDistancesM: screen ? {
@@ -235,20 +221,47 @@ function enrichedLocations(sites, loads, screeningById) {
   });
 }
 
-function privateRows(existingCoverage) {
-  return existingCoverage.houses.filter(({ nearestLocationId }) => nearestLocationId === 'WH23').map((house) => ({
-    houseId: house.id,
-    address: house.address,
-    postcode: house.postcode,
-    lat: house.lat,
-    lon: house.lon,
-    assignedContainerId: 'WH23',
-    assignedLocationKind: 'existing',
-    assignedLocationAccessScope: 'private',
-    walkingDistanceM: round(house.walkingDistanceM, 2),
-    coverageStatus: distanceBand(house.walkingDistanceM),
-    routeGeometry: house.routeGeometry ?? []
-  }));
+function buildPrivateRows(existingCoverage) {
+  const privateLocationIds = new Set(FIXED_PRIVATE_IDS);
+  return existingCoverage.houses
+    .filter(({ nearestLocationId }) => privateLocationIds.has(nearestLocationId))
+    .map((house) => ({
+      houseId: house.id,
+      address: house.address,
+      postcode: house.postcode,
+      lat: house.lat,
+      lon: house.lon,
+      assignedContainerId: house.nearestLocationId,
+      assignedLocationKind: 'existing',
+      assignedLocationAccessScope: 'private',
+      walkingDistanceM: round(house.walkingDistanceM, 2),
+      coverageStatus: distanceBand(house.walkingDistanceM),
+      routeGeometry: house.routeGeometry ?? []
+    }));
+}
+
+function buildPrivateLocations(containers, privateAssignmentRows) {
+  const containerById = new Map(containers.map((container) => [container.id, container]));
+  return FIXED_PRIVATE_IDS.map((id) => {
+    const container = containerById.get(id);
+    assert(container?.access?.scope === 'private', `${id} is not marked private in container-locations.json.`);
+    return {
+      id,
+      kind: 'existing',
+      status: 'existing',
+      address: container.address,
+      hvcContainerId: container.hvcContainerId,
+      lat: container.lat,
+      lon: container.lon,
+      sourceType: 'hvc-existing-private',
+      accessScope: 'private',
+      accessLabel: container.access.label,
+      allowedAddresses: container.access.allowedAddresses,
+      capacityUnits: 1,
+      assignedHouseholds: privateAssignmentRows.filter(({ assignedContainerId }) => assignedContainerId === id).length,
+      screeningRating: 'private-fixed'
+    };
+  });
 }
 
 function writeLocationFiles(locations) {
@@ -257,7 +270,7 @@ function writeLocationFiles(locations) {
   writeFileSync(paths.tsv, `${tsv}\n`);
   writeFileSync(paths.geojson, `${JSON.stringify({
     type: 'FeatureCollection',
-    name: 'Warmenhuizen capacity-first plan, approximately 75 BAG residential address proxies per bin',
+    name: 'Warmenhuizen capacity-first plan, approximately 75 BAG residential address proxies per public bin',
     features: locations.map(({ lat, lon, ...properties }) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lon, lat] },
@@ -270,69 +283,60 @@ const coverage = readJson(paths.coverage);
 const containers = readJson(paths.containers);
 const matrix = readJson(paths.matrix);
 const existingCoverage = readJson(paths.existingCoverage);
-const wh24Column = readJson(paths.wh24Column);
 const screening = readJson(paths.screening);
-augmentMatrix(matrix, wh24Column);
+const evaluation = readJson(paths.evaluation);
 const screeningById = new Map(screening.locations.map((location) => [location.id, location]));
 const houseById = new Map(coverage.houses.map((house) => [house.id, house]));
-const privateAssignmentRows = privateRows(existingCoverage);
-assert(privateAssignmentRows.length === 3, `Expected three WH23-private addresses, found ${privateAssignmentRows.length}.`);
+const privateAssignmentRows = buildPrivateRows(existingCoverage);
+assert(privateAssignmentRows.length === 7, `Expected seven private addresses, found ${privateAssignmentRows.length}.`);
 const privateHouseIds = new Set(privateAssignmentRows.map(({ houseId }) => houseId));
 const publicIndexes = matrix.houseIds.flatMap((houseId, index) => privateHouseIds.has(houseId) ? [] : [index]);
-assert(publicIndexes.length === 2576, `Expected 2576 public address proxies, found ${publicIndexes.length}.`);
+assert(publicIndexes.length === 2572, `Expected 2572 public address proxies, found ${publicIndexes.length}.`);
 
-const selectedNewIds = screening.locations.filter(({ role }) => role === 'new').map(({ id }) => id);
-assert(selectedNewIds.length === 25, `Expected 25 selected new locations, found ${selectedNewIds.length}.`);
+assert(evaluation.publicHouseholds === publicIndexes.length, 'Leave-one-out evaluation uses another public demand count.');
+assert(JSON.stringify(evaluation.fixedPublicIds) === JSON.stringify(FIXED_PUBLIC_IDS), 'Leave-one-out evaluation uses other fixed public sites.');
+assert(evaluation.results.length === evaluation.startingAdditionIds.length, 'Leave-one-out evaluation is incomplete.');
+const selectionWinner = evaluation.results[0];
+const selectedNewIds = evaluation.startingAdditionIds.filter((id) => id !== selectionWinner.removed);
+const requiredPublicContainers = Math.round(publicIndexes.length / TARGET);
+assert(requiredPublicContainers === FIXED_PUBLIC_IDS.length + selectedNewIds.length, 'Selected site count does not match the soft target count.');
+selectedNewIds.forEach((id) => assert(screeningById.has(id), `Selected location ${id} has no screening record.`));
+
 const recommendedSites = buildSites([...FIXED_PUBLIC_IDS, ...selectedNewIds], matrix, screeningById);
 const recommendedResult = assign({ matrix, publicIndexes, sites: recommendedSites });
 const recommendedRows = publicAssignmentRows(recommendedResult, recommendedSites, matrix, houseById);
-const recommendedScenario = scenario(recommendedSites, recommendedResult, recommendedRows);
+const recommendedScenario = scenario(recommendedSites, recommendedResult, recommendedRows, nearestRows({ matrix, publicIndexes, sites: recommendedSites }));
 recommendedSites.forEach((site, index) => {
   const load = recommendedResult.loads[index];
   assert(load <= PUBLIC_MAXIMUM, `${site.id} exceeds ${PUBLIC_MAXIMUM}.`);
   if (site.kind === 'new') assert(load >= NEW_MINIMUM, `${site.id} is below ${NEW_MINIMUM}.`);
-  const expectedLoad = screeningById.get(site.id)?.assignedHouseholds;
-  assert(load === expectedLoad, `${site.id} load changed: expected ${expectedLoad}, received ${load}.`);
 });
+assert(round(recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM, 1) === selectionWinner.total, 'Selected leave-one-out total differs from rebuilt assignment.');
 
 const municipalSites = buildSites([...FIXED_PUBLIC_IDS, ...MUNICIPAL_REST_IDS], matrix, screeningById);
 const municipalResult = assign({ matrix, publicIndexes, sites: municipalSites });
 const municipalRows = publicAssignmentRows(municipalResult, municipalSites, matrix, houseById);
-const municipalScenario = scenario(municipalSites, municipalResult, municipalRows);
+const municipalScenario = scenario(municipalSites, municipalResult, municipalRows, nearestRows({ matrix, publicIndexes, sites: municipalSites }));
 
-const wh23 = containers.find(({ id }) => id === 'WH23');
-const privateLocation = {
-  id: 'WH23',
-  kind: 'existing',
-  status: 'existing',
-  address: wh23.address,
-  hvcContainerId: wh23.hvcContainerId,
-  lat: wh23.lat,
-  lon: wh23.lon,
-  sourceType: 'hvc-existing-private',
-  accessScope: 'private',
-  accessLabel: wh23.access.label,
-  allowedAddresses: wh23.access.allowedAddresses,
-  capacityUnits: 1,
-  assignedHouseholds: privateAssignmentRows.length,
-  screeningRating: 'private-fixed'
-};
-const locations = [...enrichedLocations(recommendedSites, recommendedResult.loads, screeningById), privateLocation];
+const privateLocations = buildPrivateLocations(containers, privateAssignmentRows);
+const locations = [...enrichedLocations(recommendedSites, recommendedResult.loads, screeningById), ...privateLocations];
 const allRowsById = new Map([...recommendedRows, ...privateAssignmentRows].map((row) => [row.houseId, row]));
 const allRows = matrix.houseIds.map((houseId) => allRowsById.get(houseId));
 assert(allRows.every(Boolean), 'Final assignment is not one-to-one for every BAG address proxy.');
 const allDistance = summarize(allRows);
-const reduction = municipalScenario.distance.totalWalkingDistanceM - recommendedScenario.distance.totalWalkingDistanceM;
+const capacityReduction = municipalScenario.capacityBalancedDistance.totalWalkingDistanceM - recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM;
+const nearestReduction = municipalScenario.nearestSiteAccessSensitivity.totalWalkingDistanceM - recommendedScenario.nearestSiteAccessSensitivity.totalWalkingDistanceM;
+const hard75PublicContainers = Math.ceil(publicIndexes.length / TARGET);
 
 const plan = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedAt: new Date().toISOString(),
   title: 'Capaciteitsgestuurde verdeling restafvalcontainers Warmenhuizen',
   decision: {
     existingPhysicalContainersRetained: 11,
-    existingPublicContainers: 10,
-    existingPrivateContainers: 1,
-    publicAccessChange: 'WH24 public by explicit user instruction; WH23 remains private.',
+    existingPublicContainers: FIXED_PUBLIC_IDS.length,
+    existingPrivateContainers: FIXED_PRIVATE_IDS.length,
+    publicAccessChange: 'None; WH23 and WH24 retain their source-defined private allowlists.',
     newPublicContainers: selectedNewIds.length,
     publicContainers: recommendedSites.length,
     totalPhysicalContainers: locations.length,
@@ -340,11 +344,20 @@ const plan = {
     publicBagResidentialAddressProxies: publicIndexes.length,
     privateAllowlistedAddressProxies: privateAssignmentRows.length,
     targetHouseholdsPerContainer: TARGET,
-    interpretation: 'Approximately 75: each new public site is assigned 60-90 BAG residential address proxies; fixed public sites are not forced to an artificial minimum and have a 90-proxy ceiling.',
-    target75ContainerCount: {
-      requiredPublicContainers: Math.ceil(publicIndexes.length / TARGET),
-      requiredNewPublicContainers: Math.ceil(publicIndexes.length / TARGET) - FIXED_PUBLIC_IDS.length,
-      totalIncludingOnePrivateContainer: Math.ceil(publicIndexes.length / TARGET) + 1
+    interpretation: 'Soft target: choose the whole public-container count with an average closest to 75, then assign each new public site 60-90 BAG residential address proxies. Existing public sites have no artificial minimum and a 90-proxy ceiling.',
+    softTargetContainerCount: {
+      rule: 'round(public BAG residential address proxies / 75)',
+      requiredPublicContainers,
+      requiredNewPublicContainers: requiredPublicContainers - FIXED_PUBLIC_IDS.length,
+      totalIncludingPrivateContainers: requiredPublicContainers + FIXED_PRIVATE_IDS.length,
+      resultingAveragePublicLoad: round(publicIndexes.length / requiredPublicContainers, 3)
+    },
+    hardMaximum75ArithmeticSensitivity: {
+      rule: 'ceil(public BAG residential address proxies / 75)',
+      scope: 'Arithmetic container count only; no 26-site selection or maximum-75 assignment was evaluated.',
+      requiredPublicContainers: hard75PublicContainers,
+      requiredNewPublicContainers: hard75PublicContainers - FIXED_PUBLIC_IDS.length,
+      totalIncludingPrivateContainers: hard75PublicContainers + FIXED_PRIVATE_IDS.length
     }
   },
   recommendedScenario: {
@@ -354,65 +367,84 @@ const plan = {
     selectedNewIds,
     selectedMunicipalConceptIds: selectedNewIds.filter((id) => MUNICIPAL_REST_IDS.includes(id)),
     selectedIndependentSearchAnchorIds: selectedNewIds.filter((id) => !MUNICIPAL_REST_IDS.includes(id)),
-    wh24ReplacementChoice: {
-      removedSearchAnchorId: 'M154',
-      retainedNearbySearchAnchorId: 'M157',
-      method: 'Full 60-90 bounded assignment for the five best leave-one-out candidates after an all-26 uncapacitated screen.',
-      runnerUp: 'Removing M157 increased total public walking distance by 1207.6 m.'
+    recordedCandidatePoolSelection: {
+      removedSearchAnchorId: selectionWinner.removed,
+      method: evaluation.method,
+      evaluatedRemovalCount: evaluation.results.length,
+      runnerUpRemovedId: evaluation.results[1].removed,
+      runnerUpAdditionalDistanceM: round(evaluation.results[1].total - selectionWinner.total, 1)
     }
   },
   municipalConceptComparison: {
     ...municipalScenario,
     proposalCountReconciled: 21,
-    totalPhysicalLocationCountIncludingPrivate: municipalSites.length + 1,
+    totalPhysicalLocationCountIncludingPrivate: municipalSites.length + privateLocations.length,
     clarification: '20 underground rest sites plus WH01 semi-underground; WH26, WH27, WH31 and WH32 are GFE-only additions and are not new rest capacity.',
     unconfirmedRepoOnlyIdExcluded: 'WH35'
   },
   comparison: {
+    interpretation: 'The primary figures compare exclusive, capacity-balanced assignments and combine location choice with four additional public containers. They do not predict which of three accessible bins a resident will actually use.',
     additionalPublicContainers: recommendedSites.length - municipalSites.length,
-    totalWalkingDistanceReductionM: round(reduction, 1),
-    totalWalkingDistanceReductionPercent: round(100 * reduction / municipalScenario.distance.totalWalkingDistanceM, 2),
-    averageWalkingDistanceReductionM: round(municipalScenario.distance.averageWalkingDistanceM - recommendedScenario.distance.averageWalkingDistanceM, 1),
-    p95WalkingDistanceReductionM: round(municipalScenario.distance.p95WalkingDistanceM - recommendedScenario.distance.p95WalkingDistanceM, 1),
-    over275Reduction: municipalScenario.distance.distanceBands.over_275 - recommendedScenario.distance.distanceBands.over_275
+    capacityBalanced: {
+      totalWalkingDistanceReductionM: round(capacityReduction, 1),
+      totalWalkingDistanceReductionPercent: round(100 * capacityReduction / municipalScenario.capacityBalancedDistance.totalWalkingDistanceM, 2),
+      averageWalkingDistanceReductionM: round(municipalScenario.capacityBalancedDistance.averageWalkingDistanceM - recommendedScenario.capacityBalancedDistance.averageWalkingDistanceM, 1),
+      p95WalkingDistanceReductionM: round(municipalScenario.capacityBalancedDistance.p95WalkingDistanceM - recommendedScenario.capacityBalancedDistance.p95WalkingDistanceM, 1),
+      over275Reduction: municipalScenario.capacityBalancedDistance.distanceBands.over_275 - recommendedScenario.capacityBalancedDistance.distanceBands.over_275
+    },
+    nearestSiteAccessSensitivity: {
+      interpretation: 'Optimistic nearest-site sensitivity without capacity balancing: every public address chooses its nearest selected public site. The difference between both scenario minima is not a bound on actual resident behaviour.',
+      totalWalkingDistanceReductionM: round(nearestReduction, 1),
+      totalWalkingDistanceReductionPercent: round(100 * nearestReduction / municipalScenario.nearestSiteAccessSensitivity.totalWalkingDistanceM, 2),
+      averageWalkingDistanceReductionM: round(municipalScenario.nearestSiteAccessSensitivity.averageWalkingDistanceM - recommendedScenario.nearestSiteAccessSensitivity.averageWalkingDistanceM, 1),
+      p95WalkingDistanceReductionM: round(municipalScenario.nearestSiteAccessSensitivity.p95WalkingDistanceM - recommendedScenario.nearestSiteAccessSensitivity.p95WalkingDistanceM, 1),
+      over275Reduction: municipalScenario.nearestSiteAccessSensitivity.distanceBands.over_275 - recommendedScenario.nearestSiteAccessSensitivity.distanceBands.over_275
+    }
   },
   model: {
     formulation: 'capacitated facility-location / p-median with fixed existing facilities and binary unique household assignment',
     objectives: [
-      'retain all 11 existing physical containers at their exact input coordinates',
-      'fix 25 new public containers from the policy target of an average close to 75',
-      'minimize total pedestrian-network distance under the 60-90 new-location policy band',
+      'retain all 11 existing physical containers at their exact input coordinates and access scopes',
+      'fix 25 new public containers from the soft target of an average closest to 75',
+      'minimize total estimated pedestrian-network distance under the chosen 60-90 new-location model band',
       'report p95, maximum and repository distance bands as fairness diagnostics'
     ],
-    locationSelection: 'BGT-aware greedy and cluster-medoid local search, followed by a complete leave-one-out comparison after WH24 became public. This is the best found local solution, not a proof of global MILP optimality.',
+    locationSelection: 'A recorded 26-site pool from the prior BGT-aware local search is reduced by a complete capacity-constrained leave-one-out comparison. The final-stage selection is reproducible; the upstream candidate search is a fixed input and this is not a proof of global facility-location optimality.',
     assignment: recommendedScenario.assignmentSolver,
     routeDistance: matrix.source,
+    privateRouteDistance: 'The seven private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.',
+    routeUncertainty: 'Estimated distance over a local bidirectional OSM pedestrian graph. Prior calibration against the stored routing dataset had MAE 29.9 m and P95 absolute error 80.9 m; reported metres are model values, not field precision.',
     candidateRecordsBeforeCoordinateDeduplication: 207,
     uniqueCandidateCoordinates: 186,
-    distanceThresholdUse: '275 m is not a constraint; it is only a map and equity reporting band.',
-    paperTranslation: 'The paper motivates explicit trade-offs. Here sunk existing facilities are fixed, households are indivisible, a count-based policy band replaces waste-volume capacity and a pedestrian graph replaces straight-line distance.'
+    distanceThresholdUse: 'Within this model, 275 m is not a constraint; it is a map and equity reporting band.',
+    paperTranslation: 'Nevrlý et al. study plastic-waste collection and motivate explicit trade-offs. This report adapts that method to residual waste: sunk existing facilities are fixed, households are indivisible, a count-based model band replaces waste-volume capacity and a pedestrian graph replaces straight-line distance.'
+  },
+  scope: {
+    includedBagResidentialAddressProxies: coverage.houses.length,
+    excludedOutsideBuiltUpArea: 303,
+    boundary: 'The stored 2025-07-01 BRT built-up-area polygon used by the repository. The 303 excluded Warmenhuizen place-query addresses remain a policy-scope decision, not evidence that they need no service.'
   },
   futureDemand: {
-    dergmeerweg: 'The municipal project page states 88 homes. They are not added blindly to this current BAG snapshot; reserve space and re-optimize for at least two further bins when an authoritative address schedule is available.',
+    dergmeerweg: 'The municipal project page states 88 homes. Reserve room for one or two bins depending on net-new BAG addresses, spatial distribution, waste volume and spare capacity; do not add them blindly to this current BAG snapshot.',
     landsheer: 'The municipal project page states 153 homes. First verify which units were already present in the 2026-08-13 BAG snapshot.'
   },
   locations,
-  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'wh24Column', 'screening'].map((name) => [name, {
+  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'screening', 'evaluation'].map((name) => [name, {
     path: relative(projectRoot, paths[name]),
     sha256: sha256(paths[name])
   }]))
 };
 
 const assignments = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedAt: plan.generatedAt,
   scenario: {
-    scenarioType: 'capacity-first-fixed-existing-wh24-public',
+    scenarioType: 'capacity-first-fixed-existing-private-access-preserved',
     targetHouseholdsPerContainer: TARGET,
     mandatoryExistingIds: [...FIXED_PUBLIC_IDS, ...FIXED_PRIVATE_IDS],
     fixedExistingLocationCount: 11,
-    fixedPublicLocationCount: 10,
-    fixedPrivateLocationCount: 1,
+    fixedPublicLocationCount: FIXED_PUBLIC_IDS.length,
+    fixedPrivateLocationCount: FIXED_PRIVATE_IDS.length,
     additionalSiteCount: selectedNewIds.length,
     totalPhysicalLocationCount: locations.length,
     publiclyUsableLocationCount: recommendedSites.length,
@@ -426,10 +458,10 @@ const assignments = {
   locations,
   houses: allRows,
   presentation: {
-    title: 'Capaciteitsplan Warmenhuizen: circa 75 huishoudens per container',
-    subtitle: '11 bestaande locaties blijven · WH24 openbaar · 25 nieuwe zoekzones · loopafstand stuurt de toewijzing',
-    note: '275 meter is alleen een kleur- en kwaliteitsindicator. Zoekankers zijn geen bouwpinnen en vereisen veld-, KLIC-, eigendoms- en HVC-validatie.',
-    locationIntro: 'Groen vierkant: bestaande publieke container. Paars: WH23 privé. Blauwe cirkel: nieuwe zoekzone. Huishoudkleuren volgen de bestaande repo-afstandsbanden.',
+    title: 'Warmenhuizen · circa 75 adressen per openbare container',
+    subtitle: '11 bestaande behouden · 2 privé · 25 nieuwe zoekzones · capaciteitsgestuurde modelafstand',
+    note: 'Binnen dit model is 275 meter alleen een kleur- en kwaliteitsindicator. Zoekankers zijn geen bouwpinnen en vereisen veld-, KLIC-, eigendoms- en HVC-validatie.',
+    locationIntro: 'Donker vierkant: bestaande openbare HVC-locatie. Blauwe ruit: bestaande privélocatie WH23 of WH24. Magenta pluscirkel: nieuw modelanker. Huishoudkleuren volgen de repo-afstandsbanden.',
     showSourceIds: true
   },
   method: plan.model,
@@ -439,4 +471,4 @@ const assignments = {
 writeFileSync(paths.plan, `${JSON.stringify(plan, null, 2)}\n`);
 writeFileSync(paths.assignments, `${JSON.stringify(assignments, null, 2)}\n`);
 writeLocationFiles(locations);
-console.log(JSON.stringify({ decision: plan.decision, recommended: plan.recommendedScenario, municipal: plan.municipalConceptComparison, comparison: plan.comparison }, null, 2));
+console.log(JSON.stringify({ decision: plan.decision, selectedRemoval: selectionWinner.removed, recommended: plan.recommendedScenario, municipal: plan.municipalConceptComparison, comparison: plan.comparison }, null, 2));

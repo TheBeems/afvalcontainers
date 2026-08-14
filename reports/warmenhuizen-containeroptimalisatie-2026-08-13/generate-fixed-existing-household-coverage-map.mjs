@@ -246,6 +246,11 @@ function extractSites(scenario, walkingMatrix, sourceContainers, screenedLocatio
       aerialRating: aerial?.status ?? aerial?.rating ?? null,
       capacityUnitsAt100: getLocationUnitsForCapacity(scenario, id, 100),
       capacityUnitsAt75: getLocationUnitsForCapacity(scenario, id, 75),
+      assignedHouseholds: finiteNumber(
+        objectSite.assignedHouseholds,
+        objectSite.assignedAddresses,
+        objectSite.assignedAddressCount
+      ),
       address: objectSite.address
         ?? objectSite.referenceAddress
         ?? candidate?.address
@@ -514,7 +519,9 @@ function buildContainerLayer(sites, projection) {
         : 'aanvullende onderzoekszone';
     const capacityLabel = Number.isFinite(site.capacityUnitsAt100) && Number.isFinite(site.capacityUnitsAt75)
       ? `${site.capacityUnitsAt100} bak${site.capacityUnitsAt100 === 1 ? '' : 'ken'} bij 100-adresscenario; ${site.capacityUnitsAt75} bij 75-adresscenario`
-      : 'geen capaciteitsgevoeligheid beschikbaar';
+      : Number.isFinite(site.assignedHouseholds)
+        ? `${site.assignedHouseholds} toegewezen adressen`
+        : 'geen capaciteitsgevoeligheid beschikbaar';
     const screeningLabel = site.oldSite
       ? ` — oude zoekzone ${site.oldSite}${site.aerialRating ? `, luchtfoto ${site.aerialRating}` : ''}`
       : '';
@@ -604,6 +611,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
   const containerLayer = buildContainerLayer(sites, projection);
   const presentation = scenario.presentation ?? {};
   const title = presentation.title ?? 'Containerscenario Warmenhuizen';
+  const titleClass = title.length > 48 ? 'title title-compact' : 'title';
   const subtitle = presentation.subtitle
     ?? `${statistics.existingSites} bestaande HVC-locaties · ${statistics.additionalSites} aanvullende onderzoekszones`;
   const note = presentation.note
@@ -625,6 +633,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
     <style>
       text { font-family: "DejaVu Sans", Arial, sans-serif; fill: #172033; }
       .title { font-size: 36px; font-weight: 750; letter-spacing: -0.7px; }
+      .title-compact { font-size: 22px; letter-spacing: -0.3px; }
       .subtitle { font-size: 18px; fill: #475569; }
       .metric-value { font-size: 25px; font-weight: 750; }
       .metric-label { font-size: 14px; fill: #64748b; }
@@ -638,7 +647,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
     </style>
   </defs>
   <rect width="${WIDTH}" height="${HEIGHT}" fill="#f8fafc"/>
-  <text x="48" y="58" class="title">${escapeXml(title)}</text>
+  <text x="48" y="58" class="${titleClass}">${escapeXml(title)}</text>
   <text x="48" y="91" class="subtitle">${escapeXml(subtitle)}</text>
 
   <g transform="translate(48 122)">
@@ -649,7 +658,7 @@ function buildSvg({ households, sites, roads, scenario, inputName }) {
   <g transform="translate(258 122)">
     <rect width="196" height="90" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
     <text x="18" y="39" class="metric-value">${statistics.existingSites} + ${statistics.additionalSites}</text>
-    <text x="18" y="66" class="metric-label">bestaand + onderzoekszones</text>
+    <text x="18" y="66" class="metric-label">bestaand + zoekzones</text>
   </g>
   <g transform="translate(468 122)">
     <rect width="196" height="90" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
@@ -694,7 +703,11 @@ function buildLocationRows(sites) {
       <td>${site.role === 'existing-public' ? 'Bestaande openbare HVC-locatie' : site.role === 'existing-private' ? 'Bestaande private HVC-locatie' : 'Aanvullende onderzoekszone'}</td>
       <td>${escapeHtml(site.address || 'Adresreferentie niet opgegeven')}</td>
       <td>${site.oldSite ? `Site ${site.oldSite}${site.aerialRating ? ` · ${escapeHtml(site.aerialRating)}` : ''}` : '—'}</td>
-      <td>${Number.isFinite(site.capacityUnitsAt100) && Number.isFinite(site.capacityUnitsAt75) ? `${site.capacityUnitsAt100} bij 100 · ${site.capacityUnitsAt75} bij 75` : 'Niet beschikbaar'}</td>
+      <td>${Number.isFinite(site.capacityUnitsAt100) && Number.isFinite(site.capacityUnitsAt75)
+        ? `${site.capacityUnitsAt100} bij 100 · ${site.capacityUnitsAt75} bij 75`
+        : Number.isFinite(site.assignedHouseholds)
+          ? `${site.assignedHouseholds} toegewezen adressen`
+          : 'Niet beschikbaar'}</td>
       <td><code>${site.lat.toFixed(6)}, ${site.lon.toFixed(6)}</code></td>
     </tr>`).join('\n');
 }
@@ -707,9 +720,12 @@ function buildHtml(svg, sites, scenario, inputName) {
   const hasCapacitySensitivity = sites.some((site) => (
     Number.isFinite(site.capacityUnitsAt100) && Number.isFinite(site.capacityUnitsAt75)
   ));
+  const hasAssignedHouseholds = sites.some((site) => Number.isFinite(site.assignedHouseholds));
   const capacityParagraph = hasCapacitySensitivity
     ? '<strong>Bakken (modelgevoeligheid)</strong> toont het benodigde aantal bij maximaal 100 of 75 BAG-adresequivalenten per bak. Dit is geen bestand van actieve afvalpassen en geen meting van afvalvolume, aanbiedfrequentie of vulgraad; het is uitsluitend een rekengevoeligheid en geen operationele capaciteitstoets.'
-    : '<strong>Capaciteit is in dit scenario niet getoetst.</strong> De tabel toont daarom “Niet beschikbaar”. Zonder bakvolume, aanbiedfrequentie, vulgraad en ledigingsregime kan deze kaart geen uitspraak doen over het benodigde aantal fysieke bakken per locatie.';
+    : hasAssignedHouseholds
+      ? '<strong>Modelbelasting</strong> toont de exclusieve adresproxytoewijzing uit het scenario. Dit is geen bestand van actieve afvalpassen en geen meting van afvalvolume, aanbiedfrequentie of vulgraad; zonder die gegevens is het geen operationele capaciteitstoets.'
+      : '<strong>Capaciteit is in dit scenario niet getoetst.</strong> De tabel toont daarom “Niet beschikbaar”. Zonder bakvolume, aanbiedfrequentie, vulgraad en ledigingsregime kan deze kaart geen uitspraak doen over het benodigde aantal fysieke bakken per locatie.';
   return `<!doctype html>
 <html lang="nl">
 <head>
@@ -729,7 +745,7 @@ function buildHtml(svg, sites, scenario, inputName) {
     button { min-height: 38px; border: 1px solid #94a3b8; border-radius: 8px; padding: 0 13px; background: #f8fafc; color: #172033; font: inherit; font-weight: 650; cursor: pointer; }
     button:focus-visible, input:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
     .map-scroll { overflow: auto; border-radius: 14px; background: #f8fafc; }
-    svg { display: block; width: 100%; height: auto; min-width: 720px; }
+    svg { display: block; width: 100%; height: auto; min-width: 1050px; }
     .is-hidden { display: none; }
     .panel { margin-top: 18px; padding: clamp(14px, 2vw, 24px); }
     h2 { margin: 0 0 12px; font-size: 1.35rem; }
@@ -775,7 +791,7 @@ function buildHtml(svg, sites, scenario, inputName) {
       <p>${capacityParagraph}</p>
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Kaart-ID</th><th>Rol</th><th>Adresreferentie</th><th>Oude screen</th><th>Bakken (modelgevoeligheid)</th><th>Coördinaten</th></tr></thead>
+          <thead><tr><th>Kaart-ID</th><th>Rol</th><th>Adresreferentie</th><th>Oude screen</th><th>Modelbelasting</th><th>Coördinaten</th></tr></thead>
           <tbody>${buildLocationRows(sites)}</tbody>
         </table>
       </div>

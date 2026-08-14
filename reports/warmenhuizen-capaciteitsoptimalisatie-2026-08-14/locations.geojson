@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "name": "Warmenhuizen capacity-first plan, approximately 75 BAG residential address proxies per bin",
+  "name": "Warmenhuizen capacity-first plan, approximately 75 BAG residential address proxies per public bin",
   "features": [
     {
       "type": "Feature",
@@ -20,8 +20,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 70,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
@@ -52,8 +52,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
@@ -84,8 +84,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
@@ -116,9 +116,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 51,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 52,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 2.2,
@@ -148,9 +148,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 84,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 90,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 3.6,
@@ -159,38 +159,6 @@
           "water": 27.7,
           "tree": 14.1,
           "obstacle": 3
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          4.74024,
-          52.720753
-        ]
-      },
-      "properties": {
-        "id": "WH24",
-        "kind": "existing",
-        "status": "existing",
-        "address": "Pastoor Willemsestraat 80",
-        "sourceType": "hvc-existing-user-confirmed-public",
-        "accessScope": "public",
-        "capacityUnits": 1,
-        "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 44,
-        "screeningRating": "fixed",
-        "bgtDistancesM": {
-          "vehicleRoad": null,
-          "openSpace": null,
-          "facade": null,
-          "water": null,
-          "tree": null,
-          "obstacle": null
         }
       }
     },
@@ -212,8 +180,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "red-fixed",
         "bgtDistancesM": {
@@ -244,8 +212,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
@@ -276,8 +244,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 89,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
@@ -308,8 +276,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": null,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 31,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
@@ -340,8 +308,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "green",
         "bgtDistancesM": {
@@ -372,8 +340,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -404,8 +372,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 70,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -436,8 +404,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -468,8 +436,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 63,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -500,8 +468,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -532,8 +500,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -564,8 +532,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -596,9 +564,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 61,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 62,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 3.1,
@@ -628,8 +596,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -660,8 +628,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -692,9 +660,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 88,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0.1,
@@ -724,8 +692,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -756,8 +724,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 72,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -788,9 +756,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 61,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 62,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -820,9 +788,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 84,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 85,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -852,8 +820,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -884,9 +852,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 73,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 86,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -916,8 +884,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -948,8 +916,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -980,9 +948,9 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
-        "assignedHouseholds": 73,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 88,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -1012,8 +980,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "green",
         "bgtDistancesM": {
@@ -1044,8 +1012,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -1076,8 +1044,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 65,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -1108,8 +1076,8 @@
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
-        "minimumPolicyLoad": 60,
-        "maximumPolicyLoad": 90,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
         "assignedHouseholds": 87,
         "screeningRating": "orange",
         "bgtDistancesM": {
@@ -1148,6 +1116,35 @@
         ],
         "capacityUnits": 1,
         "assignedHouseholds": 3,
+        "screeningRating": "private-fixed"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74024,
+          52.720753
+        ]
+      },
+      "properties": {
+        "id": "WH24",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Pastoor Willemsestraat 80",
+        "hvcContainerId": "80428",
+        "sourceType": "hvc-existing-private",
+        "accessScope": "private",
+        "accessLabel": "Privé Angelapark",
+        "allowedAddresses": [
+          {
+            "street": "Pastoor Willemsestraat",
+            "houseNumbers": "80, 82, 84, 86"
+          }
+        ],
+        "capacityUnits": 1,
+        "assignedHouseholds": 4,
         "screeningRating": "private-fixed"
       }
     }
