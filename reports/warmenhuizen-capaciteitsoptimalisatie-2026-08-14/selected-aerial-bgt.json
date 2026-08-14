@@ -31,7 +31,8 @@
     ],
     "searchRadiusM": 20
   },
-  "input": "household-assignment.json",
+  "input": "historical 25-zone selection before the user-directed WH02/WH30 replacements and M082 addition",
+  "selectionStatus": "Image and BGT archive. The current contact sheet filters this file to the 23 retained zones; M055, M056 and M082 still require fresh capture and screening.",
   "sites": [
     {
       "id": "WH18",

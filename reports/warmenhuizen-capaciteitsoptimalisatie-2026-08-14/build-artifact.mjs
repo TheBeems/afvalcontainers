@@ -40,6 +40,8 @@ const recommendedDistance = recommended.capacityBalancedDistance;
 const municipalDistance = municipal.capacityBalancedDistance;
 const capacityComparison = plan.comparison.capacityBalanced;
 const nearestComparison = plan.comparison.nearestSiteAccessSensitivity;
+const baseline = plan.decisionBaseline;
+const findings = plan.locationChangeFindings;
 const scenarioRows = [
   {
     scenario: 'Gemeentelijke restvoorstellen',
@@ -55,7 +57,7 @@ const scenarioRows = [
     dichtstbij_boven_275: municipal.nearestSiteAccessSensitivity.distanceBands.over_275
   },
   {
-    scenario: 'Capaciteitsplan met private toegang behouden',
+    scenario: 'Besloten variant met WH24 openbaar',
     label: 'Advies',
     openbare_locaties: recommended.publicLocationCount,
     nieuwe_locaties: recommended.newPublicLocationCount,
@@ -87,7 +89,9 @@ const newRows = plan.locations.filter(({ kind }) => kind === 'new').map((locatio
   bureauscreen: location.screeningRating,
   status: location.screeningRating === 'green'
     ? 'plausibele zoekzone; integraal toetsen'
-    : 'lokale verschuiving/conflictcontrole nodig'
+    : location.screeningRating === 'not-screened'
+      ? 'exacte pin nog niet integraal gescreend'
+      : 'lokale verschuiving/conflictcontrole nodig'
 }));
 
 const existingRows = plan.locations.filter(({ kind }) => kind === 'existing').map((location) => ({
@@ -101,10 +105,10 @@ const existingRows = plan.locations.filter(({ kind }) => kind === 'existing').ma
 
 const criteriaRows = [
   { criterium: 'Loopafstand', artikel: 'volumegewogen afstand', toepassing: 'één BAG-woonadresproxy; geschatte OSM-netwerkafstand', grens: '275 m alleen modelrapportage' },
-  { criterium: 'Aantal punten/bakken', artikel: 'aantal inzamelpunten en containertype', toepassing: 'zacht doel round(2.572 / 75): 25 nieuwe openbare bakken', grens: '34 openbaar + 2 privé' },
+  { criterium: 'Aantal punten/bakken', artikel: 'aantal inzamelpunten en containertype', toepassing: 'besloten servicevariant: 36 openbaar, inclusief M082', grens: '35 openbaar is de rekenkundige minimumtelling bij maximaal 75' },
   { criterium: 'Capaciteit', artikel: 'volume, frequentie en benutting', toepassing: 'gekozen modelband 60–90 adressen per nieuwe bak', grens: 'geen liter-/kilogrambewijs' },
   { criterium: 'Servicetijd', artikel: 'voertuigservicetijd', toepassing: 'alleen BGT/OSM/orthofoto-voorselectie', grens: 'HVC-ritten en stoptijden ontbreken' },
-  { criterium: 'Kosten', artikel: 'aanschafkosten', toepassing: 'bestaande locaties vast; nieuw aantal uit zacht doel', grens: 'lokale civiele en beheerkosten ontbreken' }
+  { criterium: 'Kosten', artikel: 'aanschafkosten', toepassing: 'alle bestaande locaties vast; één extra fysieke container ten opzichte van de baseline', grens: 'lokale civiele en beheerkosten ontbreken' }
 ];
 
 const loadDistributionRows = [
@@ -127,7 +131,7 @@ const sources = [
   { id: 'bgt', label: 'PDOK BGT OGC API', href: 'https://api.pdok.nl/lv/bgt/ogc/v1?f=html&lang=nl', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/location-screening.json' },
   { id: 'orthophoto', label: 'PDOK luchtfoto RGB', href: 'https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-' },
   { id: 'osm', label: 'OpenStreetMap pedestrian-network snapshot', href: 'https://www.openstreetmap.org/copyright', path: 'reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json' },
-  { id: 'selection', label: 'Volledige eindselectie van de 26-kandidatenpool', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json' },
+  { id: 'selection', label: 'Eerdere 26-kandidaten-baseline', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json' },
   { id: 'plan_json', label: 'Volledig capaciteitsplan en bronhashes', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/capacity-plan.json' },
   { id: 'assignments', label: 'Unieke toewijzing van 2.579 adresproxies', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/household-assignment.json' },
   { id: 'map', label: 'Interactieve afstandskaart', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/overview-map.html' }
@@ -137,7 +141,7 @@ const charts = [
   {
     id: 'distance_comparison',
     title: 'Capaciteitsgebalanceerde modelafstand',
-    subtitle: 'Exclusieve toewijzing van dezelfde 2.572 openbare BAG-woonadresproxies; advies heeft vier openbare locaties meer.',
+    subtitle: 'Exclusieve toewijzing van dezelfde 2.576 openbare BAG-woonadresproxies; advies heeft vijf openbare locaties meer.',
     type: 'bar', dataset: 'scenarios',
     source: inlineSqlSource('distance_comparison_sql', 'Afstandsvergelijking', scenarioRows, ['label', 'toegewezen_gemiddeld_m', 'toegewezen_p95_m'], 'Afgeleid uit capacity-plan.json.'),
     encodings: {
@@ -164,7 +168,7 @@ const charts = [
   {
     id: 'new_loads',
     title: 'Nieuwe locaties rond het zachte doel 75',
-    subtitle: 'Verdeling van 25 nieuwe bakken binnen de gekozen modelband 60–90.',
+    subtitle: 'Verdeling van 26 nieuwe bakken binnen de gekozen modelband 60–90.',
     type: 'bar', dataset: 'load_distribution',
     source: inlineSqlSource('new_loads_sql', 'Belastingsbanden nieuwe locaties', loadDistributionRows, ['band', 'aantal'], 'Geteld uit capacity-plan.json.'),
     encodings: {
@@ -178,7 +182,7 @@ const charts = [
 const tables = [
   {
     id: 'scenario_table', title: 'Twee interpretaties naast elkaar',
-    subtitle: 'WH23 en WH24 blijven in beide scenario’s privé; afstand is geschat over dezelfde lokale OSM-graaf.',
+    subtitle: 'WH24 is openbaar en alleen WH23 blijft privé; afstand is geschat over dezelfde lokale OSM-graaf.',
     dataset: 'scenarios', density: 'dense',
     source: inlineSqlSource('scenario_table_sql', 'Scenario-KPI’s', scenarioRows, Object.keys(scenarioRows[0]), 'Afgeleid uit capacity-plan.json.'),
     columns: [
@@ -192,7 +196,7 @@ const tables = [
     ]
   },
   {
-    id: 'new_locations_table', title: 'De 25 aanvullende zoekzones', subtitle: 'Service-ankers; geen bouw- of graafpinnen.',
+    id: 'new_locations_table', title: 'De 26 aanvullende zoekzones', subtitle: 'Service-ankers; geen bouw- of graafpinnen.',
     dataset: 'new_locations', density: 'dense',
     source: inlineSqlSource('new_locations_sql', 'Nieuwe zoekzones', newRows, Object.keys(newRows[0]), 'Afgeleid uit capacity-plan.json.'),
     columns: [
@@ -204,7 +208,7 @@ const tables = [
     ]
   },
   {
-    id: 'existing_table', title: 'De elf onverplaatste bestaande locaties', subtitle: 'Negen openbaar; WH23 en WH24 met hun bestaande private allowlists.',
+    id: 'existing_table', title: 'De elf onverplaatste bestaande locaties', subtitle: 'Tien openbaar, inclusief WH24; alleen WH23 blijft privé.',
     dataset: 'existing_locations', density: 'dense',
     source: inlineSqlSource('existing_locations_sql', 'Bestaande locaties', existingRows, Object.keys(existingRows[0]), 'Afgeleid uit capacity-plan.json.'),
     columns: [
@@ -228,20 +232,26 @@ const tables = [
   }
 ];
 
-const selection = recommended.recordedCandidatePoolSelection;
 const blocks = [
   { id: 'title', type: 'markdown', body: `# ${title}` },
   {
-    id: 'summary', type: 'markdown', body: `## Advies
+    id: 'summary', type: 'markdown', body: `## Executive Summary
 
-Behoud alle **11 bestaande** containers en hun toegangsrechten exact. WH23 en WH24 blijven privé voor samen zeven geconfigureerde adressen. Plaats **25 nieuwe openbare bakken**: 36 fysiek totaal, waarvan 34 openbaar. De 2.572 openbare BAG-woonadresproxies geven gemiddeld **${recommended.averageHouseholdsPerPublicContainer} adressen per openbare container**.
+- **37 fysieke containers, waarvan 36 openbaar.** WH24 wordt openbaar, alleen WH23 blijft privé en M082 wordt toegevoegd terwijl M094 behouden blijft.
+- **Gerichte verschuivingen verbeteren de drie probleemgebieden.** WH02 → M055 bij De Fuik en WH30 → M056 in de oostelijke wijk; M027 en M044 blijven staan.
+- **De gemiddelde capaciteitsgebalanceerde modelafstand daalt van ${baseline.capacityBalancedDistance.averageWalkingDistanceM} naar ${recommendedDistance.averageWalkingDistanceM} meter.** P95 daalt met ${findings.p95WalkingDistanceReductionM} meter en openbare adressen boven 275 meter van ${baseline.capacityBalancedDistance.distanceBands.over_275} naar ${recommendedDistance.distanceBands.over_275}.
+- **M094 behouden geeft een kleine aanvullende servicewinst.** Tegenover de gelijk-aantalvariant daalt het gemiddelde nog ${findings.samePhysicalCountSensitivity.extraContainerBenefit.averageWalkingDistanceReductionM} meter en zijn er vier adressen minder boven 275 meter.
 
-Het zachte doelaantal is \`round(2.572 / 75) = 34\` openbaar. De gekozen modelband voor nieuwe locaties is 60–90. Als 75 een harde bovengrens is, is 35 openbaar en 37 fysiek alleen een rekenkundige ondergrens; een 26-locatielijst en maximum-75-toewijzing zijn niet doorgerekend.`
+De 2.576 openbare BAG-woonadresproxies geven gemiddeld **${recommended.averageHouseholdsPerPublicContainer} adressen per openbare container**. De rekenkundige minimumtelling bij maximaal 75 is 35 openbaar; deze servicevariant kiest er één extra. Alle nieuwe locaties blijven binnen de gekozen modelband 60–90.`
   },
   { id: 'scenario_table_block', type: 'table', tableId: 'scenario_table' },
   { id: 'distance_chart_block', type: 'chart', chartId: 'distance_comparison' },
   {
-    id: 'comparison', type: 'markdown', body: `De capaciteitsgebalanceerde één-op-één-toewijzing geeft **${capacityComparison.totalWalkingDistanceReductionPercent}%** minder totale modelafstand en ${capacityComparison.over275Reduction} minder openbare adressen boven 275 m. In een optimistische gevoeligheid kiest ieder adres zonder capaciteitsbalans de dichtstbijzijnde geselecteerde locatie; dan is dat **${nearestComparison.totalWalkingDistanceReductionPercent}%** en ${nearestComparison.over275Reduction}. Het verschil tussen beide scenariominima is geen grens voor werkelijk gedrag. Het advies gebruikt vier openbare locaties meer; beide cijfers combineren dus locatiekeuze en extra capaciteit.`
+    id: 'comparison', type: 'markdown', body: `## De locatieaanpassingen pakken de rode zones gericht aan
+
+Tegenover de WH24-openbare baseline daalt de totale modelafstand ${findings.totalWalkingDistanceReductionM} meter en zijn er ${findings.over275Reduction} minder openbare adressen boven 275 m. De Fuik gaat van 16 naar 2, Dorpsstraat/Fabrieksstraat/'t Eiland van 67 naar 20 en de oostelijke woonwijk van 7 naar 0.
+
+Ten opzichte van het gemeentelijke concept geeft de capaciteitsgebalanceerde één-op-één-toewijzing **${capacityComparison.totalWalkingDistanceReductionPercent}%** minder totale modelafstand en ${capacityComparison.over275Reduction} minder openbare adressen boven 275 m. In de optimistische dichtstbijzijnde-locatiegevoeligheid is dat **${nearestComparison.totalWalkingDistanceReductionPercent}%** en ${nearestComparison.over275Reduction}. Het advies gebruikt vijf openbare locaties meer; beide cijfers combineren dus locatiekeuze en extra capaciteit.`
   },
   { id: 'band_chart_block', type: 'chart', chartId: 'distance_bands' },
   {
@@ -249,26 +259,26 @@ Het zachte doelaantal is \`round(2.572 / 75) = 34\` openbaar. De gekozen modelba
 
 Nevrlý et al. onderzoeken plasticafval en modelleren volumegewogen loopafstand, aantal inzamelpunten, aanschafkosten en voertuigservicetijd als conflicterende criteria. Dit rapport past de afwegingsmethode toe op restafval. Er volgt geen universele 275-metergrens uit het artikel.
 
-De 75 is een BAG-adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, vulgraad, ledigingsfrequentie, lokale kosten en HVC-servicetijden ontbreken. De OSM-netwerkafstand is een schatting; de eerdere kalibratie had MAE 29,9 m en P95 absolute afwijking 80,9 m. De openbare scenariovergelijking gebruikt alleen deze matrix; de zeven private kaartrijen behouden hun opgeslagen OSRM-route en beïnvloeden de vergelijking niet.`
+	De 75 is een BAG-adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, vulgraad, ledigingsfrequentie, lokale kosten en HVC-servicetijden ontbreken. De OSM-netwerkafstand is een schatting; de eerdere kalibratie had MAE 29,9 m en P95 absolute afwijking 80,9 m. De openbare scenariovergelijking gebruikt alleen deze matrix; de drie private WH23-kaartrijen behouden hun opgeslagen OSRM-route en beïnvloeden de vergelijking niet.`
   },
   { id: 'criteria_table_block', type: 'table', tableId: 'criteria_table' },
   { id: 'loads_chart_block', type: 'chart', chartId: 'new_loads' },
   { id: 'existing_table_block', type: 'table', tableId: 'existing_table' },
   { id: 'new_table_block', type: 'table', tableId: 'new_locations_table' },
   {
-    id: 'selection', type: 'markdown', body: `## Eindselectie
+    id: 'selection', type: 'markdown', body: `## Besloten locatievariant
 
-Alle 26 vastgelegde toevoegingskandidaten zijn onder dezelfde 60–90-regels vergeleken. ${selection.removedSearchAnchorId} vervalt; de nummer twee (${selection.runnerUpRemovedId} laten vervallen) is ${selection.runnerUpAdditionalDistanceM} modelmeter langer. De upstream kandidaatzoekgang is een vastgelegde beoordeelde invoer; dit is geen wereldwijd optimaliteitsbewijs.`
+De vorige 25 zoekzones zijn als baseline herbouwd. WH02 is vervangen door M055, WH30 door M056 en M082 is toegevoegd. M027, M044 en M094 blijven behouden. De gelijk-aantalvariant zonder M094 heeft ${findings.samePhysicalCountSensitivity.capacityBalancedDistance.distanceBands.over_275} adressen boven 275 m; met M094 zijn dat ${recommendedDistance.distanceBands.over_275}. Als M044 vervalt loopt WH24 op tot ${findings.m044RemovalSensitivity.assignedHouseholdsByLocation.WH24} adressen en neemt de totale afstand toe. De locatiekeuzes zijn scenarioafwegingen, geen wereldwijd optimaliteitsbewijs.`
   },
   {
     id: 'map', type: 'markdown', body: `## Kaart en afstandskleuren
 
-Open [de interactieve overzichtskaart](overview-map.html) of [de SVG-kaart](overview-map.svg). Donker vierkant is bestaand openbaar, blauwe ruit is bestaand privé en magenta pluscirkel is een nieuw modelanker. Binnen dit model is 275 m alleen een kwaliteitsindicator.`
+Open [de interactieve overzichtskaart](overview-map.html) of [de SVG-kaart](overview-map.svg). Donker vierkant is bestaand openbaar, inclusief WH24; de blauwe ruit is WH23 privé en magenta pluscirkel is een nieuw modelanker. Binnen dit model is 275 m alleen een kwaliteitsindicator.`
   },
   {
     id: 'screening', type: 'markdown', body: `## Zoekzones zijn geen bouwpinnen
 
-Vier nieuwe zones zijn groen en 21 oranje in de voorselectie. Geen enkele zone is uitvoeringsrijp. Orthofoto, BGT, OSM en gemeentelijke stukken bewijzen geen eigendom, vrije kabel-/leidingruimte, boomwortelvrij volume, voertuigbeweging, parkeerdruk of draagkracht.
+Vier nieuwe zones zijn groen en negentien oranje in de bestaande voorselectie. M055, M056 en M082 zijn op hun exacte pin nog niet integraal gescreend. Geen enkele zone is uitvoeringsrijp. Orthofoto, BGT, OSM en gemeentelijke stukken bewijzen geen eigendom, vrije kabel-/leidingruimte, boomwortelvrij volume, voertuigbeweging, parkeerdruk of draagkracht.
 
 Vereist: veldinmeting, KLIC en zo nodig proefsleuven, juridische titel, bodem/water/bomen, toegankelijkheid en een HVC rijcurve-, stempel- en hijsproef. Iedere pinverschuiving vraagt een nieuwe route- en capaciteitsrun.`
   },
@@ -282,7 +292,7 @@ Dergmeerweg noemt 88 toekomstige woningen: reserveer ruimte voor één of twee e
   {
     id: 'reproducibility', type: 'markdown', body: `## Reproduceerbaarheid
 
-\`evaluate-private-access-finalists.mjs\` herbouwt de complete eindselectie. \`build-capacity-plan.mjs\` bouwt beide private allowlists en de unieke capaciteitsassignments. \`validate-capacity-plan.mjs\` controleert adressen, lasten, toegang, vaste coördinaten, bronhashes en kaartpresentatie. Zie [private-access-leave-one-out.json](private-access-leave-one-out.json), [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson).`
+\`build-wh24-public-column.mjs\` herbouwt de openbare WH24-afstandskolom. \`build-capacity-plan.mjs\` bouwt de WH24-openbare baseline, de besloten locatievariant, gevoeligheden en unieke capaciteitsassignments. \`validate-capacity-plan.mjs\` controleert adressen, lasten, toegang, vaste coördinaten, bronhashes en kaartpresentatie. Zie [private-access-leave-one-out.json](private-access-leave-one-out.json) voor de eerdere baseline en [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson) voor de actuele variant.`
   }
 ];
 
@@ -290,7 +300,7 @@ const manifest = {
   version: 1,
   surface: 'report',
   title,
-  description: 'Brononderbouwd capaciteitsplan met 11 bestaande, twee private allowlists en 25 nieuwe openbare restcontainers.',
+  description: 'Brononderbouwd capaciteitsplan met 11 bestaande locaties, WH24 openbaar, WH23 privé en 26 nieuwe openbare zoekzones.',
   generatedAt,
   charts,
   tables,

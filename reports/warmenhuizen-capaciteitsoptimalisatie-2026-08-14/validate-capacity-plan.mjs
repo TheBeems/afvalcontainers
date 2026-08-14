@@ -36,14 +36,14 @@ const sourceById = new Map(sourceContainers.map((container) => [container.id, co
 
 assert(plan.schemaVersion === 2 && assignments.schemaVersion === 2, 'Expected capacity-report schema version 2.');
 assert(plan.decision.existingPhysicalContainersRetained === 11, 'Exactly 11 existing physical containers must remain.');
-assert(plan.decision.existingPublicContainers === 9, 'Expected nine public existing locations.');
-assert(plan.decision.existingPrivateContainers === 2, 'WH23 and WH24 must remain private.');
-assert(plan.decision.newPublicContainers === 25, 'Soft target scenario should use 25 new public containers.');
-assert(plan.decision.publicContainers === 34 && plan.decision.totalPhysicalContainers === 36, 'Soft target location counts differ.');
-assert(plan.decision.softTargetContainerCount.requiredNewPublicContainers === 25, 'Soft target count differs.');
-assert(plan.decision.hardMaximum75ArithmeticSensitivity.requiredNewPublicContainers === 26, 'Hard-75 arithmetic count differs.');
-assert(plan.decision.hardMaximum75ArithmeticSensitivity.scope.includes('Arithmetic container count only'), 'Hard-75 count is not scoped as arithmetic-only.');
-assert(plan.decision.publicBagResidentialAddressProxies === 2572 && plan.decision.privateAllowlistedAddressProxies === 7, 'Public/private demand counts differ.');
+assert(plan.decision.existingPublicContainers === 10, 'Expected ten public existing locations including WH24.');
+assert(plan.decision.existingPrivateContainers === 1, 'Only WH23 should remain private.');
+assert(plan.decision.newPublicContainers === 26, 'Decision scenario should use 26 new public containers.');
+assert(plan.decision.publicContainers === 36 && plan.decision.totalPhysicalContainers === 37, 'Decision-scenario location counts differ.');
+assert(plan.decision.softTargetContainerCount.requiredNewPublicContainers === 24, 'Soft target arithmetic count differs.');
+assert(plan.decision.hardMaximum75ArithmeticSensitivity.requiredNewPublicContainers === 25, 'Hard-75 arithmetic count differs.');
+assert(plan.decision.hardMaximum75ArithmeticSensitivity.scope.includes('Arithmetic minimum only'), 'Hard-75 count is not scoped as arithmetic-only.');
+assert(plan.decision.publicBagResidentialAddressProxies === 2576 && plan.decision.privateAllowlistedAddressProxies === 3, 'Public/private demand counts differ.');
 
 assert(assignments.houses.length === sourceCoverage.houses.length, 'Assignment count differs from BAG coverage.');
 assert(new Set(assignments.houses.map(({ houseId }) => houseId)).size === sourceCoverage.houses.length, 'Assignments are not unique by house ID.');
@@ -58,12 +58,15 @@ for (const source of expectedExisting) {
   const location = locationById.get(source.id);
   assert(location, `Existing ${source.id} is missing.`);
   assert(location.lat === source.lat && location.lon === source.lon, `${source.id} coordinate moved.`);
-  assert(location.accessScope === (source.access?.scope ?? 'public'), `${source.id} access scope differs from the source.`);
+  const expectedAccessScope = source.id === 'WH24' ? 'public' : (source.access?.scope ?? 'public');
+  assert(location.accessScope === expectedAccessScope, `${source.id} access scope differs from the decision scenario.`);
 }
 assert(locationById.get('WH23').accessScope === 'private', 'WH23 must remain private.');
-assert(locationById.get('WH24').accessScope === 'private', 'WH24 must remain private.');
+assert(locationById.get('WH24').accessScope === 'public', 'WH24 must be public in the decision scenario.');
 assert(!locationById.has('M154'), 'M154 should be the removed addition candidate.');
 assert(locationById.has('M157'), 'M157 should be retained at Dergmeerweg.');
+for (const id of ['M027', 'M044', 'M055', 'M056', 'M082', 'M094']) assert(locationById.has(id), `${id} is missing from the selected variant.`);
+assert(!locationById.has('WH02') && !locationById.has('WH30'), 'Superseded WH02 or WH30 remains in the selected variant.');
 
 const loads = Object.fromEntries(assignments.locations.map(({ id }) => [id, 0]));
 for (const house of assignments.houses) {
@@ -80,15 +83,14 @@ for (const location of assignments.locations) {
 }
 
 const expectedPrivateAddresses = {
-  WH23: ['Pastoor Willemsestraat 9', 'Pastoor Willemsestraat 131', 'Pastoor Willemsestraat 224'],
-  WH24: ['Pastoor Willemsestraat 80', 'Pastoor Willemsestraat 82', 'Pastoor Willemsestraat 84', 'Pastoor Willemsestraat 86']
+  WH23: ['Pastoor Willemsestraat 9', 'Pastoor Willemsestraat 131', 'Pastoor Willemsestraat 224']
 };
 for (const [id, addresses] of Object.entries(expectedPrivateAddresses)) {
   const assigned = assignments.houses.filter(({ assignedContainerId }) => assignedContainerId === id).map(({ address }) => address);
   assert(JSON.stringify(sorted(assigned)) === JSON.stringify(sorted(addresses)), `${id} private allowlist changed.`);
   assert(sourceById.get(id).access.scope === 'private', `${id} is no longer private in source data.`);
 }
-assert(assignments.houses.filter(({ assignedLocationAccessScope }) => assignedLocationAccessScope === 'private').length === 7, 'Unexpected private assignment count.');
+assert(assignments.houses.filter(({ assignedLocationAccessScope }) => assignedLocationAccessScope === 'private').length === 3, 'Unexpected private assignment count.');
 
 const counts = { within_100: 0, between_100_125: 0, between_125_150: 0, between_150_275: 0, over_275: 0, unreachable: 0 };
 let total = 0;
@@ -98,17 +100,23 @@ for (const house of assignments.houses) {
 }
 assert(JSON.stringify(counts) === JSON.stringify(assignments.scenario.distanceBands), 'Scenario distance-band totals differ.');
 assert(round(total) === plan.recommendedScenario.totalDistanceIncludingPrivate.totalWalkingDistanceM, 'Total distance differs.');
-assert(plan.recommendedScenario.capacityBalancedDistance.householdCount === 2572, 'Public household count differs.');
-assert(plan.recommendedScenario.capacityBalancedDistance.distanceBands.over_275 === 176, 'Expected 176 public addresses over 275 m.');
-assert(plan.comparison.capacityBalanced.totalWalkingDistanceReductionPercent === 23.22, 'Capacity-balanced comparison changed.');
-assert(plan.comparison.nearestSiteAccessSensitivity.totalWalkingDistanceReductionPercent === 17.5, 'Nearest-site comparison changed.');
+assert(plan.recommendedScenario.capacityBalancedDistance.householdCount === 2576, 'Public household count differs.');
+assert(plan.recommendedScenario.capacityBalancedDistance.distanceBands.over_275 === 88, 'Expected 88 public addresses over 275 m.');
+assert(plan.recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM === 345441.9, 'Recommended objective changed.');
+assert(plan.comparison.capacityBalanced.totalWalkingDistanceReductionPercent === 24.98, 'Capacity-balanced comparison changed.');
+assert(plan.comparison.nearestSiteAccessSensitivity.totalWalkingDistanceReductionPercent === 22.02, 'Nearest-site comparison changed.');
+assert(plan.decisionBaseline.capacityBalancedDistance.totalWalkingDistanceM === 364802.2, 'WH24-public baseline changed.');
+assert(plan.locationChangeFindings.over275Reduction === 69, 'Location-change over-275 improvement changed.');
+assert(plan.locationChangeFindings.samePhysicalCountSensitivity.extraContainerBenefit.over275Reduction === 4, 'M094-retention sensitivity changed.');
+assert(plan.locationChangeFindings.focusAreas.deFuik.recommended.distanceBands.over_275 === 2, 'De Fuik result changed.');
+assert(plan.locationChangeFindings.focusAreas.dorpsFabriekEiland.recommended.distanceBands.over_275 === 20, 'Dorpsstraat/Fabrieksstraat result changed.');
+assert(plan.locationChangeFindings.focusAreas.eastNeighbourhood.recommended.distanceBands.over_275 === 0, 'East-neighbourhood result changed.');
 
 assert(evaluation.results.length === 26 && evaluation.results[0].removed === 'M154', 'Complete 26-candidate selection differs.');
 assert(evaluation.results[1].removed === 'M157', 'Expected M157 as selection runner-up.');
 assert(round(evaluation.results[1].total - evaluation.results[0].total, 1) === 1207.6, 'Selection runner-up distance differs.');
-assert(round(evaluation.results[0].total, 1) === round(plan.recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM, 1), 'Evaluation winner and plan differ.');
 
-assert(screening.locations.length === 36, 'Screening must contain the 36 selected physical locations.');
+assert(screening.locations.length === 37, 'Screening must contain the 37 selected physical locations.');
 assert(screening.locations.every((location) => !Object.hasOwn(location, 'assignedHouseholds')), 'Screening must not contain model-output loads.');
 assert(JSON.stringify(sorted(screening.locations.map(({ id }) => id))) === JSON.stringify(sorted(assignments.locations.map(({ id }) => id))), 'Screening and assignment location IDs differ.');
 assert(geojson.features.length === assignments.locations.length, 'GeoJSON location count differs.');
@@ -116,9 +124,11 @@ const tsvLines = readFileSync(resolve(reportDirectory, 'locations.tsv'), 'utf8')
 assert(tsvLines.length === assignments.locations.length + 1, 'TSV location count differs.');
 
 const selectedNewIds = assignments.locations.filter(({ kind }) => kind === 'new').map(({ id }) => id);
-assert(aerial.sites.length === 25, 'Expected 25 selected orthophoto records.');
-assert(JSON.stringify(sorted(aerial.sites.map(({ id }) => id))) === JSON.stringify(sorted(selectedNewIds)), 'Orthophoto and selected-new IDs differ.');
-for (const site of aerial.sites) {
+const currentAerialSites = aerial.sites.filter(({ id }) => selectedNewIds.includes(id));
+assert(currentAerialSites.length === 23, 'Expected 23 retained orthophoto records.');
+assert(!currentAerialSites.some(({ id }) => ['WH02', 'WH30'].includes(id)), 'Superseded site remains in the current orthophoto subset.');
+assert(JSON.stringify(sorted(selectedNewIds.filter((id) => !currentAerialSites.some((site) => site.id === id)))) === JSON.stringify(['M055', 'M056', 'M082']), 'Unexpected current sites lack orthophotos.');
+for (const site of currentAerialSites) {
   assert(existsSync(resolve(reportDirectory, site.aerialImage)), `Orthophoto ${site.aerialImage} is missing.`);
 }
 
@@ -126,7 +136,7 @@ for (const [name, input] of Object.entries(plan.inputs)) {
   const path = resolve(projectRoot, input.path);
   assert(sha256(path) === input.sha256, `${name} SHA-256 differs.`);
 }
-assert(!Object.hasOwn(plan.inputs, 'wh24Column'), 'Obsolete WH24-public input is still recorded.');
+assert(Object.hasOwn(plan.inputs, 'wh24Column'), 'WH24-public distance input is not recorded.');
 
 const svg = readFileSync(resolve(reportDirectory, 'overview-map.svg'), 'utf8');
 const mapHtml = readFileSync(resolve(reportDirectory, 'overview-map.html'), 'utf8');
@@ -136,25 +146,27 @@ for (const color of ['#15803d', '#eab308', '#f97316', '#dc2626', '#7f1d1d', '#64
   assert(svg.includes(color) && mapHtml.includes(color), `Map color ${color} is missing.`);
 }
 assert(svg.includes('WH23') && svg.includes('WH24'), 'Private locations are missing from the map.');
-assert(svg.includes('25 nieuwe zoekzones'), 'Map subtitle does not state 25 new zones.');
-assert(svg.includes('4 toegewezen adressen') && mapHtml.includes('4 toegewezen adressen'), 'WH24 private load is missing from map tooltips.');
+assert(svg.includes('26 nieuwe zoekzones'), 'Map subtitle does not state 26 new zones.');
+assert(svg.includes('WH24') && svg.includes('24 toegewezen adressen'), 'WH24 public load is missing from map tooltips.');
+assert(svg.includes('M055') && svg.includes('M056') && svg.includes('M082') && svg.includes('M094'), 'Selected change locations are missing from the map.');
 assert(svg.includes('title title-compact'), 'Long map title is not using the non-overlapping compact style.');
 assert(mapHtml.includes('min-width: 1050px'), 'Mobile map does not retain readable text sizing.');
 assert(reportHtml.includes('.chart{min-width:680px}') && reportHtml.includes('min-width:1050px'), 'Mobile report charts or map do not retain readable text sizing.');
 assert(reportHtml.includes('blauwe ruit') && reportHtml.includes('magenta pluscirkel'), 'Report marker legend differs from the rendered map.');
-assert(!reportHtml.includes('WH24 openbaar') && !mapHtml.includes('WH24 openbaar'), 'Stale WH24-public wording remains in HTML output.');
-assert((contactSheet.match(/<figure>/gu) ?? []).length === 25, 'Contact sheet does not contain 25 orthophotos.');
+assert(reportHtml.includes('WH24 openbaar') && mapHtml.includes('WH24 openbaar'), 'WH24-public wording is missing from HTML output.');
+assert((contactSheet.match(/<figure>/gu) ?? []).length === 23, 'Contact sheet does not contain 23 retained orthophotos.');
+assert(contactSheet.includes('M055, M056 en M082'), 'Contact sheet does not disclose the three missing current orthophotos.');
 assert(contactSheet.includes('CSS-doelkruis') && contactSheet.includes('JPEG-bronuitsneden zijn ongewijzigd'), 'Contact-sheet overlay disclosure is missing.');
-assert(artifact.manifest.description.includes('twee private allowlists'), 'Artifact description does not disclose private access.');
+assert(artifact.manifest.description.includes('WH24 openbaar') && artifact.manifest.description.includes('WH23 privé'), 'Artifact description does not disclose access changes.');
 
 console.log(JSON.stringify({
   status: 'ok',
   households: assignments.houses.length,
   locations: assignments.locations.length,
   existing: 11,
-  publicExisting: 9,
-  privateExisting: 2,
-  newLocations: 25,
+  publicExisting: 10,
+  privateExisting: 1,
+  newLocations: 26,
   loads: {
     minimumNew: Math.min(...assignments.locations.filter(({ kind }) => kind === 'new').map(({ assignedHouseholds }) => assignedHouseholds)),
     maximumPublic: Math.max(...assignments.locations.filter(({ accessScope }) => accessScope === 'public').map(({ assignedHouseholds }) => assignedHouseholds))

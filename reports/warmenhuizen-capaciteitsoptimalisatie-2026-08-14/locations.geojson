@@ -22,7 +22,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 70,
+        "assignedHouseholds": 67,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 3.6,
@@ -150,7 +150,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 90,
+        "assignedHouseholds": 84,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 3.6,
@@ -159,6 +159,38 @@
           "water": 27.7,
           "tree": 14.1,
           "obstacle": 3
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.74024,
+          52.720753
+        ]
+      },
+      "properties": {
+        "id": "WH24",
+        "kind": "existing",
+        "status": "existing",
+        "address": "Pastoor Willemsestraat 80",
+        "sourceType": "hvc-existing-user-confirmed-public",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumModelLoad": null,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 24,
+        "screeningRating": "orange-fixed",
+        "bgtDistancesM": {
+          "vehicleRoad": null,
+          "openSpace": null,
+          "facade": null,
+          "water": null,
+          "tree": null,
+          "obstacle": null
         }
       }
     },
@@ -566,7 +598,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 62,
+        "assignedHouseholds": 61,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 3.1,
@@ -598,7 +630,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 90,
+        "assignedHouseholds": 71,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -662,7 +694,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 90,
+        "assignedHouseholds": 83,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0.1,
@@ -758,7 +790,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 62,
+        "assignedHouseholds": 63,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -790,7 +822,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 85,
+        "assignedHouseholds": 81,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -854,7 +886,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 86,
+        "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -871,30 +903,30 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          4.739241,
-          52.71779
+          4.7402468,
+          52.7177165
         ]
       },
       "properties": {
-        "id": "WH30",
+        "id": "M056",
         "kind": "new",
         "status": "proposed",
-        "address": "Molenaarweg 1",
-        "sourceType": "municipal-concept",
+        "address": "modelpunt nabij Dorsvlegel 36",
+        "sourceType": "analytical-search-anchor",
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 90,
-        "screeningRating": "orange",
+        "assignedHouseholds": 73,
+        "screeningRating": "not-screened",
         "bgtDistancesM": {
-          "vehicleRoad": 1.9,
-          "openSpace": 0,
-          "facade": 33.5,
-          "water": 8.6,
-          "tree": 5.5,
-          "obstacle": 6.9
+          "vehicleRoad": null,
+          "openSpace": null,
+          "facade": null,
+          "water": null,
+          "tree": null,
+          "obstacle": null
         }
       }
     },
@@ -903,30 +935,30 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          4.739284,
-          52.727742
+          4.7389822,
+          52.7289883
         ]
       },
       "properties": {
-        "id": "WH02",
+        "id": "M055",
         "kind": "new",
         "status": "proposed",
-        "address": "Dorpsstraat 13",
-        "sourceType": "municipal-concept",
+        "address": "modelpunt nabij De Fuik 25",
+        "sourceType": "analytical-search-anchor",
         "accessScope": "public",
         "capacityUnits": 1,
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
         "assignedHouseholds": 60,
-        "screeningRating": "orange",
+        "screeningRating": "not-screened",
         "bgtDistancesM": {
-          "vehicleRoad": 0,
-          "openSpace": 12.7,
-          "facade": 11.9,
-          "water": 151.9,
-          "tree": 11,
-          "obstacle": 3.1
+          "vehicleRoad": null,
+          "openSpace": null,
+          "facade": null,
+          "water": null,
+          "tree": null,
+          "obstacle": null
         }
       }
     },
@@ -950,7 +982,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 88,
+        "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -1095,6 +1127,38 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          4.7380954,
+          52.7186864
+        ]
+      },
+      "properties": {
+        "id": "M082",
+        "kind": "new",
+        "status": "proposed",
+        "address": "modelpunt nabij Fabrieksstraat 33",
+        "sourceType": "analytical-search-anchor",
+        "accessScope": "public",
+        "capacityUnits": 1,
+        "targetHouseholds": 75,
+        "minimumModelLoad": 60,
+        "maximumModelLoad": 90,
+        "assignedHouseholds": 90,
+        "screeningRating": "not-screened",
+        "bgtDistancesM": {
+          "vehicleRoad": null,
+          "openSpace": null,
+          "facade": null,
+          "water": null,
+          "tree": null,
+          "obstacle": null
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           4.738551,
           52.720329
         ]
@@ -1116,35 +1180,6 @@
         ],
         "capacityUnits": 1,
         "assignedHouseholds": 3,
-        "screeningRating": "private-fixed"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          4.74024,
-          52.720753
-        ]
-      },
-      "properties": {
-        "id": "WH24",
-        "kind": "existing",
-        "status": "existing",
-        "address": "Pastoor Willemsestraat 80",
-        "hvcContainerId": "80428",
-        "sourceType": "hvc-existing-private",
-        "accessScope": "private",
-        "accessLabel": "Privé Angelapark",
-        "allowedAddresses": [
-          {
-            "street": "Pastoor Willemsestraat",
-            "houseNumbers": "80, 82, 84, 86"
-          }
-        ],
-        "capacityUnits": 1,
-        "assignedHouseholds": 4,
         "screeningRating": "private-fixed"
       }
     }

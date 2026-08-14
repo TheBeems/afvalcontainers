@@ -1,9 +1,10 @@
 id	kind	sourceType	address	lat	lon	accessScope	assignedHouseholds	targetHouseholds	screeningRating
-WH03	existing	hvc-existing	Rietzangerstraat 17	52.72721	4.741939	public	70	75	green-fixed
+WH03	existing	hvc-existing	Rietzangerstraat 17	52.72721	4.741939	public	67	75	green-fixed
 WH05	existing	hvc-existing	Kuipersven 36	52.726883	4.748476	public	90	75	green-fixed
 WH06	existing	hvc-existing	Soeverein 2	52.727578	4.750383	public	60	75	orange-fixed
 WH08	existing	hvc-existing	Dorpsstraat 89	52.725435	4.739056	public	52	75	orange-fixed
-WH14	existing	hvc-existing	Doorbraak 23	52.722411	4.740981	public	90	75	orange-fixed
+WH14	existing	hvc-existing	Doorbraak 23	52.722411	4.740981	public	84	75	orange-fixed
+WH24	existing	hvc-existing-user-confirmed-public	Pastoor Willemsestraat 80	52.720753	4.74024	public	24	75	orange-fixed
 WH26	existing	hvc-existing	Regelhaalder 42	52.718557	4.741484	public	90	75	red-fixed
 WH27	existing	hvc-existing	Zigt 97	52.718151	4.743409	public	90	75	orange-fixed
 WH33	existing	hvc-existing	Zuiderkruis 36	52.729898	4.74845	public	89	75	green-fixed
@@ -16,22 +17,22 @@ M004	new	analytical-search-anchor	Dorusakker 9	52.7209966	4.7273943	public	63	75
 M149	new	analytical-search-anchor	De Cres 1	52.7163151	4.7315518	public	60	75	orange
 M027	new	analytical-search-anchor	Hartendorp 4	52.7277134	4.7386021	public	60	75	orange
 WH19	new	municipal-concept	Zwartepad 32	52.720963	4.73382	public	90	75	orange
-WH10	new	municipal-concept	De Baan 27	52.725356	4.74332	public	62	75	green
-M020	new	analytical-search-anchor	Zigt 28	52.71692	4.7437203	public	90	75	orange
+WH10	new	municipal-concept	De Baan 27	52.725356	4.74332	public	61	75	green
+M020	new	analytical-search-anchor	Zigt 28	52.71692	4.7437203	public	71	75	orange
 M093	new	analytical-search-anchor	't Lange Weidje 1A	52.7265557	4.7460736	public	90	75	orange
-WH13	new	municipal-concept	Alingterp 2	52.723362	4.735266	public	90	75	orange
+WH13	new	municipal-concept	Alingterp 2	52.723362	4.735266	public	83	75	orange
 M041	new	analytical-search-anchor	Langedijker 18	52.7238747	4.7422359	public	90	75	orange
 M134	new	analytical-search-anchor	Baljuw 14	52.7258004	4.7516221	public	72	75	orange
-M018	new	analytical-search-anchor	Vierhuizen 5	52.725945	4.7371967	public	62	75	orange
-M100	new	analytical-search-anchor	Beuninge 31	52.7206833	4.7290946	public	85	75	green
+M018	new	analytical-search-anchor	Vierhuizen 5	52.725945	4.7371967	public	63	75	orange
+M100	new	analytical-search-anchor	Beuninge 31	52.7206833	4.7290946	public	81	75	green
 M024	new	analytical-search-anchor	Oudewal 29	52.7195656	4.729399	public	60	75	orange
-M051	new	analytical-search-anchor	Zigt 2	52.7185154	4.7451624	public	86	75	orange
-WH30	new	municipal-concept	Molenaarweg 1	52.71779	4.739241	public	90	75	orange
-WH02	new	municipal-concept	Dorpsstraat 13	52.727742	4.739284	public	60	75	orange
-M045	new	analytical-search-anchor	Krankhoorn 37	52.7219446	4.7354065	public	88	75	orange
+M051	new	analytical-search-anchor	Zigt 2	52.7185154	4.7451624	public	60	75	orange
+M056	new	analytical-search-anchor	modelpunt nabij Dorsvlegel 36	52.7177165	4.7402468	public	73	75	not-screened
+M055	new	analytical-search-anchor	modelpunt nabij De Fuik 25	52.7289883	4.7389822	public	60	75	not-screened
+M045	new	analytical-search-anchor	Krankhoorn 37	52.7219446	4.7354065	public	60	75	orange
 WH12	new	municipal-concept	De Negen Geerzen 29	52.722146	4.74644	public	60	75	green
 M094	new	analytical-search-anchor	De Baan 13	52.7255628	4.7410458	public	60	75	orange
 M104	new	analytical-search-anchor	Wonge 36	52.721757	4.7282832	public	65	75	orange
 M157	new	analytical-search-anchor	Dergmeerweg 65	52.7285395	4.7433291	public	87	75	orange
+M082	new	analytical-search-anchor	modelpunt nabij Fabrieksstraat 33	52.7186864	4.7380954	public	90	75	not-screened
 WH23	existing	hvc-existing-private	Molenaarsweg 7	52.720329	4.738551	private	3		private-fixed
-WH24	existing	hvc-existing-private	Pastoor Willemsestraat 80	52.720753	4.74024	private	4		private-fixed

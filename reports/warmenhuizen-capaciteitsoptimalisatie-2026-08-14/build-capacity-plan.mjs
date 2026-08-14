@@ -13,6 +13,7 @@ const paths = {
   containers: resolve(projectRoot, 'data/places/warmenhuizen/container-locations.json'),
   matrix: resolve(priorReport, 'walking-matrix.json'),
   existingCoverage: resolve(priorReport, 'existing-11-household-coverage.json'),
+  wh24Column: resolve(reportDirectory, 'wh24-public-column.json'),
   screening: resolve(reportDirectory, 'location-screening.json'),
   evaluation: resolve(reportDirectory, 'private-access-leave-one-out.json'),
   plan: resolve(reportDirectory, 'capacity-plan.json'),
@@ -21,8 +22,8 @@ const paths = {
   geojson: resolve(reportDirectory, 'locations.geojson')
 };
 
-const FIXED_PUBLIC_IDS = ['WH03', 'WH05', 'WH06', 'WH08', 'WH14', 'WH26', 'WH27', 'WH33', 'WH34'];
-const FIXED_PRIVATE_IDS = ['WH23', 'WH24'];
+const FIXED_PUBLIC_IDS = ['WH03', 'WH05', 'WH06', 'WH08', 'WH14', 'WH24', 'WH26', 'WH27', 'WH33', 'WH34'];
+const FIXED_PRIVATE_IDS = ['WH23'];
 const MUNICIPAL_REST_IDS = [
   'WH01', 'WH02', 'WH04', 'WH07', 'WH09', 'WH10', 'WH11', 'WH12', 'WH13',
   'WH15', 'WH16', 'WH17', 'WH18', 'WH19', 'WH20', 'WH21', 'WH22', 'WH25',
@@ -68,6 +69,17 @@ function summarize(rows) {
     maximumWalkingDistanceM: round(values.at(-1), 1),
     distanceBands: counts
   };
+}
+
+function augmentMatrix(matrix, wh24Column) {
+  assert(wh24Column.houseIds.length === matrix.houseIds.length, 'WH24 column has a different household count.');
+  wh24Column.houseIds.forEach((houseId, index) => {
+    assert(houseId === matrix.houseIds[index], `WH24 household order differs at row ${index}.`);
+  });
+  assert(!matrix.candidateIds.includes('WH24'), 'WH24 unexpectedly already occurs in the public matrix.');
+  matrix.candidateIds.push('WH24');
+  matrix.candidates.push(wh24Column.candidate);
+  matrix.distances.forEach((row, index) => row.push(wh24Column.distances[index]));
 }
 
 function buildSites(ids, matrix, screeningById) {
@@ -170,6 +182,30 @@ function nearestRows({ matrix, publicIndexes, sites }) {
   return publicIndexes.map((houseIndex) => ({
     walkingDistanceM: Math.min(...columns.map((column) => matrix.distances[houseIndex][column]))
   }));
+}
+
+function streetName(address) {
+  return address.replace(/\s+\d.*$/u, '');
+}
+
+function regionalSummaries(rows) {
+  const definitions = {
+    deFuik: (row) => streetName(row.address) === 'De Fuik',
+    dorpsFabriekEiland: (row) => ["'t Eiland", 'Fabrieksstraat', 'Dorpsstraat'].includes(streetName(row.address)),
+    eastNeighbourhood: (row) => row.lon >= 4.741 && row.lat <= 52.7205
+  };
+  return Object.fromEntries(Object.entries(definitions).map(([id, predicate]) => {
+    const regionRows = rows.filter(predicate);
+    return [id, summarize(regionRows)];
+  }));
+}
+
+function validateLoads(sites, result) {
+  sites.forEach((site, index) => {
+    const load = result.loads[index];
+    assert(load <= PUBLIC_MAXIMUM, `${site.id} exceeds ${PUBLIC_MAXIMUM}.`);
+    if (site.kind === 'new') assert(load >= NEW_MINIMUM, `${site.id} is below ${NEW_MINIMUM}.`);
+  });
 }
 
 function scenario(sites, result, rows, nearestSiteRows) {
@@ -283,35 +319,59 @@ const coverage = readJson(paths.coverage);
 const containers = readJson(paths.containers);
 const matrix = readJson(paths.matrix);
 const existingCoverage = readJson(paths.existingCoverage);
+const wh24Column = readJson(paths.wh24Column);
 const screening = readJson(paths.screening);
 const evaluation = readJson(paths.evaluation);
+augmentMatrix(matrix, wh24Column);
 const screeningById = new Map(screening.locations.map((location) => [location.id, location]));
 const houseById = new Map(coverage.houses.map((house) => [house.id, house]));
 const privateAssignmentRows = buildPrivateRows(existingCoverage);
-assert(privateAssignmentRows.length === 7, `Expected seven private addresses, found ${privateAssignmentRows.length}.`);
+assert(privateAssignmentRows.length === 3, `Expected three WH23-private addresses, found ${privateAssignmentRows.length}.`);
 const privateHouseIds = new Set(privateAssignmentRows.map(({ houseId }) => houseId));
 const publicIndexes = matrix.houseIds.flatMap((houseId, index) => privateHouseIds.has(houseId) ? [] : [index]);
-assert(publicIndexes.length === 2572, `Expected 2572 public address proxies, found ${publicIndexes.length}.`);
+assert(publicIndexes.length === 2576, `Expected 2576 public address proxies, found ${publicIndexes.length}.`);
 
-assert(evaluation.publicHouseholds === publicIndexes.length, 'Leave-one-out evaluation uses another public demand count.');
-assert(JSON.stringify(evaluation.fixedPublicIds) === JSON.stringify(FIXED_PUBLIC_IDS), 'Leave-one-out evaluation uses other fixed public sites.');
 assert(evaluation.results.length === evaluation.startingAdditionIds.length, 'Leave-one-out evaluation is incomplete.');
 const selectionWinner = evaluation.results[0];
-const selectedNewIds = evaluation.startingAdditionIds.filter((id) => id !== selectionWinner.removed);
-const requiredPublicContainers = Math.round(publicIndexes.length / TARGET);
-assert(requiredPublicContainers === FIXED_PUBLIC_IDS.length + selectedNewIds.length, 'Selected site count does not match the soft target count.');
+assert(selectionWinner.removed === 'M154', 'The recorded prior 25-site baseline no longer removes M154.');
+const baselineNewIds = evaluation.startingAdditionIds.filter((id) => id !== selectionWinner.removed);
+const selectedNewIds = baselineNewIds.map((id) => {
+  if (id === 'WH02') return 'M055';
+  if (id === 'WH30') return 'M056';
+  return id;
+});
+selectedNewIds.push('M082');
+assert(baselineNewIds.length === 25, `Expected 25 baseline search zones, found ${baselineNewIds.length}.`);
+assert(selectedNewIds.length === 26, `Expected 26 selected search zones, found ${selectedNewIds.length}.`);
+assert(!selectedNewIds.includes('WH02') && !selectedNewIds.includes('WH30'), 'Superseded WH02 or WH30 remains selected.');
+assert(selectedNewIds.includes('M044') && selectedNewIds.includes('M094') && selectedNewIds.includes('M082'), 'M044, M094 or M082 is missing from the decision scenario.');
 selectedNewIds.forEach((id) => assert(screeningById.has(id), `Selected location ${id} has no screening record.`));
 
 const recommendedSites = buildSites([...FIXED_PUBLIC_IDS, ...selectedNewIds], matrix, screeningById);
 const recommendedResult = assign({ matrix, publicIndexes, sites: recommendedSites });
 const recommendedRows = publicAssignmentRows(recommendedResult, recommendedSites, matrix, houseById);
 const recommendedScenario = scenario(recommendedSites, recommendedResult, recommendedRows, nearestRows({ matrix, publicIndexes, sites: recommendedSites }));
-recommendedSites.forEach((site, index) => {
-  const load = recommendedResult.loads[index];
-  assert(load <= PUBLIC_MAXIMUM, `${site.id} exceeds ${PUBLIC_MAXIMUM}.`);
-  if (site.kind === 'new') assert(load >= NEW_MINIMUM, `${site.id} is below ${NEW_MINIMUM}.`);
-});
-assert(round(recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM, 1) === selectionWinner.total, 'Selected leave-one-out total differs from rebuilt assignment.');
+validateLoads(recommendedSites, recommendedResult);
+
+const baselineSites = buildSites([...FIXED_PUBLIC_IDS, ...baselineNewIds], matrix, screeningById);
+const baselineResult = assign({ matrix, publicIndexes, sites: baselineSites });
+const baselineRows = publicAssignmentRows(baselineResult, baselineSites, matrix, houseById);
+const baselineScenario = scenario(baselineSites, baselineResult, baselineRows, nearestRows({ matrix, publicIndexes, sites: baselineSites }));
+validateLoads(baselineSites, baselineResult);
+
+const sameCountNewIds = selectedNewIds.filter((id) => id !== 'M094');
+const sameCountSites = buildSites([...FIXED_PUBLIC_IDS, ...sameCountNewIds], matrix, screeningById);
+const sameCountResult = assign({ matrix, publicIndexes, sites: sameCountSites });
+const sameCountRows = publicAssignmentRows(sameCountResult, sameCountSites, matrix, houseById);
+const sameCountScenario = scenario(sameCountSites, sameCountResult, sameCountRows, nearestRows({ matrix, publicIndexes, sites: sameCountSites }));
+validateLoads(sameCountSites, sameCountResult);
+
+const m044AlternativeNewIds = selectedNewIds.filter((id) => id !== 'M044');
+const m044AlternativeSites = buildSites([...FIXED_PUBLIC_IDS, ...m044AlternativeNewIds], matrix, screeningById);
+const m044AlternativeResult = assign({ matrix, publicIndexes, sites: m044AlternativeSites });
+const m044AlternativeRows = publicAssignmentRows(m044AlternativeResult, m044AlternativeSites, matrix, houseById);
+const m044AlternativeScenario = scenario(m044AlternativeSites, m044AlternativeResult, m044AlternativeRows, nearestRows({ matrix, publicIndexes, sites: m044AlternativeSites }));
+validateLoads(m044AlternativeSites, m044AlternativeResult);
 
 const municipalSites = buildSites([...FIXED_PUBLIC_IDS, ...MUNICIPAL_REST_IDS], matrix, screeningById);
 const municipalResult = assign({ matrix, publicIndexes, sites: municipalSites });
@@ -326,6 +386,10 @@ assert(allRows.every(Boolean), 'Final assignment is not one-to-one for every BAG
 const allDistance = summarize(allRows);
 const capacityReduction = municipalScenario.capacityBalancedDistance.totalWalkingDistanceM - recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM;
 const nearestReduction = municipalScenario.nearestSiteAccessSensitivity.totalWalkingDistanceM - recommendedScenario.nearestSiteAccessSensitivity.totalWalkingDistanceM;
+const baselineCapacityReduction = baselineScenario.capacityBalancedDistance.totalWalkingDistanceM - recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM;
+const focusAreaBaseline = regionalSummaries(baselineRows);
+const focusAreaRecommended = regionalSummaries(recommendedRows);
+const softTargetPublicContainers = Math.round(publicIndexes.length / TARGET);
 const hard75PublicContainers = Math.ceil(publicIndexes.length / TARGET);
 
 const plan = {
@@ -336,7 +400,7 @@ const plan = {
     existingPhysicalContainersRetained: 11,
     existingPublicContainers: FIXED_PUBLIC_IDS.length,
     existingPrivateContainers: FIXED_PRIVATE_IDS.length,
-    publicAccessChange: 'None; WH23 and WH24 retain their source-defined private allowlists.',
+    publicAccessChange: 'WH24 is public in this decision scenario by explicit user instruction; WH23 retains its source-defined private allowlist.',
     newPublicContainers: selectedNewIds.length,
     publicContainers: recommendedSites.length,
     totalPhysicalContainers: locations.length,
@@ -344,17 +408,17 @@ const plan = {
     publicBagResidentialAddressProxies: publicIndexes.length,
     privateAllowlistedAddressProxies: privateAssignmentRows.length,
     targetHouseholdsPerContainer: TARGET,
-    interpretation: 'Soft target: choose the whole public-container count with an average closest to 75, then assign each new public site 60-90 BAG residential address proxies. Existing public sites have no artificial minimum and a 90-proxy ceiling.',
+    interpretation: 'User-selected service variant: retain M044 and M094, add M082, and accept one public container more than the arithmetic maximum-75 minimum. Each new public site is assigned 60-90 BAG residential address proxies; existing public sites have no artificial minimum and a 90-proxy ceiling.',
     softTargetContainerCount: {
       rule: 'round(public BAG residential address proxies / 75)',
-      requiredPublicContainers,
-      requiredNewPublicContainers: requiredPublicContainers - FIXED_PUBLIC_IDS.length,
-      totalIncludingPrivateContainers: requiredPublicContainers + FIXED_PRIVATE_IDS.length,
-      resultingAveragePublicLoad: round(publicIndexes.length / requiredPublicContainers, 3)
+      requiredPublicContainers: softTargetPublicContainers,
+      requiredNewPublicContainers: softTargetPublicContainers - FIXED_PUBLIC_IDS.length,
+      totalIncludingPrivateContainers: softTargetPublicContainers + FIXED_PRIVATE_IDS.length,
+      resultingAveragePublicLoad: round(publicIndexes.length / softTargetPublicContainers, 3)
     },
     hardMaximum75ArithmeticSensitivity: {
       rule: 'ceil(public BAG residential address proxies / 75)',
-      scope: 'Arithmetic container count only; no 26-site selection or maximum-75 assignment was evaluated.',
+      scope: 'Arithmetic minimum only. The selected service variant uses one additional public container and has an average below 75.',
       requiredPublicContainers: hard75PublicContainers,
       requiredNewPublicContainers: hard75PublicContainers - FIXED_PUBLIC_IDS.length,
       totalIncludingPrivateContainers: hard75PublicContainers + FIXED_PRIVATE_IDS.length
@@ -367,12 +431,54 @@ const plan = {
     selectedNewIds,
     selectedMunicipalConceptIds: selectedNewIds.filter((id) => MUNICIPAL_REST_IDS.includes(id)),
     selectedIndependentSearchAnchorIds: selectedNewIds.filter((id) => !MUNICIPAL_REST_IDS.includes(id)),
-    recordedCandidatePoolSelection: {
-      removedSearchAnchorId: selectionWinner.removed,
-      method: evaluation.method,
-      evaluatedRemovalCount: evaluation.results.length,
-      runnerUpRemovedId: evaluation.results[1].removed,
-      runnerUpAdditionalDistanceM: round(evaluation.results[1].total - selectionWinner.total, 1)
+    userDirectedLocationChanges: {
+      baseline: 'WH24 public with the previously selected 25 new search zones.',
+      replacements: [
+        { removedId: 'WH02', addedId: 'M055', purpose: 'Move service north along De Fuik while retaining M027.' },
+        { removedId: 'WH30', addedId: 'M056', purpose: 'Move the search anchor 68.2 m east into the residential area.' }
+      ],
+      addedIds: ['M082'],
+      retainedAfterReview: ['M027', 'M044', 'M094'],
+      physicalCountChange: 1
+    }
+  },
+  decisionBaseline: {
+    label: 'WH24 public with previous 25 new search zones',
+    ...baselineScenario,
+    focusAreas: focusAreaBaseline
+  },
+  locationChangeFindings: {
+    comparisonBasis: 'Capacity-balanced assignment versus the same WH24-public baseline with the previous 25 new search zones.',
+    totalWalkingDistanceReductionM: round(baselineCapacityReduction, 1),
+    averageWalkingDistanceReductionM: round(baselineScenario.capacityBalancedDistance.averageWalkingDistanceM - recommendedScenario.capacityBalancedDistance.averageWalkingDistanceM, 3),
+    p95WalkingDistanceReductionM: round(baselineScenario.capacityBalancedDistance.p95WalkingDistanceM - recommendedScenario.capacityBalancedDistance.p95WalkingDistanceM, 1),
+    over275Reduction: baselineScenario.capacityBalancedDistance.distanceBands.over_275 - recommendedScenario.capacityBalancedDistance.distanceBands.over_275,
+    focusAreas: Object.fromEntries(Object.keys(focusAreaBaseline).map((id) => [id, {
+      baseline: focusAreaBaseline[id],
+      recommended: focusAreaRecommended[id],
+      over275Reduction: focusAreaBaseline[id].distanceBands.over_275 - focusAreaRecommended[id].distanceBands.over_275
+    }])),
+    selectedLocationLoads: Object.fromEntries(['WH24', 'M027', 'M044', 'M055', 'M056', 'M082', 'M094'].map((id) => [id, recommendedScenario.assignedHouseholdsByLocation[id]])),
+    placementEvidence: {
+      M055: 'Approximately 140 m north of WH02 and 144 m from M027. It lies in the previously advised search direction, but the exact pin has not been BGT, ownership or field screened.',
+      M082: 'Service anchor near Fabrieksstraat 33, approximately 39 m from the previously orange-screened Fabrieksstraat 29 zone. Investigate the north/east grass edge.',
+      M056: 'Approximately 68 m east of WH30 near Dorsvlegel 36 and the Schoffel/Strekel connection. It depends on M082 taking over the south-western service role.',
+      M044: 'Retained. Removing it from the complete change bundle increases total model distance and fills WH24 to its 90-address ceiling.',
+      M094: 'Retained by explicit decision. Compared with the same-count variant that removes M094, the extra container reduces average distance and the number over 275 m further.'
+    },
+    samePhysicalCountSensitivity: {
+      removedId: 'M094',
+      ...sameCountScenario,
+      extraContainerBenefit: {
+        totalWalkingDistanceReductionM: round(sameCountScenario.capacityBalancedDistance.totalWalkingDistanceM - recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM, 1),
+        averageWalkingDistanceReductionM: round(sameCountScenario.capacityBalancedDistance.averageWalkingDistanceM - recommendedScenario.capacityBalancedDistance.averageWalkingDistanceM, 3),
+        p95WalkingDistanceReductionM: round(sameCountScenario.capacityBalancedDistance.p95WalkingDistanceM - recommendedScenario.capacityBalancedDistance.p95WalkingDistanceM, 1),
+        over275Reduction: sameCountScenario.capacityBalancedDistance.distanceBands.over_275 - recommendedScenario.capacityBalancedDistance.distanceBands.over_275
+      }
+    },
+    m044RemovalSensitivity: {
+      removedId: 'M044',
+      ...m044AlternativeScenario
     }
   },
   municipalConceptComparison: {
@@ -383,7 +489,7 @@ const plan = {
     unconfirmedRepoOnlyIdExcluded: 'WH35'
   },
   comparison: {
-    interpretation: 'The primary figures compare exclusive, capacity-balanced assignments and combine location choice with four additional public containers. They do not predict which of three accessible bins a resident will actually use.',
+    interpretation: 'The primary figures compare exclusive, capacity-balanced assignments and combine location choice with five additional public containers. They do not predict which of three accessible bins a resident will actually use.',
     additionalPublicContainers: recommendedSites.length - municipalSites.length,
     capacityBalanced: {
       totalWalkingDistanceReductionM: round(capacityReduction, 1),
@@ -404,15 +510,15 @@ const plan = {
   model: {
     formulation: 'capacitated facility-location / p-median with fixed existing facilities and binary unique household assignment',
     objectives: [
-      'retain all 11 existing physical containers at their exact input coordinates and access scopes',
-      'fix 25 new public containers from the soft target of an average closest to 75',
+      'retain all 11 existing physical containers at their exact input coordinates, with WH24 public in the decision scenario and WH23 private',
+      'apply the user-selected 26-zone service variant, including M082 while retaining M044 and M094',
       'minimize total estimated pedestrian-network distance under the chosen 60-90 new-location model band',
       'report p95, maximum and repository distance bands as fairness diagnostics'
     ],
-    locationSelection: 'A recorded 26-site pool from the prior BGT-aware local search is reduced by a complete capacity-constrained leave-one-out comparison. The final-stage selection is reproducible; the upstream candidate search is a fixed input and this is not a proof of global facility-location optimality.',
+    locationSelection: 'The prior 25-zone selection is the baseline. The decision scenario replaces WH02 with M055, replaces WH30 with M056, adds M082, and explicitly retains M027, M044 and M094. These are user-directed scenario choices informed by focused variant testing, not a globally optimized facility-location result.',
     assignment: recommendedScenario.assignmentSolver,
     routeDistance: matrix.source,
-    privateRouteDistance: 'The seven private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.',
+    privateRouteDistance: 'The three WH23-private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.',
     routeUncertainty: 'Estimated distance over a local bidirectional OSM pedestrian graph. Prior calibration against the stored routing dataset had MAE 29.9 m and P95 absolute error 80.9 m; reported metres are model values, not field precision.',
     candidateRecordsBeforeCoordinateDeduplication: 207,
     uniqueCandidateCoordinates: 186,
@@ -429,7 +535,7 @@ const plan = {
     landsheer: 'The municipal project page states 153 homes. First verify which units were already present in the 2026-08-13 BAG snapshot.'
   },
   locations,
-  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'screening', 'evaluation'].map((name) => [name, {
+  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'wh24Column', 'screening', 'evaluation'].map((name) => [name, {
     path: relative(projectRoot, paths[name]),
     sha256: sha256(paths[name])
   }]))
@@ -439,7 +545,7 @@ const assignments = {
   schemaVersion: 2,
   generatedAt: plan.generatedAt,
   scenario: {
-    scenarioType: 'capacity-first-fixed-existing-private-access-preserved',
+    scenarioType: 'capacity-first-wh24-public-user-selected-location-changes',
     targetHouseholdsPerContainer: TARGET,
     mandatoryExistingIds: [...FIXED_PUBLIC_IDS, ...FIXED_PRIVATE_IDS],
     fixedExistingLocationCount: 11,
@@ -459,9 +565,9 @@ const assignments = {
   houses: allRows,
   presentation: {
     title: 'Warmenhuizen · circa 75 adressen per openbare container',
-    subtitle: '11 bestaande behouden · 2 privé · 25 nieuwe zoekzones · capaciteitsgestuurde modelafstand',
+    subtitle: '11 bestaande behouden · WH24 openbaar · WH23 privé · 26 nieuwe zoekzones · capaciteitsgestuurde modelafstand',
     note: 'Binnen dit model is 275 meter alleen een kleur- en kwaliteitsindicator. Zoekankers zijn geen bouwpinnen en vereisen veld-, KLIC-, eigendoms- en HVC-validatie.',
-    locationIntro: 'Donker vierkant: bestaande openbare HVC-locatie. Blauwe ruit: bestaande privélocatie WH23 of WH24. Magenta pluscirkel: nieuw modelanker. Huishoudkleuren volgen de repo-afstandsbanden.',
+    locationIntro: 'Donker vierkant: bestaande openbare HVC-locatie, inclusief WH24. Blauwe ruit: bestaande privélocatie WH23. Magenta pluscirkel: nieuw modelanker. Huishoudkleuren volgen de repo-afstandsbanden.',
     showSourceIds: true
   },
   method: plan.model,
@@ -471,4 +577,11 @@ const assignments = {
 writeFileSync(paths.plan, `${JSON.stringify(plan, null, 2)}\n`);
 writeFileSync(paths.assignments, `${JSON.stringify(assignments, null, 2)}\n`);
 writeLocationFiles(locations);
-console.log(JSON.stringify({ decision: plan.decision, selectedRemoval: selectionWinner.removed, recommended: plan.recommendedScenario, municipal: plan.municipalConceptComparison, comparison: plan.comparison }, null, 2));
+console.log(JSON.stringify({
+  decision: plan.decision,
+  locationChanges: plan.recommendedScenario.userDirectedLocationChanges,
+  recommended: plan.recommendedScenario,
+  versusWh24PublicBaseline: plan.locationChangeFindings,
+  municipal: plan.municipalConceptComparison,
+  comparison: plan.comparison
+}, null, 2));

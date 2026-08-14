@@ -13,6 +13,8 @@ const recommendedDistance = recommended.capacityBalancedDistance;
 const municipalDistance = municipal.capacityBalancedDistance;
 const capacityComparison = plan.comparison.capacityBalanced;
 const nearestComparison = plan.comparison.nearestSiteAccessSensitivity;
+const baseline = plan.decisionBaseline;
+const findings = plan.locationChangeFindings;
 const newLocations = plan.locations.filter(({ kind }) => kind === 'new');
 const existingLocations = plan.locations.filter(({ kind }) => kind === 'existing');
 
@@ -36,7 +38,8 @@ function ratingLabel(rating) {
     'green-fixed': 'groen (bestaand)',
     'orange-fixed': 'oranje (bestaand)',
     'red-fixed': 'rood (bestaand)',
-    'private-fixed': 'privé (bestaand)'
+    'private-fixed': 'privé (bestaand)',
+    'not-screened': 'exacte pin niet gescreend'
   };
   return labels[rating] ?? rating;
 }
@@ -108,6 +111,30 @@ function distanceBandChart() {
   </svg>`;
 }
 
+function focusAreaChart() {
+  const rows = [
+    { id: 'deFuik', label: 'De Fuik' },
+    { id: 'dorpsFabriekEiland', label: "Dorps-/Fabrieksstraat/'t Eiland" },
+    { id: 'eastNeighbourhood', label: 'Oostelijke woonwijk' }
+  ].map((row) => ({ ...row, ...findings.focusAreas[row.id] }));
+  const maximum = Math.max(...rows.flatMap(({ baseline: before, recommended: after }) => [before.distanceBands.over_275, after.distanceBands.over_275]));
+  const bars = rows.map((row, index) => {
+    const y = 50 + index * 82;
+    const before = row.baseline.distanceBands.over_275;
+    const after = row.recommended.distanceBands.over_275;
+    return `<text x="190" y="${y + 12}" text-anchor="end" font-weight="700">${escapeHtml(row.label)}</text>
+      <rect x="210" y="${y - 9}" width="${before / maximum * 500}" height="19" rx="3" fill="#cbd5e1"/>
+      <rect x="210" y="${y + 15}" width="${after / maximum * 500}" height="19" rx="3" fill="#2563eb"/>
+      <text x="${222 + before / maximum * 500}" y="${y + 6}">${before}</text>
+      <text x="${222 + after / maximum * 500}" y="${y + 31}">${after}</text>`;
+  }).join('');
+  return `<svg class="chart" viewBox="0 0 800 330" role="img" aria-label="Adressen boven 275 meter per focusgebied, voor en na de locatieaanpassingen">
+    ${bars}
+    <rect x="260" y="300" width="16" height="10" rx="2" fill="#cbd5e1"/><text x="284" y="309">WH24-openbare baseline</text>
+    <rect x="495" y="300" width="16" height="10" rx="2" fill="#2563eb"/><text x="519" y="309">Besloten variant</text>
+  </svg>`;
+}
+
 function loadChart() {
   const plot = { x: 50, y: 35, width: 780, height: 240 };
   const gap = 4;
@@ -120,12 +147,13 @@ function loadChart() {
       <text transform="translate(${x + barWidth / 2} ${plot.y + plot.height + 12}) rotate(65)" font-size="9">${escapeHtml(location.id)}</text>`;
   }).join('');
   const targetY = plot.y + plot.height - 75 / 100 * plot.height;
-  return `<svg class="chart" viewBox="0 0 860 360" role="img" aria-label="Modelbelasting van de 25 nieuwe locaties">
+  return `<svg class="chart" viewBox="0 0 860 360" role="img" aria-label="Modelbelasting van de ${newLocations.length} nieuwe locaties">
     <rect x="${plot.x}" y="${plot.y + plot.height - 90 / 100 * plot.height}" width="${plot.width}" height="${(90 - 60) / 100 * plot.height}" fill="#dbeafe" opacity=".55"/>
     <line x1="${plot.x}" y1="${targetY}" x2="${plot.x + plot.width}" y2="${targetY}" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 5"/>
-    <text x="${plot.x + plot.width - 4}" y="${targetY - 7}" text-anchor="end" font-weight="700">zacht doel 75</text>
     ${bars}
     <line x1="${plot.x}" y1="${plot.y + plot.height}" x2="${plot.x + plot.width}" y2="${plot.y + plot.height}" stroke="#94a3b8"/>
+    <line x1="${plot.x}" y1="18" x2="${plot.x + 44}" y2="18" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="${plot.x + 52}" y="22" font-weight="700">zacht doel 75</text>
   </svg>`;
 }
 
@@ -145,7 +173,6 @@ function chartRegion(label, chart) {
 }
 
 const totalBands = recommended.totalDistanceIncludingPrivate.distanceBands;
-const selection = recommended.recordedCandidatePoolSelection;
 const html = `<!doctype html>
 <html lang="nl">
 <head>
@@ -196,26 +223,40 @@ const html = `<!doctype html>
 <body>
   <header><div>
     <h1>Capaciteitsplan Warmenhuizen</h1>
-    <p>Circa 75 huishoudens per openbare restcontainer · alle 11 bestaande locaties én toegangsrechten behouden · modelafstand als allocatiecriterium</p>
-    <div class="cards">
-      <div class="card"><strong>${plan.decision.totalPhysicalContainers}</strong><span>fysieke containers totaal</span></div>
-      <div class="card"><strong>${plan.decision.newPublicContainers}</strong><span>nieuwe openbare zoekzones</span></div>
-      <div class="card"><strong>${formatNumber(recommended.averageHouseholdsPerPublicContainer, 1)}</strong><span>adressen per openbare bak gemiddeld</span></div>
-      <div class="card"><strong>${formatNumber(recommendedDistance.averageWalkingDistanceM, 1)} m</strong><span>capaciteitsgebalanceerde modelafstand</span></div>
-    </div>
+    <p>WH24 openbaar · M094 behouden · M082 toegevoegd · gerichte verschuivingen bij De Fuik en de Molenaarweg</p>
   </div></header>
   <main>
     <section>
-      <h2>Advies</h2>
-      <p class="lead">Behoud alle elf bestaande containers exact, inclusief de private allowlists van WH23 en WH24. Plaats 25 nieuwe openbare containers, zodat ${formatNumber(plan.decision.publicBagResidentialAddressProxies)} openbare BAG-woonadresproxies over ${plan.decision.publicContainers} openbare bakken worden verdeeld. De zeven geconfigureerde private adressen blijven uitsluitend aan WH23 of WH24 gekoppeld.</p>
-      <p class="callout"><strong>Zacht doelaantal:</strong> round(${formatNumber(plan.decision.publicBagResidentialAddressProxies)} / 75) = ${plan.decision.publicContainers} openbare bakken. Met negen bestaande openbare bakken betekent dat 25 nieuwe; inclusief twee private bakken zijn er ${plan.decision.totalPhysicalContainers} fysiek. Het gemiddelde is ${formatNumber(recommended.averageHouseholdsPerPublicContainer, 1)}.</p>
-      <p>Iedere nieuwe locatie krijgt in het model 60–90 adressen; bestaande openbare locaties krijgen geen kunstmatig minimum. Als 75 als harde bovengrens wordt bedoeld, is 35 openbaar en 37 fysiek alleen de rekenkundige ondergrens. Een 26-locatielijst en maximum-75-toewijzing zijn niet doorgerekend.</p>
+      <h2>Executive Summary</h2>
+      <ul class="lead">
+        <li><strong>De gekozen variant telt 37 fysieke containers.</strong> WH24 wordt openbaar, WH23 blijft privé, M094 blijft staan en M082 wordt als extra openbare zoekzone toegevoegd.</li>
+        <li><strong>De drie probleemgebieden verbeteren tegelijk.</strong> WH02 verschuift naar M055 bij De Fuik, WH30 naar M056 in de oostelijke wijk en M082 bedient Dorpsstraat, Fabrieksstraat en ’t Eiland.</li>
+        <li><strong>De gemiddelde modelafstand daalt van ${formatNumber(baseline.capacityBalancedDistance.averageWalkingDistanceM, 1)} naar ${formatNumber(recommendedDistance.averageWalkingDistanceM, 1)} meter.</strong> De P95 daalt met ${formatNumber(findings.p95WalkingDistanceReductionM, 1)} meter en het aantal openbare adressen boven 275 meter van ${baseline.capacityBalancedDistance.distanceBands.over_275} naar ${recommendedDistance.distanceBands.over_275}.</li>
+        <li><strong>M044 en M094 blijven bewust behouden.</strong> M044 blijft systeemmatig waardevol; M094 behouden levert tegenover de gelijk-aantalvariant nog ${formatNumber(findings.samePhysicalCountSensitivity.extraContainerBenefit.averageWalkingDistanceReductionM, 1)} meter gemiddeld en vier adressen boven 275 meter winst.</li>
+      </ul>
+      <div class="cards">
+        <div class="card"><strong>${plan.decision.totalPhysicalContainers}</strong><span>fysieke containers totaal</span></div>
+        <div class="card"><strong>${plan.decision.publicContainers}</strong><span>openbaar bruikbare locaties</span></div>
+        <div class="card"><strong>${formatNumber(recommended.averageHouseholdsPerPublicContainer, 1)}</strong><span>adressen per openbare bak gemiddeld</span></div>
+        <div class="card"><strong>${formatNumber(recommendedDistance.averageWalkingDistanceM, 1)} m</strong><span>capaciteitsgebalanceerde modelafstand</span></div>
+      </div>
+    </section>
+    <section>
+      <h2>Besloten locatievariant</h2>
+      <p class="lead">Alle elf bestaande fysieke containers blijven op hun huidige coördinaten. WH24 wordt in dit scenario openbaar; alleen WH23 blijft privé voor drie geconfigureerde adressen. De 2.576 openbare BAG-woonadresproxies worden verdeeld over 36 openbare locaties: tien bestaande en 26 nieuwe zoekzones.</p>
+      <ul>
+        <li><strong>De Fuik:</strong> WH02 vervalt als zoekzone; M055 komt circa 140 meter noordelijker. M027 blijft staan.</li>
+        <li><strong>Fabrieksstraat/’t Eiland:</strong> M082 komt erbij als extra zoekzone. M094 blijft behouden.</li>
+        <li><strong>Oostelijke woonwijk:</strong> WH30 verschuift circa 68 meter oostwaarts naar M056, nabij Dorsvlegel/Schoffel/Strekel.</li>
+        <li><strong>Molenaarsweg:</strong> M044 blijft staan; verplaatsing is onderzocht maar geeft een zwakker totaalresultaat.</li>
+      </ul>
+      <p class="callout"><strong>Relatie met het 75-doel:</strong> de rekenkundige minimumtelling bij maximaal 75 is 35 openbare locaties. Deze servicevariant kiest er 36 en komt uit op gemiddeld ${formatNumber(recommended.averageHouseholdsPerPublicContainer, 1)} adressen. Iedere nieuwe locatie blijft in de gekozen modelband van 60–90.</p>
     </section>
     <section>
       <h2>Effect ten opzichte van het gemeentelijke concept</h2>
       <div class="grid">
         ${chartRegion('Vergelijkingsgrafiek', comparisonChart())}
-        <div><p><strong>+4 openbare containers</strong> ten opzichte van de 21 als restafval gedocumenteerde nieuwe voorstellen.</p>
+        <div><p><strong>+5 openbare locaties</strong> ten opzichte van het scenario met de 21 als restafval gedocumenteerde gemeentelijke voorstellen.</p>
           <p>Bij exclusieve capaciteitsbalancering:</p>
           <ul>
             <li>${formatNumber(capacityComparison.totalWalkingDistanceReductionPercent, 2)}% minder totale modelafstand</li>
@@ -226,19 +267,26 @@ const html = `<!doctype html>
           <p><strong>Optimistische gevoeligheid zonder capaciteitsbalans:</strong> als ieder adres de dichtstbijzijnde geselecteerde openbare bak kiest, is de reductie ${formatNumber(nearestComparison.totalWalkingDistanceReductionPercent, 2)}%, de P95-winst ${formatNumber(nearestComparison.p95WalkingDistanceReductionM, 1)} m en zijn er ${formatNumber(nearestComparison.over275Reduction)} minder adressen boven 275 m. Het verschil tussen beide minima is geen grens voor werkelijk bewonersgedrag.</p>
         </div>
       </div>
-      <p class="callout warning"><strong>Interpretatie:</strong> de hoofdvergelijking is een één-op-één modeltoewijzing binnen de 60–90-band. Zij voorspelt niet welke van de drie met een afvalpas toegankelijke bakken bewoners feitelijk kiezen. De winst combineert bovendien andere locaties met vier extra openbare bakken.</p>
+      <p class="callout warning"><strong>Interpretatie:</strong> de hoofdvergelijking is een één-op-één modeltoewijzing binnen de 60–90-band. Zij voorspelt niet welke van de drie met een afvalpas toegankelijke bakken bewoners feitelijk kiezen. De winst combineert bovendien andere locaties met vijf extra openbare locaties.</p>
+    </section>
+    <section>
+      <h2>De drie aangewezen probleemgebieden verbeteren</h2>
+      ${chartRegion('Adressen boven 275 meter per focusgebied', focusAreaChart())}
+      <p><strong>De Fuik:</strong> van 16 naar 2 adressen boven 275 meter; de gemiddelde modelafstand daalt van ${formatNumber(findings.focusAreas.deFuik.baseline.averageWalkingDistanceM, 1)} naar ${formatNumber(findings.focusAreas.deFuik.recommended.averageWalkingDistanceM, 1)} meter.</p>
+      <p><strong>Dorpsstraat, Fabrieksstraat en ’t Eiland:</strong> van 67 naar 20 adressen boven 275 meter. M082 is hier de nuttigste nog fysiek plausibele zoekzone; de exact afstandsgunstige M147-pin bij ’t Eiland 2 blijft afvallen wegens de eerder rode bureauscreening.</p>
+      <p><strong>Oostelijke woonwijk:</strong> van 7 naar 0 adressen boven 275 meter. M056 is alleen logisch in combinatie met M082, omdat M082 de zuidwestelijke functie van WH30 overneemt.</p>
     </section>
     <section><h2>Dezelfde afstandskleuren als de repository</h2>
       ${chartRegion('Grafiek met afstandsbanden', distanceBandChart())}
-      <p>Advies inclusief beide privélocaties: ${formatNumber(totalBands.within_100)} groen, ${formatNumber(totalBands.between_100_125)} geel, ${formatNumber(totalBands.between_125_150)} oranje, ${formatNumber(totalBands.between_150_275)} rood, ${formatNumber(totalBands.over_275)} donkerrood en ${formatNumber(totalBands.unreachable)} grijs/onbereikbaar.</p>
+      <p>Advies inclusief WH23 privé: ${formatNumber(totalBands.within_100)} groen, ${formatNumber(totalBands.between_100_125)} geel, ${formatNumber(totalBands.between_125_150)} oranje, ${formatNumber(totalBands.between_150_275)} rood, ${formatNumber(totalBands.over_275)} donkerrood en ${formatNumber(totalBands.unreachable)} grijs/onbereikbaar.</p>
     </section>
-    <section><h2>Belasting van de 25 nieuwe locaties</h2>
+    <section><h2>Belasting van de ${newLocations.length} nieuwe locaties</h2>
       ${chartRegion('Grafiek met modelbelasting per nieuwe locatie', loadChart())}
       <p>De lichtblauwe zone is de gekozen modelband 60–90; de stippellijn markeert het zachte doel 75. Dit is een BAG-adresproxy, geen gemeten afvalvolume of bewezen fysieke bakcapaciteit.</p>
     </section>
     <section>
       <h2>Nieuwe zoekzones</h2>
-      <p>Vier zones zijn groen en 21 oranje in de bureauscreen. Het zijn netwerkankers voor dienstverlening, geen exacte bouw- of graafpinnen.</p>
+      <p>Vier zones zijn groen en negentien oranje in de bestaande bureauscreen. De exacte pins van M055, M056 en M082 zijn nog niet integraal op BGT, orthofoto, eigendom of in het veld gescreend. Alle 26 punten zijn netwerkankers voor dienstverlening, geen exacte bouw- of graafpinnen.</p>
       <div class="table-wrap"><table><thead><tr><th>ID</th><th>Referentie</th><th>Bron</th><th>Adressen</th><th>Screen</th><th>WGS84</th></tr></thead><tbody>${locationRows(newLocations)}</tbody></table></div>
     </section>
     <section>
@@ -249,18 +297,26 @@ const html = `<!doctype html>
       <h2>Onderzoeksmethode en onzekerheid</h2>
       <p>Nevrlý et al. onderzoeken plasticafval en modelleren vier conflicterende criteria: volumegewogen loopafstand, aantal inzamelpunten, aanschafkosten en voertuigservicetijd. Dit rapport past de afwegingsmethode toe op restafval; er volgt geen universele 275-metergrens uit het artikel.</p>
       <p>De loopafstanden zijn schattingen over een lokale bidirectionele OSM-voetgangersgraaf. De eerdere kalibratie tegen de opgeslagen routeringsdata had een gemiddelde absolute afwijking van 29,9 m en een P95-afwijking van 80,9 m. Meterwaarden zijn daarom vergelijkbare modeluitkomsten, geen veldnauwkeurige routeclaims.</p>
-      <p>Beide openbare scenario’s gebruiken uitsluitend diezelfde OSM-matrix voor 2.572 adressen. Alleen de zeven private rijen op de kaart behouden hun eerder opgeslagen OSRM-route; zij tellen niet mee in de scenariovergelijking.</p>
-      <p>De volledige eindselectie vergelijkt alle 26 vastgelegde toevoegingskandidaten onder dezelfde capaciteitseisen. ${selection.removedSearchAnchorId} vervalt; de nummer twee (${selection.runnerUpRemovedId} laten vervallen) is ${formatNumber(selection.runnerUpAdditionalDistanceM, 1)} modelmeter langer. De voorafgaande kandidaatzoekgang blijft een vastgelegde invoer en is geen wereldwijd optimaliteitsbewijs.</p>
+      <p>Beide openbare scenario’s gebruiken uitsluitend diezelfde OSM-matrix voor 2.576 adressen. Alleen de drie private WH23-rijen op de kaart behouden hun eerder opgeslagen OSRM-route; zij tellen niet mee in de openbare scenariovergelijking.</p>
+      <p>De vorige 25-zone-uitkomst is als baseline herbouwd. Daarop zijn de expliciet gekozen wijzigingen WH02 → M055, WH30 → M056 en de toevoeging van M082 toegepast, met behoud van M027, M044 en M094. De vaste-locatietoewijzing minimaliseert de totale modelafstand binnen de 60–90-regels; de locatiekeuzes zelf zijn geen wereldwijd optimaliteitsbewijs.</p>
+    </section>
+    <section>
+      <h2>Waarom M044 en M094 blijven</h2>
+      <p><strong>M044 blijft volledig benut met 90 adressen.</strong> Als M044 in de gecombineerde wijzigingsvariant vervalt, loopt WH24 direct op tot 90 adressen en stijgt de totale modelafstand met ${formatNumber(findings.m044RemovalSensitivity.capacityBalancedDistance.totalWalkingDistanceM - recommendedDistance.totalWalkingDistanceM, 1)} meter. M044 blijft daarom nuttiger dan verplaatsing naar de zuidelijke M082-zone.</p>
+      <p><strong>M094 blijft omdat een extra container is toegestaan.</strong> De gelijk-aantalvariant zonder M094 heeft ${findings.samePhysicalCountSensitivity.capacityBalancedDistance.distanceBands.over_275} adressen boven 275 meter. Met M094 én M082 zijn dat ${recommendedDistance.distanceBands.over_275}; het gemiddelde daalt nog ${formatNumber(findings.samePhysicalCountSensitivity.extraContainerBenefit.averageWalkingDistanceReductionM, 1)} meter. Dit is een servicekeuze, geen capaciteitstechnische noodzaak.</p>
     </section>
     <section>
       <h2>Kaart</h2>
-      <p>Een donker vierkant is een bestaande openbare HVC-locatie, een blauwe ruit is een bestaande privélocatie (WH23 of WH24) en een magenta pluscirkel is een nieuw modelanker. Huishoudpunten volgen de zes repositorykleuren.</p>
+      <p>Een donker vierkant is een bestaande openbare HVC-locatie, inclusief WH24; de blauwe ruit is privélocatie WH23 en een magenta pluscirkel is een nieuw modelanker. Huishoudpunten volgen de zes repositorykleuren.</p>
       <div class="map" tabindex="0" role="region" aria-label="Overzichtskaart; op een smal scherm horizontaal te verschuiven">${mapSvg}</div>
     </section>
     <section>
       <h2>Bouwbaarheid en vervolgstappen</h2>
       <p class="callout warning"><strong>Geen plaatsingsbesluit op deze pins.</strong> Orthofoto, BGT, OSM en gemeentelijke stukken zijn bureauscreens. Zij bewijzen geen eigendom, kabel-/leidingvrij volume, boomwortelvrijheid, actuele parkeerdruk, draaicurve, draagkracht of vrije hijslijn.</p>
       <ol>
+        <li>Screen M055 exact op gemeentelijke grond, KLIC, gevel-/boomafstand en HVC-opstelroute.</li>
+        <li>Zoek binnen de M082-zone een concrete pin aan de noord-/oostelijke grasrand en toets eigendom en verkeersveiligheid.</li>
+        <li>Toets M056 daarna; de verplaatsing van WH30 hangt samen met een haalbare M082-zone.</li>
         <li>Leg openbare ruimte, eigendom en rechten juridisch vast.</li>
         <li>Meet gevel, bomen, water, zicht, parkeren en toegankelijkheid ter plaatse in.</li>
         <li>Doe een KLIC-orientatieverzoek, zo nodig proefsleuven en later een graafmelding.</li>
@@ -288,7 +344,7 @@ const html = `<!doctype html>
         <li><a href="https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&amp;lang=nl">PDOK BAG</a> en <a href="https://api.pdok.nl/lv/bgt/ogc/v1?f=html&amp;lang=nl">PDOK BGT</a></li>
         <li><a href="https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-">PDOK orthofoto RGB</a></li>
         <li><a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></li>
-        <li><a href="capacity-plan.json">Plan en bronhashes</a> · <a href="private-access-leave-one-out.json">volledige eindselectie</a></li>
+        <li><a href="capacity-plan.json">Plan, locatievarianten en bronhashes</a> · <a href="private-access-leave-one-out.json">eerdere 26-kandidaten-baseline</a></li>
         <li><a href="household-assignment.json">2.579 unieke toewijzingen</a> · <a href="locations.geojson">GeoJSON</a></li>
       </ul>
     </section>
@@ -299,7 +355,7 @@ const html = `<!doctype html>
 
 writeFileSync(outputUrl, html);
 const verification = readFileSync(outputUrl, 'utf8');
-for (const expected of ['WH23 en WH24', '25 nieuwe openbare', 'dichtstbijzijnde geselecteerde', '#15803d', '#eab308', '#f97316', '#dc2626', '#7f1d1d', 'M157', 'magenta pluscirkel']) {
+for (const expected of ['Executive Summary', 'WH24 wordt openbaar', 'M094 blijft', 'M082', 'M055', 'M056', '26 nieuwe locaties', 'dichtstbijzijnde geselecteerde', '#15803d', '#eab308', '#f97316', '#dc2626', '#7f1d1d', 'M157', 'magenta pluscirkel']) {
   if (!verification.includes(expected)) throw new Error(`Standalone report is missing ${expected}.`);
 }
 console.log(JSON.stringify({ output: outputUrl.pathname, bytes: Buffer.byteLength(verification), locations: plan.locations.length, status: 'verified' }, null, 2));

@@ -1,51 +1,52 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-14T11:34:58.758Z",
+  "generatedAt": "2026-08-14T22:39:30.552Z",
   "title": "Capaciteitsgestuurde verdeling restafvalcontainers Warmenhuizen",
   "decision": {
     "existingPhysicalContainersRetained": 11,
-    "existingPublicContainers": 9,
-    "existingPrivateContainers": 2,
-    "publicAccessChange": "None; WH23 and WH24 retain their source-defined private allowlists.",
-    "newPublicContainers": 25,
-    "publicContainers": 34,
-    "totalPhysicalContainers": 36,
+    "existingPublicContainers": 10,
+    "existingPrivateContainers": 1,
+    "publicAccessChange": "WH24 is public in this decision scenario by explicit user instruction; WH23 retains its source-defined private allowlist.",
+    "newPublicContainers": 26,
+    "publicContainers": 36,
+    "totalPhysicalContainers": 37,
     "currentBagResidentialAddressProxies": 2579,
-    "publicBagResidentialAddressProxies": 2572,
-    "privateAllowlistedAddressProxies": 7,
+    "publicBagResidentialAddressProxies": 2576,
+    "privateAllowlistedAddressProxies": 3,
     "targetHouseholdsPerContainer": 75,
-    "interpretation": "Soft target: choose the whole public-container count with an average closest to 75, then assign each new public site 60-90 BAG residential address proxies. Existing public sites have no artificial minimum and a 90-proxy ceiling.",
+    "interpretation": "User-selected service variant: retain M044 and M094, add M082, and accept one public container more than the arithmetic maximum-75 minimum. Each new public site is assigned 60-90 BAG residential address proxies; existing public sites have no artificial minimum and a 90-proxy ceiling.",
     "softTargetContainerCount": {
       "rule": "round(public BAG residential address proxies / 75)",
       "requiredPublicContainers": 34,
-      "requiredNewPublicContainers": 25,
-      "totalIncludingPrivateContainers": 36,
-      "resultingAveragePublicLoad": 75.647
+      "requiredNewPublicContainers": 24,
+      "totalIncludingPrivateContainers": 35,
+      "resultingAveragePublicLoad": 75.765
     },
     "hardMaximum75ArithmeticSensitivity": {
       "rule": "ceil(public BAG residential address proxies / 75)",
-      "scope": "Arithmetic container count only; no 26-site selection or maximum-75 assignment was evaluated.",
+      "scope": "Arithmetic minimum only. The selected service variant uses one additional public container and has an average below 75.",
       "requiredPublicContainers": 35,
-      "requiredNewPublicContainers": 26,
-      "totalIncludingPrivateContainers": 37
+      "requiredNewPublicContainers": 25,
+      "totalIncludingPrivateContainers": 36
     }
   },
   "recommendedScenario": {
-    "publicLocationCount": 34,
-    "fixedPublicLocationCount": 9,
-    "newPublicLocationCount": 25,
-    "averageHouseholdsPerPublicContainer": 75.647,
+    "publicLocationCount": 36,
+    "fixedPublicLocationCount": 10,
+    "newPublicLocationCount": 26,
+    "averageHouseholdsPerPublicContainer": 71.556,
     "targetHouseholdsPerContainer": 75,
     "chosenModelBandForNewLocations": [
       60,
       90
     ],
     "assignedHouseholdsByLocation": {
-      "WH03": 70,
+      "WH03": 67,
       "WH05": 90,
       "WH06": 60,
       "WH08": 52,
-      "WH14": 90,
+      "WH14": 84,
+      "WH24": 24,
       "WH26": 90,
       "WH27": 90,
       "WH33": 89,
@@ -58,81 +59,82 @@
       "M149": 60,
       "M027": 60,
       "WH19": 90,
-      "WH10": 62,
-      "M020": 90,
+      "WH10": 61,
+      "M020": 71,
       "M093": 90,
-      "WH13": 90,
+      "WH13": 83,
       "M041": 90,
       "M134": 72,
-      "M018": 62,
-      "M100": 85,
+      "M018": 63,
+      "M100": 81,
       "M024": 60,
-      "M051": 86,
-      "WH30": 90,
-      "WH02": 60,
-      "M045": 88,
+      "M051": 60,
+      "M056": 73,
+      "M055": 60,
+      "M045": 60,
       "WH12": 60,
       "M094": 60,
       "M104": 65,
-      "M157": 87
+      "M157": 87,
+      "M082": 90
     },
     "capacityBalancedDistance": {
-      "householdCount": 2572,
-      "reachableCount": 2572,
-      "totalWalkingDistanceM": 368271.7,
-      "averageWalkingDistanceM": 143.185,
-      "p50WalkingDistanceM": 128.6,
-      "p90WalkingDistanceM": 248.6,
-      "p95WalkingDistanceM": 301.6,
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 345441.9,
+      "averageWalkingDistanceM": 134.1,
+      "p50WalkingDistanceM": 124.3,
+      "p90WalkingDistanceM": 223.6,
+      "p95WalkingDistanceM": 261.4,
       "maximumWalkingDistanceM": 776,
       "distanceBands": {
-        "within_100": 899,
-        "between_100_125": 337,
-        "between_125_150": 332,
-        "between_150_275": 828,
-        "over_275": 176,
+        "within_100": 942,
+        "between_100_125": 353,
+        "between_125_150": 360,
+        "between_150_275": 833,
+        "over_275": 88,
         "unreachable": 0
       }
     },
     "nearestSiteAccessSensitivity": {
-      "householdCount": 2572,
-      "reachableCount": 2572,
-      "totalWalkingDistanceM": 352031.3,
-      "averageWalkingDistanceM": 136.871,
-      "p50WalkingDistanceM": 126.4,
-      "p90WalkingDistanceM": 223.7,
-      "p95WalkingDistanceM": 280,
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 331721,
+      "averageWalkingDistanceM": 128.774,
+      "p50WalkingDistanceM": 121.8,
+      "p90WalkingDistanceM": 210.9,
+      "p95WalkingDistanceM": 240.4,
       "maximumWalkingDistanceM": 662.7,
       "distanceBands": {
-        "within_100": 906,
-        "between_100_125": 359,
-        "between_125_150": 350,
-        "between_150_275": 825,
-        "over_275": 132,
+        "within_100": 964,
+        "between_100_125": 372,
+        "between_125_150": 373,
+        "between_150_275": 805,
+        "over_275": 62,
         "unreachable": 0
       }
     },
     "assignmentSolver": {
       "method": "deterministic epsilon-scaling auction over individual capacity slots",
       "finalEpsilonM": 0.01,
-      "unusedCapacitySlots": 488
+      "unusedCapacitySlots": 664
     },
-    "totalPhysicalLocationCount": 36,
+    "totalPhysicalLocationCount": 37,
     "totalDistanceIncludingPrivate": {
       "householdCount": 2579,
       "reachableCount": 2579,
-      "totalWalkingDistanceM": 369154.82,
-      "averageWalkingDistanceM": 143.139,
-      "p50WalkingDistanceM": 128.6,
-      "p90WalkingDistanceM": 248.6,
-      "p95WalkingDistanceM": 301.6,
+      "totalWalkingDistanceM": 345948.86,
+      "averageWalkingDistanceM": 134.141,
+      "p50WalkingDistanceM": 124.5,
+      "p90WalkingDistanceM": 223.6,
+      "p95WalkingDistanceM": 261.4,
       "maximumWalkingDistanceM": 776,
       "distanceBands": {
-        "within_100": 902,
-        "between_100_125": 337,
-        "between_125_150": 332,
-        "between_150_275": 832,
-        "over_275": 176,
+        "within_100": 942,
+        "between_100_125": 353,
+        "between_125_150": 360,
+        "between_150_275": 836,
+        "over_275": 88,
         "unreachable": 0
       }
     },
@@ -155,21 +157,20 @@
       "M100",
       "M024",
       "M051",
-      "WH30",
-      "WH02",
+      "M056",
+      "M055",
       "M045",
       "WH12",
       "M094",
       "M104",
-      "M157"
+      "M157",
+      "M082"
     ],
     "selectedMunicipalConceptIds": [
       "WH18",
       "WH19",
       "WH10",
       "WH13",
-      "WH30",
-      "WH02",
       "WH12"
     ],
     "selectedIndependentSearchAnchorIds": [
@@ -187,24 +188,518 @@
       "M100",
       "M024",
       "M051",
+      "M056",
+      "M055",
       "M045",
       "M094",
       "M104",
-      "M157"
+      "M157",
+      "M082"
     ],
-    "recordedCandidatePoolSelection": {
-      "removedSearchAnchorId": "M154",
-      "method": "Complete capacity-constrained leave-one-out comparison of all 26 starting additions",
-      "evaluatedRemovalCount": 26,
-      "runnerUpRemovedId": "M157",
-      "runnerUpAdditionalDistanceM": 1207.6
+    "userDirectedLocationChanges": {
+      "baseline": "WH24 public with the previously selected 25 new search zones.",
+      "replacements": [
+        {
+          "removedId": "WH02",
+          "addedId": "M055",
+          "purpose": "Move service north along De Fuik while retaining M027."
+        },
+        {
+          "removedId": "WH30",
+          "addedId": "M056",
+          "purpose": "Move the search anchor 68.2 m east into the residential area."
+        }
+      ],
+      "addedIds": [
+        "M082"
+      ],
+      "retainedAfterReview": [
+        "M027",
+        "M044",
+        "M094"
+      ],
+      "physicalCountChange": 1
+    }
+  },
+  "decisionBaseline": {
+    "label": "WH24 public with previous 25 new search zones",
+    "publicLocationCount": 35,
+    "fixedPublicLocationCount": 10,
+    "newPublicLocationCount": 25,
+    "averageHouseholdsPerPublicContainer": 73.6,
+    "targetHouseholdsPerContainer": 75,
+    "chosenModelBandForNewLocations": [
+      60,
+      90
+    ],
+    "assignedHouseholdsByLocation": {
+      "WH03": 70,
+      "WH05": 90,
+      "WH06": 60,
+      "WH08": 51,
+      "WH14": 84,
+      "WH24": 44,
+      "WH26": 90,
+      "WH27": 90,
+      "WH33": 89,
+      "WH34": 31,
+      "WH18": 90,
+      "M044": 90,
+      "M016": 70,
+      "M101": 90,
+      "M004": 63,
+      "M149": 60,
+      "M027": 60,
+      "WH19": 90,
+      "WH10": 61,
+      "M020": 90,
+      "M093": 90,
+      "WH13": 88,
+      "M041": 90,
+      "M134": 72,
+      "M018": 61,
+      "M100": 84,
+      "M024": 60,
+      "M051": 73,
+      "WH30": 90,
+      "WH02": 60,
+      "M045": 73,
+      "WH12": 60,
+      "M094": 60,
+      "M104": 65,
+      "M157": 87
+    },
+    "capacityBalancedDistance": {
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 364802.2,
+      "averageWalkingDistanceM": 141.616,
+      "p50WalkingDistanceM": 128,
+      "p90WalkingDistanceM": 240.6,
+      "p95WalkingDistanceM": 288.5,
+      "maximumWalkingDistanceM": 776,
+      "distanceBands": {
+        "within_100": 905,
+        "between_100_125": 343,
+        "between_125_150": 330,
+        "between_150_275": 841,
+        "over_275": 157,
+        "unreachable": 0
+      }
+    },
+    "nearestSiteAccessSensitivity": {
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 351528.6,
+      "averageWalkingDistanceM": 136.463,
+      "p50WalkingDistanceM": 126.1,
+      "p90WalkingDistanceM": 223.6,
+      "p95WalkingDistanceM": 280,
+      "maximumWalkingDistanceM": 662.7,
+      "distanceBands": {
+        "within_100": 913,
+        "between_100_125": 360,
+        "between_125_150": 350,
+        "between_150_275": 821,
+        "over_275": 132,
+        "unreachable": 0
+      }
+    },
+    "assignmentSolver": {
+      "method": "deterministic epsilon-scaling auction over individual capacity slots",
+      "finalEpsilonM": 0.01,
+      "unusedCapacitySlots": 574
+    },
+    "focusAreas": {
+      "deFuik": {
+        "householdCount": 32,
+        "reachableCount": 32,
+        "totalWalkingDistanceM": 8295.7,
+        "averageWalkingDistanceM": 259.241,
+        "p50WalkingDistanceM": 254,
+        "p90WalkingDistanceM": 413.6,
+        "p95WalkingDistanceM": 417.4,
+        "maximumWalkingDistanceM": 447.5,
+        "distanceBands": {
+          "within_100": 6,
+          "between_100_125": 2,
+          "between_125_150": 0,
+          "between_150_275": 8,
+          "over_275": 16,
+          "unreachable": 0
+        }
+      },
+      "dorpsFabriekEiland": {
+        "householdCount": 244,
+        "reachableCount": 244,
+        "totalWalkingDistanceM": 51687.2,
+        "averageWalkingDistanceM": 211.833,
+        "p50WalkingDistanceM": 205.9,
+        "p90WalkingDistanceM": 364.1,
+        "p95WalkingDistanceM": 385.7,
+        "maximumWalkingDistanceM": 427.2,
+        "distanceBands": {
+          "within_100": 32,
+          "between_100_125": 19,
+          "between_125_150": 21,
+          "between_150_275": 105,
+          "over_275": 67,
+          "unreachable": 0
+        }
+      },
+      "eastNeighbourhood": {
+        "householdCount": 306,
+        "reachableCount": 306,
+        "totalWalkingDistanceM": 36777,
+        "averageWalkingDistanceM": 120.186,
+        "p50WalkingDistanceM": 100.5,
+        "p90WalkingDistanceM": 223.5,
+        "p95WalkingDistanceM": 254,
+        "maximumWalkingDistanceM": 303.7,
+        "distanceBands": {
+          "within_100": 152,
+          "between_100_125": 38,
+          "between_125_150": 36,
+          "between_150_275": 73,
+          "over_275": 7,
+          "unreachable": 0
+        }
+      }
+    }
+  },
+  "locationChangeFindings": {
+    "comparisonBasis": "Capacity-balanced assignment versus the same WH24-public baseline with the previous 25 new search zones.",
+    "totalWalkingDistanceReductionM": 19360.3,
+    "averageWalkingDistanceReductionM": 7.516,
+    "p95WalkingDistanceReductionM": 27.1,
+    "over275Reduction": 69,
+    "focusAreas": {
+      "deFuik": {
+        "baseline": {
+          "householdCount": 32,
+          "reachableCount": 32,
+          "totalWalkingDistanceM": 8295.7,
+          "averageWalkingDistanceM": 259.241,
+          "p50WalkingDistanceM": 254,
+          "p90WalkingDistanceM": 413.6,
+          "p95WalkingDistanceM": 417.4,
+          "maximumWalkingDistanceM": 447.5,
+          "distanceBands": {
+            "within_100": 6,
+            "between_100_125": 2,
+            "between_125_150": 0,
+            "between_150_275": 8,
+            "over_275": 16,
+            "unreachable": 0
+          }
+        },
+        "recommended": {
+          "householdCount": 32,
+          "reachableCount": 32,
+          "totalWalkingDistanceM": 5104.2,
+          "averageWalkingDistanceM": 159.506,
+          "p50WalkingDistanceM": 120.2,
+          "p90WalkingDistanceM": 264.2,
+          "p95WalkingDistanceM": 417.4,
+          "maximumWalkingDistanceM": 447.5,
+          "distanceBands": {
+            "within_100": 12,
+            "between_100_125": 4,
+            "between_125_150": 2,
+            "between_150_275": 12,
+            "over_275": 2,
+            "unreachable": 0
+          }
+        },
+        "over275Reduction": 14
+      },
+      "dorpsFabriekEiland": {
+        "baseline": {
+          "householdCount": 244,
+          "reachableCount": 244,
+          "totalWalkingDistanceM": 51687.2,
+          "averageWalkingDistanceM": 211.833,
+          "p50WalkingDistanceM": 205.9,
+          "p90WalkingDistanceM": 364.1,
+          "p95WalkingDistanceM": 385.7,
+          "maximumWalkingDistanceM": 427.2,
+          "distanceBands": {
+            "within_100": 32,
+            "between_100_125": 19,
+            "between_125_150": 21,
+            "between_150_275": 105,
+            "over_275": 67,
+            "unreachable": 0
+          }
+        },
+        "recommended": {
+          "householdCount": 244,
+          "reachableCount": 244,
+          "totalWalkingDistanceM": 41884.9,
+          "averageWalkingDistanceM": 171.659,
+          "p50WalkingDistanceM": 178.2,
+          "p90WalkingDistanceM": 266.1,
+          "p95WalkingDistanceM": 284.8,
+          "maximumWalkingDistanceM": 421.7,
+          "distanceBands": {
+            "within_100": 46,
+            "between_100_125": 19,
+            "between_125_150": 31,
+            "between_150_275": 128,
+            "over_275": 20,
+            "unreachable": 0
+          }
+        },
+        "over275Reduction": 47
+      },
+      "eastNeighbourhood": {
+        "baseline": {
+          "householdCount": 306,
+          "reachableCount": 306,
+          "totalWalkingDistanceM": 36777,
+          "averageWalkingDistanceM": 120.186,
+          "p50WalkingDistanceM": 100.5,
+          "p90WalkingDistanceM": 223.5,
+          "p95WalkingDistanceM": 254,
+          "maximumWalkingDistanceM": 303.7,
+          "distanceBands": {
+            "within_100": 152,
+            "between_100_125": 38,
+            "between_125_150": 36,
+            "between_150_275": 73,
+            "over_275": 7,
+            "unreachable": 0
+          }
+        },
+        "recommended": {
+          "householdCount": 306,
+          "reachableCount": 306,
+          "totalWalkingDistanceM": 33756.4,
+          "averageWalkingDistanceM": 110.315,
+          "p50WalkingDistanceM": 109.6,
+          "p90WalkingDistanceM": 172.5,
+          "p95WalkingDistanceM": 215.8,
+          "maximumWalkingDistanceM": 270.3,
+          "distanceBands": {
+            "within_100": 144,
+            "between_100_125": 41,
+            "between_125_150": 63,
+            "between_150_275": 58,
+            "over_275": 0,
+            "unreachable": 0
+          }
+        },
+        "over275Reduction": 7
+      }
+    },
+    "selectedLocationLoads": {
+      "WH24": 24,
+      "M027": 60,
+      "M044": 90,
+      "M055": 60,
+      "M056": 73,
+      "M082": 90,
+      "M094": 60
+    },
+    "placementEvidence": {
+      "M055": "Approximately 140 m north of WH02 and 144 m from M027. It lies in the previously advised search direction, but the exact pin has not been BGT, ownership or field screened.",
+      "M082": "Service anchor near Fabrieksstraat 33, approximately 39 m from the previously orange-screened Fabrieksstraat 29 zone. Investigate the north/east grass edge.",
+      "M056": "Approximately 68 m east of WH30 near Dorsvlegel 36 and the Schoffel/Strekel connection. It depends on M082 taking over the south-western service role.",
+      "M044": "Retained. Removing it from the complete change bundle increases total model distance and fills WH24 to its 90-address ceiling.",
+      "M094": "Retained by explicit decision. Compared with the same-count variant that removes M094, the extra container reduces average distance and the number over 275 m further."
+    },
+    "samePhysicalCountSensitivity": {
+      "removedId": "M094",
+      "publicLocationCount": 35,
+      "fixedPublicLocationCount": 10,
+      "newPublicLocationCount": 25,
+      "averageHouseholdsPerPublicContainer": 73.6,
+      "targetHouseholdsPerContainer": 75,
+      "chosenModelBandForNewLocations": [
+        60,
+        90
+      ],
+      "assignedHouseholdsByLocation": {
+        "WH03": 89,
+        "WH05": 90,
+        "WH06": 60,
+        "WH08": 66,
+        "WH14": 84,
+        "WH24": 24,
+        "WH26": 90,
+        "WH27": 90,
+        "WH33": 89,
+        "WH34": 31,
+        "WH18": 90,
+        "M044": 90,
+        "M016": 70,
+        "M101": 90,
+        "M004": 63,
+        "M149": 60,
+        "M027": 60,
+        "WH19": 90,
+        "WH10": 85,
+        "M020": 71,
+        "M093": 90,
+        "WH13": 83,
+        "M041": 90,
+        "M134": 72,
+        "M018": 63,
+        "M100": 81,
+        "M024": 60,
+        "M051": 60,
+        "M056": 73,
+        "M055": 60,
+        "M045": 60,
+        "WH12": 60,
+        "M104": 65,
+        "M157": 87,
+        "M082": 90
+      },
+      "capacityBalancedDistance": {
+        "householdCount": 2576,
+        "reachableCount": 2576,
+        "totalWalkingDistanceM": 349740,
+        "averageWalkingDistanceM": 135.769,
+        "p50WalkingDistanceM": 125.7,
+        "p90WalkingDistanceM": 229.4,
+        "p95WalkingDistanceM": 262.4,
+        "maximumWalkingDistanceM": 776,
+        "distanceBands": {
+          "within_100": 931,
+          "between_100_125": 347,
+          "between_125_150": 349,
+          "between_150_275": 857,
+          "over_275": 92,
+          "unreachable": 0
+        }
+      },
+      "nearestSiteAccessSensitivity": {
+        "householdCount": 2576,
+        "reachableCount": 2576,
+        "totalWalkingDistanceM": 336259.8,
+        "averageWalkingDistanceM": 130.536,
+        "p50WalkingDistanceM": 123,
+        "p90WalkingDistanceM": 215.5,
+        "p95WalkingDistanceM": 246.3,
+        "maximumWalkingDistanceM": 662.7,
+        "distanceBands": {
+          "within_100": 951,
+          "between_100_125": 370,
+          "between_125_150": 357,
+          "between_150_275": 832,
+          "over_275": 66,
+          "unreachable": 0
+        }
+      },
+      "assignmentSolver": {
+        "method": "deterministic epsilon-scaling auction over individual capacity slots",
+        "finalEpsilonM": 0.01,
+        "unusedCapacitySlots": 574
+      },
+      "extraContainerBenefit": {
+        "totalWalkingDistanceReductionM": 4298.1,
+        "averageWalkingDistanceReductionM": 1.669,
+        "p95WalkingDistanceReductionM": 1,
+        "over275Reduction": 4
+      }
+    },
+    "m044RemovalSensitivity": {
+      "removedId": "M044",
+      "publicLocationCount": 35,
+      "fixedPublicLocationCount": 10,
+      "newPublicLocationCount": 25,
+      "averageHouseholdsPerPublicContainer": 73.6,
+      "targetHouseholdsPerContainer": 75,
+      "chosenModelBandForNewLocations": [
+        60,
+        90
+      ],
+      "assignedHouseholdsByLocation": {
+        "WH03": 67,
+        "WH05": 90,
+        "WH06": 60,
+        "WH08": 52,
+        "WH14": 88,
+        "WH24": 90,
+        "WH26": 90,
+        "WH27": 90,
+        "WH33": 89,
+        "WH34": 31,
+        "WH18": 90,
+        "M016": 70,
+        "M101": 90,
+        "M004": 63,
+        "M149": 60,
+        "M027": 60,
+        "WH19": 90,
+        "WH10": 61,
+        "M020": 73,
+        "M093": 90,
+        "WH13": 90,
+        "M041": 90,
+        "M134": 72,
+        "M018": 64,
+        "M100": 85,
+        "M024": 60,
+        "M051": 60,
+        "M056": 73,
+        "M055": 60,
+        "M045": 66,
+        "WH12": 60,
+        "M094": 60,
+        "M104": 65,
+        "M157": 87,
+        "M082": 90
+      },
+      "capacityBalancedDistance": {
+        "householdCount": 2576,
+        "reachableCount": 2576,
+        "totalWalkingDistanceM": 358210.5,
+        "averageWalkingDistanceM": 139.057,
+        "p50WalkingDistanceM": 129.8,
+        "p90WalkingDistanceM": 225.5,
+        "p95WalkingDistanceM": 262.4,
+        "maximumWalkingDistanceM": 776,
+        "distanceBands": {
+          "within_100": 856,
+          "between_100_125": 350,
+          "between_125_150": 366,
+          "between_150_275": 907,
+          "over_275": 97,
+          "unreachable": 0
+        }
+      },
+      "nearestSiteAccessSensitivity": {
+        "householdCount": 2576,
+        "reachableCount": 2576,
+        "totalWalkingDistanceM": 342511.3,
+        "averageWalkingDistanceM": 132.962,
+        "p50WalkingDistanceM": 127.6,
+        "p90WalkingDistanceM": 211.8,
+        "p95WalkingDistanceM": 240.4,
+        "maximumWalkingDistanceM": 662.7,
+        "distanceBands": {
+          "within_100": 875,
+          "between_100_125": 371,
+          "between_125_150": 375,
+          "between_150_275": 883,
+          "over_275": 72,
+          "unreachable": 0
+        }
+      },
+      "assignmentSolver": {
+        "method": "deterministic epsilon-scaling auction over individual capacity slots",
+        "finalEpsilonM": 0.01,
+        "unusedCapacitySlots": 574
+      }
     }
   },
   "municipalConceptComparison": {
-    "publicLocationCount": 30,
-    "fixedPublicLocationCount": 9,
+    "publicLocationCount": 31,
+    "fixedPublicLocationCount": 10,
     "newPublicLocationCount": 21,
-    "averageHouseholdsPerPublicContainer": 85.733,
+    "averageHouseholdsPerPublicContainer": 83.097,
     "targetHouseholdsPerContainer": 75,
     "chosenModelBandForNewLocations": [
       60,
@@ -216,72 +711,73 @@
       "WH06": 90,
       "WH08": 90,
       "WH14": 90,
+      "WH24": 90,
       "WH26": 90,
       "WH27": 90,
       "WH33": 89,
-      "WH34": 59,
-      "WH01": 62,
+      "WH34": 46,
+      "WH01": 60,
       "WH02": 90,
       "WH04": 90,
       "WH07": 90,
-      "WH09": 90,
+      "WH09": 62,
       "WH10": 90,
       "WH11": 90,
       "WH12": 90,
       "WH13": 90,
       "WH15": 90,
-      "WH16": 90,
-      "WH17": 82,
-      "WH18": 90,
+      "WH16": 89,
+      "WH17": 62,
+      "WH18": 80,
       "WH19": 90,
       "WH20": 90,
       "WH21": 60,
       "WH22": 60,
       "WH25": 90,
-      "WH28": 90,
+      "WH28": 78,
       "WH29": 90,
       "WH30": 90
     },
     "capacityBalancedDistance": {
-      "householdCount": 2572,
-      "reachableCount": 2572,
-      "totalWalkingDistanceM": 479676.2,
-      "averageWalkingDistanceM": 186.499,
-      "p50WalkingDistanceM": 159.3,
-      "p90WalkingDistanceM": 343.7,
-      "p95WalkingDistanceM": 407.7,
-      "maximumWalkingDistanceM": 960.7,
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 460436.9,
+      "averageWalkingDistanceM": 178.741,
+      "p50WalkingDistanceM": 157.4,
+      "p90WalkingDistanceM": 314.1,
+      "p95WalkingDistanceM": 371.2,
+      "maximumWalkingDistanceM": 689.9,
       "distanceBands": {
-        "within_100": 571,
-        "between_100_125": 278,
+        "within_100": 578,
+        "between_100_125": 283,
         "between_125_150": 340,
-        "between_150_275": 911,
-        "over_275": 472,
+        "between_150_275": 978,
+        "over_275": 397,
         "unreachable": 0
       }
     },
     "nearestSiteAccessSensitivity": {
-      "householdCount": 2572,
-      "reachableCount": 2572,
-      "totalWalkingDistanceM": 426730,
-      "averageWalkingDistanceM": 165.914,
-      "p50WalkingDistanceM": 149.1,
-      "p90WalkingDistanceM": 284.5,
-      "p95WalkingDistanceM": 326.5,
+      "householdCount": 2576,
+      "reachableCount": 2576,
+      "totalWalkingDistanceM": 425417.1,
+      "averageWalkingDistanceM": 165.146,
+      "p50WalkingDistanceM": 148.7,
+      "p90WalkingDistanceM": 282.8,
+      "p95WalkingDistanceM": 321.9,
       "maximumWalkingDistanceM": 621,
       "distanceBands": {
-        "within_100": 590,
-        "between_100_125": 333,
-        "between_125_150": 378,
+        "within_100": 594,
+        "between_100_125": 335,
+        "between_125_150": 380,
         "between_150_275": 985,
-        "over_275": 286,
+        "over_275": 282,
         "unreachable": 0
       }
     },
     "assignmentSolver": {
       "method": "deterministic epsilon-scaling auction over individual capacity slots",
       "finalEpsilonM": 0.01,
-      "unusedCapacitySlots": 128
+      "unusedCapacitySlots": 214
     },
     "proposalCountReconciled": 21,
     "totalPhysicalLocationCountIncludingPrivate": 32,
@@ -289,37 +785,37 @@
     "unconfirmedRepoOnlyIdExcluded": "WH35"
   },
   "comparison": {
-    "interpretation": "The primary figures compare exclusive, capacity-balanced assignments and combine location choice with four additional public containers. They do not predict which of three accessible bins a resident will actually use.",
-    "additionalPublicContainers": 4,
+    "interpretation": "The primary figures compare exclusive, capacity-balanced assignments and combine location choice with five additional public containers. They do not predict which of three accessible bins a resident will actually use.",
+    "additionalPublicContainers": 5,
     "capacityBalanced": {
-      "totalWalkingDistanceReductionM": 111404.5,
-      "totalWalkingDistanceReductionPercent": 23.22,
-      "averageWalkingDistanceReductionM": 43.3,
-      "p95WalkingDistanceReductionM": 106.1,
-      "over275Reduction": 296
+      "totalWalkingDistanceReductionM": 114995,
+      "totalWalkingDistanceReductionPercent": 24.98,
+      "averageWalkingDistanceReductionM": 44.6,
+      "p95WalkingDistanceReductionM": 109.8,
+      "over275Reduction": 309
     },
     "nearestSiteAccessSensitivity": {
       "interpretation": "Optimistic nearest-site sensitivity without capacity balancing: every public address chooses its nearest selected public site. The difference between both scenario minima is not a bound on actual resident behaviour.",
-      "totalWalkingDistanceReductionM": 74698.7,
-      "totalWalkingDistanceReductionPercent": 17.5,
-      "averageWalkingDistanceReductionM": 29,
-      "p95WalkingDistanceReductionM": 46.5,
-      "over275Reduction": 154
+      "totalWalkingDistanceReductionM": 93696.1,
+      "totalWalkingDistanceReductionPercent": 22.02,
+      "averageWalkingDistanceReductionM": 36.4,
+      "p95WalkingDistanceReductionM": 81.5,
+      "over275Reduction": 220
     }
   },
   "model": {
     "formulation": "capacitated facility-location / p-median with fixed existing facilities and binary unique household assignment",
     "objectives": [
-      "retain all 11 existing physical containers at their exact input coordinates and access scopes",
-      "fix 25 new public containers from the soft target of an average closest to 75",
+      "retain all 11 existing physical containers at their exact input coordinates, with WH24 public in the decision scenario and WH23 private",
+      "apply the user-selected 26-zone service variant, including M082 while retaining M044 and M094",
       "minimize total estimated pedestrian-network distance under the chosen 60-90 new-location model band",
       "report p95, maximum and repository distance bands as fairness diagnostics"
     ],
-    "locationSelection": "A recorded 26-site pool from the prior BGT-aware local search is reduced by a complete capacity-constrained leave-one-out comparison. The final-stage selection is reproducible; the upstream candidate search is a fixed input and this is not a proof of global facility-location optimality.",
+    "locationSelection": "The prior 25-zone selection is the baseline. The decision scenario replaces WH02 with M055, replaces WH30 with M056, adds M082, and explicitly retains M027, M044 and M094. These are user-directed scenario choices informed by focused variant testing, not a globally optimized facility-location result.",
     "assignment": {
       "method": "deterministic epsilon-scaling auction over individual capacity slots",
       "finalEpsilonM": 0.01,
-      "unusedCapacitySlots": 488
+      "unusedCapacitySlots": 664
     },
     "routeDistance": {
       "dataset": "OpenStreetMap highway ways extracted through Overpass API",
@@ -346,7 +842,7 @@
       "stepsWeightMultiplier": 1.35,
       "limitation": "This local graph does not model every OSRM foot-profile rule, turn restriction, surface or barrier."
     },
-    "privateRouteDistance": "The seven private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.",
+    "privateRouteDistance": "The three WH23-private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.",
     "routeUncertainty": "Estimated distance over a local bidirectional OSM pedestrian graph. Prior calibration against the stored routing dataset had MAE 29.9 m and P95 absolute error 80.9 m; reported metres are model values, not field precision.",
     "candidateRecordsBeforeCoordinateDeduplication": 207,
     "uniqueCandidateCoordinates": 186,
@@ -376,7 +872,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": null,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 70,
+      "assignedHouseholds": 67,
       "screeningRating": "green-fixed",
       "bgtDistancesM": {
         "vehicleRoad": 3.6,
@@ -472,7 +968,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": null,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 90,
+      "assignedHouseholds": 84,
       "screeningRating": "orange-fixed",
       "bgtDistancesM": {
         "vehicleRoad": 3.6,
@@ -481,6 +977,30 @@
         "water": 27.7,
         "tree": 14.1,
         "obstacle": 3
+      }
+    },
+    {
+      "id": "WH24",
+      "kind": "existing",
+      "status": "existing",
+      "address": "Pastoor Willemsestraat 80",
+      "lat": 52.720753,
+      "lon": 4.74024,
+      "sourceType": "hvc-existing-user-confirmed-public",
+      "accessScope": "public",
+      "capacityUnits": 1,
+      "targetHouseholds": 75,
+      "minimumModelLoad": null,
+      "maximumModelLoad": 90,
+      "assignedHouseholds": 24,
+      "screeningRating": "orange-fixed",
+      "bgtDistancesM": {
+        "vehicleRoad": null,
+        "openSpace": null,
+        "facade": null,
+        "water": null,
+        "tree": null,
+        "obstacle": null
       }
     },
     {
@@ -784,7 +1304,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 62,
+      "assignedHouseholds": 61,
       "screeningRating": "green",
       "bgtDistancesM": {
         "vehicleRoad": 3.1,
@@ -808,7 +1328,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 90,
+      "assignedHouseholds": 71,
       "screeningRating": "orange",
       "bgtDistancesM": {
         "vehicleRoad": 0,
@@ -856,7 +1376,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 90,
+      "assignedHouseholds": 83,
       "screeningRating": "orange",
       "bgtDistancesM": {
         "vehicleRoad": 0.1,
@@ -928,7 +1448,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 62,
+      "assignedHouseholds": 63,
       "screeningRating": "orange",
       "bgtDistancesM": {
         "vehicleRoad": 0,
@@ -952,7 +1472,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 85,
+      "assignedHouseholds": 81,
       "screeningRating": "green",
       "bgtDistancesM": {
         "vehicleRoad": 0,
@@ -1000,7 +1520,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 86,
+      "assignedHouseholds": 60,
       "screeningRating": "orange",
       "bgtDistancesM": {
         "vehicleRoad": 0,
@@ -1012,51 +1532,51 @@
       }
     },
     {
-      "id": "WH30",
+      "id": "M056",
       "kind": "new",
       "status": "proposed",
-      "address": "Molenaarweg 1",
-      "lat": 52.71779,
-      "lon": 4.739241,
-      "sourceType": "municipal-concept",
+      "address": "modelpunt nabij Dorsvlegel 36",
+      "lat": 52.7177165,
+      "lon": 4.7402468,
+      "sourceType": "analytical-search-anchor",
       "accessScope": "public",
       "capacityUnits": 1,
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 90,
-      "screeningRating": "orange",
+      "assignedHouseholds": 73,
+      "screeningRating": "not-screened",
       "bgtDistancesM": {
-        "vehicleRoad": 1.9,
-        "openSpace": 0,
-        "facade": 33.5,
-        "water": 8.6,
-        "tree": 5.5,
-        "obstacle": 6.9
+        "vehicleRoad": null,
+        "openSpace": null,
+        "facade": null,
+        "water": null,
+        "tree": null,
+        "obstacle": null
       }
     },
     {
-      "id": "WH02",
+      "id": "M055",
       "kind": "new",
       "status": "proposed",
-      "address": "Dorpsstraat 13",
-      "lat": 52.727742,
-      "lon": 4.739284,
-      "sourceType": "municipal-concept",
+      "address": "modelpunt nabij De Fuik 25",
+      "lat": 52.7289883,
+      "lon": 4.7389822,
+      "sourceType": "analytical-search-anchor",
       "accessScope": "public",
       "capacityUnits": 1,
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
       "assignedHouseholds": 60,
-      "screeningRating": "orange",
+      "screeningRating": "not-screened",
       "bgtDistancesM": {
-        "vehicleRoad": 0,
-        "openSpace": 12.7,
-        "facade": 11.9,
-        "water": 151.9,
-        "tree": 11,
-        "obstacle": 3.1
+        "vehicleRoad": null,
+        "openSpace": null,
+        "facade": null,
+        "water": null,
+        "tree": null,
+        "obstacle": null
       }
     },
     {
@@ -1072,7 +1592,7 @@
       "targetHouseholds": 75,
       "minimumModelLoad": 60,
       "maximumModelLoad": 90,
-      "assignedHouseholds": 88,
+      "assignedHouseholds": 60,
       "screeningRating": "orange",
       "bgtDistancesM": {
         "vehicleRoad": 0,
@@ -1180,6 +1700,30 @@
       }
     },
     {
+      "id": "M082",
+      "kind": "new",
+      "status": "proposed",
+      "address": "modelpunt nabij Fabrieksstraat 33",
+      "lat": 52.7186864,
+      "lon": 4.7380954,
+      "sourceType": "analytical-search-anchor",
+      "accessScope": "public",
+      "capacityUnits": 1,
+      "targetHouseholds": 75,
+      "minimumModelLoad": 60,
+      "maximumModelLoad": 90,
+      "assignedHouseholds": 90,
+      "screeningRating": "not-screened",
+      "bgtDistancesM": {
+        "vehicleRoad": null,
+        "openSpace": null,
+        "facade": null,
+        "water": null,
+        "tree": null,
+        "obstacle": null
+      }
+    },
+    {
       "id": "WH23",
       "kind": "existing",
       "status": "existing",
@@ -1198,27 +1742,6 @@
       ],
       "capacityUnits": 1,
       "assignedHouseholds": 3,
-      "screeningRating": "private-fixed"
-    },
-    {
-      "id": "WH24",
-      "kind": "existing",
-      "status": "existing",
-      "address": "Pastoor Willemsestraat 80",
-      "hvcContainerId": "80428",
-      "lat": 52.720753,
-      "lon": 4.74024,
-      "sourceType": "hvc-existing-private",
-      "accessScope": "private",
-      "accessLabel": "Privé Angelapark",
-      "allowedAddresses": [
-        {
-          "street": "Pastoor Willemsestraat",
-          "houseNumbers": "80, 82, 84, 86"
-        }
-      ],
-      "capacityUnits": 1,
-      "assignedHouseholds": 4,
       "screeningRating": "private-fixed"
     }
   ],
@@ -1239,9 +1762,13 @@
       "path": "reports/warmenhuizen-containeroptimalisatie-2026-08-13/existing-11-household-coverage.json",
       "sha256": "b09a0fec52bb91f52d16684a685f1a4bdbee74cd5fe0b2df78d24754f8064e9f"
     },
+    "wh24Column": {
+      "path": "reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/wh24-public-column.json",
+      "sha256": "4169e6a60b3758c80b097db5725387c0ec762b288998bd8af62e7499b70840be"
+    },
     "screening": {
       "path": "reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/location-screening.json",
-      "sha256": "91dbed8f5ff87b6a659f23a6adc50ca4274392d6987b75106f99629519097f27"
+      "sha256": "ec85688534d1effdebb1731d66b19ff63442ab7ba629d98721bd84f66bcb360b"
     },
     "evaluation": {
       "path": "reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json",

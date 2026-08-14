@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenedAt": "2026-08-14",
-  "accessAssumption": "Source-defined access is retained: WH23 and WH24 remain private for their configured address allowlists.",
-  "purpose": "Bureauscreening van de vaste locaties en de 25 geselecteerde zoekankers; toegewezen lasten zijn modeluitvoer en staan daarom niet in dit invoerbestand; geen civieltechnische vrijgave.",
+  "accessAssumption": "Decision-scenario override: WH24 is public by explicit user instruction; WH23 remains private for its configured address allowlist.",
+  "purpose": "Bureauscreening van de vaste locaties en de 26 geselecteerde zoekankers; M055, M056 en M082 zijn nog niet op hun exacte pin gescreend; toegewezen lasten zijn modeluitvoer en staan daarom niet in dit invoerbestand; geen civieltechnische vrijgave.",
   "method": {
     "sources": [
       "PDOK BGT daily snapshot through 2026-08-13",
@@ -15,6 +15,7 @@
     "ratings": {
       "green": "Plausible search zone in the automated object-distance pre-screen; still requires all field checks.",
       "orange": "Plausible only after a local shift or with a material unresolved object conflict.",
+      "not-screened": "Service anchor selected for distance analysis; exact BGT, orthophoto, ownership and field screening still required.",
       "fixed": "Existing location retained irrespective of the automated siting score.",
       "private-fixed": "Existing private location retained only for its configured allowlist."
     },
@@ -35,7 +36,7 @@
     {"id":"WH06","role":"existing-public","source":"hvc-existing","address":"Soeverein 2","lat":52.727578,"lon":4.750383,"rating":"orange-fixed","roadM":5.3,"openSpaceM":0.6,"facadeM":15.4,"waterM":5.3,"treeM":36.7,"obstacleM":1.6},
     {"id":"WH08","role":"existing-public","source":"hvc-existing","address":"Dorpsstraat 89","lat":52.725435,"lon":4.739056,"rating":"orange-fixed","roadM":2.2,"openSpaceM":0.0,"facadeM":22.9,"waterM":81.8,"treeM":5.4,"obstacleM":7.1},
     {"id":"WH14","role":"existing-public","source":"hvc-existing","address":"Doorbraak 23","lat":52.722411,"lon":4.740981,"rating":"orange-fixed","roadM":3.6,"openSpaceM":9.9,"facadeM":9.5,"waterM":27.7,"treeM":14.1,"obstacleM":3.0},
-    {"id":"WH24","role":"existing-private","source":"hvc-existing-private","address":"Pastoor Willemsestraat 80","lat":52.720753,"lon":4.74024,"rating":"private-fixed"},
+    {"id":"WH24","role":"existing-public","source":"hvc-existing-user-confirmed-public","address":"Pastoor Willemsestraat 80","lat":52.720753,"lon":4.74024,"rating":"orange-fixed"},
     {"id":"WH26","role":"existing-public","source":"hvc-existing","address":"Regelhaalder 42","lat":52.718557,"lon":4.741484,"rating":"red-fixed","roadM":2.3,"openSpaceM":1.3,"facadeM":4.1,"waterM":91.3,"treeM":6.4,"obstacleM":12.4},
     {"id":"WH27","role":"existing-public","source":"hvc-existing","address":"Zigt 97","lat":52.718151,"lon":4.743409,"rating":"orange-fixed","roadM":1.1,"openSpaceM":21.1,"facadeM":10.7,"waterM":153.0,"treeM":10.5,"obstacleM":4.1},
     {"id":"WH33","role":"existing-public","source":"hvc-existing","address":"Zuiderkruis 36","lat":52.729898,"lon":4.74845,"rating":"green-fixed","roadM":0.0,"openSpaceM":3.6,"facadeM":12.6,"waterM":68.4,"treeM":142.1,"obstacleM":10.0},
@@ -58,13 +59,14 @@
     {"id":"M100","role":"new","source":"analytical-search-anchor","address":"Beuninge 31","lat":52.7206833,"lon":4.7290946,"rating":"green","roadM":0.0,"openSpaceM":3.5,"facadeM":12.0,"waterM":36.2,"treeM":8.0,"obstacleM":5.5},
     {"id":"M024","role":"new","source":"analytical-search-anchor","address":"Oudewal 29","lat":52.7195656,"lon":4.729399,"rating":"orange","roadM":0.0,"openSpaceM":8.7,"facadeM":11.9,"waterM":134.7,"treeM":4.1,"obstacleM":6.1},
     {"id":"M051","role":"new","source":"analytical-search-anchor","address":"Zigt 2","lat":52.7185154,"lon":4.7451624,"rating":"orange","roadM":0.0,"openSpaceM":4.5,"facadeM":9.1,"waterM":34.5,"treeM":11.7,"obstacleM":2.7},
-    {"id":"WH30","role":"new","source":"municipal-concept","address":"Molenaarweg 1","lat":52.71779,"lon":4.739241,"rating":"orange","roadM":1.9,"openSpaceM":0.0,"facadeM":33.5,"waterM":8.6,"treeM":5.5,"obstacleM":6.9},
-    {"id":"WH02","role":"new","source":"municipal-concept","address":"Dorpsstraat 13","lat":52.727742,"lon":4.739284,"rating":"orange","roadM":0.0,"openSpaceM":12.7,"facadeM":11.9,"waterM":151.9,"treeM":11.0,"obstacleM":3.1},
+    {"id":"M056","role":"new","source":"analytical-search-anchor","address":"modelpunt nabij Dorsvlegel 36","lat":52.7177165,"lon":4.7402468,"rating":"not-screened"},
+    {"id":"M055","role":"new","source":"analytical-search-anchor","address":"modelpunt nabij De Fuik 25","lat":52.7289883,"lon":4.7389822,"rating":"not-screened"},
     {"id":"M045","role":"new","source":"analytical-search-anchor","address":"Krankhoorn 37","lat":52.7219446,"lon":4.7354065,"rating":"orange","roadM":0.0,"openSpaceM":21.7,"facadeM":5.3,"waterM":8.4,"treeM":25.1,"obstacleM":36.5},
     {"id":"WH12","role":"new","source":"municipal-concept","address":"De Negen Geerzen 29","lat":52.722146,"lon":4.74644,"rating":"green","roadM":1.2,"openSpaceM":0.0,"facadeM":22.4,"waterM":29.4,"treeM":11.2,"obstacleM":8.0},
     {"id":"M094","role":"new","source":"analytical-search-anchor","address":"De Baan 13","lat":52.7255628,"lon":4.7410458,"rating":"orange","roadM":0.0,"openSpaceM":16.8,"facadeM":10.0,"waterM":53.7,"treeM":23.2,"obstacleM":7.7},
     {"id":"M104","role":"new","source":"analytical-search-anchor","address":"Wonge 36","lat":52.721757,"lon":4.7282832,"rating":"orange","roadM":0.0,"openSpaceM":6.0,"facadeM":7.0,"waterM":73.0,"treeM":10.6,"obstacleM":3.9},
     {"id":"M157","role":"new","source":"analytical-search-anchor","address":"Dergmeerweg 65","lat":52.7285395,"lon":4.7433291,"rating":"orange","roadM":0.0,"openSpaceM":9.5,"facadeM":11.1,"waterM":13.6,"treeM":12.3,"obstacleM":4.2},
+    {"id":"M082","role":"new","source":"analytical-search-anchor","address":"modelpunt nabij Fabrieksstraat 33","lat":52.7186864,"lon":4.7380954,"rating":"not-screened"},
     {"id":"WH23","role":"existing-private","source":"hvc-existing-private","address":"Molenaarsweg 7","lat":52.720329,"lon":4.738551,"rating":"private-fixed"}
   ]
 }
