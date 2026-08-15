@@ -5,7 +5,7 @@ import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(scriptDirectory, '../..');
+const projectRoot = resolve(scriptDirectory, '../../..');
 
 const DEFAULT_INPUT = resolve(scriptDirectory, 'fixed-existing-household-coverage-225.json');
 const DEFAULT_SVG_OUTPUT = resolve(scriptDirectory, 'fixed-existing-household-coverage-map.svg');

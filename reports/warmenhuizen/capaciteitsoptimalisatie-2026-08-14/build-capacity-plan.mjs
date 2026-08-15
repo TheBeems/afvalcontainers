@@ -6,14 +6,13 @@ import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const reportDirectory = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(reportDirectory, '../..');
-const priorReport = resolve(projectRoot, 'reports/warmenhuizen-containeroptimalisatie-2026-08-13');
+const projectRoot = resolve(reportDirectory, '../../..');
+const priorReport = resolve(reportDirectory, '../locatieoptimalisatie-2026-08-13');
 const paths = {
   coverage: resolve(projectRoot, 'data/places/warmenhuizen/house-coverage.json'),
   containers: resolve(projectRoot, 'data/places/warmenhuizen/container-locations.json'),
-  matrix: resolve(priorReport, 'walking-matrix.json'),
+  matrix: resolve(reportDirectory, 'walking-matrix-segment-snapped.json'),
   existingCoverage: resolve(priorReport, 'existing-11-household-coverage.json'),
-  wh24Column: resolve(reportDirectory, 'wh24-public-column.json'),
   screening: resolve(reportDirectory, 'location-screening.json'),
   evaluation: resolve(reportDirectory, 'private-access-leave-one-out.json'),
   plan: resolve(reportDirectory, 'capacity-plan.json'),
@@ -69,17 +68,6 @@ function summarize(rows) {
     maximumWalkingDistanceM: round(values.at(-1), 1),
     distanceBands: counts
   };
-}
-
-function augmentMatrix(matrix, wh24Column) {
-  assert(wh24Column.houseIds.length === matrix.houseIds.length, 'WH24 column has a different household count.');
-  wh24Column.houseIds.forEach((houseId, index) => {
-    assert(houseId === matrix.houseIds[index], `WH24 household order differs at row ${index}.`);
-  });
-  assert(!matrix.candidateIds.includes('WH24'), 'WH24 unexpectedly already occurs in the public matrix.');
-  matrix.candidateIds.push('WH24');
-  matrix.candidates.push(wh24Column.candidate);
-  matrix.distances.forEach((row, index) => row.push(wh24Column.distances[index]));
 }
 
 function buildSites(ids, matrix, screeningById) {
@@ -319,10 +307,9 @@ const coverage = readJson(paths.coverage);
 const containers = readJson(paths.containers);
 const matrix = readJson(paths.matrix);
 const existingCoverage = readJson(paths.existingCoverage);
-const wh24Column = readJson(paths.wh24Column);
 const screening = readJson(paths.screening);
 const evaluation = readJson(paths.evaluation);
-augmentMatrix(matrix, wh24Column);
+assert(matrix.candidateIds.includes('WH24'), 'WH24 is missing from the segment-snapped public matrix.');
 const screeningById = new Map(screening.locations.map((location) => [location.id, location]));
 const houseById = new Map(coverage.houses.map((house) => [house.id, house]));
 const privateAssignmentRows = buildPrivateRows(existingCoverage);
@@ -519,7 +506,7 @@ const plan = {
     assignment: recommendedScenario.assignmentSolver,
     routeDistance: matrix.source,
     privateRouteDistance: 'The three WH23-private rows preserve their stored routes and OSRM distances from existing-11-household-coverage.json. Both compared public scenarios use only the local OSM matrix, so the comparison itself does not mix route models.',
-    routeUncertainty: 'Estimated distance over a local bidirectional OSM pedestrian graph. Prior calibration against the stored routing dataset had MAE 29.9 m and P95 absolute error 80.9 m; reported metres are model values, not field precision.',
+    routeUncertainty: 'Estimated distance over a local bidirectional OSM pedestrian graph with nearest-segment snapping. The predecessor node-snapped matrix had MAE 29.9 m and P95 absolute error 80.9 m against the stored routing dataset; this segment-snapped successor is not independently field-calibrated, so reported metres remain model values.',
     candidateRecordsBeforeCoordinateDeduplication: 207,
     uniqueCandidateCoordinates: 186,
     distanceThresholdUse: 'Within this model, 275 m is not a constraint; it is a map and equity reporting band.',
@@ -535,7 +522,7 @@ const plan = {
     landsheer: 'The municipal project page states 153 homes. First verify which units were already present in the 2026-08-13 BAG snapshot.'
   },
   locations,
-  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'wh24Column', 'screening', 'evaluation'].map((name) => [name, {
+  inputs: Object.fromEntries(['coverage', 'containers', 'matrix', 'existingCoverage', 'screening', 'evaluation'].map((name) => [name, {
     path: relative(projectRoot, paths[name]),
     sha256: sha256(paths[name])
   }]))

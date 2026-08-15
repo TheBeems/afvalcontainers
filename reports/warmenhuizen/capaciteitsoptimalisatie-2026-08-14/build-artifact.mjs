@@ -130,7 +130,7 @@ const sources = [
   { id: 'bag', label: 'PDOK BAG OGC API', href: 'https://api.pdok.nl/kadaster/bag/ogc/v2?f=html&lang=nl', path: 'data/places/warmenhuizen/house-coverage.json' },
   { id: 'bgt', label: 'PDOK BGT OGC API', href: 'https://api.pdok.nl/lv/bgt/ogc/v1?f=html&lang=nl', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/location-screening.json' },
   { id: 'orthophoto', label: 'PDOK luchtfoto RGB', href: 'https://www.pdok.nl/ogc-webservices/-/article/pdok-luchtfoto-rgb-open-' },
-  { id: 'osm', label: 'OpenStreetMap pedestrian-network snapshot', href: 'https://www.openstreetmap.org/copyright', path: 'reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json' },
+  { id: 'osm', label: 'OpenStreetMap pedestrian-network snapshot', href: 'https://www.openstreetmap.org/copyright', path: 'reports/warmenhuizen/locatieoptimalisatie-2026-08-13/osm-highways.json' },
   { id: 'selection', label: 'Eerdere 26-kandidaten-baseline', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/private-access-leave-one-out.json' },
   { id: 'plan_json', label: 'Volledig capaciteitsplan en bronhashes', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/capacity-plan.json' },
   { id: 'assignments', label: 'Unieke toewijzing van 2.579 adresproxies', path: 'reports/warmenhuizen-capaciteitsoptimalisatie-2026-08-14/household-assignment.json' },
@@ -240,7 +240,7 @@ const blocks = [
 - **37 fysieke containers, waarvan 36 openbaar.** WH24 wordt openbaar, alleen WH23 blijft privé en M082 wordt toegevoegd terwijl M094 behouden blijft.
 - **Gerichte verschuivingen verbeteren de drie probleemgebieden.** WH02 → M055 bij De Fuik en WH30 → M056 in de oostelijke wijk; M027 en M044 blijven staan.
 - **De gemiddelde capaciteitsgebalanceerde modelafstand daalt van ${baseline.capacityBalancedDistance.averageWalkingDistanceM} naar ${recommendedDistance.averageWalkingDistanceM} meter.** P95 daalt met ${findings.p95WalkingDistanceReductionM} meter en openbare adressen boven 275 meter van ${baseline.capacityBalancedDistance.distanceBands.over_275} naar ${recommendedDistance.distanceBands.over_275}.
-- **M094 behouden geeft een kleine aanvullende servicewinst.** Tegenover de gelijk-aantalvariant daalt het gemiddelde nog ${findings.samePhysicalCountSensitivity.extraContainerBenefit.averageWalkingDistanceReductionM} meter en zijn er vier adressen minder boven 275 meter.
+- **M094 behouden geeft een kleine aanvullende servicewinst.** Tegenover de gelijk-aantalvariant daalt het gemiddelde nog ${findings.samePhysicalCountSensitivity.extraContainerBenefit.averageWalkingDistanceReductionM} meter en zijn er ${findings.samePhysicalCountSensitivity.extraContainerBenefit.over275Reduction} adres${findings.samePhysicalCountSensitivity.extraContainerBenefit.over275Reduction === 1 ? '' : 'sen'} minder boven 275 meter.
 
 De 2.576 openbare BAG-woonadresproxies geven gemiddeld **${recommended.averageHouseholdsPerPublicContainer} adressen per openbare container**. De rekenkundige minimumtelling bij maximaal 75 is 35 openbaar; deze servicevariant kiest er één extra. Alle nieuwe locaties blijven binnen de gekozen modelband 60–90.`
   },
@@ -259,7 +259,7 @@ Ten opzichte van het gemeentelijke concept geeft de capaciteitsgebalanceerde é�
 
 Nevrlý et al. onderzoeken plasticafval en modelleren volumegewogen loopafstand, aantal inzamelpunten, aanschafkosten en voertuigservicetijd als conflicterende criteria. Dit rapport past de afwegingsmethode toe op restafval. Er volgt geen universele 275-metergrens uit het artikel.
 
-	De 75 is een BAG-adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, vulgraad, ledigingsfrequentie, lokale kosten en HVC-servicetijden ontbreken. De OSM-netwerkafstand is een schatting; de eerdere kalibratie had MAE 29,9 m en P95 absolute afwijking 80,9 m. De openbare scenariovergelijking gebruikt alleen deze matrix; de drie private WH23-kaartrijen behouden hun opgeslagen OSRM-route en beïnvloeden de vergelijking niet.`
+	De 75 is een BAG-adresproxy, geen bewezen fysieke volumegrens. Afvalvolumes, vulgraad, ledigingsfrequentie, lokale kosten en HVC-servicetijden ontbreken. De OSM-netwerkafstand gebruikt projectie op het dichtstbijzijnde toegankelijke wegsegment; de eerdere knoopgesnapte matrix had MAE 29,9 m en P95 absolute afwijking 80,9 m, maar deze opvolger is niet onafhankelijk veldgekalibreerd. De openbare scenariovergelijking gebruikt alleen deze matrix; de drie private WH23-kaartrijen behouden hun opgeslagen OSRM-route en beïnvloeden de vergelijking niet.`
   },
   { id: 'criteria_table_block', type: 'table', tableId: 'criteria_table' },
   { id: 'loads_chart_block', type: 'chart', chartId: 'new_loads' },
@@ -292,7 +292,7 @@ Dergmeerweg noemt 88 toekomstige woningen: reserveer ruimte voor één of twee e
   {
     id: 'reproducibility', type: 'markdown', body: `## Reproduceerbaarheid
 
-\`build-wh24-public-column.mjs\` herbouwt de openbare WH24-afstandskolom. \`build-capacity-plan.mjs\` bouwt de WH24-openbare baseline, de besloten locatievariant, gevoeligheden en unieke capaciteitsassignments. \`validate-capacity-plan.mjs\` controleert adressen, lasten, toegang, vaste coördinaten, bronhashes en kaartpresentatie. Zie [private-access-leave-one-out.json](private-access-leave-one-out.json) voor de eerdere baseline en [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson) voor de actuele variant.`
+\`build-segment-snapped-walking-matrix.mjs\` herbouwt de lokale afstandsmatrix met wegsegmentsnapping. \`build-capacity-plan.mjs\` bouwt de WH24-openbare baseline, de besloten locatievariant, gevoeligheden en unieke capaciteitsassignments. \`validate-capacity-plan.mjs\` controleert adressen, lasten, toegang, vaste coördinaten, bronhashes en kaartpresentatie. Zie [private-access-leave-one-out.json](private-access-leave-one-out.json) voor de eerdere baseline en [capacity-plan.json](capacity-plan.json), [household-assignment.json](household-assignment.json), [locations.tsv](locations.tsv) en [locations.geojson](locations.geojson) voor de actuele variant.`
   }
 ];
 

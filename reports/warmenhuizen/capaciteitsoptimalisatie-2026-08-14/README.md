@@ -45,10 +45,10 @@ Binnen dit model is 275 meter **geen selectie- of haalbaarheidsgrens**. De kleur
 | Openbare locaties | 31 | 36 | +5 |
 | Totaal inclusief WH23 privé | 32 | 37 | +5 |
 | Gemiddelde openbare belasting | 83,10 | 71,56 | −11,54 |
-| Gemiddelde modelafstand | 178,7 m | 134,1 m | −44,6 m |
-| P95-modelafstand | 371,2 m | 261,4 m | −109,8 m |
-| Openbare adressen boven 275 m | 397 | 88 | −309 |
-| Totale eenrichtingsmodelafstand | 460.436,9 m | 345.441,9 m | −24,98% |
+| Gemiddelde modelafstand | 171,1 m | 127,6 m | −43,5 m |
+| P95-modelafstand | 353,1 m | 251,2 m | −101,9 m |
+| Openbare adressen boven 275 m | 353 | 69 | −284 |
+| Totale eenrichtingsmodelafstand | 440.853,6 m | 328.700,2 m | −25,44% |
 
 Dit is een verplichte één-op-één-toewijzing binnen de gekozen 60–90-band. Zij vergelijkt de capaciteitseis consistent, maar voorspelt niet welke bak bewoners feitelijk gebruiken. Het advies gebruikt bovendien vijf openbare locaties meer; de winst combineert dus locatiekeuze en extra capaciteit.
 
@@ -60,28 +60,28 @@ De gemeentelijke uitleg vermeldt toegang tot de drie dichtstbijzijnde bakken. Zo
 
 | Maatstaf | Gemeente | Dit voorstel | Verschil |
 |---|---:|---:|---:|
-| Gemiddelde modelafstand | 165,1 m | 128,8 m | −36,4 m |
-| P95-modelafstand | 321,9 m | 240,4 m | −81,5 m |
-| Openbare adressen boven 275 m | 282 | 62 | −220 |
-| Totale eenrichtingsmodelafstand | 425.417,1 m | 331.721,0 m | −22,02% |
+| Gemiddelde modelafstand | 157,7 m | 122,8 m | −34,9 m |
+| P95-modelafstand | 307,7 m | 234,6 m | −73,1 m |
+| Openbare adressen boven 275 m | 240 | 47 | −193 |
+| Totale eenrichtingsmodelafstand | 406.335,1 m | 316.420,5 m | −22,13% |
 
-Over alle 2.579 adressen, inclusief de drie private WH23-adressen, is de capaciteitsgebalanceerde gemiddelde modelafstand 134,1 m. De kaartverdeling is 942 groen, 353 geel, 360 oranje, 836 rood, 88 donkerrood en nul onbereikbaar.
+Over alle 2.579 adressen, inclusief de drie private WH23-adressen, is de capaciteitsgebalanceerde gemiddelde modelafstand 127,6 m. De kaartverdeling is 1.013 groen, 380 geel, 377 oranje, 740 rood, 69 donkerrood en nul onbereikbaar.
 
 ## Effect van de besloten locatieaanpassingen
 
-De referentie is dezelfde WH24-openbare situatie met de vorige 25 nieuwe zoekzones. De besloten variant verlaagt de totale modelafstand met 19.360,3 m, het gemiddelde met 7,5 m en de P95 met 27,1 m. Het aantal openbare adressen boven 275 m daalt van 157 naar 88.
+De referentie is dezelfde WH24-openbare situatie met de vorige 25 nieuwe zoekzones. De besloten variant verlaagt de totale modelafstand met 20.631,4 m, het gemiddelde met 8,0 m en de P95 met 28,2 m. Het aantal openbare adressen boven 275 m daalt van 139 naar 69.
 
 | Focusgebied | Gemiddeld vóór | Gemiddeld na | Boven 275 m vóór | Boven 275 m na |
 |---|---:|---:|---:|---:|
-| De Fuik | 259,2 m | 159,5 m | 16 | 2 |
-| Dorpsstraat, Fabrieksstraat en ’t Eiland | 211,8 m | 171,7 m | 67 | 20 |
-| Oostelijke woonwijk | 120,2 m | 110,3 m | 7 | 0 |
+| De Fuik | 257,3 m | 155,3 m | 16 | 3 |
+| Dorpsstraat, Fabrieksstraat en ’t Eiland | 208,8 m | 168,8 m | 66 | 16 |
+| Oostelijke woonwijk | 119,2 m | 106,1 m | 3 | 0 |
 
 - **M055** ligt circa 140 m noordelijk van WH02 en 144 m van M027. Het punt ligt in de eerder geadviseerde zoekrichting, maar de exacte pin is nog niet opnieuw gescreend.
 - **M082** ligt nabij Fabrieksstraat 33 en circa 39 m van de eerder oranje beoordeelde zone Fabrieksstraat 29. Onderzoek de noord-/oostelijke grasrand. De kortere M147-pin bij ’t Eiland 2 blijft fysiek rood beoordeeld.
 - **M056** ligt circa 68 m oostelijk van WH30, bij Dorsvlegel/Schoffel/Strekel. Deze verschuiving is alleen logisch als M082 de zuidwestelijke functie overneemt.
 - **M044** blijft met 90 adressen volledig benut. Zonder M044 loopt WH24 tot 90 adressen op en stijgt de totale modelafstand.
-- **M094** blijft behouden. Ten opzichte van de gelijk-aantalvariant zonder M094 daalt het gemiddelde nog 1,7 m en zijn er vier adressen minder boven 275 m.
+- **M094** blijft behouden. Ten opzichte van de gelijk-aantalvariant zonder M094 daalt het gemiddelde nog 1,7 m en is er één adres minder boven 275 m.
 
 ## Voorgestelde 26 nieuwe zoekzones
 
@@ -89,31 +89,31 @@ Een `WH`-ID verwijst naar een gemeentelijk conceptpunt. Een `M`-ID is een zelfst
 
 | ID | Referentie | Bron | WGS84 | Adressen | Bureauscreen |
 |---|---|---|---|---:|---|
-| WH18 | Schelphoek Noord 48 | gemeentelijk concept | 52.721767, 4.731634 | 90 | groen |
+| WH18 | Schelphoek Noord 48 | gemeentelijk concept | 52.721767, 4.731634 | 86 | groen |
 | M044 | ’t Jaerlinger 16 | eigen zoekanker | 52.719859, 4.739785 | 90 | oranje |
-| M016 | Pastoorsgroet 1 | eigen zoekanker | 52.723078, 4.744687 | 70 | oranje |
+| M016 | Pastoorsgroet 1 | eigen zoekanker | 52.723078, 4.744687 | 67 | oranje |
 | M101 | Dorpsstraat 106 | eigen zoekanker | 52.722612, 4.737705 | 90 | oranje |
-| M004 | Dorusakker 9 | eigen zoekanker | 52.720997, 4.727394 | 63 | oranje |
+| M004 | Dorusakker 9 | eigen zoekanker | 52.720997, 4.727394 | 62 | oranje |
 | M149 | De Cres 1 | eigen zoekanker | 52.716315, 4.731552 | 60 | oranje |
 | M027 | Hartendorp 4 | eigen zoekanker | 52.727713, 4.738602 | 60 | oranje |
 | WH19 | Zwartepad 32 | gemeentelijk concept | 52.720963, 4.733820 | 90 | oranje |
-| WH10 | De Baan 27 | gemeentelijk concept | 52.725356, 4.743320 | 61 | groen |
-| M020 | Zigt 28 | eigen zoekanker | 52.716920, 4.743720 | 71 | oranje |
+| WH10 | De Baan 27 | gemeentelijk concept | 52.725356, 4.743320 | 60 | groen |
+| M020 | Zigt 28 | eigen zoekanker | 52.716920, 4.743720 | 62 | oranje |
 | M093 | ’t Lange Weidje 1A | eigen zoekanker | 52.726556, 4.746074 | 90 | oranje |
-| WH13 | Alingterp 2 | gemeentelijk concept | 52.723362, 4.735266 | 83 | oranje |
+| WH13 | Alingterp 2 | gemeentelijk concept | 52.723362, 4.735266 | 76 | oranje |
 | M041 | Langedijker 18 | eigen zoekanker | 52.723875, 4.742236 | 90 | oranje |
-| M134 | Baljuw 14 | eigen zoekanker | 52.725800, 4.751622 | 72 | oranje |
-| M018 | Vierhuizen 5 | eigen zoekanker | 52.725945, 4.737197 | 63 | oranje |
-| M100 | Beuninge 31 | eigen zoekanker | 52.720683, 4.729095 | 81 | groen |
+| M134 | Baljuw 14 | eigen zoekanker | 52.725800, 4.751622 | 70 | oranje |
+| M018 | Vierhuizen 5 | eigen zoekanker | 52.725945, 4.737197 | 60 | oranje |
+| M100 | Beuninge 31 | eigen zoekanker | 52.720683, 4.729095 | 82 | groen |
 | M024 | Oudewal 29 | eigen zoekanker | 52.719566, 4.729399 | 60 | oranje |
 | M051 | Zigt 2 | eigen zoekanker | 52.718515, 4.745162 | 60 | oranje |
-| M056 | nabij Dorsvlegel 36 | eigen zoekanker | 52.717717, 4.740247 | 73 | niet gescreend |
+| M056 | nabij Dorsvlegel 36 | eigen zoekanker | 52.717717, 4.740247 | 81 | niet gescreend |
 | M055 | nabij De Fuik 25 | eigen zoekanker | 52.728988, 4.738982 | 60 | niet gescreend |
 | M045 | Krankhoorn 37 | eigen zoekanker | 52.721945, 4.735407 | 60 | oranje |
 | WH12 | De Negen Geerzen 29 | gemeentelijk concept | 52.722146, 4.746440 | 60 | groen |
 | M094 | De Baan 13 | eigen zoekanker | 52.725563, 4.741046 | 60 | oranje |
-| M104 | Wonge 36 | eigen zoekanker | 52.721757, 4.728283 | 65 | oranje |
-| M157 | Dergmeerweg 65 | eigen zoekanker | 52.728540, 4.743329 | 87 | oranje |
+| M104 | Wonge 36 | eigen zoekanker | 52.721757, 4.728283 | 66 | oranje |
+| M157 | Dergmeerweg 65 | eigen zoekanker | 52.728540, 4.743329 | 90 | oranje |
 | M082 | nabij Fabrieksstraat 33 | eigen zoekanker | 52.718686, 4.738095 | 90 | niet gescreend |
 
 Vijf gemeentelijke conceptzones blijven over: WH10, WH12, WH13, WH18 en WH19. De andere 21 zijn zelfstandige zoekzones. De [eerdere leave-one-out-evaluatie](private-access-leave-one-out.json) documenteert de 25-zone-baseline; de actuele selectie volgt uit de hierboven beschreven, expliciet gekozen locatievarianten.
@@ -126,14 +126,14 @@ Vijf gemeentelijke conceptzones blijven over: WH10, WH12, WH13, WH18 en WH19. De
 |---|---|---:|---|
 | WH03 | openbaar | 67 | blijft exact staan |
 | WH05 | openbaar | 90 | blijft exact staan |
-| WH06 | openbaar | 60 | nabij water/obstakels; bestaand gegeven |
-| WH08 | openbaar | 52 | blijft exact staan |
-| WH14 | openbaar | 84 | blijft exact staan |
-| WH24 | **openbaar** | 24 | toegang gewijzigd op expliciete scenario-instructie |
+| WH06 | openbaar | 63 | nabij water/obstakels; bestaand gegeven |
+| WH08 | openbaar | 57 | blijft exact staan |
+| WH14 | openbaar | 90 | blijft exact staan |
+| WH24 | **openbaar** | 27 | toegang gewijzigd op expliciete scenario-instructie |
 | WH26 | openbaar | 90 | korte gevelafstand in BGT, maar bestaand |
 | WH27 | openbaar | 90 | bestaande restcontainer; gemeentelijke toevoeging is GFE |
-| WH33 | openbaar | 89 | blijft exact staan |
-| WH34 | openbaar | 31 | blijft exact staan; geen kunstmatige minimumlast |
+| WH33 | openbaar | 84 | blijft exact staan |
+| WH34 | openbaar | 36 | blijft exact staan; geen kunstmatige minimumlast |
 | WH23 | privé | 3 | alleen Pastoor Willemsestraat 9, 131 en 224 |
 
 Aan bestaande openbare locaties is geen minimum van 60 opgelegd. Het maximum van 90 geldt wel voor alle openbare bakken in deze modelgevoeligheid.
@@ -159,7 +159,7 @@ Voor Warmenhuizen is de methode als volgt aangepast:
 - afstand wordt geschat over een lokale bidirectionele OpenStreetMap-voetgangersgraaf;
 - P95, maximum en afstandskleuren worden apart gerapporteerd.
 
-De eerdere kalibratie van die lokale graaf tegen de opgeslagen routeringsdata had een gemiddelde absolute afwijking van 29,9 m en een P95 absolute afwijking van 80,9 m. Afstanden zijn daarom vergelijkbare modeluitkomsten, niet veldnauwkeurige claims. De vaste-locatietoewijzing is reproduceerbaar; de expliciet gekozen locaties en de voorafgaande BGT-bewuste kandidaatzoekgang zijn scenario-invoer. Dit is geen bewijs van een mondiaal optimaal facility-locationmodel.
+De routegraaf gebruikt nu een projectie op het dichtstbijzijnde toegankelijke OSM-wegsegment in plaats van één dichtstbijzijnde netwerkknoop. Daarmee verdwijnen aantoonbare omwegen door een verkeerde knoopsnap, zoals bij De Baan 15 naast M094. De eerdere knoopgesnapte matrix had bij kalibratie tegen de opgeslagen routeringsdata een gemiddelde absolute afwijking van 29,9 m en een P95 absolute afwijking van 80,9 m; de nieuwe segment-snap is niet onafhankelijk veldgekalibreerd. Afstanden zijn daarom vergelijkbare modeluitkomsten, niet veldnauwkeurige claims. De vaste-locatietoewijzing is reproduceerbaar; de expliciet gekozen locaties en de voorafgaande BGT-bewuste kandidaatzoekgang zijn scenario-invoer. Dit is geen bewijs van een mondiaal optimaal facility-locationmodel.
 
 De vergelijking tussen gemeente en advies gebruikt uitsluitend de lokale OSM-matrix voor dezelfde 2.576 openbare adressen. Alleen de drie private WH23-rijen op de kaart en in het totaal over 2.579 adressen behouden hun eerder opgeslagen OSRM-route uit `existing-11-household-coverage.json`; die rijen beïnvloeden de scenariovergelijking niet.
 
@@ -167,7 +167,7 @@ De gemeentelijke publicatie met circa 75–100 huishoudens en locatiecriteria ge
 
 ## Loopafstand en uitschieters
 
-De capaciteitsgebalanceerde modeltoewijzing laat 88 openbare adressen boven 275 m. De model-P95 is 261,4 m en de langste route is 776 m bij Debbemeerweg 39. Door de routemodelafwijking moeten absolute grensgevallen rond 275 m terughoudend worden gelezen.
+De capaciteitsgebalanceerde modeltoewijzing laat 69 openbare adressen boven 275 m. De model-P95 is 251,2 m en de langste route is 780 m bij Debbemeerweg 39. Door de routemodelafwijking moeten absolute grensgevallen rond 275 m terughoudend worden gelezen.
 
 Een bestuurlijke gelijkheidsvariant kan één aanvullende bouwbare corridorzone rond **Oudevaart 67–89/Oudewal 59–75** onderzoeken. Dat is een bewuste extra-capaciteitsvariant en moet opnieuw integraal worden doorgerekend.
 
@@ -197,15 +197,15 @@ De gemeentelijke projectpagina voor Dergmeerweg noemt 88 woningen. Zonder defini
 
 Voer vanuit deze rapportmap de lokale buildketen uit:
 
-1. `node build-wh24-public-column.mjs`
+1. `node build-segment-snapped-walking-matrix.mjs`
 2. `node build-capacity-plan.mjs`
-3. `node ../warmenhuizen-containeroptimalisatie-2026-08-13/generate-fixed-existing-household-coverage-map.mjs --input=household-assignment.json --svg-output=overview-map.svg --html-output=overview-map.html`
+3. `node ../locatieoptimalisatie-2026-08-13/generate-fixed-existing-household-coverage-map.mjs --input=household-assignment.json --svg-output=overview-map.svg --html-output=overview-map.html`
 4. `node build-orthophoto-contact-sheet.mjs`
 5. `node build-standalone-report.mjs`
 6. `node build-artifact.mjs`
 7. `node validate-capacity-plan.mjs`
 
-Stap 1 herbouwt de WH24-afstandskolom uit dezelfde vastgelegde OSM-graaf. De keten herbouwt daarna de WH24-openbare baseline, de gekozen locatievariant, gevoeligheden, toewijzingen, locatiebestanden, kaarten en rapportartefacten. [private-access-leave-one-out.json](private-access-leave-one-out.json) blijft de historische 25-zone-baseline documenteren. De upstream kandidaatzoekgang en het ophalen van BGT/orthofoto worden niet opnieuw uitgevoerd. `generatedAt`-waarden veranderen bij een herbouw.
+Stap 1 herbouwt de volledige afstandsmatrix uit de vastgelegde OSM-graaf met projectie op het dichtstbijzijnde toegankelijke wegsegment. De keten herbouwt daarna de WH24-openbare baseline, de gekozen locatievariant, gevoeligheden, toewijzingen, locatiebestanden, kaarten en rapportartefacten. [private-access-leave-one-out.json](private-access-leave-one-out.json) blijft de historische 25-zone-baseline documenteren. De upstream kandidaatzoekgang en het ophalen van BGT/orthofoto worden niet opnieuw uitgevoerd. `generatedAt`-waarden veranderen bij een herbouw.
 
 [capacity-plan.json](capacity-plan.json) bevat de beslisregels, twee vergelijkingsinterpretaties, locatiebelasting en SHA-256-bronhashes. [household-assignment.json](household-assignment.json) bevat voor ieder adres exact één container, modelafstand en kleurband.
 

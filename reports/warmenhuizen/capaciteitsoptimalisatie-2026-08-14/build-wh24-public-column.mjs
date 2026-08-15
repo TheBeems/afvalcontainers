@@ -6,11 +6,11 @@ import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const reportDirectory = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(reportDirectory, '../..');
+const projectRoot = resolve(reportDirectory, '../../..');
 const paths = {
   coverage: resolve(projectRoot, 'data/places/warmenhuizen/house-coverage.json'),
   containers: resolve(projectRoot, 'data/places/warmenhuizen/container-locations.json'),
-  network: resolve(projectRoot, 'reports/warmenhuizen-containeroptimalisatie-2026-08-13/osm-highways.json'),
+  network: resolve(reportDirectory, '../locatieoptimalisatie-2026-08-13/osm-highways.json'),
   output: resolve(reportDirectory, 'wh24-public-column.json')
 };
 

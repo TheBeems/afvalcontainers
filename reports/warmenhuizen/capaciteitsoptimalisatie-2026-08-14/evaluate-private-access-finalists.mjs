@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const prior = resolve(here, '../warmenhuizen-containeroptimalisatie-2026-08-13');
+const prior = resolve(here, '../locatieoptimalisatie-2026-08-13');
 const matrix = JSON.parse(readFileSync(resolve(prior, 'walking-matrix.json'), 'utf8'));
 const existing = JSON.parse(readFileSync(resolve(prior, 'existing-11-household-coverage.json'), 'utf8'));
 

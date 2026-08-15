@@ -86,7 +86,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 60,
+        "assignedHouseholds": 63,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 5.3,
@@ -118,7 +118,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 52,
+        "assignedHouseholds": 57,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 2.2,
@@ -150,7 +150,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 84,
+        "assignedHouseholds": 90,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 3.6,
@@ -182,7 +182,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 24,
+        "assignedHouseholds": 27,
         "screeningRating": "orange-fixed",
         "bgtDistancesM": {
           "vehicleRoad": null,
@@ -278,7 +278,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 89,
+        "assignedHouseholds": 84,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -310,7 +310,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": null,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 31,
+        "assignedHouseholds": 36,
         "screeningRating": "green-fixed",
         "bgtDistancesM": {
           "vehicleRoad": 3.9,
@@ -342,7 +342,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 90,
+        "assignedHouseholds": 86,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 0.4,
@@ -406,7 +406,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 70,
+        "assignedHouseholds": 67,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -470,7 +470,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 63,
+        "assignedHouseholds": 62,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -598,7 +598,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 61,
+        "assignedHouseholds": 60,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 3.1,
@@ -630,7 +630,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 71,
+        "assignedHouseholds": 62,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -694,7 +694,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 83,
+        "assignedHouseholds": 76,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0.1,
@@ -758,7 +758,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 72,
+        "assignedHouseholds": 70,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -790,7 +790,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 63,
+        "assignedHouseholds": 60,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -822,7 +822,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 81,
+        "assignedHouseholds": 82,
         "screeningRating": "green",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -918,7 +918,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 73,
+        "assignedHouseholds": 81,
         "screeningRating": "not-screened",
         "bgtDistancesM": {
           "vehicleRoad": null,
@@ -1078,7 +1078,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 65,
+        "assignedHouseholds": 66,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,
@@ -1110,7 +1110,7 @@
         "targetHouseholds": 75,
         "minimumModelLoad": 60,
         "maximumModelLoad": 90,
-        "assignedHouseholds": 87,
+        "assignedHouseholds": 90,
         "screeningRating": "orange",
         "bgtDistancesM": {
           "vehicleRoad": 0,

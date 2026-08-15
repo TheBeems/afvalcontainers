@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const reportDirectory = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(reportDirectory, '../..');
+const projectRoot = resolve(reportDirectory, '../../..');
 const readJson = (name) => JSON.parse(readFileSync(resolve(reportDirectory, name), 'utf8'));
 const sha256 = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -101,15 +101,15 @@ for (const house of assignments.houses) {
 assert(JSON.stringify(counts) === JSON.stringify(assignments.scenario.distanceBands), 'Scenario distance-band totals differ.');
 assert(round(total) === plan.recommendedScenario.totalDistanceIncludingPrivate.totalWalkingDistanceM, 'Total distance differs.');
 assert(plan.recommendedScenario.capacityBalancedDistance.householdCount === 2576, 'Public household count differs.');
-assert(plan.recommendedScenario.capacityBalancedDistance.distanceBands.over_275 === 88, 'Expected 88 public addresses over 275 m.');
-assert(plan.recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM === 345441.9, 'Recommended objective changed.');
-assert(plan.comparison.capacityBalanced.totalWalkingDistanceReductionPercent === 24.98, 'Capacity-balanced comparison changed.');
-assert(plan.comparison.nearestSiteAccessSensitivity.totalWalkingDistanceReductionPercent === 22.02, 'Nearest-site comparison changed.');
-assert(plan.decisionBaseline.capacityBalancedDistance.totalWalkingDistanceM === 364802.2, 'WH24-public baseline changed.');
-assert(plan.locationChangeFindings.over275Reduction === 69, 'Location-change over-275 improvement changed.');
-assert(plan.locationChangeFindings.samePhysicalCountSensitivity.extraContainerBenefit.over275Reduction === 4, 'M094-retention sensitivity changed.');
-assert(plan.locationChangeFindings.focusAreas.deFuik.recommended.distanceBands.over_275 === 2, 'De Fuik result changed.');
-assert(plan.locationChangeFindings.focusAreas.dorpsFabriekEiland.recommended.distanceBands.over_275 === 20, 'Dorpsstraat/Fabrieksstraat result changed.');
+assert(plan.recommendedScenario.capacityBalancedDistance.distanceBands.over_275 === 69, 'Expected 69 public addresses over 275 m.');
+assert(plan.recommendedScenario.capacityBalancedDistance.totalWalkingDistanceM === 328700.2, 'Recommended objective changed.');
+assert(plan.comparison.capacityBalanced.totalWalkingDistanceReductionPercent === 25.44, 'Capacity-balanced comparison changed.');
+assert(plan.comparison.nearestSiteAccessSensitivity.totalWalkingDistanceReductionPercent === 22.13, 'Nearest-site comparison changed.');
+assert(plan.decisionBaseline.capacityBalancedDistance.totalWalkingDistanceM === 349331.6, 'WH24-public baseline changed.');
+assert(plan.locationChangeFindings.over275Reduction === 70, 'Location-change over-275 improvement changed.');
+assert(plan.locationChangeFindings.samePhysicalCountSensitivity.extraContainerBenefit.over275Reduction === 1, 'M094-retention sensitivity changed.');
+assert(plan.locationChangeFindings.focusAreas.deFuik.recommended.distanceBands.over_275 === 3, 'De Fuik result changed.');
+assert(plan.locationChangeFindings.focusAreas.dorpsFabriekEiland.recommended.distanceBands.over_275 === 16, 'Dorpsstraat/Fabrieksstraat result changed.');
 assert(plan.locationChangeFindings.focusAreas.eastNeighbourhood.recommended.distanceBands.over_275 === 0, 'East-neighbourhood result changed.');
 
 assert(evaluation.results.length === 26 && evaluation.results[0].removed === 'M154', 'Complete 26-candidate selection differs.');
@@ -136,7 +136,7 @@ for (const [name, input] of Object.entries(plan.inputs)) {
   const path = resolve(projectRoot, input.path);
   assert(sha256(path) === input.sha256, `${name} SHA-256 differs.`);
 }
-assert(Object.hasOwn(plan.inputs, 'wh24Column'), 'WH24-public distance input is not recorded.');
+assert(plan.inputs.matrix.path.endsWith('walking-matrix-segment-snapped.json'), 'Segment-snapped walking matrix is not recorded.');
 
 const svg = readFileSync(resolve(reportDirectory, 'overview-map.svg'), 'utf8');
 const mapHtml = readFileSync(resolve(reportDirectory, 'overview-map.html'), 'utf8');
@@ -147,7 +147,15 @@ for (const color of ['#15803d', '#eab308', '#f97316', '#dc2626', '#7f1d1d', '#64
 }
 assert(svg.includes('WH23') && svg.includes('WH24'), 'Private locations are missing from the map.');
 assert(svg.includes('26 nieuwe zoekzones'), 'Map subtitle does not state 26 new zones.');
-assert(svg.includes('WH24') && svg.includes('24 toegewezen adressen'), 'WH24 public load is missing from map tooltips.');
+assert(svg.includes('WH24') && svg.includes('27 toegewezen adressen'), 'WH24 public load is missing from map tooltips.');
+for (const [address, distance, color] of [
+  ['De Baan 15', '68.60 m', '#15803d'],
+  ['De Baan 17', '81.20 m', '#15803d'],
+  ['Tuinfluiterstraat 30', '54.30 m', '#15803d']
+]) {
+  const circlePattern = new RegExp(`<circle[^>]+fill="${color}"[^>]+data-address="${address}"[^>]+data-distance="${distance}"`);
+  assert(circlePattern.test(svg), `${address} does not have the expected segment-snapped map color and distance.`);
+}
 assert(svg.includes('M055') && svg.includes('M056') && svg.includes('M082') && svg.includes('M094'), 'Selected change locations are missing from the map.');
 assert(svg.includes('title title-compact'), 'Long map title is not using the non-overlapping compact style.');
 assert(mapHtml.includes('min-width: 1050px'), 'Mobile map does not retain readable text sizing.');
