@@ -497,6 +497,9 @@ function validateHouseMap(houseMap, place) {
     assertNumber(house.lat, `${label}.lat`);
     assertNumber(house.lon, `${label}.lon`);
     assertString(house.detailBundle, `${label}.detailBundle`);
+    if (house.nearestContainerId !== null) {
+      assertString(house.nearestContainerId, `${label}.nearestContainerId`);
+    }
     if (!VALID_COVERAGE_STATUSES.has(house.coverageStatus)) {
       fail(`${label}.coverageStatus is invalid: ${house.coverageStatus}`);
     }
@@ -612,6 +615,9 @@ export async function validateData() {
         }
         if (house.coverageStatus !== houseMarker.coverageStatus) {
           fail(`${place.id} house detail ${house.id}.coverageStatus must match house-map.json.`);
+        }
+        if ((house.nearestContainerId ?? null) !== houseMarker.nearestContainerId) {
+          fail(`${place.id} house detail ${house.id}.nearestContainerId must match house-map.json.`);
         }
         if (detailHousesById.has(house.id)) {
           fail(`${place.id} house detail ${house.id} appears in multiple detail bundles.`);
