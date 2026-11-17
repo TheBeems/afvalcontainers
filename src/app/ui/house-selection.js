@@ -36,7 +36,6 @@ export function createHouseSelection(context, api) {
     selectionLayer,
     selectionRenderer
   } = mapContext;
-  let isHouseLayerMuted = false;
 
   function getHouseCircleRadius({ isMuted = false } = {}) {
     const zoomGrowth = Math.max(0, map.getZoom() - HOUSE_MARKER_MIN_ZOOM);
@@ -45,17 +44,32 @@ export function createHouseSelection(context, api) {
     return isMuted ? Math.max(3, radius - 1) : radius;
   }
 
+  function getSelectedRestContainerId() {
+    const container = state.containers[state.activeContainerIndex];
+    return container && hasRestafvalStream(container) ? container.id : null;
+  }
+
+  function getHouseMarkerStyle(nearestContainerId) {
+    const selectedContainerId = getSelectedRestContainerId();
+    const isMuted = Boolean(selectedContainerId && nearestContainerId !== selectedContainerId);
+
+    return {
+      radius: getHouseCircleRadius({ isMuted }),
+      weight: isMuted ? 0 : 1,
+      fillOpacity: isMuted ? HOUSE_MARKER_MUTED_FILL_OPACITY : HOUSE_MARKER_FILL_OPACITY
+    };
+  }
+
   function renderHouseMarkers() {
     houseLayer.clearLayers();
 
     for (const house of state.houses) {
       const marker = L.circleMarker([house.lat, house.lon], {
         renderer: houseRenderer,
-        radius: getHouseCircleRadius(),
-        weight: 1,
+        nearestContainerId: house.nearestContainerId,
         color: '#ffffff',
         fillColor: getCoverageStatus(house.coverageStatus).color,
-        fillOpacity: HOUSE_MARKER_FILL_OPACITY
+        ...getHouseMarkerStyle(house.nearestContainerId)
       });
 
       marker.on('click', () => {
@@ -65,33 +79,18 @@ export function createHouseSelection(context, api) {
     }
   }
 
-  function setHouseLayerMuted(isMuted) {
-    isHouseLayerMuted = isMuted;
-
+  function syncHouseMarkerStyles() {
     houseLayer.eachLayer((marker) => {
-      if (typeof marker.setStyle === 'function') {
-        marker.setStyle({
-          weight: isMuted ? 0 : 1,
-          fillOpacity: isMuted ? HOUSE_MARKER_MUTED_FILL_OPACITY : HOUSE_MARKER_FILL_OPACITY
-        });
-      }
-
-      if (typeof marker.setRadius === 'function') {
-        marker.setRadius(getHouseCircleRadius({ isMuted }));
-      }
-    });
-  }
-
-  function syncHouseMarkerRadii() {
-    houseLayer.eachLayer((marker) => {
-      if (typeof marker.setRadius === 'function') {
-        marker.setRadius(getHouseCircleRadius({ isMuted: isHouseLayerMuted }));
+      const style = getHouseMarkerStyle(marker.options.nearestContainerId);
+      if (Object.entries(style).some(([key, value]) => marker.options[key] !== value)) {
+        marker.setStyle(style);
       }
     });
   }
 
   function syncHouseLayerVisibility() {
-    const shouldShowHouses = state.houses.length > 0 && map.getZoom() >= HOUSE_MARKER_MIN_ZOOM;
+    const shouldShowHouses = state.houses.length > 0
+      && (map.getZoom() >= HOUSE_MARKER_MIN_ZOOM || getSelectedRestContainerId() !== null);
 
     if (shouldShowHouses && !map.hasLayer(houseLayer)) {
       houseLayer.addTo(map);
@@ -110,7 +109,6 @@ export function createHouseSelection(context, api) {
     resultLayer.clearLayers();
     routeLayer.clearLayers();
     renderHouseMapInfo(null);
-    setHouseLayerMuted(false);
     state.selectedHouseMarker = null;
   }
 
@@ -626,7 +624,6 @@ export function createHouseSelection(context, api) {
 
     const selectionId = state.houseSelectionId;
     resetHouseSelectionVisuals();
-    setHouseLayerMuted(false);
 
     const ranking = api.getCurrentRanking(house);
 
@@ -642,8 +639,7 @@ export function createHouseSelection(context, api) {
 
   return {
     renderHouseMarkers,
-    setHouseLayerMuted,
-    syncHouseMarkerRadii,
+    syncHouseMarkerStyles,
     syncHouseLayerVisibility,
     resetHouseSelectionVisuals,
     clearHouseSelection,

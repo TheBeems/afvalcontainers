@@ -50,7 +50,7 @@ function registerCoreListeners(context, api) {
 
   mapContext.map.on('zoomend', () => {
     api.syncHouseLayerVisibility();
-    api.syncHouseMarkerRadii();
+    api.syncHouseMarkerStyles();
   });
   mapContext.map.on('click', api.handleMapClick);
 

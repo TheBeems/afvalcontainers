@@ -146,6 +146,7 @@ function buildHouseMap(houses, houseDetailBundles) {
     lat: house.lat,
     lon: house.lon,
     coverageStatus: house.coverageStatus,
+    nearestContainerId: house.nearestContainerId ?? null,
     detailBundle: houseDetailBundles.get(house.id)
   }));
 }

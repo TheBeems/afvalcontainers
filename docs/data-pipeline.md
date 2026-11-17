@@ -127,7 +127,7 @@ Per gepubliceerd dorp bestaan de volgende bestanden:
 | `container-locations.json` | Handmatig beheerde containerbron | Ja |
 | `house-coverage.json` | Volledige generatorcache en bron voor de split | Nee |
 | `coverage-summary.json` | Metadata en totalen voor de actieve plaats | Ja |
-| `house-map.json` | Compacte markerlaag met ID, coördinaat en categorie | Ja |
+| `house-map.json` | Compacte markerlaag met ID, coördinaat, categorie en dichtstbijzijnde container | Ja |
 | `address-index.compact.json` | Zoekindex voor adressen | Ja, lazy geladen |
 | `house-details/*.json` | Volledige adres- en routegegevens, per straat gebundeld | Ja, lazy geladen |
 

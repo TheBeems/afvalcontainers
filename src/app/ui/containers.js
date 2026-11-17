@@ -55,6 +55,12 @@ export function createContainersUi(context, api) {
     const hvcContainerIdLine = hvcContainerId
       ? `<div class="container-map-info-meta">HVC container-ID: ${escapeHtml(hvcContainerId)}</div>`
       : '';
+    const nearestHouseCount = state.coverage && hasRestafvalStream(container)
+      ? state.houses.filter((house) => house.nearestContainerId === container.id).length
+      : null;
+    const nearestHouseCountLine = nearestHouseCount !== null
+      ? `<div class="container-map-info-meta"><span>Dichtstbijzijnde container voor <strong>${nearestHouseCount.toLocaleString('nl-NL')} ${nearestHouseCount === 1 ? 'huis' : 'huizen'}</strong>.</span></div>`
+      : '';
     const categoryPills = categories
       .map((containerCategory) => `
         <span class="container-category-pill">
@@ -77,6 +83,7 @@ export function createContainersUi(context, api) {
           ${categoryPills}
           ${api.buildContainerAccessPill(container)}
         </div>
+        ${nearestHouseCountLine}
         ${hvcContainerIdLine}
         <div class="container-map-info-meta">Nauwkeurigheid: ${escapeHtml(container.accuracy)}</div>
       </div>
@@ -331,6 +338,8 @@ export function createContainersUi(context, api) {
       state.containerMarkers[index].getElement()?.classList.add('container-marker-active');
     }
 
+    api.syncHouseMarkerStyles();
+    api.syncHouseLayerVisibility();
     api.updateContainerEditorControls();
   }
 
@@ -390,7 +399,7 @@ export function createContainersUi(context, api) {
     }
 
     const statusText = hasRestafvalStream(container)
-      ? `Geselecteerde container ${container.id}. De blauwe cirkel toont 275 meter hemelsbreed.`
+      ? `Geselecteerde container ${container.id}. De blauwe cirkel toont ${REFERENCE_RADIUS_METERS} meter hemelsbreed. Huishoudens waarvoor dit de dichtstbijzijnde container is, zijn uitgelicht; overige huishoudens zijn gedimd.`
       : `Geselecteerde container ${container.id}. Deze locatie telt niet mee voor restafval-loopafstanden.`;
     api.setCoverageStatus(statusText);
 
@@ -406,6 +415,7 @@ export function createContainersUi(context, api) {
     addContainerList();
     api.renderContainerMarkerLegend();
     renderContainerMapInfo(state.activeContainerIndex !== null ? state.containers[state.activeContainerIndex] : null);
+    api.syncHouseMarkerStyles();
     api.updateContainerEditorControls();
   }
 
