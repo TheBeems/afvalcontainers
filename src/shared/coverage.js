@@ -1,3 +1,4 @@
+export const RESIDENTIAL_RADIUS_METERS = 150;
 export const REFERENCE_RADIUS_METERS = 275;
 
 export const COVERAGE_STATUS = {
@@ -55,7 +56,7 @@ export function classifyCoverageStatus(distance) {
     return 'between_100_125';
   }
 
-  if (distance <= 150) {
+  if (distance <= RESIDENTIAL_RADIUS_METERS) {
     return 'between_125_150';
   }
 

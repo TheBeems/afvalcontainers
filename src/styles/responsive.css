@@ -28,6 +28,11 @@
     transform: translateX(0);
   }
 
+  .coverage-show-map {
+    display: block;
+    margin-top: 10px;
+  }
+
   .mobile-sidebar-toggle {
     position: fixed;
     z-index: 1600;

@@ -50,6 +50,40 @@ async function downloadContainerDataset(page) {
   };
 }
 
+async function exposeLeafletMap(page) {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'L', {
+      configurable: true,
+      set(leaflet) {
+        Object.defineProperty(window, 'L', { configurable: true, writable: true, value: leaflet });
+        leaflet.Map.addInitHook(function () {
+          window.__testLeafletMap = this;
+        });
+      }
+    });
+  });
+}
+
+// House markers use Canvas, so inspect Leaflet styles.
+async function getHouseMarkers(page) {
+  return page.evaluate(() => {
+    const markers = [];
+    window.__testLeafletMap.eachLayer((layer) => {
+      if (layer instanceof L.CircleMarker && layer.options.renderer?.options.pane === 'houseMarkerPane') {
+        markers.push({
+          id: L.stamp(layer),
+          houseId: layer.options.houseId,
+          nearestContainerId: layer.options.nearestContainerId,
+          fillOpacity: layer.options.fillOpacity,
+          color: layer.options.fillColor,
+          radius: layer.getRadius()
+        });
+      }
+    });
+    return markers;
+  });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.route('https://tile.openstreetmap.org/**', async (route) => {
     await route.fulfill({ status: 204 });
@@ -613,37 +647,223 @@ test('serves sortable analyses for each place with container map links', async (
   await expect(page.getByRole('link', { name: /^TH\d{2}$/ }).first()).toHaveAttribute('href', /\/tuitjenhorn\/\?container=TH\d{2}#kaart$/);
 });
 
+test('combines coverage filters, refreshes them for a new village and restores the overview', async ({ page }) => {
+  await exposeLeafletMap(page);
+  await page.goto('/warmenhuizen/#kaart');
+  const toggle = page.locator('#coverage-filters-toggle');
+  await expect(page.locator('#coverage-summary')).toBeVisible();
+
+  const originalMarkers = await getHouseMarkers(page);
+  const originalOpacity = originalMarkers[0].fillOpacity;
+  const houses = await (await page.request.get('/data/places/warmenhuizen/house-map.json')).json();
+  const outsideRadius = (house) => house.withinResidentialRadius === false;
+  const limit = Math.ceil(Math.max(...houses.map((house) => house.walkingDistance ?? 0)));
+  const withinWalkingBounds = (house) => house.walkingDistance >= 210 && house.walkingDistance <= 245;
+  const detour = (house) => house.withinResidentialRadius === true
+    && ['between_150_275', 'over_275'].includes(house.coverageStatus);
+
+  const dashboard = page.getByRole('region', { name: 'Knelpunten' });
+  const outsideFilter = dashboard.getByRole('button', { name: /^Hemelsbreed meer dan 150 m/ });
+  const walkingFilter = dashboard.getByRole('button', { name: /^Loopafstand/ });
+  const minSlider = dashboard.getByRole('slider', { name: 'Minimale loopafstand' });
+  const maxSlider = dashboard.getByRole('slider', { name: 'Maximale loopafstand' });
+  const minInput = dashboard.getByRole('spinbutton', { name: 'Minimale loopafstand in meters' });
+  const maxInput = dashboard.getByRole('spinbutton', { name: 'Maximale loopafstand in meters' });
+  const detourFilter = dashboard.getByRole('button', { name: /^Omweg bij nabije container/ });
+  const status = dashboard.getByRole('status');
+
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#sidebar-overview')).toBeHidden();
+  await expect(dashboard).toBeVisible();
+
+  const outsideCount = houses.filter(outsideRadius).length;
+  await expect(outsideFilter.locator('.coverage-filter-count')).toHaveText(outsideCount.toLocaleString('nl-NL'));
+  await expect(detourFilter.locator('.coverage-filter-count')).toHaveText(houses.filter(detour).length.toLocaleString('nl-NL'));
+  await expect(minSlider).toHaveValue('100');
+  await expect(maxSlider).toHaveValue(String(limit));
+  await expect(walkingFilter).toHaveAttribute('aria-pressed', 'false');
+
+  await outsideFilter.press('Space');
+  await expect(outsideFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(status).toHaveText(`${outsideCount.toLocaleString('nl-NL')} adressen uitgelicht.`);
+  await minSlider.press('ArrowRight');
+  await expect(minInput).toHaveValue('101');
+  await expect(walkingFilter).toHaveAttribute('aria-pressed', 'true');
+
+  const track = dashboard.locator('.coverage-distance-track');
+  const { x, y, width, height } = await track.boundingBox();
+  const thumbSize = await track.evaluate((element) => (
+    parseFloat(getComputedStyle(element).getPropertyValue('--thumb-size'))
+  ));
+  const centerY = y + height / 2;
+  await page.mouse.move(x + width - thumbSize / 2, centerY);
+  await page.mouse.down();
+  await page.mouse.move(x + width * 0.72, centerY, { steps: 6 });
+  await page.mouse.up();
+  await expect.poll(async () => Number(await maxSlider.inputValue())).toBeLessThan(limit);
+
+  await maxInput.fill('245');
+  await maxInput.press('Tab');
+  await expect(maxSlider).toHaveValue('245');
+  await minSlider.press('End');
+  await expect(minSlider).toHaveValue('245');
+  await minInput.fill('210');
+  await minInput.press('Tab');
+  await expect(minSlider).toHaveValue('210');
+  await expect(walkingFilter.locator('.coverage-filter-count')).toHaveText(houses.filter(withinWalkingBounds).length.toLocaleString('nl-NL'));
+
+  const expectedIds = houses.filter((house) => outsideRadius(house) || withinWalkingBounds(house)).map((house) => house.id);
+  await expect(status).toHaveText(`${expectedIds.length.toLocaleString('nl-NL')} adressen uitgelicht.`);
+
+  const filteredMarkers = await getHouseMarkers(page);
+  expect(filteredMarkers.map((marker) => marker.id)).toEqual(originalMarkers.map((marker) => marker.id));
+  expect(filteredMarkers.filter((marker) => marker.fillOpacity === originalOpacity).map((marker) => marker.houseId).sort())
+    .toEqual(expectedIds.sort());
+  expect(filteredMarkers.every((marker) => marker.fillOpacity > 0)).toBe(true);
+
+  await page.evaluate(() => {
+    window.__testLeafletMap.setZoom(15, { animate: false });
+  });
+  expect(await getHouseMarkers(page)).toHaveLength(houses.length);
+
+  await dashboard.getByRole('button', { name: 'Wis filters' }).click();
+  await expect(outsideFilter).toHaveAttribute('aria-pressed', 'false');
+  await expect(walkingFilter).toHaveAttribute('aria-pressed', 'false');
+  await expect(minSlider).toHaveValue('100');
+  await expect(maxSlider).toHaveValue(String(limit));
+  expect(await getHouseMarkers(page)).toHaveLength(0);
+
+  await detourFilter.click();
+  const otherHouses = await (await page.request.get('/data/places/tuitjenhorn/house-map.json')).json();
+  await page.getByLabel('Selecteer dorp').selectOption('tuitjenhorn');
+  await expect(detourFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(status).toHaveText(`${otherHouses.filter(detour).length.toLocaleString('nl-NL')} adressen uitgelicht.`);
+  const otherLimit = Math.ceil(Math.max(...otherHouses.map((house) => house.walkingDistance ?? 0)));
+  await expect(maxSlider).toHaveValue(String(otherLimit));
+  await expect.poll(() => getHouseMarkers(page)).toHaveLength(otherHouses.length);
+
+  await page.getByRole('button', { name: 'Terug naar overzicht' }).click();
+  await expect(page.locator('#sidebar-overview')).toBeVisible();
+  await expect(dashboard).toBeHidden();
+  const restoredMarkers = await getHouseMarkers(page);
+  expect(restoredMarkers).toHaveLength(otherHouses.length);
+  expect(restoredMarkers.every((marker) => marker.fillOpacity === originalOpacity)).toBe(true);
+});
+
+test('highlights containers that are closest to more than 100 addresses', async ({ page }) => {
+  await page.goto('/warmenhuizen/#kaart');
+  const houses = await (await page.request.get('/data/places/warmenhuizen/house-map.json')).json();
+  const getMatchingContainerIds = (rows) => Array.from(Map.groupBy(rows, (house) => house.nearestContainerId))
+    .filter(([id, nearestHouses]) => id && nearestHouses.length > 100)
+    .map(([id]) => id)
+    .sort();
+  const matchingIds = getMatchingContainerIds(houses);
+  const walkingCount = houses.filter((house) => house.walkingDistance >= 100).length;
+
+  await page.getByRole('button', { name: 'Knelpunten op de kaart' }).click();
+  const dashboard = page.getByRole('region', { name: 'Knelpunten' });
+  const containerFilter = dashboard.getByRole('button', { name: /^Containers met meer dan 100 adressen/ });
+  const highlighted = page.locator('.container-marker-highlighted');
+  const muted = page.locator('.container-marker-muted');
+  const status = dashboard.getByRole('status');
+
+  await expect(containerFilter.locator('.coverage-filter-count')).toHaveText(String(matchingIds.length));
+  await containerFilter.click();
+  await expect(status).toHaveText(`${matchingIds.length} containers uitgelicht.`);
+  await expect(highlighted).toHaveCount(matchingIds.length);
+  const labels = await highlighted.evaluateAll((markers) => markers
+    .map((marker) => {
+      const label = marker.querySelector('.container-marker-address-count');
+      return {
+        id: marker.title.split(' - ')[0],
+        count: Number(label.textContent),
+        abovePin: label.getBoundingClientRect().bottom < marker.getBoundingClientRect().top
+      };
+    })
+    .sort((left, right) => left.id.localeCompare(right.id)));
+  expect(labels).toEqual(matchingIds.map((id) => ({
+    id,
+    count: houses.filter((house) => house.nearestContainerId === id).length,
+    abovePin: true
+  })));
+  await expect(muted.first().locator('svg')).toHaveCSS('opacity', '0.35');
+
+  const walkingFilter = dashboard.getByRole('button', { name: /^Loopafstand/ });
+  await walkingFilter.click();
+  await expect(status).toHaveText(`${walkingCount.toLocaleString('nl-NL')} adressen en ${matchingIds.length} containers uitgelicht.`);
+  await expect(highlighted).toHaveCount(matchingIds.length);
+
+  const otherHouses = await (await page.request.get('/data/places/tuitjenhorn/house-map.json')).json();
+  const otherMatchingIds = getMatchingContainerIds(otherHouses);
+  await page.getByLabel('Selecteer dorp').selectOption('tuitjenhorn');
+  await expect(containerFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(containerFilter.locator('.coverage-filter-count')).toHaveText(String(otherMatchingIds.length));
+  await expect(highlighted).toHaveCount(otherMatchingIds.length);
+
+  await dashboard.getByRole('button', { name: 'Wis filters' }).click();
+  await expect(highlighted).toHaveCount(0);
+  await expect(muted).toHaveCount(0);
+  await expect(page.locator('.container-marker-address-count')).toHaveCount(0);
+});
+
+test('only shows the no-route filter when a place has addresses without a route', async ({ page }) => {
+  await page.route('**/data/places/*/house-map.json', async (route) => {
+    const [house] = await (await route.fetch()).json();
+    const isUnreachable = route.request().url().includes('/tuitjenhorn/');
+    await route.fulfill({
+      json: [{
+        ...house,
+        walkingDistance: isUnreachable ? null : 75,
+        coverageStatus: isUnreachable ? 'unreachable' : 'within_100'
+      }]
+    });
+  });
+
+  await page.goto('/warmenhuizen/#kaart');
+  await page.getByRole('button', { name: 'Knelpunten op de kaart' }).click();
+  const noRoute = page.locator('[data-coverage-filter="unreachable"]');
+  const placeSelect = page.getByLabel('Selecteer dorp');
+  await expect(placeSelect).toBeEnabled();
+  await expect(noRoute).toBeHidden();
+
+  await placeSelect.selectOption('tuitjenhorn');
+  await expect(noRoute).toBeVisible();
+  await expect(noRoute.locator('.coverage-filter-count')).toHaveText('1');
+  await noRoute.click();
+  await expect(page.locator('#coverage-filter-status')).toHaveText('1 adres uitgelicht.');
+
+  await placeSelect.selectOption('warmenhuizen');
+  await expect(noRoute).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Wis filters' })).toBeDisabled();
+});
+
+test('shows the filtered map from the mobile dashboard', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#kaart');
+
+  const menu = page.getByRole('button', { name: 'Menu openen' });
+  await menu.click();
+  await page.getByRole('button', { name: 'Knelpunten op de kaart' }).click();
+  const walkingFilter = page.getByRole('button', { name: /^Loopafstand/ });
+  await walkingFilter.click();
+  await expect(walkingFilter).toHaveAttribute('aria-pressed', 'true');
+  const containerFilter = page.getByRole('button', { name: /^Containers met meer dan 100 adressen/ });
+  await containerFilter.click();
+  await expect(containerFilter).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Bekijk op de kaart' }).click();
+  await expect(menu).toBeFocused();
+  await expect(page.getByRole('region', { name: 'Knelpunten' })).toBeHidden();
+
+  await menu.click();
+  await expect(walkingFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(containerFilter).toHaveAttribute('aria-pressed', 'true');
+});
+
 for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }]) {
   test(`highlights assigned households and keeps other households visible at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.addInitScript(() => {
-      Object.defineProperty(window, 'L', {
-        configurable: true,
-        set(leaflet) {
-          Object.defineProperty(window, 'L', { configurable: true, writable: true, value: leaflet });
-          leaflet.Map.addInitHook(function () {
-            window.__testLeafletMap = this;
-          });
-        }
-      });
-    });
-
-    // House markers use Canvas, so inspect their Leaflet styles rather than SVG elements.
-    const getHouseMarkers = () => page.evaluate(() => {
-      const markers = [];
-      window.__testLeafletMap.eachLayer((layer) => {
-        if (layer instanceof L.CircleMarker && layer.options.renderer?.options.pane === 'houseMarkerPane') {
-          markers.push({
-            id: L.stamp(layer),
-            nearestContainerId: layer.options.nearestContainerId,
-            fillOpacity: layer.options.fillOpacity,
-            color: layer.options.fillColor,
-            radius: layer.getRadius()
-          });
-        }
-      });
-      return markers;
-    });
+    await exposeLeafletMap(page);
 
     const getCoverageCircles = () => page.evaluate(() => {
       const circles = [];
@@ -679,7 +899,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     expect(selectedHouses.some((house) => house.coverageStatus === 'over_275')).toBe(true);
     await expect(page.locator('.container-map-info')).toContainText(`Dichtstbijzijnde container voor ${selectedHouses.length.toLocaleString('nl-NL')} huizen.`);
 
-    const originalMarkers = await getHouseMarkers();
+    const originalMarkers = await getHouseMarkers(page);
     expect(originalMarkers).toHaveLength(houses.length);
 
     const highlightedMarkers = originalMarkers.filter((marker) => marker.nearestContainerId === 'WH02');
@@ -697,7 +917,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     await expectCoverageCirclesFor('WH03');
     const switchedHouseCount = houses.filter((house) => house.nearestContainerId === 'WH03').length;
     await expect(page.locator('.container-map-info')).toContainText(`Dichtstbijzijnde container voor ${switchedHouseCount.toLocaleString('nl-NL')} huizen.`);
-    const switchedMarkers = await getHouseMarkers();
+    const switchedMarkers = await getHouseMarkers(page);
     expect(switchedMarkers.map((marker) => marker.id)).toEqual(originalMarkers.map((marker) => marker.id));
     expect(switchedMarkers.map((marker) => marker.color)).toEqual(originalMarkers.map((marker) => marker.color));
     expect(switchedMarkers.every((marker) => marker.nearestContainerId === 'WH03'
@@ -707,7 +927,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     await page.evaluate(() => {
       window.__testLeafletMap.setZoom(15, { animate: false });
     });
-    const zoomedMarkers = await getHouseMarkers();
+    const zoomedMarkers = await getHouseMarkers(page);
     expect(zoomedMarkers).toHaveLength(houses.length);
     expect(zoomedMarkers.map((marker) => marker.fillOpacity)).toEqual(switchedMarkers.map((marker) => marker.fillOpacity));
 
@@ -715,11 +935,11 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
       window.__testLeafletMap.fire('click');
     });
     expect(await getCoverageCircles()).toHaveLength(0);
-    expect(await getHouseMarkers()).toHaveLength(0);
+    expect(await getHouseMarkers(page)).toHaveLength(0);
     await page.evaluate(() => {
       window.__testLeafletMap.setZoom(17, { animate: false });
     });
-    const clearedMarkers = await getHouseMarkers();
+    const clearedMarkers = await getHouseMarkers(page);
     expect(clearedMarkers.map((marker) => marker.id)).toEqual(originalMarkers.map((marker) => marker.id));
     expect(clearedMarkers.every((marker) => marker.fillOpacity === highlightedMarkers[0].fillOpacity)).toBe(true);
 

@@ -4,7 +4,7 @@ import {
   INITIAL_ZOOM_OFFSET,
   MAP_MAX_ZOOM
 } from '../config.js';
-import { REFERENCE_RADIUS_METERS } from '../../shared/coverage.js';
+import { REFERENCE_RADIUS_METERS, RESIDENTIAL_RADIUS_METERS } from '../../shared/coverage.js';
 import {
   getContainerAccessLabel,
   getContainerCategories,
@@ -19,7 +19,6 @@ import {
   getContainerMarkerColor
 } from './container-marker.js';
 
-const RESIDENTIAL_RADIUS_METERS = 150;
 const COVERAGE_CIRCLES_DESCRIPTION = `De doorgetrokken lijn toont de hemelsbrede straal van ${RESIDENTIAL_RADIUS_METERS} meter, de stippellijn die van ${REFERENCE_RADIUS_METERS} meter.`;
 
 export function createContainersUi(context, api) {
@@ -39,6 +38,12 @@ export function createContainersUi(context, api) {
     return categories.some((category) => category.status === 'existing')
       ? hvcContainerId
       : '';
+  }
+
+  function getAssignedHouseCount(container) {
+    return state.coverage && hasRestafvalStream(container)
+      ? state.nearestHouseCountsByContainerId.get(container.id) ?? 0
+      : null;
   }
 
   function renderContainerMapInfo(container) {
@@ -63,9 +68,7 @@ export function createContainersUi(context, api) {
     const coverageCirclesLine = hasRestafval
       ? `<div class="container-map-info-meta">${COVERAGE_CIRCLES_DESCRIPTION}</div>`
       : '';
-    const nearestHouseCount = state.coverage && hasRestafval
-      ? state.houses.filter((house) => house.nearestContainerId === container.id).length
-      : null;
+    const nearestHouseCount = getAssignedHouseCount(container);
     const nearestHouseCountLine = nearestHouseCount !== null
       ? `<div class="container-map-info-meta"><span>Dichtstbijzijnde container voor <strong>${nearestHouseCount.toLocaleString('nl-NL')} ${nearestHouseCount === 1 ? 'huis' : 'huizen'}</strong>.</span></div>`
       : '';
@@ -291,6 +294,46 @@ export function createContainersUi(context, api) {
     }
   }
 
+  function syncContainerAddressCount(element, count) {
+    const existing = element.querySelector('.container-marker-address-count');
+    if (count === null) {
+      if (existing) {
+        existing.remove();
+        element.removeAttribute('aria-label');
+      }
+      return;
+    }
+
+    const countText = count.toLocaleString('nl-NL');
+    if (existing?.textContent === countText) {
+      return;
+    }
+
+    const label = existing || document.createElement('span');
+    label.className = 'container-marker-address-count';
+    label.setAttribute('aria-hidden', 'true');
+    label.textContent = countText;
+    if (!existing) {
+      element.append(label);
+    }
+    element.setAttribute('aria-label', `${element.title}, ${countText} adressen`);
+  }
+
+  function syncContainerMarkerStyles() {
+    const { filteredContainerIds } = state;
+    state.containerMarkers.forEach((marker, index) => {
+      const markerElement = marker.getElement();
+      if (!markerElement) {
+        return;
+      }
+      const container = state.containers[index];
+      const matches = filteredContainerIds?.has(container.id) ?? false;
+      markerElement.classList.toggle('container-marker-highlighted', matches);
+      markerElement.classList.toggle('container-marker-muted', filteredContainerIds !== null && !matches);
+      syncContainerAddressCount(markerElement, matches ? getAssignedHouseCount(container) : null);
+    });
+  }
+
   function addContainerList() {
     elements.containerList.innerHTML = '';
     state.containerButtons = [];
@@ -352,6 +395,9 @@ export function createContainersUi(context, api) {
     coverageLayer.clearLayers();
     renderContainerMapInfo(null);
     updateActiveContainer(null);
+    if (!state.selectedHouse) {
+      api.renderIdleHouseState();
+    }
   }
 
   function showCoverageCircles(container) {
@@ -422,7 +468,9 @@ export function createContainersUi(context, api) {
   }
 
   function renderContainers({ fitBounds = false } = {}) {
+    api.refreshCoverageFilters('containers');
     addContainerMarkers({ fitBounds });
+    syncContainerMarkerStyles();
     addContainerList();
     api.renderContainerMarkerLegend();
     const activeContainer = state.containers[state.activeContainerIndex];
@@ -434,6 +482,7 @@ export function createContainersUi(context, api) {
 
   return {
     renderContainerMapInfo,
+    getAssignedHouseCount,
     getContainerMarkerColor,
     createContainerMarkerSvg,
     createContainerMarkerIcon,
@@ -449,6 +498,7 @@ export function createContainersUi(context, api) {
     handleContainerDragEnd,
     attachContainerMarkerEditing,
     addContainerMarkers,
+    syncContainerMarkerStyles,
     addContainerList,
     updateActiveContainer,
     clearContainerSelection,

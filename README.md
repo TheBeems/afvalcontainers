@@ -6,6 +6,10 @@ Deze statische webapp laat per adres binnen de bebouwde kom zien wat de berekend
 
 Klik op een restafvalcontainer om twee hemelsbrede stralen te zien. De doorgetrokken lijn ligt op 150 meter van de container en de stippellijn op 275 meter. Tussen beide lijnen is de vulling lichter.
 
+Open **Knelpunten op de kaart** in het linkermenu om adressen uit te lichten. Stel bij **Loopafstand** een minimum en maximum in met de schuifknoppen of de metervelden. Het bereik begint bij 100 meter en loopt standaard tot de langste berekende loopafstand in het dorp, naar boven afgerond. Je kunt ook filteren op meer dan 150 meter hemelsbreed, op omwegen bij een nabije container en op adressen zonder berekende looproute als die er zijn. Bij meerdere actieve filters telt het dashboard ieder adres één keer. Overige adressen blijven gedimd zichtbaar.
+
+Met **Containers met meer dan 100 adressen** licht je de restafvalcontainers uit die voor meer dan 100 adressen het dichtstbij zijn op loopafstand. Boven elke uitgelichte pin staat het aantal adressen.
+
 De website publiceert momenteel analyses voor **Warmenhuizen, Tuitjenhorn en Waarland**. In `data/places.json` staan daarnaast alvast Dirkshorn, Sint Maarten, Burgerbrug, Oudesluis en Schagerbrug. Een geconfigureerd dorp verschijnt pas op de publieke website zodra alle benodigde runtime-data aanwezig is.
 
 Actuele aantallen en verdelingen staan op de pagina [Analyses](https://afvalcontainers-warmenhuizen.nl/analyses/). Ze worden tijdens de build uit de gegenereerde datasets gelezen en daarom niet handmatig in deze README bijgehouden.
