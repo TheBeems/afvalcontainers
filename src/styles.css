@@ -3,6 +3,7 @@
 @import './styles/layout.css';
 @import './styles/search.css';
 @import './styles/analysis.css';
+@import './styles/coverage-filters.css';
 @import './styles/containers.css';
 @import './styles/map.css';
 @import './styles/container-editor.css';

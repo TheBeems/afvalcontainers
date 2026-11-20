@@ -1171,7 +1171,7 @@ export async function generateHouseCoverage(argv = process.argv.slice(2)) {
 
   await writeOutput(options.outputJsonPath, payload);
   if (options.writeSplitFiles) {
-    await splitCoverageForPlace(options.place, payload);
+    await splitCoverageForPlace(options.place, payload, containers);
   }
 
   console.log('Analyse afgerond.');

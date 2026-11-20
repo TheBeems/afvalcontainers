@@ -109,6 +109,12 @@ De classificatie gebruikt altijd de vooraf berekende loopafstand. Hemelsbrede af
 
 De kaart tekent de hemelsbrede cirkels rond de actuele positie van de geselecteerde restafvalcontainer. De cirkel op 150 meter heeft een doorgetrokken lijn. De cirkel op 275 meter heeft een stippellijn en een lichtere vulling. Bij een verplaatsing in de containereditor verschuiven beide cirkels mee.
 
+Het dashboard gebruikt `withinResidentialRadius` uit de compacte huizenlaag. Bij het splitsen wordt per adres bepaald of minstens één toegankelijke rest- of semi-restcontainer binnen 150 meter hemelsbreed ligt. Daarbij tellen de toegangsregels van privécontainers mee. Een adres valt onder **Omweg bij nabije container** als het hemelsbreed binnen 150 meter ligt en de kortste berekende looproute langer is dan 150 meter.
+
+Het bereikfilter gebruikt `walkingDistance` uit de compacte huizenlaag en telt beide gekozen grenzen mee. De invoer werkt in hele meters. Het standaardmaximum is de langste opgeslagen loopafstand in het dorp, afgerond naar boven. Een negatieve bronwaarde wordt voor dit filter als 0 meter behandeld. Adressen met de status `unreachable` zijn beschikbaar via **Geen berekende looproute** als het dorp zulke adressen bevat.
+
+Het containerfilter en de containerkaart tellen adressen per `nearestContainerId` in de compacte huizenlaag. Elk adres telt mee bij de container bovenaan de opgeslagen loopafstandsrangschikking, ook als het adres buiten de getekende stralen ligt. Bij containers met meer dan 100 van deze adressen toont het filter de telling boven de pin.
+
 ## 5. Routegeometrie
 
 OSRM-afstanden en routegeometrieën zijn twee afzonderlijke onderdelen:
@@ -129,7 +135,7 @@ Per gepubliceerd dorp bestaan de volgende bestanden:
 | `container-locations.json` | Handmatig beheerde containerbron | Ja |
 | `house-coverage.json` | Volledige generatorcache en bron voor de split | Nee |
 | `coverage-summary.json` | Metadata en totalen voor de actieve plaats | Ja |
-| `house-map.json` | Compacte markerlaag met ID, coördinaat, categorie en dichtstbijzijnde container | Ja |
+| `house-map.json` | Compacte markerlaag met ID, coördinaat, loopafstand, afstandscategorie, dichtstbijzijnde container en hemelsbrede dekking op 150 meter | Ja |
 | `address-index.compact.json` | Zoekindex voor adressen | Ja, lazy geladen |
 | `house-details/*.json` | Volledige adres- en routegegevens, per straat gebundeld | Ja, lazy geladen |
 

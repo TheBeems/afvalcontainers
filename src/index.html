@@ -274,72 +274,128 @@
       <span class="mobile-sidebar-toggle-icon" aria-hidden="true"></span>
     </button>
 
-    <aside id="app-sidebar" class="sidebar" aria-labelledby="app-title">
+    <aside id="app-sidebar" class="sidebar" aria-label="Kaartmenu">
+      <button id="coverage-filters-toggle" class="coverage-view-button" type="button" aria-controls="coverage-filters" aria-expanded="false" disabled>
+        Knelpunten op de kaart
+      </button>
+
       <section class="panel place-panel" aria-labelledby="place-selector-title">
         <h2 id="place-selector-title">Dorp</h2>
         <select id="place-select" class="place-select" aria-label="Selecteer dorp"></select>
       </section>
 
-      <nav class="sidebar-section-nav" aria-label="Informatienavigatie">
-        <a href="/methodiek/">Methodiek</a>
-        <a href="/analyses/">Analyses</a>
-        <a href="/enquete/">Enquête-uitslag</a>
-      </nav>
+      <div id="sidebar-overview">
+        <nav class="sidebar-section-nav" aria-label="Informatienavigatie">
+          <a href="/methodiek/">Methodiek</a>
+          <a href="/analyses/">Analyses</a>
+          <a href="/enquete/">Enquête-uitslag</a>
+        </nav>
 
-      <header class="sidebar-header">
-        <details id="sidebar-header-panel" open>
-          <summary>
-            <hgroup class="sidebar-header-summary-text">
-              <h2 id="app-title">Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h2>
-              <p class="sidebar-header-hint">
-                <span class="sidebar-header-hint-closed">Toelichting tonen</span>
-                <span class="sidebar-header-hint-open">Toelichting verbergen</span>
-              </p>
-            </hgroup>
-          </summary>
+        <header class="sidebar-header">
+          <details id="sidebar-header-panel" open>
+            <summary>
+              <hgroup class="sidebar-header-summary-text">
+                <h2 id="app-title">Werkelijke loopafstand naar restafvalcontainers in Warmenhuizen</h2>
+                <p class="sidebar-header-hint">
+                  <span class="sidebar-header-hint-closed">Toelichting tonen</span>
+                  <span class="sidebar-header-hint-open">Toelichting verbergen</span>
+                </p>
+              </hgroup>
+            </summary>
 
-          <div class="sidebar-header-body">
-            <p>Deze website is verbonden aan de <strong>Dorpsraad Warmenhuizen</strong> en laat per adres zien wat de geplande ondergrondse restafvalcontainers betekenen voor de <strong>werkelijke loopafstand</strong>.</p>
+            <div class="sidebar-header-body">
+              <p>Deze website is verbonden aan de <strong>Dorpsraad Warmenhuizen</strong> en laat per adres zien wat de geplande ondergrondse restafvalcontainers betekenen voor de <strong>werkelijke loopafstand</strong>.</p>
 
-            <p>De <strong>gemeente Schagen</strong> heeft <span id="place-source-reference"><a id="place-source-link" href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a></span> dat huishoudens in <span data-place-name>Warmenhuizen</span> hun grijze restafvalbak aan huis moeten inruilen voor ondergrondse restafvalcontainers. Deze kaart rekent niet met de rechte lijn op de kaart, maar met de route via straten en paden.</p>
+              <p>De <strong>gemeente Schagen</strong> heeft <span id="place-source-reference"><a id="place-source-link" href="https://www.schagen.nl/plaatsing-ondergrondse-restafvalcontainers-warmenhuizen">aangekondigd</a></span> dat huishoudens in <span data-place-name>Warmenhuizen</span> hun grijze restafvalbak aan huis moeten inruilen voor ondergrondse restafvalcontainers. Deze kaart rekent niet met de rechte lijn op de kaart, maar met de route via straten en paden.</p>
 
-            <p>Voor <span data-place-name>Warmenhuizen</span> laat de analyse zien dat <strong><span id="intro-long-distance-count">1.138</span></strong> van de <span id="intro-total-address-count">2.870</span> adressen binnen de bebouwde kom op <strong>meer dan 150 meter</strong> loopafstand liggen (<span id="intro-long-distance-percent">39,7%</span>). <span id="intro-over-reference-text">Daarvan liggen <strong>211</strong> adressen boven <em>275 meter</em> (7,4%).</span></p>
+              <p>Voor <span data-place-name>Warmenhuizen</span> laat de analyse zien dat <strong><span id="intro-long-distance-count">1.138</span></strong> van de <span id="intro-total-address-count">2.870</span> adressen binnen de bebouwde kom op <strong>meer dan 150 meter</strong> loopafstand liggen (<span id="intro-long-distance-percent">39,7%</span>). <span id="intro-over-reference-text">Daarvan liggen <strong>211</strong> adressen boven <em>275 meter</em> (7,4%).</span></p>
 
-            <p><a id="methodology-link" class="sidebar-methodology-button" href="./methodiek/">Bekijk methodiek en onderzoeksbasis</a></p>
-            <p><a href="#visuele-uitleg">Bekijk de visuele uitleg opnieuw</a></p>
+              <p><a id="methodology-link" class="sidebar-methodology-button" href="./methodiek/">Bekijk methodiek en onderzoeksbasis</a></p>
+              <p><a href="#visuele-uitleg">Bekijk de visuele uitleg opnieuw</a></p>
+            </div>
+          </details>
+        </header>
+
+        <section class="panel analysis-panel" aria-labelledby="analysis-title">
+          <h2 id="analysis-title">Analyse</h2>
+          <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
+
+          <section id="coverage-summary-panel" class="summary-panel" aria-labelledby="coverage-summary-title">
+            <h3 id="coverage-summary-title">Samenvatting bebouwde kom</h3>
+            <div id="coverage-summary" class="summary-grid" hidden></div>
+            <p><a id="analyses-link" class="sidebar-methodology-button" href="./analyses/">Bekijk uitgebreide analyses</a></p>
+          </section>
+
+          <div id="house-details" class="detail-list">
+            <div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>
+          </div>
+        </section>
+
+        <details class="sidebar-collapsible container-section">
+          <summary id="container-list-title">Containerlocaties</summary>
+          <div class="sidebar-collapsible-body">
+            <div id="container-list" class="container-list"></div>
           </div>
         </details>
-      </header>
 
-      <section class="panel analysis-panel" aria-labelledby="analysis-title">
-  <h2 id="analysis-title">Analyse</h2>
-  <p id="coverage-status" class="status-note loading" aria-live="polite">Vooraf berekende huizenlaag wordt geladen...</p>
+        <nav class="sidebar-footer-nav" aria-label="Secundaire navigatie">
+          <a href="/warmenhuizen/">Warmenhuizen</a>
+          <a href="/tuitjenhorn/">Tuitjenhorn</a>
+          <a href="/analyses/">Analyses</a>
+          <a href="/methodiek/">Methodiek</a>
+          <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Data: CC BY 4.0</a>
+        </nav>
+      </div>
 
-  <section id="coverage-summary-panel" class="summary-panel" aria-labelledby="coverage-summary-title">
-    <h3 id="coverage-summary-title">Samenvatting bebouwde kom</h3>
-    <div id="coverage-summary" class="summary-grid" hidden></div>
-    <p><a id="analyses-link" class="sidebar-methodology-button" href="./analyses/">Bekijk uitgebreide analyses</a></p>
-  </section>
-
-  <div id="house-details" class="detail-list">
-    <div class="empty-state">Klik op een huispunt of zoek je adres om de dekking en routes te bekijken.</div>
-  </div>
-</section>
-
-      <details class="sidebar-collapsible container-section">
-  <summary id="container-list-title">Containerlocaties</summary>
-  <div class="sidebar-collapsible-body">
-    <div id="container-list" class="container-list"></div>
-  </div>
-</details>
-
-      <nav class="sidebar-footer-nav" aria-label="Secundaire navigatie">
-        <a href="/warmenhuizen/">Warmenhuizen</a>
-        <a href="/tuitjenhorn/">Tuitjenhorn</a>
-        <a href="/analyses/">Analyses</a>
-        <a href="/methodiek/">Methodiek</a>
-        <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Data: CC BY 4.0</a>
-      </nav>
+      <section id="coverage-filters" class="panel panel-body coverage-filters" aria-labelledby="coverage-filters-title" hidden>
+        <div class="coverage-filters-header">
+          <h2 id="coverage-filters-title">Knelpunten</h2>
+          <button id="clear-coverage-filters" class="coverage-filters-reset" type="button" disabled>Wis filters</button>
+        </div>
+        <div class="coverage-filter-list" role="group" aria-label="Knelpuntenfilters">
+          <div class="coverage-distance-filter">
+            <button class="coverage-filter" type="button" data-coverage-filter="walking-distance" aria-pressed="false" disabled>
+              <span>Loopafstand</span>
+              <span class="coverage-filter-count">–</span>
+            </button>
+            <div id="walking-distance-controls" class="coverage-distance-controls" hidden>
+              <div class="coverage-distance-track">
+                <input type="range" id="walking-distance-min" min="0" step="1" aria-label="Minimale loopafstand">
+                <input type="range" id="walking-distance-max" min="0" step="1" aria-label="Maximale loopafstand">
+              </div>
+              <div class="coverage-distance-values">
+                <label>
+                  Min. <input type="number" id="walking-distance-min-value" min="0" step="1" inputmode="numeric" aria-label="Minimale loopafstand in meters"> m
+                </label>
+                <label>
+                  Max. <input type="number" id="walking-distance-max-value" min="0" step="1" inputmode="numeric" aria-label="Maximale loopafstand in meters"> m
+                </label>
+              </div>
+            </div>
+          </div>
+          <button class="coverage-filter" type="button" data-coverage-filter="outside-radius" aria-pressed="false" disabled>
+            <span>Hemelsbreed meer dan 150 m <small>Naar de dichtstbijzijnde toegankelijke restafvalcontainer</small></span>
+            <span class="coverage-filter-count">–</span>
+          </button>
+          <button class="coverage-filter" type="button" data-coverage-filter="detour" aria-pressed="false" disabled>
+            <span>Omweg bij nabije container <small>Binnen 150 m hemelsbreed en meer dan 150 m lopen</small></span>
+            <span class="coverage-filter-count">–</span>
+          </button>
+          <button class="coverage-filter" type="button" data-coverage-filter="unreachable" aria-pressed="false" disabled hidden>
+            <span>Geen berekende looproute</span>
+            <span class="coverage-filter-count">–</span>
+          </button>
+          <button class="coverage-filter" type="button" data-coverage-filter="container-address-count" aria-pressed="false" disabled>
+            <span>
+              Containers met meer dan <span id="container-address-threshold"></span> adressen
+              <small>Dichtstbij op basis van de loopafstand</small>
+            </span>
+            <span class="coverage-filter-count">–</span>
+          </button>
+        </div>
+        <p id="coverage-filter-status" class="status-note" role="status">Adresgegevens worden geladen…</p>
+        <button id="coverage-filters-show-map" class="coverage-view-button coverage-show-map" type="button">Bekijk op de kaart</button>
+      </section>
     </aside>
 
     <button

@@ -500,6 +500,12 @@ function validateHouseMap(houseMap, place) {
     if (house.nearestContainerId !== null) {
       assertString(house.nearestContainerId, `${label}.nearestContainerId`);
     }
+    if ('walkingDistance' in house && house.walkingDistance !== null) {
+      assertNumber(house.walkingDistance, `${label}.walkingDistance`);
+    }
+    if ('withinResidentialRadius' in house && typeof house.withinResidentialRadius !== 'boolean') {
+      fail(`${label}.withinResidentialRadius must be a boolean when present.`);
+    }
     if (!VALID_COVERAGE_STATUSES.has(house.coverageStatus)) {
       fail(`${label}.coverageStatus is invalid: ${house.coverageStatus}`);
     }
@@ -615,6 +621,9 @@ export async function validateData() {
         }
         if (house.coverageStatus !== houseMarker.coverageStatus) {
           fail(`${place.id} house detail ${house.id}.coverageStatus must match house-map.json.`);
+        }
+        if ('walkingDistance' in houseMarker && (house.walkingDistance ?? null) !== houseMarker.walkingDistance) {
+          fail(`${place.id} house detail ${house.id}.walkingDistance must match house-map.json.`);
         }
         if ((house.nearestContainerId ?? null) !== houseMarker.nearestContainerId) {
           fail(`${place.id} house detail ${house.id}.nearestContainerId must match house-map.json.`);

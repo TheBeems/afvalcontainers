@@ -11,6 +11,7 @@ import { createLiveRoutes } from './services/live-routes.js';
 import { createContainerEditor } from './ui/container-editor.js';
 import { createContainerMarkup } from './ui/container-markup.js';
 import { createContainersUi } from './ui/containers.js';
+import { createCoverageFilters } from './ui/coverage-filters.js';
 import { createCoverageSummary } from './ui/coverage-summary.js';
 import { createHouseSelection } from './ui/house-selection.js';
 import { createMobileSidebar } from './ui/mobile-sidebar.js';
@@ -40,17 +41,21 @@ function createApp() {
   Object.assign(api, createContainerEditor(context, api));
   Object.assign(api, createContainersUi(context, api));
   Object.assign(api, createHouseSelection(context, api));
+  Object.assign(api, createCoverageFilters(context, api));
   Object.assign(api, createPlaceLoader(context, api));
 
   return { api, context };
 }
 
 function registerCoreListeners(context, api) {
-  const { elements, mapContext } = context;
+  const { elements, mapContext, state } = context;
 
   mapContext.map.on('zoomend', () => {
     api.syncHouseLayerVisibility();
     api.syncHouseMarkerStyles();
+    if (state.placeLoadStatus === 'ready' && !state.selectedHouse && state.activeContainerIndex === null) {
+      api.renderIdleHouseState();
+    }
   });
   mapContext.map.on('click', api.handleMapClick);
 
@@ -62,6 +67,7 @@ function registerCoreListeners(context, api) {
   elements.downloadContainersButton?.addEventListener('click', api.downloadContainerLocations);
   elements.resetContainersButton?.addEventListener('click', api.resetContainerLocations);
   api.bindMobileSidebarEvents();
+  api.bindCoverageFilterEvents();
 }
 
 async function init(context, api, options = {}) {
@@ -75,6 +81,7 @@ async function init(context, api, options = {}) {
     });
   } catch (error) {
     state.placeLoadStatus = 'error';
+    api.refreshCoverageFilters();
     elements.coverageSummary.hidden = true;
     elements.houseDetails.hidden = false;
     elements.houseDetails.innerHTML = '<div class="empty-state">De batchlaag kon niet worden geladen.</div>';

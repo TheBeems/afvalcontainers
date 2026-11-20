@@ -49,9 +49,10 @@ export function createHouseSelection(context, api) {
     return container && hasRestafvalStream(container) ? container.id : null;
   }
 
-  function getHouseMarkerStyle(nearestContainerId) {
-    const selectedContainerId = getSelectedRestContainerId();
-    const isMuted = Boolean(selectedContainerId && nearestContainerId !== selectedContainerId);
+  function getHouseMarkerStyle({ houseId, nearestContainerId }, selectedContainerId) {
+    const isMuted = state.filteredHouseIds !== null
+      ? !state.filteredHouseIds.has(houseId)
+      : Boolean(selectedContainerId && nearestContainerId !== selectedContainerId);
 
     return {
       radius: getHouseCircleRadius({ isMuted }),
@@ -62,14 +63,16 @@ export function createHouseSelection(context, api) {
 
   function renderHouseMarkers() {
     houseLayer.clearLayers();
+    const selectedContainerId = getSelectedRestContainerId();
 
     for (const house of state.houses) {
+      const houseMarker = { houseId: house.id, nearestContainerId: house.nearestContainerId };
       const marker = L.circleMarker([house.lat, house.lon], {
         renderer: houseRenderer,
-        nearestContainerId: house.nearestContainerId,
+        ...houseMarker,
         color: '#ffffff',
         fillColor: getCoverageStatus(house.coverageStatus).color,
-        ...getHouseMarkerStyle(house.nearestContainerId)
+        ...getHouseMarkerStyle(houseMarker, selectedContainerId)
       });
 
       marker.on('click', () => {
@@ -80,8 +83,9 @@ export function createHouseSelection(context, api) {
   }
 
   function syncHouseMarkerStyles() {
+    const selectedContainerId = getSelectedRestContainerId();
     houseLayer.eachLayer((marker) => {
-      const style = getHouseMarkerStyle(marker.options.nearestContainerId);
+      const style = getHouseMarkerStyle(marker.options, selectedContainerId);
       if (Object.entries(style).some(([key, value]) => marker.options[key] !== value)) {
         marker.setStyle(style);
       }
@@ -90,16 +94,14 @@ export function createHouseSelection(context, api) {
 
   function syncHouseLayerVisibility() {
     const shouldShowHouses = state.houses.length > 0
-      && (map.getZoom() >= HOUSE_MARKER_MIN_ZOOM || getSelectedRestContainerId() !== null);
+      && (map.getZoom() >= HOUSE_MARKER_MIN_ZOOM
+        || getSelectedRestContainerId() !== null
+        || state.filteredHouseIds?.size > 0);
 
     if (shouldShowHouses && !map.hasLayer(houseLayer)) {
       houseLayer.addTo(map);
     } else if (!shouldShowHouses && map.hasLayer(houseLayer)) {
       map.removeLayer(houseLayer);
-    }
-
-    if (!state.selectedHouse && state.activeContainerIndex === null) {
-      renderIdleHouseState();
     }
   }
 

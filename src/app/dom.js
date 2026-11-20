@@ -1,6 +1,12 @@
 export function getElements() {
   return {
     sidebar: document.getElementById('app-sidebar'),
+    sidebarOverview: document.getElementById('sidebar-overview'),
+    coverageFilters: document.getElementById('coverage-filters'),
+    coverageFiltersToggle: document.getElementById('coverage-filters-toggle'),
+    coverageFilterStatus: document.getElementById('coverage-filter-status'),
+    clearCoverageFilters: document.getElementById('clear-coverage-filters'),
+    coverageFiltersShowMap: document.getElementById('coverage-filters-show-map'),
     mobileSidebarToggle: document.getElementById('mobile-sidebar-toggle'),
     mobileSidebarOverlay: document.getElementById('mobile-sidebar-overlay'),
     sidebarHeaderPanel: document.getElementById('sidebar-header-panel'),

@@ -236,6 +236,18 @@ export function createPlaceLoader(context, api) {
     }
   }
 
+  function setHouseMap(houses) {
+    state.houses = houses;
+    state.nearestHouseCountsByContainerId.clear();
+
+    for (const { nearestContainerId } of houses) {
+      if (nearestContainerId) {
+        const count = state.nearestHouseCountsByContainerId.get(nearestContainerId) ?? 0;
+        state.nearestHouseCountsByContainerId.set(nearestContainerId, count + 1);
+      }
+    }
+  }
+
   function resetPlaceDataState() {
     api.lockUnlockedContainer?.();
     map.closePopup();
@@ -254,7 +266,7 @@ export function createPlaceLoader(context, api) {
     state.originalContainers = [];
     state.containerEditorPlace = state.activePlace;
     state.containerEditorSelectionId += 1;
-    state.houses = [];
+    setHouseMap([]);
     state.coverage = null;
     state.addressIndex = [];
     state.addressIndexPlaceId = null;
@@ -338,7 +350,7 @@ export function createPlaceLoader(context, api) {
     routeLayer.clearLayers();
     selectionLayer.clearLayers();
 
-    state.houses = [];
+    setHouseMap([]);
     state.coverage = null;
     state.addressIndex = [];
     state.addressIndexPlaceId = null;
@@ -372,6 +384,7 @@ export function createPlaceLoader(context, api) {
 
     api.renderContainerMapInfo?.(null);
     api.renderHouseMapInfo?.(null);
+    api.refreshCoverageFilters();
   }
 
   async function loadOptionalContainers(place) {
@@ -535,6 +548,7 @@ export function createPlaceLoader(context, api) {
 
   async function loadPlaceData(place, selectionId, options = {}) {
     state.placeLoadStatus = 'loading';
+    api.refreshCoverageFilters();
     renderPlaceSelector();
     api.setCoverageStatus(`Data voor ${place.name} wordt geladen...`, 'loading');
 
@@ -558,8 +572,9 @@ export function createPlaceLoader(context, api) {
       cacheContainerEditorDataset();
       const [coverageSummary, houseMap] = Array.isArray(coverage) ? coverage : [null, []];
       state.coverage = coverageSummary && typeof coverageSummary === 'object' ? coverageSummary : null;
-      state.houses = Array.isArray(houseMap) ? houseMap : [];
+      setHouseMap(Array.isArray(houseMap) ? houseMap : []);
       state.placeLoadStatus = 'ready';
+      api.refreshCoverageFilters('houses');
       renderPlaceSelector();
       renderContainerEditorPlaceSelector();
       renderLoadedPlace(options);
@@ -569,6 +584,7 @@ export function createPlaceLoader(context, api) {
       }
 
       state.placeLoadStatus = 'error';
+      api.refreshCoverageFilters();
       renderPlaceSelector();
       elements.coverageSummary.hidden = true;
       elements.houseDetails.hidden = false;

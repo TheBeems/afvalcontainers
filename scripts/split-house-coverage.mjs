@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { isContainerAllowedForHouse } from '../src/shared/address.js';
+import { hasRestafvalStream } from '../src/shared/containers.js';
+import { RESIDENTIAL_RADIUS_METERS } from '../src/shared/coverage.js';
+import { haversineMeters } from '../src/shared/geometry.js';
 import {
   readJson,
   readPlacesManifest,
@@ -140,14 +144,23 @@ function buildCoverageSummary(coverage) {
   };
 }
 
-function buildHouseMap(houses, houseDetailBundles) {
+function buildHouseMap(houses, houseDetailBundles, containers) {
+  const restafvalContainers = containers?.filter(hasRestafvalStream);
+
   return houses.map((house) => ({
     id: house.id,
     lat: house.lat,
     lon: house.lon,
     coverageStatus: house.coverageStatus,
+    walkingDistance: house.walkingDistance ?? null,
     nearestContainerId: house.nearestContainerId ?? null,
-    detailBundle: houseDetailBundles.get(house.id)
+    detailBundle: houseDetailBundles.get(house.id),
+    ...(restafvalContainers && {
+      withinResidentialRadius: restafvalContainers.some((container) => (
+        haversineMeters(house.lat, house.lon, container.lat, container.lon) <= RESIDENTIAL_RADIUS_METERS
+        && isContainerAllowedForHouse(house, container)
+      ))
+    })
   }));
 }
 
@@ -176,7 +189,7 @@ async function fileExists(path) {
   }
 }
 
-export async function splitCoverageForPlace(place, coverage) {
+export async function splitCoverageForPlace(place, coverage, containers = null) {
   const houses = Array.isArray(coverage.houses) ? coverage.houses : [];
   const houseDetailsBasePath = resolveProjectPath(place.paths.houseDetailsBase);
   const { bundles, houseDetailBundles } = buildDetailBundles(houses);
@@ -186,7 +199,7 @@ export async function splitCoverageForPlace(place, coverage) {
 
   await Promise.all([
     writeJson(getRequiredPath(place, 'coverageSummary'), buildCoverageSummary(coverage)),
-    writeJson(getRequiredPath(place, 'houseMap'), buildHouseMap(houses, houseDetailBundles)),
+    writeJson(getRequiredPath(place, 'houseMap'), buildHouseMap(houses, houseDetailBundles, containers)),
     writeJson(getRequiredPath(place, 'addressIndex'), buildAddressIndex(place, coverage, houseDetailBundles)),
     ...bundles.map((bundle) => writeJson(getHouseDetailsPath(place, bundle.detailBundle), bundle))
   ]);
@@ -212,8 +225,15 @@ export async function splitHouseCoverage({ verbose = true } = {}) {
       continue;
     }
 
-    const coverage = await readJson(legacyCoveragePath, `${place.id} legacy coverage`);
-    const count = await splitCoverageForPlace(place, coverage);
+    const containersPath = getRequiredPath(place, 'containers');
+    const hasContainers = await fileExists(containersPath);
+    const [coverage, containers] = await Promise.all([
+      readJson(legacyCoveragePath, `${place.id} legacy coverage`),
+      hasContainers
+        ? readJson(containersPath, `${place.id} container-locations.json`)
+        : null
+    ]);
+    const count = await splitCoverageForPlace(place, coverage, containers);
 
     results.push({
       placeId: place.id,
