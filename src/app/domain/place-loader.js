@@ -110,6 +110,7 @@ export function createPlaceLoader(context, api) {
   const { elements, mapContext, state } = context;
   const {
     containerLayer,
+    coverageLayer,
     houseLayer,
     map,
     resultLayer,
@@ -243,13 +244,11 @@ export function createPlaceLoader(context, api) {
     }
 
     containerLayer.clearLayers();
+    coverageLayer.clearLayers();
     houseLayer.clearLayers();
     resultLayer.clearLayers();
     routeLayer.clearLayers();
     selectionLayer.clearLayers();
-    if (state.coverageCircle) {
-      map.removeLayer(state.coverageCircle);
-    }
 
     state.containers = [];
     state.originalContainers = [];
@@ -266,7 +265,6 @@ export function createPlaceLoader(context, api) {
     state.activeContainerIndex = null;
     state.activeContainerKey = null;
     state.selectedHouse = null;
-    state.coverageCircle = null;
     state.selectedHouseMarker = null;
     state.containerMarkers = [];
     state.containerButtons = [];
@@ -334,13 +332,11 @@ export function createPlaceLoader(context, api) {
     }
 
     containerLayer.clearLayers();
+    coverageLayer.clearLayers();
     houseLayer.clearLayers();
     resultLayer.clearLayers();
     routeLayer.clearLayers();
     selectionLayer.clearLayers();
-    if (state.coverageCircle) {
-      map.removeLayer(state.coverageCircle);
-    }
 
     state.houses = [];
     state.coverage = null;
@@ -349,7 +345,6 @@ export function createPlaceLoader(context, api) {
     state.activeContainerIndex = null;
     state.activeContainerKey = null;
     state.selectedHouse = null;
-    state.coverageCircle = null;
     state.selectedHouseMarker = null;
     state.containerMarkers = [];
     state.containerButtons = [];

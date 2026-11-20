@@ -591,8 +591,6 @@ export function createContainerEditor(context, api) {
     state.liveRouteCache.clear();
     map.getContainer().classList.remove('adding-container');
     api.renderContainers();
-    api.showCoverageCircle(container);
-    api.renderContainerMapInfo(container);
     map.panTo([container.lat, container.lon], { animate: true });
     api.refreshSelectedHouseLiveState();
     setContainerEditorStatus(`Container ${container.id} is toegevoegd. Download de JSON om de wijziging te bewaren.`, 'success');

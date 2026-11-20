@@ -25,6 +25,7 @@ export function createMapContext() {
   const selectionRenderer = L.canvas({ padding: 0.5, pane: 'selectionMarkerPane' });
 
   const houseLayer = L.layerGroup();
+  const coverageLayer = L.featureGroup().addTo(map);
   const resultLayer = L.layerGroup().addTo(map);
   const routeLayer = L.layerGroup().addTo(map);
   const selectionLayer = L.layerGroup().addTo(map);
@@ -47,6 +48,7 @@ export function createMapContext() {
     routeRenderer,
     selectionRenderer,
     houseLayer,
+    coverageLayer,
     resultLayer,
     routeLayer,
     selectionLayer,

@@ -107,6 +107,8 @@ De centrale indeling staat in `src/shared/coverage.js`:
 
 De classificatie gebruikt altijd de vooraf berekende loopafstand. Hemelsbrede afstand wordt ter vergelijking getoond, maar niet gebruikt als vervangende dekking wanneer OSRM geen route vindt.
 
+De kaart tekent de hemelsbrede cirkels rond de actuele positie van de geselecteerde restafvalcontainer. De cirkel op 150 meter heeft een doorgetrokken lijn. De cirkel op 275 meter heeft een stippellijn en een lichtere vulling. Bij een verplaatsing in de containereditor verschuiven beide cirkels mee.
+
 ## 5. Routegeometrie
 
 OSRM-afstanden en routegeometrieën zijn twee afzonderlijke onderdelen:

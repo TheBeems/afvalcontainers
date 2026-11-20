@@ -25,7 +25,6 @@ export function createAppState() {
     activeContainerIndex: null,
     activeContainerKey: null,
     selectedHouse: null,
-    coverageCircle: null,
     selectedHouseMarker: null,
     containerMarkers: [],
     containerButtons: [],

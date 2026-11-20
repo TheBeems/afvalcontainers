@@ -19,10 +19,14 @@ import {
   getContainerMarkerColor
 } from './container-marker.js';
 
+const RESIDENTIAL_RADIUS_METERS = 150;
+const COVERAGE_CIRCLES_DESCRIPTION = `De doorgetrokken lijn toont de hemelsbrede straal van ${RESIDENTIAL_RADIUS_METERS} meter, de stippellijn die van ${REFERENCE_RADIUS_METERS} meter.`;
+
 export function createContainersUi(context, api) {
   const { elements, mapContext, state } = context;
   const {
     containerLayer,
+    coverageLayer,
     map
   } = mapContext;
 
@@ -55,7 +59,11 @@ export function createContainersUi(context, api) {
     const hvcContainerIdLine = hvcContainerId
       ? `<div class="container-map-info-meta">HVC container-ID: ${escapeHtml(hvcContainerId)}</div>`
       : '';
-    const nearestHouseCount = state.coverage && hasRestafvalStream(container)
+    const hasRestafval = hasRestafvalStream(container);
+    const coverageCirclesLine = hasRestafval
+      ? `<div class="container-map-info-meta">${COVERAGE_CIRCLES_DESCRIPTION}</div>`
+      : '';
+    const nearestHouseCount = state.coverage && hasRestafval
       ? state.houses.filter((house) => house.nearestContainerId === container.id).length
       : null;
     const nearestHouseCountLine = nearestHouseCount !== null
@@ -83,6 +91,7 @@ export function createContainersUi(context, api) {
           ${categoryPills}
           ${api.buildContainerAccessPill(container)}
         </div>
+        ${coverageCirclesLine}
         ${nearestHouseCountLine}
         ${hvcContainerIdLine}
         <div class="container-map-info-meta">Nauwkeurigheid: ${escapeHtml(container.accuracy)}</div>
@@ -155,10 +164,6 @@ export function createContainersUi(context, api) {
     container.accuracy = MANUAL_CONTAINER_ACCURACY;
     api.syncContainerIndex();
     renderContainers();
-    const index = getContainerIndexById(container.id);
-    if (state.activeContainerKey === container.clientKey || state.activeContainerIndex === index) {
-      showCoverageCircle(container);
-    }
 
     api.refreshSelectedHouseLiveState();
     api.setContainerEditorStatus(`Container ${container.id} is verplaatst. Download de JSON om de wijziging te bewaren.`, 'success');
@@ -343,35 +348,38 @@ export function createContainersUi(context, api) {
     api.updateContainerEditorControls();
   }
 
-  function clearCoverageCircle() {
-    if (state.coverageCircle) {
-      map.removeLayer(state.coverageCircle);
-      state.coverageCircle = null;
-    }
-  }
-
   function clearContainerSelection() {
-    clearCoverageCircle();
+    coverageLayer.clearLayers();
     renderContainerMapInfo(null);
     updateActiveContainer(null);
   }
 
-  function showCoverageCircle(container) {
-    clearCoverageCircle();
-    if (!hasRestafvalStream(container)) {
+  function showCoverageCircles(container) {
+    coverageLayer.clearLayers();
+    if (!container || !hasRestafvalStream(container)) {
       return;
     }
 
-    state.coverageCircle = L.circle([container.lat, container.lon], {
-      radius: REFERENCE_RADIUS_METERS,
+    const center = [container.lat, container.lon];
+    const circleStyle = {
       color: '#2563eb',
       weight: 2,
       opacity: 0.9,
       fillColor: '#60a5fa',
-      fillOpacity: 0.18,
       interactive: false
-    }).addTo(map);
-    state.coverageCircle.bringToBack();
+    };
+    L.circle(center, {
+      ...circleStyle,
+      radius: REFERENCE_RADIUS_METERS,
+      dashArray: '1 6',
+      fillOpacity: 0.08
+    }).addTo(coverageLayer);
+    // The two fills combine to approximately the original 18% opacity inside the inner circle.
+    L.circle(center, {
+      ...circleStyle,
+      radius: RESIDENTIAL_RADIUS_METERS,
+      fillOpacity: 0.11
+    }).addTo(coverageLayer);
   }
 
   function selectContainer(index, { focusMap = true, scrollToMap = false } = {}) {
@@ -388,18 +396,21 @@ export function createContainersUi(context, api) {
       renderContainers();
     }
 
-    showCoverageCircle(container);
+    showCoverageCircles(container);
     updateActiveContainer(index);
     renderContainerMapInfo(container);
 
-    if (focusMap && state.coverageCircle) {
-      map.fitBounds(state.coverageCircle.getBounds(), { padding: [32, 32], maxZoom: 17 });
-    } else if (focusMap) {
-      map.setView([container.lat, container.lon], Math.max(map.getZoom(), 17), { animate: true });
+    if (focusMap) {
+      const bounds = coverageLayer.getBounds();
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [32, 32], maxZoom: 17 });
+      } else {
+        map.setView([container.lat, container.lon], Math.max(map.getZoom(), 17), { animate: true });
+      }
     }
 
     const statusText = hasRestafvalStream(container)
-      ? `Geselecteerde container ${container.id}. De blauwe cirkel toont ${REFERENCE_RADIUS_METERS} meter hemelsbreed. Huishoudens waarvoor dit de dichtstbijzijnde container is, zijn uitgelicht; overige huishoudens zijn gedimd.`
+      ? `Geselecteerde container ${container.id}. ${COVERAGE_CIRCLES_DESCRIPTION} Huishoudens waarvoor dit de dichtstbijzijnde container is, zijn uitgelicht; overige huishoudens zijn gedimd.`
       : `Geselecteerde container ${container.id}. Deze locatie telt niet mee voor restafval-loopafstanden.`;
     api.setCoverageStatus(statusText);
 
@@ -414,7 +425,9 @@ export function createContainersUi(context, api) {
     addContainerMarkers({ fitBounds });
     addContainerList();
     api.renderContainerMarkerLegend();
-    renderContainerMapInfo(state.activeContainerIndex !== null ? state.containers[state.activeContainerIndex] : null);
+    const activeContainer = state.containers[state.activeContainerIndex];
+    showCoverageCircles(activeContainer);
+    renderContainerMapInfo(activeContainer);
     api.syncHouseMarkerStyles();
     api.updateContainerEditorControls();
   }
@@ -438,9 +451,7 @@ export function createContainersUi(context, api) {
     addContainerMarkers,
     addContainerList,
     updateActiveContainer,
-    clearCoverageCircle,
     clearContainerSelection,
-    showCoverageCircle,
     selectContainer,
     renderContainers
   };

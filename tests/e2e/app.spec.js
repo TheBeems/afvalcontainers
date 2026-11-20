@@ -645,10 +645,35 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
       return markers;
     });
 
+    const getCoverageCircles = () => page.evaluate(() => {
+      const circles = [];
+      window.__testLeafletMap.eachLayer((layer) => {
+        if (layer instanceof L.Circle) {
+          circles.push({
+            radius: layer.getRadius(),
+            center: layer.getLatLng(),
+            dashed: Boolean(layer.options.dashArray),
+            fillOpacity: layer.options.fillOpacity
+          });
+        }
+      });
+      return circles.sort((a, b) => a.radius - b.radius);
+    });
+
     await page.goto('/warmenhuizen/?container=WH02#kaart');
     await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container WH02');
 
     const houses = await (await page.request.get('/data/places/warmenhuizen/house-map.json')).json();
+    const containers = await (await page.request.get('/data/places/warmenhuizen/container-locations.json')).json();
+    const expectCoverageCirclesFor = async (containerId) => {
+      const { lat, lon } = containers.find((container) => container.id === containerId);
+      const center = { lat, lng: lon };
+      expect(await getCoverageCircles()).toEqual([
+        { radius: 150, center, dashed: false, fillOpacity: 0.11 },
+        { radius: 275, center, dashed: true, fillOpacity: 0.08 }
+      ]);
+    };
+
     const selectedHouses = houses.filter((house) => house.nearestContainerId === 'WH02');
     expect(selectedHouses.length).toBeGreaterThan(0);
     expect(selectedHouses.some((house) => house.coverageStatus === 'over_275')).toBe(true);
@@ -664,18 +689,12 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     expect(Math.max(...otherMarkers.map((marker) => marker.fillOpacity)))
       .toBeLessThan(Math.min(...highlightedMarkers.map((marker) => marker.fillOpacity)));
     expect(otherMarkers.every((marker) => marker.fillOpacity > 0)).toBe(true);
-    expect(await page.evaluate(() => {
-      let hasReferenceCircle = false;
-      window.__testLeafletMap.eachLayer((layer) => {
-        if (layer instanceof L.Circle && layer.getRadius() === 275) {
-          hasReferenceCircle = true;
-        }
-      });
-      return hasReferenceCircle;
-    })).toBe(true);
+    await expectCoverageCirclesFor('WH02');
+    await expect(page.locator('.container-map-info')).toContainText('hemelsbrede straal van 150 meter');
 
     await page.locator('.container-marker-icon[title^="WH03 -"]').click();
     await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container WH03');
+    await expectCoverageCirclesFor('WH03');
     const switchedHouseCount = houses.filter((house) => house.nearestContainerId === 'WH03').length;
     await expect(page.locator('.container-map-info')).toContainText(`Dichtstbijzijnde container voor ${switchedHouseCount.toLocaleString('nl-NL')} huizen.`);
     const switchedMarkers = await getHouseMarkers();
@@ -695,6 +714,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     await page.evaluate(() => {
       window.__testLeafletMap.fire('click');
     });
+    expect(await getCoverageCircles()).toHaveLength(0);
     expect(await getHouseMarkers()).toHaveLength(0);
     await page.evaluate(() => {
       window.__testLeafletMap.setZoom(17, { animate: false });

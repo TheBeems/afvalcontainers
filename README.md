@@ -4,6 +4,8 @@
 
 Deze statische webapp laat per adres binnen de bebouwde kom zien wat de berekende loopafstand is naar restafvalcontainers. De kaart vergelijkt de route via straten en paden met de door de gemeente Schagen genoemde richtafstand van ongeveer 275 meter.
 
+Klik op een restafvalcontainer om twee hemelsbrede stralen te zien. De doorgetrokken lijn ligt op 150 meter van de container en de stippellijn op 275 meter. Tussen beide lijnen is de vulling lichter.
+
 De website publiceert momenteel analyses voor **Warmenhuizen, Tuitjenhorn en Waarland**. In `data/places.json` staan daarnaast alvast Dirkshorn, Sint Maarten, Burgerbrug, Oudesluis en Schagerbrug. Een geconfigureerd dorp verschijnt pas op de publieke website zodra alle benodigde runtime-data aanwezig is.
 
 Actuele aantallen en verdelingen staan op de pagina [Analyses](https://afvalcontainers-warmenhuizen.nl/analyses/). Ze worden tijdens de build uit de gegenereerde datasets gelezen en daarom niet handmatig in deze README bijgehouden.
