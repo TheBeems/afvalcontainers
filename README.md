@@ -10,6 +10,8 @@ Open **Knelpunten op de kaart** in het linkermenu om adressen uit te lichten. St
 
 Met **Containers met meer dan 100 adressen** licht je de restafvalcontainers uit die voor meer dan 100 adressen het dichtstbij zijn op loopafstand. Boven elke uitgelichte pin staat het aantal adressen.
 
+Met **Toon 150-metercirkels** zie je in hetzelfde menu de hemelsbrede straal rond alle openbare rest- en semi-restafvalcontainers van het gekozen dorp. De kaart zoomt zo nodig uit om alle cirkels in beeld te brengen. Je kunt deze kaartlaag combineren met de knelpuntenfilters.
+
 De website publiceert momenteel analyses voor **Warmenhuizen, Tuitjenhorn en Waarland**. In `data/places.json` staan daarnaast alvast Dirkshorn, Sint Maarten, Burgerbrug, Oudesluis en Schagerbrug. Een geconfigureerd dorp verschijnt pas op de publieke website zodra alle benodigde runtime-data aanwezig is.
 
 Actuele aantallen en verdelingen staan op de pagina [Analyses](https://afvalcontainers-warmenhuizen.nl/analyses/). Ze worden tijdens de build uit de gegenereerde datasets gelezen en daarom niet handmatig in deze README bijgehouden.

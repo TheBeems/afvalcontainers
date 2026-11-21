@@ -107,6 +107,12 @@
   display: none;
 }
 
+.coverage-circles-toggle {
+  width: 100%;
+  margin-top: 10px;
+  grid-template-columns: 14px minmax(0, 1fr);
+}
+
 .coverage-distance-filter {
   border: 1px solid var(--border);
   border-radius: 8px;

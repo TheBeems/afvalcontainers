@@ -109,6 +109,8 @@ De classificatie gebruikt altijd de vooraf berekende loopafstand. Hemelsbrede af
 
 De kaart tekent de hemelsbrede cirkels rond de actuele positie van de geselecteerde restafvalcontainer. De cirkel op 150 meter heeft een doorgetrokken lijn. De cirkel op 275 meter heeft een stippellijn en een lichtere vulling. Bij een verplaatsing in de containereditor verschuiven beide cirkels mee.
 
+De schakelaar **Toon 150-metercirkels** in het knelpuntenmenu toont een aparte Leaflet-laag met een hemelsbrede straal van 150 meter rond elke openbare rest- en semi-restafvalcontainer in de geladen containerdataset. De laag staat standaard uit. Bij het aanzetten en bij een dorpswissel past de kaart zo nodig de uitsnede aan aan de actieve cirkels. De cirkels volgen de actuele kaartposities.
+
 Het dashboard gebruikt `withinResidentialRadius` uit de compacte huizenlaag. Bij het splitsen wordt per adres bepaald of minstens één toegankelijke rest- of semi-restcontainer binnen 150 meter hemelsbreed ligt. Daarbij tellen de toegangsregels van privécontainers mee. Een adres valt onder **Omweg bij nabije container** als het hemelsbreed binnen 150 meter ligt en de kortste berekende looproute langer is dan 150 meter.
 
 Het bereikfilter gebruikt `walkingDistance` uit de compacte huizenlaag en telt beide gekozen grenzen mee. De invoer werkt in hele meters. Het standaardmaximum is de langste opgeslagen loopafstand in het dorp, afgerond naar boven. Een negatieve bronwaarde wordt voor dit filter als 0 meter behandeld. Adressen met de status `unreachable` zijn beschikbaar via **Geen berekende looproute** als het dorp zulke adressen bevat.

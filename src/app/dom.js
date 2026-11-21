@@ -6,6 +6,7 @@ export function getElements() {
     coverageFiltersToggle: document.getElementById('coverage-filters-toggle'),
     coverageFilterStatus: document.getElementById('coverage-filter-status'),
     clearCoverageFilters: document.getElementById('clear-coverage-filters'),
+    coverageCirclesToggle: document.getElementById('coverage-circles-toggle'),
     coverageFiltersShowMap: document.getElementById('coverage-filters-show-map'),
     mobileSidebarToggle: document.getElementById('mobile-sidebar-toggle'),
     mobileSidebarOverlay: document.getElementById('mobile-sidebar-overlay'),
