@@ -111,6 +111,7 @@ export function createPlaceLoader(context, api) {
   const {
     containerLayer,
     coverageLayer,
+    coverageOverviewLayer,
     houseLayer,
     map,
     resultLayer,
@@ -257,6 +258,7 @@ export function createPlaceLoader(context, api) {
 
     containerLayer.clearLayers();
     coverageLayer.clearLayers();
+    coverageOverviewLayer.clearLayers();
     houseLayer.clearLayers();
     resultLayer.clearLayers();
     routeLayer.clearLayers();
@@ -345,6 +347,7 @@ export function createPlaceLoader(context, api) {
 
     containerLayer.clearLayers();
     coverageLayer.clearLayers();
+    coverageOverviewLayer.clearLayers();
     houseLayer.clearLayers();
     resultLayer.clearLayers();
     routeLayer.clearLayers();
@@ -486,6 +489,7 @@ export function createPlaceLoader(context, api) {
     collapseIntroForSelectedContainer = false
   } = {}) {
     api.renderContainers({ fitBounds: false });
+    api.fitCoverageOverview();
 
     if (!state.coverage || state.houses.length === 0) {
       if (elements.coverageSummary) {
@@ -632,6 +636,7 @@ export function createPlaceLoader(context, api) {
 
       map.setView(place.map.center, place.map.zoom);
       api.renderContainers({ fitBounds: false });
+      api.fitCoverageOverview();
       api.setCoverageStatus(`Containereditor voor ${place.name}. Genereer de analyse om huizen en loopafstanden te bekijken.`);
       api.setContainerEditorStatus?.(
         state.originalContainers.length === 0

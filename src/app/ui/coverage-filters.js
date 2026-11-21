@@ -1,3 +1,4 @@
+import { RESIDENTIAL_RADIUS_METERS } from '../../shared/coverage.js';
 import { createWalkingDistanceRange } from './walking-distance-range.js';
 
 const CONTAINER_ADDRESS_THRESHOLD = 100;
@@ -33,7 +34,7 @@ function getMatchingIds(activeFilters, target) {
 }
 
 export function createCoverageFilters(context, api) {
-  const { elements, state } = context;
+  const { elements, mapContext: { map, coverageOverviewLayer }, state } = context;
   const filters = Array.from(elements.coverageFilters.querySelectorAll('[data-coverage-filter]'), (button) => ({
     target: 'houses',
     ...COVERAGE_FILTERS[button.dataset.coverageFilter],
@@ -165,9 +166,23 @@ export function createCoverageFilters(context, api) {
     }
   }
 
+  function toggleCoverageCircles() {
+    const showCircles = !map.hasLayer(coverageOverviewLayer);
+    if (showCircles) {
+      coverageOverviewLayer.addTo(map);
+      api.fitCoverageOverview();
+    } else {
+      coverageOverviewLayer.remove();
+    }
+    elements.coverageCirclesToggle.setAttribute('aria-pressed', String(showCircles));
+  }
+
   function bindCoverageFilterEvents() {
     walkingRange.bind();
     elements.coverageFilters.querySelector('#container-address-threshold').textContent = CONTAINER_ADDRESS_THRESHOLD.toLocaleString('nl-NL');
+    elements.coverageCirclesToggle.querySelector('#coverage-circles-radius').textContent = RESIDENTIAL_RADIUS_METERS;
+    elements.coverageCirclesToggle.addEventListener('click', toggleCoverageCircles);
+    elements.coverageCirclesToggle.disabled = false;
     elements.coverageFiltersToggle.addEventListener('click', toggleFilterView);
     elements.coverageFiltersToggle.disabled = false;
 

@@ -1,4 +1,5 @@
 import { devices, expect, test } from '@playwright/test';
+import { hasRestafvalStream, sortContainersById } from '../../src/shared/containers.js';
 
 const SITE_URL = 'https://afvalcontainers-warmenhuizen.nl/';
 const IPHONE_15_SHORT_PORTRAIT = {
@@ -81,6 +82,23 @@ async function getHouseMarkers(page) {
       }
     });
     return markers;
+  });
+}
+
+function getCoverageCircles(page) {
+  return page.evaluate(() => {
+    const circles = [];
+    window.__testLeafletMap.eachLayer((layer) => {
+      if (layer instanceof L.Circle) {
+        circles.push({
+          radius: layer.getRadius(),
+          center: layer.getLatLng(),
+          dashed: Boolean(layer.options.dashArray),
+          fillOpacity: layer.options.fillOpacity
+        });
+      }
+    });
+    return circles.sort((a, b) => a.radius - b.radius);
   });
 }
 
@@ -838,6 +856,76 @@ test('only shows the no-route filter when a place has addresses without a route'
   await expect(page.getByRole('button', { name: 'Wis filters' })).toBeDisabled();
 });
 
+test('toggles 150-meter circles for public containers in the current village', async ({ page }) => {
+  await exposeLeafletMap(page);
+  await page.goto('/warmenhuizen/#kaart');
+  await expect(page.locator('#coverage-summary')).toBeVisible();
+  const openFilters = page.getByRole('button', { name: 'Knelpunten op de kaart' });
+  await openFilters.click();
+  const circlesToggle = page.getByRole('button', { name: /^Toon 150-metercirkels/ });
+
+  const getExpectedCircles = async (place) => {
+    const response = await page.request.get(`/data/places/${place}/container-locations.json`);
+    const publicContainers = (await response.json()).filter(
+      (container) => container.access?.scope !== 'private' && hasRestafvalStream(container)
+    );
+    return sortContainersById(publicContainers).map(({ lat, lon }) => ({
+      radius: 150,
+      center: { lat, lng: lon },
+      dashed: false
+    }));
+  };
+  const circlesFitInView = () => page.evaluate(() => {
+    const map = window.__testLeafletMap;
+    const bounds = L.latLngBounds();
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Circle) {
+        bounds.extend(layer.getBounds());
+      }
+    });
+    return map.getBounds().contains(bounds);
+  });
+  const warmenhuizenCircles = await getExpectedCircles('warmenhuizen');
+  await expect(circlesToggle).toHaveAttribute('aria-pressed', 'false');
+  expect(await getCoverageCircles(page)).toHaveLength(0);
+
+  await circlesToggle.press('Space');
+  await expect(circlesToggle).toHaveAttribute('aria-pressed', 'true');
+  expect(await getCoverageCircles(page)).toMatchObject(warmenhuizenCircles);
+  expect(await circlesFitInView()).toBe(true);
+
+  await page.getByRole('button', { name: /^Containers met meer dan 100 adressen/ }).click();
+  expect(await getCoverageCircles(page)).toMatchObject(warmenhuizenCircles);
+  await page.getByRole('button', { name: 'Wis filters' }).click();
+  expect(await getCoverageCircles(page)).toMatchObject(warmenhuizenCircles);
+
+  await page.getByRole('button', { name: 'Terug naar overzicht' }).click();
+  await page.locator('.container-section > summary').click();
+  await page.locator('.container-item').filter({ hasText: 'WH23' }).click();
+  await expect(page.locator('.container-map-info')).toContainText('Container WH23');
+  expect(await getCoverageCircles(page)).toHaveLength(warmenhuizenCircles.length + 2);
+
+  await openFilters.click();
+  await circlesToggle.click();
+  await expect(circlesToggle).toHaveAttribute('aria-pressed', 'false');
+  expect((await getCoverageCircles(page)).map(({ radius }) => radius)).toEqual([150, 275]);
+
+  await circlesToggle.click();
+  await page.evaluate(() => {
+    window.__testLeafletMap.fire('click');
+  });
+  expect(await getCoverageCircles(page)).toMatchObject(warmenhuizenCircles);
+
+  const tuitjenhornCircles = await getExpectedCircles('tuitjenhorn');
+  await page.getByLabel('Selecteer dorp').selectOption('tuitjenhorn');
+  await expect(circlesToggle).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => getCoverageCircles(page)).toMatchObject(tuitjenhornCircles);
+  await expect.poll(circlesFitInView).toBe(true);
+
+  await circlesToggle.click();
+  expect(await getCoverageCircles(page)).toHaveLength(0);
+});
+
 test('shows the filtered map from the mobile dashboard', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/#kaart');
@@ -851,6 +939,8 @@ test('shows the filtered map from the mobile dashboard', async ({ page }) => {
   const containerFilter = page.getByRole('button', { name: /^Containers met meer dan 100 adressen/ });
   await containerFilter.click();
   await expect(containerFilter).toHaveAttribute('aria-pressed', 'true');
+  const circlesToggle = page.getByRole('button', { name: /^Toon 150-metercirkels/ });
+  await circlesToggle.click();
   await page.getByRole('button', { name: 'Bekijk op de kaart' }).click();
   await expect(menu).toBeFocused();
   await expect(page.getByRole('region', { name: 'Knelpunten' })).toBeHidden();
@@ -858,27 +948,13 @@ test('shows the filtered map from the mobile dashboard', async ({ page }) => {
   await menu.click();
   await expect(walkingFilter).toHaveAttribute('aria-pressed', 'true');
   await expect(containerFilter).toHaveAttribute('aria-pressed', 'true');
+  await expect(circlesToggle).toHaveAttribute('aria-pressed', 'true');
 });
 
 for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 }]) {
   test(`highlights assigned households and keeps other households visible at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await exposeLeafletMap(page);
-
-    const getCoverageCircles = () => page.evaluate(() => {
-      const circles = [];
-      window.__testLeafletMap.eachLayer((layer) => {
-        if (layer instanceof L.Circle) {
-          circles.push({
-            radius: layer.getRadius(),
-            center: layer.getLatLng(),
-            dashed: Boolean(layer.options.dashArray),
-            fillOpacity: layer.options.fillOpacity
-          });
-        }
-      });
-      return circles.sort((a, b) => a.radius - b.radius);
-    });
 
     await page.goto('/warmenhuizen/?container=WH02#kaart');
     await expect(page.locator('#coverage-status')).toContainText('Geselecteerde container WH02');
@@ -888,7 +964,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     const expectCoverageCirclesFor = async (containerId) => {
       const { lat, lon } = containers.find((container) => container.id === containerId);
       const center = { lat, lng: lon };
-      expect(await getCoverageCircles()).toEqual([
+      expect(await getCoverageCircles(page)).toEqual([
         { radius: 150, center, dashed: false, fillOpacity: 0.11 },
         { radius: 275, center, dashed: true, fillOpacity: 0.08 }
       ]);
@@ -934,7 +1010,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 390, height: 844 
     await page.evaluate(() => {
       window.__testLeafletMap.fire('click');
     });
-    expect(await getCoverageCircles()).toHaveLength(0);
+    expect(await getCoverageCircles(page)).toHaveLength(0);
     expect(await getHouseMarkers(page)).toHaveLength(0);
     await page.evaluate(() => {
       window.__testLeafletMap.setZoom(17, { animate: false });

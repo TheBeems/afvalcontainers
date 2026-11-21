@@ -3,6 +3,11 @@ import { MAP_MAX_ZOOM } from '../config.js';
 export function createMapContext() {
   const map = L.map('map', { preferCanvas: true });
 
+  // Draw the village-wide circles underneath the selected container circles.
+  const coverageOverviewPane = map.createPane('coverageOverviewPane');
+  coverageOverviewPane.style.zIndex = 390;
+  coverageOverviewPane.style.pointerEvents = 'none';
+
   // Custom panes keep route and selection overlays above markers without intercepting map clicks.
   map.createPane('houseMarkerPane');
   map.getPane('houseMarkerPane').style.zIndex = 410;
@@ -25,6 +30,7 @@ export function createMapContext() {
   const selectionRenderer = L.canvas({ padding: 0.5, pane: 'selectionMarkerPane' });
 
   const houseLayer = L.layerGroup();
+  const coverageOverviewLayer = L.featureGroup();
   const coverageLayer = L.featureGroup().addTo(map);
   const resultLayer = L.layerGroup().addTo(map);
   const routeLayer = L.layerGroup().addTo(map);
@@ -48,6 +54,7 @@ export function createMapContext() {
     routeRenderer,
     selectionRenderer,
     houseLayer,
+    coverageOverviewLayer,
     coverageLayer,
     resultLayer,
     routeLayer,

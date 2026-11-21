@@ -9,6 +9,7 @@ import {
   getContainerAccessLabel,
   getContainerCategories,
   getContainerCategory,
+  hasPrivateContainerAccess,
   hasRestafvalStream,
   MANUAL_CONTAINER_ACCURACY
 } from '../../shared/containers.js';
@@ -20,14 +21,38 @@ import {
 } from './container-marker.js';
 
 const COVERAGE_CIRCLES_DESCRIPTION = `De doorgetrokken lijn toont de hemelsbrede straal van ${RESIDENTIAL_RADIUS_METERS} meter, de stippellijn die van ${REFERENCE_RADIUS_METERS} meter.`;
+const COVERAGE_CIRCLE_STYLE = {
+  radius: RESIDENTIAL_RADIUS_METERS,
+  color: '#2563eb',
+  weight: 2,
+  opacity: 0.9,
+  fillColor: '#60a5fa',
+  fillOpacity: 0.11,
+  interactive: false
+};
+const COVERAGE_OVERVIEW_CIRCLE_STYLE = {
+  ...COVERAGE_CIRCLE_STYLE,
+  pane: 'coverageOverviewPane',
+  weight: 1.5,
+  opacity: 0.75
+};
 
 export function createContainersUi(context, api) {
   const { elements, mapContext, state } = context;
   const {
     containerLayer,
     coverageLayer,
+    coverageOverviewLayer,
     map
   } = mapContext;
+
+  let zoomInProgress = false;
+  map.on('zoomstart', () => {
+    zoomInProgress = true;
+  });
+  map.on('zoomend', () => {
+    zoomInProgress = false;
+  });
 
   function getKnownExistingHvcContainerId(container, categories) {
     const hvcContainerId = String(container.hvcContainerId || '').trim();
@@ -407,25 +432,39 @@ export function createContainersUi(context, api) {
     }
 
     const center = [container.lat, container.lon];
-    const circleStyle = {
-      color: '#2563eb',
-      weight: 2,
-      opacity: 0.9,
-      fillColor: '#60a5fa',
-      interactive: false
-    };
     L.circle(center, {
-      ...circleStyle,
+      ...COVERAGE_CIRCLE_STYLE,
       radius: REFERENCE_RADIUS_METERS,
       dashArray: '1 6',
       fillOpacity: 0.08
     }).addTo(coverageLayer);
     // The two fills combine to approximately the original 18% opacity inside the inner circle.
-    L.circle(center, {
-      ...circleStyle,
-      radius: RESIDENTIAL_RADIUS_METERS,
-      fillOpacity: 0.11
-    }).addTo(coverageLayer);
+    L.circle(center, COVERAGE_CIRCLE_STYLE).addTo(coverageLayer);
+  }
+
+  function renderCoverageOverview() {
+    coverageOverviewLayer.clearLayers();
+    const publicContainers = state.containers.filter(
+      (container) => !hasPrivateContainerAccess(container) && hasRestafvalStream(container)
+    );
+    for (const { lat, lon } of publicContainers) {
+      L.circle([lat, lon], COVERAGE_OVERVIEW_CIRCLE_STYLE).addTo(coverageOverviewLayer);
+    }
+  }
+
+  function fitCoverageOverview() {
+    if (!map.hasLayer(coverageOverviewLayer)) {
+      return;
+    }
+    if (zoomInProgress) {
+      map.once('zoomend', fitCoverageOverview);
+      return;
+    }
+
+    const bounds = coverageOverviewLayer.getBounds();
+    if (bounds.isValid() && !map.getBounds().contains(bounds)) {
+      map.fitBounds(bounds, { padding: [12, 24], maxZoom: map.getZoom(), animate: false });
+    }
   }
 
   function selectContainer(index, { focusMap = true, scrollToMap = false } = {}) {
@@ -470,6 +509,7 @@ export function createContainersUi(context, api) {
   function renderContainers({ fitBounds = false } = {}) {
     api.refreshCoverageFilters('containers');
     addContainerMarkers({ fitBounds });
+    renderCoverageOverview();
     syncContainerMarkerStyles();
     addContainerList();
     api.renderContainerMarkerLegend();
@@ -503,6 +543,7 @@ export function createContainersUi(context, api) {
     updateActiveContainer,
     clearContainerSelection,
     selectContainer,
+    fitCoverageOverview,
     renderContainers
   };
 }
